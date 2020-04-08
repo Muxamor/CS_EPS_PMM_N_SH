@@ -36,17 +36,11 @@
 *.x86_64
 *.hex
 
-# Debug files
-*.dSYM/
+## Debug files
 *.su
 *.idb
 *.pdb
+*.lst
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+/Debug/
+/Build_gcc_eabi/
