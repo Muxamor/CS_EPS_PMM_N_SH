@@ -191,13 +191,15 @@ int8_t TMP1075_set_mode(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mode){
     I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(1 << 8)))  | (mode << 8));
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if((current_state & (~(1 << 8)))  | (mode << 8))
+    if((current_state & (~(1 << 8)))  | (mode << 8)){
 
     	return 0;
 
-    else
+    }else{
 
-    	return -1;
+        return -1;
+    }
+
 }
 
 
@@ -220,14 +222,12 @@ int8_t TMP1075_set_time_conversion(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint
     I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(3 << 13))) | (time << 13));
 
 	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(3 << 13))) | (time << 13)) == current_state){
+    if(((last_state & (~(3 << 13))) | (time << 13)) != current_state){
 
-    	return 0;
-
-    }else{
-
-        return -1;
+    	return -1;
     }
+
+    return 0;
 }
 
 
@@ -245,14 +245,32 @@ int8_t TMP1075_one_shot_conversion_start(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr
     I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(1 << 15))) | (1 << 15));
 
 	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(1 << 15))) | (1 << 15)) == current_state){
-
-    	return 0;
-
-    }else{
+    if(((last_state & (~(1 << 15))) | (1 << 15)) != current_state){
 
     	return -1;
     }
+
+    return 0;
+}
+
+
+/** @brief  Disable ALERT pin function.
+    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+    @param  tmp1075_addr - 7-bit device address.
+    @retval 0-OK, 1-Error
+*/
+int8_t TMP1075_disable_ALERT_pin(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
+
+    if( TMP1075_set_low_limit( I2Cx, tmp1075_addr, -128) == -1){
+        return -1;
+    }
+
+    if( TMP1075_set_high_limit(I2Cx, tmp1075_addr, 127.9375) == -1){
+
+        return -1;
+    }
+
+    return 0;
 }
 
 
@@ -273,14 +291,12 @@ int8_t TMP1075_set_mode_ALERT_pin(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8
     I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(1 << 9))) | (mode << 9));
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(1 << 9))) | (mode << 9)) == current_state){
+    if(((last_state & (~(1 << 9))) | (mode << 9)) != current_state){
 
-    	return 0;
-
-    }else{
-
-        return -1;
+    	return -1;
     }
+
+    return 0;
 }
 
 
@@ -301,14 +317,12 @@ int8_t TMP1075_ALERT_active_level(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8
     I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(1 << 10))) | (mode << 10));
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(1 << 10))) | (mode << 10)) == current_state){
-
-    	return 0;
-
-    }else{
+    if(((last_state & (~(1 << 10))) | (mode << 10)) != current_state){
 
     	return -1;
     }
+
+    return 0;
 }
 
 
@@ -331,14 +345,13 @@ int8_t TMP1075_ALERT_sensitivity(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_
     I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(3 << 11))) | (mode << 11));
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(3 << 11))) | (mode << 11)) == current_state){
-
-    	return 0;
-
-    }else{
+    if(((last_state & (~(3 << 11))) | (mode << 11)) != current_state){
 
     	return -1;
     }
+
+    return 0;
+   
 }
 
 
@@ -351,13 +364,22 @@ int8_t TMP1075_ALERT_sensitivity(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_
 int8_t TMP1075_set_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float low_limit){
 
 	uint16_t low_limit_temp=0;
-	int8_t  ret = 0 ;
+    uint16_t get_reg_data=0;
 
-	low_limit_temp = TMP1075_float_to_binary(low_limit);
+    low_limit_temp = TMP1075_float_to_binary(low_limit);
 
-	ret = I2C_Write_word(I2Cx, 0x02, tmp1075_addr, low_limit_temp);
+    if( I2C_Write_word(I2Cx, 0x02, tmp1075_addr, low_limit_temp) == -1){
+        return -1;
+    };
+    
+    TMP1075_get_low_limit(I2Cx, tmp1075_addr, &get_reg_data);
+    
+    if( low_limit_temp != get_reg_data ){
 
-	return ret;
+        return -1;
+    }
+
+    return 0;
 }
 
 
@@ -369,14 +391,24 @@ int8_t TMP1075_set_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float low_
 */
 int8_t TMP1075_set_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float high_limit){
 
-	uint16_t high_limit_temp=0;
-	int8_t  ret = 0 ;
+    uint16_t high_limit_temp=0;
+    uint16_t get_reg_data=0;
 
-	high_limit_temp = TMP1075_float_to_binary(high_limit);
+    high_limit_temp = TMP1075_float_to_binary(high_limit);
 
-	ret = I2C_Write_word(I2Cx, 0x03, tmp1075_addr, high_limit_temp);
+    if( I2C_Write_word(I2Cx, 0x03, tmp1075_addr, high_limit_temp) == -1){
 
-	return ret;
+        return -1;
+    }
+
+    TMP1075_get_high_limit(I2Cx, tmp1075_addr, &get_reg_data);
+    
+    if( high_limit_temp != get_reg_data ){
+        
+        return -1;
+    }
+    
+    return 0;
 }
 
 
