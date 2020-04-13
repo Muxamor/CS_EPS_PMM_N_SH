@@ -61,7 +61,6 @@ void SystemClock_Config(void){
 	uint8_t HSE_Fault=0;
 	uint32_t down_counter = 500000;
 
-
 	LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
 
 	if(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_4){
@@ -77,7 +76,6 @@ void SystemClock_Config(void){
 	while( (LL_RCC_HSE_IsReady() != 1) && (down_counter != 0)){
 		down_counter--;
 	}
-
 
 	if(down_counter==0){
 
@@ -115,7 +113,6 @@ void SystemClock_Config(void){
 	/* Wait till System clock is ready */
 	while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL){}
 
-
 	LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 	LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
 	LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
@@ -141,6 +138,105 @@ void SystemClock_Config(void){
 	//LL_RCC_SetI2CClockSource(LL_RCC_I2C2_CLKSOURCE_PCLK1);     // Backup I2C1 Comm. with module PAM and PDM and another part of PMM module
 	LL_RCC_SetI2CClockSource(LL_RCC_I2C4_CLKSOURCE_PCLK1);       // Main I2C4 Comm. with module PAM and PDM and another part of PMM module
 
+}
+
+/** @brief I2C3 Initialization Function. I2C3 use for communiction inside main and backup block
+  * @param None
+  * @retval None
+  */
+void I2C3_Init(void){
+
+  	LL_I2C_InitTypeDef I2C_InitStruct = {0};
+  	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+  	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+  	LL_PWR_EnableVddIO2();
+
+  	/**I2C3 GPIO Configuration  
+  	PA7   ------> I2C3_SCL
+ 	PG8   ------> I2C3_SDA */
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+  	GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
+  	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+  	GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
+  	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+  	/* Peripheral clock enable */
+  	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C3);
+
+  	/** I2C Initialization */
+  	LL_I2C_EnableAutoEndMode(I2C3);
+  	LL_I2C_DisableOwnAddress2(I2C3);
+  	LL_I2C_DisableGeneralCall(I2C3);
+  	LL_I2C_EnableClockStretching(I2C3);
+
+  	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
+  	I2C_InitStruct.Timing = 0x00702991;
+  	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
+  	I2C_InitStruct.DigitalFilter = 0;
+  	I2C_InitStruct.OwnAddress1 = 0;
+  	I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK;
+  	I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
+ 	LL_I2C_Init(I2C3, &I2C_InitStruct);
+
+  	LL_I2C_SetOwnAddress2(I2C3, 0, LL_I2C_OWNADDRESS2_NOMASK);
+
+	LL_I2C_Enable(I2C3);
+}
+
+/** @brief I2C4 Initialization Function. Main I2C4 communication 
+  * 		with module PAM and PDM and another part of PMM module.
+  * @param None
+  * @retval None */
+void I2C4_Init(void){
+
+  LL_I2C_InitTypeDef I2C_InitStruct = {0};
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
+  /**I2C4 GPIO Configuration  
+  PF14   ------> I2C4_SCL
+  PF15   ------> I2C4_SDA */
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_14|LL_GPIO_PIN_15;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
+  LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /* Peripheral clock enable */
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_I2C4);
+
+  /** I2C Initialization */
+  LL_I2C_EnableAutoEndMode(I2C4);
+  LL_I2C_DisableOwnAddress2(I2C4);
+  LL_I2C_DisableGeneralCall(I2C4);
+  LL_I2C_EnableClockStretching(I2C4);
+
+  I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
+  I2C_InitStruct.Timing = 0x00702991;
+  I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
+  I2C_InitStruct.DigitalFilter = 0;
+  I2C_InitStruct.OwnAddress1 = 0;
+  I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK;
+  I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
+  LL_I2C_Init(I2C4, &I2C_InitStruct);
+
+  LL_I2C_SetOwnAddress2(I2C4, 0, LL_I2C_OWNADDRESS2_NOMASK);
+
+  LL_I2C_Enable(I2C4);
 }
 
 /** @brief LPUART1 Initialization Function
@@ -221,7 +317,6 @@ void USART3_Init(void){
 	LL_USART_Init(USART3, &USART_InitStruct);
 	LL_USART_ConfigAsyncMode(USART3);
 	LL_USART_Enable(USART3);
-
 }
 
 /**
@@ -325,6 +420,7 @@ void GPIO_Init(void){
   	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
   	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
 
+	/*-------------------------------------------------------------------------------------*/
   	/* Configure GPIO pin to control I2C bus multiplexor TMUX1209  (U5 and U18) */
   	GPIO_InitStruct.Pin = LL_GPIO_PIN_12|LL_GPIO_PIN_13;
   	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
@@ -351,6 +447,35 @@ void GPIO_Init(void){
 	/*SW_TMUX1209_I2C1_main_PDM();  - Switch I2C1 line for comm. with the PDM module  		*/
 	/*SW_TMUX1209_I2C1_main_BAT();  - Switch I2C1 line for comm. with the Battery module	*/
 	/*SW_TMUX1209_I2C1_main_PMM();	- Switch I2C1 line for comm. with the PMM module		*/
+  	/****************************************************************************************/
+
+
+	/*-------------------------------------------------------------------------------------*/
+  	/* Configure GPIO pin to control write protaction on FRAM1 and FRAM2  FM24Cl64 */
+  	/** FRAM write control pin  
+  		PG15 ------> Write control FRAM1 (main)
+  		PC3  ------> Write control FRAM1 (backup)
+  	*/
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_15;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_3;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	/* Setup default state */
+  	LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_15); // Disable write to FRAM1
+  	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_3);  // Disable write to FRAM2
+  	/****************************************************************************************/
+
+  	
 
 }
 

@@ -14,6 +14,8 @@
 
 void LL_Init(void);
 void SystemClock_Config(void);
+void I2C3_Init(void);
+void I2C4_Init(void);
 void LPUART1_Init(void);
 void USART3_Init(void);
 void UART5_Init(void);
