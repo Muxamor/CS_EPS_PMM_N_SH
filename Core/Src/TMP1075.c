@@ -1,7 +1,5 @@
 
 #include "TMP1075.h"
-#include <stdlib.h>
-
 
 /** @brief	Reading 2 byte register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
@@ -9,7 +7,7 @@
 	@param 	SlaveAddr - 7-bit device address.
 	@retval 0-OK, -1-Error
 */
-int8_t I2C_Read_word(I2C_TypeDef *I2Cx, uint8_t reg_id, uint8_t SlaveAddr, uint16_t *data){
+int8_t I2C_Read_word(I2C_TypeDef *I2Cx,  uint8_t SlaveAddr, uint8_t reg_id, uint16_t *data){
 
 	uint8_t big, little;
     int8_t error_status = 0;
@@ -42,7 +40,7 @@ int8_t I2C_Read_word(I2C_TypeDef *I2Cx, uint8_t reg_id, uint8_t SlaveAddr, uint1
 
     LL_I2C_ClearFlag_STOP(I2Cx);
 
-    *data = big << 8 | little;
+    *data = (((uint16_t)big) << 8) | ((uint16_t)little);
 
     return error_status;
 }
@@ -55,7 +53,7 @@ int8_t I2C_Read_word(I2C_TypeDef *I2Cx, uint8_t reg_id, uint8_t SlaveAddr, uint1
 	@param data - 2-byte data to write
 	@retval	0-OK, -1-Error
 */
-int8_t I2C_Write_word(I2C_TypeDef *I2Cx, uint8_t reg_id, uint8_t SlaveAddr, uint16_t data){
+int8_t I2C_Write_word(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t reg_id, uint16_t data){
 
 	uint8_t data_low = (data & 0xFF);
     uint8_t data_high = data >> 8;
@@ -95,7 +93,7 @@ int8_t I2C_Write_word(I2C_TypeDef *I2Cx, uint8_t reg_id, uint8_t SlaveAddr, uint
 */
 int8_t TMP1075_read_id(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-	int8_t err_status = I2C_Read_word(I2Cx, 0x0F, tmp1075_addr, read_data);
+	int8_t err_status = I2C_Read_word(I2Cx, tmp1075_addr, 0x0F, read_data);
 
 	return err_status;
 }
@@ -108,7 +106,7 @@ int8_t TMP1075_read_id(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_d
 */
 int8_t TMP1075_read_raw_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-	int8_t err_status = I2C_Read_word(I2Cx, 0x00, tmp1075_addr, read_data);
+	int8_t err_status = I2C_Read_word(I2Cx, tmp1075_addr, 0x00, read_data);
 
 	return err_status;
 }
@@ -170,7 +168,7 @@ uint16_t TMP1075_float_to_binary(float val_temp){
 */
 int8_t TMP1075_read_config(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-	int8_t err_status = I2C_Read_word(I2Cx, 0x01, tmp1075_addr, read_data);
+	int8_t err_status = I2C_Read_word(I2Cx, tmp1075_addr, 0x01, read_data);
 
 	return err_status;
 }
@@ -188,7 +186,7 @@ int8_t TMP1075_set_mode(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mode){
 	uint16_t current_state;
 
 	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(1 << 8)))  | (mode << 8)) == -1 ){
+    if( I2C_Write_word(I2Cx, tmp1075_addr, 0x01, (last_state & (~(1 << 8))) | (mode << 8) ) == -1 ){
         return -1;
     }
 
@@ -221,7 +219,7 @@ int8_t TMP1075_set_time_conversion(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint
     uint16_t current_state;
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(3 << 13))) | (time << 13)) == -1 ){
+    if( I2C_Write_word(I2Cx, tmp1075_addr, 0x01, (last_state & (~(3 << 13))) | (time << 13)) == -1 ){
         return -1;
     }
 
@@ -246,7 +244,7 @@ int8_t TMP1075_one_shot_conversion_start(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr
 	uint16_t current_state;
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(1 << 15))) | (1 << 15)) == -1 ){
+    if( I2C_Write_word(I2Cx, tmp1075_addr, 0x01, (last_state & (~(1 << 15))) | (1 << 15)) == -1 ){
         return -1;
     }
 
@@ -294,7 +292,7 @@ int8_t TMP1075_set_mode_ALERT_pin(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8
 	uint16_t current_state;
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(1 << 9))) | (mode << 9)) == -1 ){
+    if( I2C_Write_word(I2Cx, tmp1075_addr, 0x01, (last_state & (~(1 << 9))) | (mode << 9)) == -1 ){
         return -1;
     }
 
@@ -322,7 +320,7 @@ int8_t TMP1075_ALERT_active_level(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8
 	uint16_t current_state;
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(1 << 10))) | (mode << 10)) == -1 ){
+    if( I2C_Write_word(I2Cx, tmp1075_addr, 0x01, (last_state & (~(1 << 10))) | (mode << 10)) == -1 ){
         return -1;
     }
 
@@ -352,7 +350,7 @@ int8_t TMP1075_ALERT_sensitivity(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_
 	uint16_t current_state;
 
     TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word(I2Cx, 0x01, tmp1075_addr, (last_state & (~(3 << 11))) | (mode << 11)) == -1 ) {
+    if( I2C_Write_word(I2Cx, tmp1075_addr, 0x01, (last_state & (~(3 << 11))) | (mode << 11)) == -1 ) {
         return -1;
     }
 
@@ -380,7 +378,7 @@ int8_t TMP1075_set_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float low_
 
     low_limit_temp = TMP1075_float_to_binary(low_limit);
 
-    if( I2C_Write_word(I2Cx, 0x02, tmp1075_addr, low_limit_temp) == -1 ){
+    if( I2C_Write_word(I2Cx, tmp1075_addr, 0x02, low_limit_temp) == -1 ){
         return -1;
     };
     
@@ -408,7 +406,7 @@ int8_t TMP1075_set_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float hig
 
     high_limit_temp = TMP1075_float_to_binary(high_limit);
 
-    if( I2C_Write_word(I2Cx, 0x03, tmp1075_addr, high_limit_temp) == -1){
+    if( I2C_Write_word(I2Cx, tmp1075_addr, 0x03, high_limit_temp) == -1){
 
         return -1;
     }
@@ -431,7 +429,7 @@ int8_t TMP1075_set_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float hig
 */
 int8_t TMP1075_get_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-    int8_t err_status =  I2C_Read_word(I2Cx, 0x02, tmp1075_addr, read_data);
+    int8_t err_status =  I2C_Read_word(I2Cx, tmp1075_addr,  0x02, read_data);
 
     return err_status;
 }
@@ -444,7 +442,7 @@ int8_t TMP1075_get_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *
 */
 int8_t TMP1075_get_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-	int8_t err_status = I2C_Read_word(I2Cx, 0x03, tmp1075_addr, read_data);
+	int8_t err_status = I2C_Read_word(I2Cx, tmp1075_addr, 0x03, read_data);
 
 	return err_status;
 }

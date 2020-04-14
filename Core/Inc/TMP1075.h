@@ -28,8 +28,8 @@
 #define TMP1075_FOUR_FAULT  	4
 
 
-int8_t I2C_Read_word(I2C_TypeDef *I2Cx, uint8_t reg_id, uint8_t SlaveAddr, uint16_t *data);
-int8_t I2C_Write_word(I2C_TypeDef *I2Cx, uint8_t reg_id, uint8_t SlaveAddr, uint16_t data);
+int8_t I2C_Read_word(I2C_TypeDef *I2Cx,  uint8_t SlaveAddr, uint8_t reg_id, uint16_t *data);
+int8_t I2C_Write_word(I2C_TypeDef *I2Cx,  uint8_t SlaveAddr, uint8_t reg_id, uint16_t data);
 
 
 int8_t TMP1075_read_id(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data);

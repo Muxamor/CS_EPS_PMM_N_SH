@@ -3,6 +3,7 @@
 #include "SetupPeriph.h"
 #include "tim_pwm.h"
 #include "TMP1075.h"
+#include "FRAM.h"
 #include  <stdio.h>
 
 /****************************TODO*************************
