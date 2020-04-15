@@ -34,6 +34,7 @@ Core/Src/SetupPeriph.c \
 Core/Src/tim_pwm.c \
 Core/Src/TMP1075.c \
 Core/Src/FRAM.c \
+Core/Src/TCA9539.c \
 Core/Src/stm32l4xx_it.c \
 Core/Src/syscalls.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_dma.c \
