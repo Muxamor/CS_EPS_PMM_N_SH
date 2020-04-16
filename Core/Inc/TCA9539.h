@@ -7,7 +7,13 @@
 
 #ifndef INC_TCA9539_H_
 #define INC_TCA9539_H_
-#include "main.h"
+
+/*
+typedef enum {
+  ERROR_N = -1,	
+  SUCCESS = 0,
+  ERROR = !SUCCESS,
+} ErrorStatus; */
 
 //#define TCA9539_I2C_ADDR					0b01110100
 
@@ -37,32 +43,25 @@
 #define TCA9539_IO_P17						0x8000
 
 
-#define TCA9539_I2C_TIMEOUT					1000
 
+ErrorStatus TCA9539_read_IO_dir_reg(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t *read_data);
+ErrorStatus TCA9539_read_output_reg(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t *read_data);
+ErrorStatus TCA9539_read_input_reg(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t *read_data);
+ErrorStatus TCA9539_read_IO_pol_reg(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t *read_data);
 
-int8_t TCA9539_I2C_check_flag(uint32_t (*I2C_check_flag)(I2C_TypeDef *), I2C_TypeDef *I2Cx, uint8_t flag_state);
+ErrorStatus TCA9539_read_IO_dir_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin, uint8_t *read_data);
+ErrorStatus TCA9539_read_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin, uint8_t *read_data);
+ErrorStatus TCA9539_read_input_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin, uint8_t *read_data);
+ErrorStatus TCA9539_read_IO_pol_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin, uint8_t *read_data);
 
-int8_t TCA9539_I2C_Read_word(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t reg_id, uint16_t *data);
-int8_t TCA9539_I2C_Write_word(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t reg_id, uint16_t data);
+ErrorStatus TCA9539_conf_IO_dir_output(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
+ErrorStatus TCA9539_conf_IO_dir_input(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
 
-int8_t TCA9539_read_IO_dir_reg(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t *read_data);
-int8_t TCA9539_read_output_reg(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t *read_data);
-int8_t TCA9539_read_input_reg(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t *read_data);
-int8_t TCA9539_read_IO_pol_reg(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t *read_data);
+ErrorStatus TCA9539_conf_IO_pol_normal(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
+ErrorStatus TCA9539_conf_IO_pol_inversion(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
 
-int8_t TCA9539_read_IO_dir_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin, uint8_t *read_data);
-int8_t TCA9539_read_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin, uint8_t *read_data);
-int8_t TCA9539_read_input_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin, uint8_t *read_data);
-int8_t TCA9539_read_IO_pol_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin, uint8_t *read_data);
-
-int8_t TCA9539_conf_IO_dir_output(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
-int8_t TCA9539_conf_IO_dir_input(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
-
-int8_t TCA9539_conf_IO_pol_normal(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
-int8_t TCA9539_conf_IO_pol_inversion(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
-
-int8_t TCA9539_Set_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
-int8_t TCA9539_Reset_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
+ErrorStatus TCA9539_Set_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
+ErrorStatus TCA9539_Reset_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
 
 
 

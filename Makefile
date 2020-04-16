@@ -31,6 +31,7 @@ BUILD_DIR = Build_gcc_eabi
 C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/SetupPeriph.c \
+Core/Src/i2c_comm.c \
 Core/Src/tim_pwm.c \
 Core/Src/TMP1075.c \
 Core/Src/FRAM.c \

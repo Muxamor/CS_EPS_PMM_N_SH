@@ -73,30 +73,7 @@ int main(void){
 
 
 
-	//TMP1075_set_low_limit(I2C3, 1, -25);
-	int16_t temp_binary=0;
-	uint16_t Uint_temp_binary=0;
-
-	temp_binary = TMP1075_float_to_binary(-0.0625);
-
-	Uint_temp_binary = (uint16_t)temp_binary;
-
-
-	float temp = -56.89;
-	int8_t tme_dec=0;
-	temp = TMP1075_raw_to_float(0b0000000000010000);
-	temp = TMP1075_raw_to_float(0b0000000001000000);
-	temp = TMP1075_raw_to_float(0b0001100100000000);
-	temp = TMP1075_raw_to_float(0b0011001000000000);
-	temp = TMP1075_raw_to_float(0b0100101100000000);
-	temp = TMP1075_raw_to_float(0b0101000000000000);
-
-
-
-	tme_dec = TMP1075_raw_to_int(0b0100101100000000);
-
-
-	printf("%f,%d \r\n  ", temp_binary, Uint_temp_binary);
+	//printf("%f,%d \r\n  ", temp_binary, Uint_temp_binary);
 
 
 
