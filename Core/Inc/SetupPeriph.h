@@ -5,11 +5,7 @@
 #ifndef __SETUPPERIPH_H
 #define __SETUPPERIPH_H
 
-#if defined(USE_FULL_ASSERT)
-#include "stm32_assert.h"
-#endif /* USE_FULL_ASSERT */
 
-//#define DEBUGprintf // Enable printf() message  to SWO
 
 
 void LL_Init(void);
@@ -25,19 +21,19 @@ void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider);
 void IWDG_Init(void);
 
 /*For control multiplexor TMUX1209  need use: */
-#define ENABLE_TMUX1209_I2C1();        LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_0);
-#define DISABLE_TMUX1209_I2C1();       LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_0);
+#define ENABLE_TMUX1209_I2C();        LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_0);
+#define DISABLE_TMUX1209_I2C();       LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_0);
 
-#define SW_TMUX1209_I2C1_main_PAM();   LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_12); \
+#define SW_TMUX1209_I2C_main_PAM();   LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_12); \
                                        LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_13);
 
-#define SW_TMUX1209_I2C1_main_PDM();   LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_12); \
+#define SW_TMUX1209_I2C_main_PDM();   LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_12); \
                                        LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_13);
 
-#define SW_TMUX1209_I2C1_main_BAT();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
+#define SW_TMUX1209_I2C_main_BAT();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
                                        LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_13);
 
-#define SW_TMUX1209_I2C1_main_PMM();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
+#define SW_TMUX1209_I2C_main_PMM();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
                                        LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_13);                                       
 
 
@@ -81,14 +77,5 @@ void IWDG_Init(void);
 
 
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-void _Error_Handler(char *, int);
-
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* SETUPPERIPH_H_ */

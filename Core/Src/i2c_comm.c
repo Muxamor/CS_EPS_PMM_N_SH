@@ -5,8 +5,7 @@
 
 
 
-/*
-    @brief  Checking flag status any LL function with signature uint32_t LL_SOME_FUNC(I2C_TypeDef *I2Cx)
+/** @brief  Checking flag status any LL function with signature uint32_t LL_SOME_FUNC(I2C_TypeDef *I2Cx)
 	@param  (*I2C_FRAM_I2C_check_flag)(I2C_TypeDef *) - pointer to LL function.
 	@param  *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param  flag_state - (SET or RESET) value to be compared result of (*I2C_check_flag)(I2C_TypeDef *).
@@ -25,8 +24,7 @@ ErrorStatus I2C_check_flag(uint32_t (*I2C_check_flag)(I2C_TypeDef *), I2C_TypeDe
 	return SUCCESS;
 }
 
-/*
-    @brief	Reading single byte  ( St_ReSt - generate Start and Restart )
+/** @brief	Reading single byte  ( St_ReSt - generate Start and Restart )
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	SlaveAddr - 8-bit device address.
 	@param  size_reg_addr - size of reg_addr in byte if:
@@ -45,43 +43,46 @@ ErrorStatus I2C_Read_byte_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t 
 	} 
 
 	uint8_t receive_data = 0;
-	uint8_t i = 0, j = 0;
+	uint8_t i = 0; 
+	int8_t  j = 0;
+	uint32_t SlaveAddr1;
 
-	SlaveAddr = (uint8_t)(SlaveAddr << 1);
+	SlaveAddr1 = (uint8_t)(SlaveAddr << 1);
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
+		return ERROR_N;
+	}
 
-	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)size_reg_addr, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE); //LL_I2C_GENERATE_START_READ
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr1, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)size_reg_addr, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
+	for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
 
 		LL_I2C_TransmitData8(I2Cx, (uint8_t)(reg_addr >> (j*8)) );
 
 		if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    		return ERROR_N;
-    	}
-    }
+			return ERROR_N;
+		}
+	}
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)1, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ); //LL_I2C_MODE_SOFTEND
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr1, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)1, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ);
+	
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 	//LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_NACK);
 	receive_data = LL_I2C_ReceiveData8(I2Cx);
 
 	//LL_I2C_GenerateStopCondition(I2Cx);
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
 	LL_I2C_ClearFlag_STOP(I2Cx);
 
@@ -111,57 +112,58 @@ ErrorStatus I2C_Read_word_u16_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint
 	} 
 
 	uint8_t high_byte = 0, low_byte = 0;
-	uint8_t i = 0, j = 0;
+	uint8_t i = 0;
+	int8_t  j = 0;
 
 	SlaveAddr = (uint8_t)(SlaveAddr << 1);
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)size_reg_addr, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)size_reg_addr, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
 
-    for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
+	for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
 
 		LL_I2C_TransmitData8(I2Cx, (uint8_t)(reg_addr >> (j*8)) );
 
 		if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    		return ERROR_N;
-    	}
-    }
+			return ERROR_N;
+		}
+	}
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)2, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_RESTART_7BIT_READ); //LL_I2C_MODE_SOFTEND
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)2, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_RESTART_7BIT_READ); //LL_I2C_MODE_SOFTEND
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 	//LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
-    high_byte = LL_I2C_ReceiveData8(I2Cx);
-    
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
-   	// LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
-    low_byte = LL_I2C_ReceiveData8(I2Cx);
+	high_byte = LL_I2C_ReceiveData8(I2Cx);
+	
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+	// LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
+	low_byte = LL_I2C_ReceiveData8(I2Cx);
 
-    //LL_I2C_GenerateStopCondition(I2Cx);
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	//LL_I2C_GenerateStopCondition(I2Cx);
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    LL_I2C_ClearFlag_STOP(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
 
-    *data =  (uint16_t)( ( high_byte  << 8 ) | low_byte );
+	*data =  (uint16_t)( ( high_byte  << 8 ) | low_byte );
 
-    return SUCCESS;
+	return SUCCESS;
 }
 
 /**@brief	Writing uint8_t data (byte) by address reg_addr. (St genereate only one start)
@@ -181,45 +183,46 @@ ErrorStatus I2C_Write_byte_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size
 	if( size_reg_addr == 0 || size_reg_addr > 4 ){ 
 		return ERROR_N;
 	} 
-    
-    uint8_t i = 0, j = 0;
+	
+	uint8_t i = 0;
+	int8_t  j = 0;
 
-    SlaveAddr = (uint8_t)(SlaveAddr << 1);
+	SlaveAddr = (uint8_t)(SlaveAddr << 1);
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
-    	return ERROR_N;
-    }
-    LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)(size_reg_addr+1), LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE); //LL_I2C_MODE_SOFTEND
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
+		return ERROR_N;
+	}
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)(size_reg_addr+1), LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE); //LL_I2C_MODE_SOFTEND
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
+	for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
 
 		LL_I2C_TransmitData8(I2Cx, (uint8_t)(reg_addr >> (j*8)) );
 
 		if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    		return ERROR_N;
-    	}
-    }
+			return ERROR_N;
+		}
+	}
 
-    LL_I2C_TransmitData8(I2Cx, data);
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	LL_I2C_TransmitData8(I2Cx, data);
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	//if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
+	//	return ERROR_N;
+	//}
 
-    //LL_I2C_GenerateStopCondition(I2Cx);
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	//LL_I2C_GenerateStopCondition(I2Cx);
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    LL_I2C_ClearFlag_STOP(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
 
-    return 0;
+	return 0;
 }
 
 /**@brief	Writing uint16_t data  by address reg_addr. (St genereate only one start)
@@ -241,50 +244,52 @@ ErrorStatus I2C_Write_word_u16_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t 
 	} 
 
 	uint8_t low_byte = (uint8_t) data;
-    uint8_t high_byte = (uint8_t)(data >> 8);
-    uint8_t i = 0, j = 0;
+	uint8_t high_byte = (uint8_t)(data >> 8);
+	uint8_t i = 0;
+	int8_t  j = 0;
 
-    SlaveAddr = (uint8_t)(SlaveAddr << 1);
+	SlaveAddr = (uint8_t)(SlaveAddr << 1);
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != 0){
-    	return ERROR_N;
-    }
-    LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)(size_reg_addr+2), LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE); //LL_I2C_MODE_SOFTEND
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != 0){
+		return ERROR_N;
+	}
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)(size_reg_addr+2), LL_I2C_MODE_AUTOEND , LL_I2C_GENERATE_START_WRITE); ////LL_I2C_MODE_SOFTEND
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
+	for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
 
 		LL_I2C_TransmitData8(I2Cx, (uint8_t)(reg_addr >> (j*8)) );
 
 		if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    		return ERROR_N;
-    	}
-    }
+			return ERROR_N;
+		}
+	}
 
-    LL_I2C_TransmitData8(I2Cx, high_byte);
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	LL_I2C_TransmitData8(I2Cx, high_byte );
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    LL_I2C_TransmitData8(I2Cx, low_byte);
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	LL_I2C_TransmitData8(I2Cx, low_byte );
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	//if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
+	//	return ERROR_N;
+	//}
 
-    //LL_I2C_GenerateStopCondition(I2Cx);
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	//LL_I2C_GenerateStopCondition(I2Cx);
 
-    LL_I2C_ClearFlag_STOP(I2Cx);
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    return SUCCESS;
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+	return SUCCESS;
 }
 
 
@@ -307,45 +312,46 @@ ErrorStatus I2C_Write_array_u8_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t 
 		return ERROR_N;
 	} 
 
-	uint32_t i = 0, j = 0;
+	uint32_t i = 0;
+	int8_t j = 0;
 
 	SlaveAddr = (uint8_t)(SlaveAddr << 1);
 	 if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
 	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)(data_size + size_reg_addr), LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE); // LL_I2C_MODE_SOFTEND
- 	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
+	for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
 
 		LL_I2C_TransmitData8(I2Cx, (uint8_t)(reg_addr >> (j*8)) );
 
 		if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    		return ERROR_N;
-    	}
-    }
+			return ERROR_N;
+		}
+	}
 
 	for( i = 0; i < data_size; i++){
 		LL_I2C_TransmitData8(I2Cx, *(data + i));
 		if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
-    		return ERROR_N;
-    	}
+			return ERROR_N;
+		}
 	}
 
-	if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	//if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
+	//	return ERROR_N;
+	//}
 
 	//LL_I2C_GenerateStopCondition(I2Cx);
-    if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
-    	return ERROR_N;
-    }
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
 
-    LL_I2C_ClearFlag_STOP(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
 
-    return SUCCESS;
+	return SUCCESS;
 }
 

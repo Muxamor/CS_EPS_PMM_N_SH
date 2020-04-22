@@ -30,12 +30,17 @@ BUILD_DIR = Build_gcc_eabi
 # C sources
 C_SOURCES =  \
 Core/Src/main.c \
+Core/Src/Error_Handler.c \
 Core/Src/SetupPeriph.c \
 Core/Src/i2c_comm.c \
+Core/Src/uart_comm.c \
+Core/Src/uart_terminal.c \
 Core/Src/tim_pwm.c \
 Core/Src/TMP1075.c \
 Core/Src/FRAM.c \
+Core/Src/PCA9534.c \
 Core/Src/TCA9539.c \
+Core/Src/PMM/pmm_savedata.c \
 Core/Src/stm32l4xx_it.c \
 Core/Src/syscalls.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_dma.c \
@@ -126,6 +131,11 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-ICore/Inc/PMM \
+-ICore/Inc/PDM \
+-ICore/Inc/PAM \
+-ICore/Inc/CAND \
+-ICore/Inc/BATT \
 -IDrivers/STM32L4xx_HAL_Driver/Inc \
 -IDrivers/CMSIS/Device/ST/STM32L4xx/Include \
 -IDrivers/CMSIS/Include

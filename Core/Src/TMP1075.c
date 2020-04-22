@@ -4,7 +4,7 @@
 
 
 /**	@brief	Reading device id.
-    @param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
 	@retval	0-OK, -1-Error
 */
@@ -17,7 +17,7 @@ ErrorStatus TMP1075_read_id(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *r
 
 
 /**	@brief	Reading raw data from temperature register.
-    @param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
 	@retval	0-OK, -1-Error
 */
@@ -35,22 +35,22 @@ ErrorStatus TMP1075_read_raw_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr
 */
 float TMP1075_raw_to_float(uint16_t ADC_CODE){
 
-    int16_t ADC_data_int = 0;
-    float ret_val = 0;
+	int16_t ADC_data_int = 0;
+	float ret_val = 0;
 
-    ADC_data_int = (int16_t)ADC_CODE;
+	ADC_data_int = (int16_t)ADC_CODE;
 
-    ADC_data_int = ADC_data_int>>4;
+	ADC_data_int = ADC_data_int>>4;
 
-    ret_val = (float)( ( (float)ADC_data_int ) * 0.0625 );
+	ret_val = (float)( ( (float)ADC_data_int ) * 0.0625 );
 
-    return ret_val;
+	return ret_val;
 }
 
 
 /** @brief  Converter from raw data (temperature register)  to int8_t.
-    @param ADC_CODE - raw data from tmp1075 sensor.
-    @retval temperature value in int8_t format
+	@param ADC_CODE - raw data from tmp1075 sensor.
+	@retval temperature value in int8_t format
 */
 int8_t TMP1075_raw_to_int(uint16_t ADC_CODE){
 
@@ -63,8 +63,8 @@ int8_t TMP1075_raw_to_int(uint16_t ADC_CODE){
 
 
 /** @brief  Converter from float to raw data temperature register..
-    @param 	val_temp - temperature value in float format.
-    @retval raw data in tmp1075 sensor format
+	@param 	val_temp - temperature value in float format.
+	@retval raw data in tmp1075 sensor format
 */
 uint16_t TMP1075_float_to_binary(float val_temp){
 
@@ -79,7 +79,7 @@ uint16_t TMP1075_float_to_binary(float val_temp){
 
 
 /** @brief	Reading configuration register tmp1075 sensor.
-    @param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param  tmp1075_addr - 7-bit device address.
 	@retval	0-OK, -1-Error
 */
@@ -92,7 +92,7 @@ ErrorStatus TMP1075_read_config(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_
 
 
 /** @brief  Sets the device in SHUTDOWN_MODE to conserve power or in CONTINUOS_CONVERSION.
-    @param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
 	@param mode - SHUTDOWN_MODE or CONTINUOS_CONVERSION mode of TMP1075 sensor.
 	@retval 0-OK, -1-Error
@@ -103,55 +103,55 @@ ErrorStatus TMP1075_set_mode(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mo
 	uint16_t current_state;
 
 	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(1 << 8))) | (mode << 8)) ) != SUCCESS ){
-        return ERROR_N;
-    }
+	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(1 << 8))) | (mode << 8)) ) != SUCCESS ){
+		return ERROR_N;
+	}
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if((current_state & (~(1 << 8)))  | (mode << 8)){
+	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
+	if((current_state & (~(1 << 8)))  | (mode << 8)){
 
-    	return SUCCESS;
+		return SUCCESS;
 
-    }else{
+	}else{
 
-        return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
 }
 
 
 /** @brief	Conversion rate setting when device is in continuos conversion mode
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param  tmp1075_addr - 7-bit device address.
 	@param  time - conversion rate:
-			     TMP1075_CR_VERY_FAST        // 27.5 ms
-			     TMP1075_CR_FAST             // 55 ms
-			     TMP1075_CR_MEDIUM           // 110 ms
-			     TMP1075_CR_SLOW             // 220 ms
+				 TMP1075_CR_VERY_FAST        // 27.5 ms
+				 TMP1075_CR_FAST             // 55 ms
+				 TMP1075_CR_MEDIUM           // 110 ms
+				 TMP1075_CR_SLOW             // 220 ms
 	@retval 0-OK, -1-Error
 */
 ErrorStatus TMP1075_set_time_conversion(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t time){
 
 	uint16_t last_state;
-    uint16_t current_state;
+	uint16_t current_state;
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(3 << 13))) | (time << 13)) )!= SUCCESS ){
-        return ERROR_N;
-    }
+	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(3 << 13))) | (time << 13)) )!= SUCCESS ){
+		return ERROR_N;
+	}
 
 	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(3 << 13))) | (time << 13)) != current_state){
+	if(((last_state & (~(3 << 13))) | (time << 13)) != current_state){
 
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    return SUCCESS;
+	return SUCCESS;
 }
 
 
 /** @brief	One-shot conversion mode (for SHUTDOWN_MODE). Requests single measurement of temperature.
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param  tmp1075_addr - 7-bit device address.
 	@retval	0-OK, 1-Error
 */
@@ -160,47 +160,47 @@ ErrorStatus TMP1075_one_shot_conversion_start(I2C_TypeDef *I2Cx, uint8_t tmp1075
 	uint16_t last_state;
 	uint16_t current_state;
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t) ((last_state & (~(1 << 15))) | (1 << 15)) ) != SUCCESS ){
-        return ERROR_N;
-    }
+	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t) ((last_state & (~(1 << 15))) | (1 << 15)) ) != SUCCESS ){
+		return ERROR_N;
+	}
 
 	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(1 << 15))) | (1 << 15)) != current_state){
+	if(((last_state & (~(1 << 15))) | (1 << 15)) != current_state){
 
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    return SUCCESS;
+	return SUCCESS;
 }
 
 
 /** @brief  Disable ALERT pin function.
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-    @param  tmp1075_addr - 7-bit device address.
-    @retval 0-OK, 1-Error
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  tmp1075_addr - 7-bit device address.
+	@retval 0-OK, 1-Error
 */
 ErrorStatus TMP1075_disable_ALERT_pin(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
 
-    if( TMP1075_set_low_limit( I2Cx, tmp1075_addr, -128) == -1){
-        return ERROR_N;
-    }
+	if( TMP1075_set_low_limit( I2Cx, tmp1075_addr, -128) == -1){
+		return ERROR_N;
+	}
 
-    if( TMP1075_set_high_limit(I2Cx, tmp1075_addr, 127.9375) == -1){
+	if( TMP1075_set_high_limit(I2Cx, tmp1075_addr, 127.9375) == -1){
 
-        return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    return SUCCESS;
+	return SUCCESS;
 }
 
 
 /** @brief	Selects the mode of the ALERT pin.
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param  tmp1075_addr - 7-bit device address.
 	@param  mode - ALERT mode:
-			     TMP1075_COMPARATOR_MODE
-			     TMP1075_INTERRUPT_MODE
+				 TMP1075_COMPARATOR_MODE
+				 TMP1075_INTERRUPT_MODE
 	@retval	0-OK, 1-Error
 */
 ErrorStatus TMP1075_set_mode_ALERT_pin(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mode){
@@ -208,27 +208,27 @@ ErrorStatus TMP1075_set_mode_ALERT_pin(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, 
 	uint16_t last_state;
 	uint16_t current_state;
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01,  (uint16_t)(( last_state & (~(1 << 9)) ) | (mode << 9))  ) != SUCCESS ){
-        return ERROR_N;
-    }
+	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01,  (uint16_t)(( last_state & (~(1 << 9)) ) | (mode << 9))  ) != SUCCESS ){
+		return ERROR_N;
+	}
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(1 << 9))) | (mode << 9)) != current_state){
+	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
+	if(((last_state & (~(1 << 9))) | (mode << 9)) != current_state){
 
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    return SUCCESS;
+	return SUCCESS;
 }
 
 
 /** @brief	Polarity of the output ALERT pin.
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
 	@param mode - ALERT polarity.
-			     TMP1075_ACTIVE_LOW
-			     TMP1075_ACTIVE_HIGH
+				 TMP1075_ACTIVE_LOW
+				 TMP1075_ACTIVE_HIGH
 	@retval	0-OK, 1-Error
 */
 ErrorStatus TMP1075_ALERT_active_level(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mode){
@@ -236,29 +236,29 @@ ErrorStatus TMP1075_ALERT_active_level(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, 
 	uint16_t last_state;
 	uint16_t current_state;
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)(( last_state & (~(1 << 10))) | (mode << 10)) ) != SUCCESS ){
-        return ERROR_N;
-    }
+	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)(( last_state & (~(1 << 10))) | (mode << 10)) ) != SUCCESS ){
+		return ERROR_N;
+	}
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(1 << 10))) | (mode << 10)) != current_state){
+	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
+	if(((last_state & (~(1 << 10))) | (mode << 10)) != current_state){
 
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    return SUCCESS;
+	return SUCCESS;
 }
 
 
 /** @brief	Consecutive fault measurements to trigger the alert function.
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
 	@param mode - amount of faults:
-			     TMP1075_ONE_FAULT   
-			     TMP1075_TWO_FAULT   
-			     TMP1075_THREE_FAULT 
-			     TMP1075_FOUR_FAULT  
+				 TMP1075_ONE_FAULT   
+				 TMP1075_TWO_FAULT   
+				 TMP1075_THREE_FAULT 
+				 TMP1075_FOUR_FAULT  
 	@retval	0-OK, 1-Error
 */
 ErrorStatus TMP1075_ALERT_sensitivity(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mode){
@@ -266,24 +266,24 @@ ErrorStatus TMP1075_ALERT_sensitivity(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, u
 	uint16_t last_state;
 	uint16_t current_state;
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
-    if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(3 << 11))) | (mode<< 11)) ) != SUCCESS ) {
-        return ERROR_N;
-    }
+	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(3 << 11))) | (mode<< 11)) ) != SUCCESS ) {
+		return ERROR_N;
+	}
 
-    TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-    if(((last_state & (~(3 << 11))) | (mode << 11)) != current_state){
+	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
+	if(((last_state & (~(3 << 11))) | (mode << 11)) != current_state){
 
-    	return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    return SUCCESS;
+	return SUCCESS;
    
 }
 
 
 /** @brief	Set low limit for comparison with temperature results.
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
 	@param low_limit -  low limit for comparison with temperature results.
 	@retval	0-OK, -1-Error
@@ -291,68 +291,68 @@ ErrorStatus TMP1075_ALERT_sensitivity(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, u
 ErrorStatus TMP1075_set_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float low_limit){
 
 	uint16_t low_limit_temp=0;
-    uint16_t get_reg_data=0;
+	uint16_t get_reg_data=0;
 
-    low_limit_temp = TMP1075_float_to_binary(low_limit);
+	low_limit_temp = TMP1075_float_to_binary(low_limit);
 
-    if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x02, low_limit_temp) != SUCCESS ){
-        return ERROR_N;
-    };
-    
-    TMP1075_get_low_limit(I2Cx, tmp1075_addr, &get_reg_data);
-    
-    if( low_limit_temp != get_reg_data ){
+	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x02, low_limit_temp) != SUCCESS ){
+		return ERROR_N;
+	};
+	
+	TMP1075_get_low_limit(I2Cx, tmp1075_addr, &get_reg_data);
+	
+	if( low_limit_temp != get_reg_data ){
 
-        return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    return SUCCESS;
+	return SUCCESS;
 }
 
 
 /** @brief  Set high limit for comparison with temperature results
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
 	@param high_limit - high limit for comparison with temperature results.
 	@retval	0-OK, -1-Error
 */
 ErrorStatus TMP1075_set_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float high_limit){
 
-    uint16_t high_limit_temp=0;
-    uint16_t get_reg_data=0;
+	uint16_t high_limit_temp=0;
+	uint16_t get_reg_data=0;
 
-    high_limit_temp = TMP1075_float_to_binary(high_limit);
+	high_limit_temp = TMP1075_float_to_binary(high_limit);
 
-    if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x03, high_limit_temp) != SUCCESS ){
+	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x03, high_limit_temp) != SUCCESS ){
 
-        return ERROR_N;
-    }
+		return ERROR_N;
+	}
 
-    TMP1075_get_high_limit(I2Cx, tmp1075_addr, &get_reg_data);
-    
-    if( high_limit_temp != get_reg_data ){
+	TMP1075_get_high_limit(I2Cx, tmp1075_addr, &get_reg_data);
+	
+	if( high_limit_temp != get_reg_data ){
 
-        return ERROR_N;
-    }
-    
-    return SUCCESS;
+		return ERROR_N;
+	}
+	
+	return SUCCESS;
 }
 
 
 /** @brief  Reading current value of low limit register.
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-    @param tmp1075_addr - 7-bit device address.
-    @retval 0-OK, -1-Error
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param tmp1075_addr - 7-bit device address.
+	@retval 0-OK, -1-Error
 */
 ErrorStatus TMP1075_get_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-    return I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr,  I2C_SIZE_REG_ADDR_U8, (uint32_t)0x02, read_data);
+	return I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr,  I2C_SIZE_REG_ADDR_U8, (uint32_t)0x02, read_data);
 
 }
 
 
 /** @brief	Reading current value of high limit register.
-    @param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
 	@retval	0-OK, -1-Error
 */

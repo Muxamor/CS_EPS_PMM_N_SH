@@ -5,7 +5,7 @@
 
 #include "stm32l4xx.h"
 
-#define I2C_TIMEOUT 1000
+#define I2C_TIMEOUT 1000000
 
 #define I2C_SIZE_REG_ADDR_U8  	1 
 #define I2C_SIZE_REG_ADDR_U16  	2 

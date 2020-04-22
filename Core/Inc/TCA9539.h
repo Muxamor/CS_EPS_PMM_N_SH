@@ -1,26 +1,23 @@
-/*
- * TCA9539.h
- *
- *  Created on: 13 апр. 2020 г.
- *      Author: ftor
- */
-
 #ifndef INC_TCA9539_H_
 #define INC_TCA9539_H_
 
 /*
 typedef enum {
-  ERROR_N = -1,	
+  ERROR_N = -1,
   SUCCESS = 0,
   ERROR = !SUCCESS,
 } ErrorStatus; */
 
 //#define TCA9539_I2C_ADDR					0b01110100
 
-#define TCA9539_Input_Port					0x00
-#define TCA9539_Output_Port					0x02
-#define TCA9539_Polarity_Inversion_Port		0x04
-#define TCA9539_Configuration_Port			0x06
+#define TCA9539_Input_Port0					0x00
+#define TCA9539_Input_Port1					0x01
+#define TCA9539_Output_Port0				0x02
+#define TCA9539_Output_Port1				0x03
+#define TCA9539_Polarity_Inversion_Port0	0x04
+#define TCA9539_Polarity_Inversion_Port1	0x05
+#define TCA9539_Configuration_Port0			0x06
+#define TCA9539_Configuration_Port1			0x07
 
 #define TCA9539_IO_ALL						0xFFFF
 

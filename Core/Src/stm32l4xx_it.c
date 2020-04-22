@@ -75,8 +75,8 @@ void LPUART1_IRQHandler(void){
 
 	//uint8_t input_byte = 0;
 	if(LL_LPUART_IsActiveFlag_RXNE(LPUART1)){
-    	//input_byte = LL_LPUART_ReceiveData8(LPUART1);
-    }
+		//input_byte = LL_LPUART_ReceiveData8(LPUART1);
+	}
 
 }
 
@@ -85,8 +85,8 @@ void UART5_IRQHandler(void){
 
 	//uint8_t input_byte = 0;
 	if(LL_USART_IsActiveFlag_RXNE(UART5)){
-    	//input_byte = LL_USART_ReceiveData8(UART5);
-    }
+		//input_byte = LL_USART_ReceiveData8(UART5);
+	}
 }
 
 /** @brief This function handles USART3 global interrupt */
@@ -94,8 +94,8 @@ void USART3_IRQHandler(void){
 
 	//uint8_t input_byte = 0;
 	if(LL_USART_IsActiveFlag_RXNE(USART3)){
-    	//input_byte = LL_USART_ReceiveData8(USART3);
-    }
+		//input_byte = LL_USART_ReceiveData8(USART3);
+	}
 }
 
 
