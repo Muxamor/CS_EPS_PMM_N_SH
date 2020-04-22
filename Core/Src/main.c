@@ -40,65 +40,11 @@ int main(void){
 	//IWDG_Init();
 
 
-//
-//	if( TCA9539_Reset_output_pin(I2C3, 0x74, TCA9539_IO_ALL) != SUCCESS){
-//		while(1);
-//	}
-//
-//	if( TCA9539_conf_IO_dir_output( I2C3, 0x74, TCA9539_IO_P10 ) != SUCCESS){
-//		while(1);
-//	}
-//
-//
-//	if( TCA9539_Set_output_pin( I2C3, 0x74, TCA9539_IO_P10 ) != SUCCESS){
-//		while(1);
-//	}
-//
-//	ENABLE_TMUX1209_I2C();
-//	SW_TMUX1209_I2C_main_PMM();
-//
-//	uint8_t read_data;
-//	uint16_t read_data_16;
-//
-//	I2C_Read_byte_St_ReSt(I2C4, 0x48, I2C_SIZE_REG_ADDR_U8 , uint32_t reg_addr, uint8_t *data)
-//
-//	while(1){
-//
-//	I2C_Read_word_u16_St_ReSt(I2C4, 0x27, I2C_SIZE_REG_ADDR_U8, 0x00, &read_data_16);
+//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
+//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
-//	PCA9534_conf_IO_dir_output(I2C4, 0x20, PCA9534_IO_ALL);
-//	while(1){
-//		PCA9534_read_IO_dir_reg (I2C4, 0x38, &read_data) ;
-//	}
-//
-//	}
-//	if(PCA9534_read_IO_dir_reg (I2C4, 0x20, &read_data) != SUCCESS){ //PCA9534_read_input_reg
-//		while(1);
-//	}
-//
-//	if(PCA9534_read_IO_dir_reg (I2C4, 0x20, &read_data) != SUCCESS ){ //PCA9534_read_input_reg
-//		while(1);
-//	}
-
-
-
-//	TCA9539_read_IO_dir_reg(I2C3, 0x74, &read_data);
-//	TCA9539_read_output_reg(I2C3, 0x74, &read_data);
-//
-//	TCA9539_read_IO_dir_pin(I2C3, 0x74, TCA9539_IO_ALL, &read_data);
-//
-//	TCA9539_read_output_pin(I2C3, 0x74, TCA9539_IO_ALL, &read_data);
-//
-//	printf("%d \r\n  ", read_data);
-
-
-
-
-	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
-	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
-
-	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
 #ifdef DEBUGprintf
 
