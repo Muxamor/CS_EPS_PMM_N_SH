@@ -478,6 +478,17 @@ void GPIO_Init(void){
 	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_3);  // Disable write to FRAM2
 	/****************************************************************************************/
 
+	/*-------------------------------------------------------------------------------------*/
+	/* Pins for detect Main/Backup mode for CPU  */
+	/** PD9 | PD10 | PD11  = 1 -> Main CPU mode
+		PD9 | PD10 | PD11  = 0 -> Backup CPU mode
+		*/
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_9|LL_GPIO_PIN_10|LL_GPIO_PIN_11;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  	/****************************************************************************************/
+
 		
 
 }
