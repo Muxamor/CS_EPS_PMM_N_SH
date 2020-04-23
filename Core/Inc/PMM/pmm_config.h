@@ -1,0 +1,38 @@
+
+
+#ifndef INC_PMM_PMM_CONFIG_H_
+#define INC_PMM_PMM_CONFIG_H_
+
+
+/*********************** Configuration for PMM module ***********************/
+
+#define PMM_I2Cx_TMP1075 			I2C3 //Temp. sensor in PMM CPU block
+#define PMM_I2CADDR_TMP1075 		0x48 //Temp. sensor in PMM CPU block
+
+#define PMM_I2Cx_GPIOExt1 			I2C4 //I2C GPIO extender TCA9539 in PMM CPU block
+#define PMM_I2CADDR_GPIOExt1 		0x74 //I2C GPIO extender TCA9539 in PMM CPU block
+
+#define PMM_I2Cx_DeployADC 			I2C4 //I2C ADC ADS1015 in PMM Deploy block
+#define PMM_I2CADDR_DeployADC 		0x48 //I2C ADC ADS1015 in PMM Deploy block
+
+#define PMM_I2Cx_DeployGPIOExt		I2C4 //I2C GPIO extender PCA9534 in PMM Deploy block
+#define PMM_I2CADDR_DeployGPIOExt 	0x38 //I2C GPIO extender PCA9534 in PMM Deploy block
+
+#define PMM_I2Cx_PowerADC			I2C4 //I2C ADC ADS1015 in PMM Power supply block
+#define PMM_I2CADDR_PowerADC 		0x49 //I2C ADC ADS1015 in PMM Power supply block
+
+#define PMM_I2Cx_VBAT1_M_INA231		I2C4 //I2C INA231 line VBAT1 Main Efuse
+#define PMM_I2CADDR_VBAT1_M_INA231 	0x40 //I2C INA231 line VBAT1 Main Efuse
+
+#define PMM_I2Cx_VBAT1_B_INA231		I2C4 //I2C INA231 line VBAT1 Backup Efuse
+#define PMM_I2CADDR_VBAT1_B_INA231 	0x44 //I2C INA231 line VBAT1 Backup Efuse
+
+#define PMM_I2Cx_VBAT2_M_INA231		I2C4 //I2C INA231 line VBAT2 Main Efuse
+#define PMM_I2CADDR_VBAT2_M_INA231 	0x41 //I2C INA231 line VBAT2 Main Efuse
+
+#define PMM_I2Cx_VBAT2_B_INA231		I2C4 //I2C INA231 line VBAT2 Backup Efuse
+#define PMM_I2CADDR_VBAT2_B_INA231 	0x45 //I2C INA231 line VBAT2 Backup Efuse
+
+
+
+#endif /* INC_PMM_PMM_CONFIG_H_ */
