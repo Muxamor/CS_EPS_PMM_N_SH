@@ -168,7 +168,7 @@ ErrorStatus PCA9534_conf_IO_dir_output(I2C_TypeDef *I2Cx, uint8_t PCA9534_addr, 
 	if(I2C_Read_byte_St_ReSt(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Configuration_Port, &read_register) != 0){
 		return ERROR_N;
 	}
-	if(I2C_Write_byte_St(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Configuration_Port, (~pin) & read_register) != 0){
+	if(I2C_Write_byte_St(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Configuration_Port, (uint8_t) ((~pin) & read_register)) != 0){
 		return ERROR_N;
 	}
 
@@ -209,7 +209,7 @@ ErrorStatus PCA9534_conf_IO_pol_normal(I2C_TypeDef *I2Cx, uint8_t PCA9534_addr, 
 	if(I2C_Read_byte_St_ReSt(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Polarity_Inversion_Port, &read_register) != 0){
 		return ERROR_N;
 	}
-	if(I2C_Write_byte_St(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Polarity_Inversion_Port, (~pin) & read_register) != 0){
+	if(I2C_Write_byte_St(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Polarity_Inversion_Port, (uint8_t)((~pin) & read_register)) != 0){
 		return ERROR_N;
 	}
 
@@ -273,7 +273,7 @@ ErrorStatus PCA9534_Reset_output_pin(I2C_TypeDef *I2Cx, uint8_t PCA9534_addr, ui
 	if(I2C_Read_byte_St_ReSt(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Output_Port, &read_register) != 0){
 		return ERROR_N;
 	}
-	if(I2C_Write_byte_St(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Output_Port, (~pin) & read_register) != 0){
+	if(I2C_Write_byte_St(I2Cx, PCA9534_addr, I2C_SIZE_REG_ADDR_U8, PCA9534_Output_Port, (uint8_t)((~pin) & read_register)) != 0){
 		return ERROR_N;
 	}
 
