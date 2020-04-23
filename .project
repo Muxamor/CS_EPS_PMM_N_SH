@@ -3,6 +3,7 @@
 	<name>CS_EPS_PMM_N_SH</name>
 	<comment></comment>
 	<projects>
+		<project>CS_EPS_PMM_N_SH</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

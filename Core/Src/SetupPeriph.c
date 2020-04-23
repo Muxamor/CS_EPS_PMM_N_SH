@@ -424,6 +424,32 @@ void GPIO_Init(void){
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
 
 	/*-------------------------------------------------------------------------------------*/
+	  GPIO_InitStruct.Pin = LL_GPIO_PIN_8|LL_GPIO_PIN_9;
+	  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+	  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+	  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	  GPIO_InitStruct.Alternate = LL_GPIO_AF_9;
+	  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	  /**/
+	  GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+	  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+	  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+	  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	  GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
+	  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	  /**/
+	  GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
+	  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+	  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+	  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	  GPIO_InitStruct.Alternate = LL_GPIO_AF_3;
+	  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	/*-------------------------------------------------------------------------------------*/
 	/* Configure GPIO pin to control I2C bus multiplexor TMUX1209  (U5 and U18) */
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_12|LL_GPIO_PIN_13;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
@@ -580,5 +606,69 @@ void IWDG_Init(void){
 }
 
 
+int CAN_Init(CAN_TypeDef *can_ref) {
+	int tmout;
+	if(can_ref == CAN1) {
+		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN1RST;
+		RCC->APB1ENR1 |= RCC_APB1ENR1_CAN1EN;
+		RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_CAN1RST;
+	}
+	else if(can_ref == CAN2) {
+		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN2RST;
+		RCC->APB1ENR1 |= RCC_APB1ENR1_CAN2EN;
+		RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_CAN2RST;
+	}
+	else{
+		return ERR_INVALID_PARAMS;
+	}
+	can_ref->MCR = CAN_MCR_INRQ;  //to init mode
+	for(tmout=10000; tmout>0; tmout--){
+		if(can_ref->MSR & CAN_MSR_INAK) {
+			break;
+		}
+	}
+	if(tmout == 0){
+		return ERR_CAN_INIT_MODE;
+	}
+	/*
+	config:
+	- Receive FIFO locked mode;
+	- Priority driven by the request order
+	*/
+	can_ref->MCR |= CAN_MCR_RFLM | CAN_MCR_TXFP | CAN_MCR_NART;
 
+	/***   bit time   ***/
+	can_ref->BTR &= ~(0x01230000);
+	//  CAN1->BTR |= (0x01 << 30); //loopback mode
+	can_ref->BTR |= (0x00 << 24) | (0x01 << 20) | (12 << 16) | (4 << 0); // SJW = 1; TS2 = 1+1; TS1 = 12+1; Prescaler = 40;
+	//  can_ref->BTR = 0x01220000 | (80000000/4/7/1000000 - 1);  //baudrate = 1 Mb/s
+	/* filters: 32-bit, Identifer-Mask */
+	if(can_ref == CAN1) {
+		can_ref->FMR |= 1;  //init mode
+		can_ref->FMR &= ~(0xFF<<8);
+		can_ref->FMR |= (14<<8);  // CAN1's bank=0..13, CAN2's bank=14..27
+		can_ref->FS1R = 0x0FFFFFFF;
+		can_ref->FFA1R = 0;  //CAN1,2 assign to FIFO0
+	}
+	/*interrupt*/
+	can_ref->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
+	if(can_ref == CAN1){
+		NVIC_EnableIRQ(CAN1_RX0_IRQn);
+	}
+	else{
+		NVIC_EnableIRQ(CAN2_RX0_IRQn);
+	}
+	/****/
+	can_ref->MCR &= ~CAN_MCR_INRQ;  //to normal mode
+	for(tmout = 10000000; tmout > 0; tmout--){
+		if((can_ref->MSR & CAN_MSR_INAK) == 0) {
+			break;
+		}
+	}
+	if(tmout == 0){
+		return ERR_CAN_NORMAL_MODE;
+	}
+
+	return 0;
+}
 
