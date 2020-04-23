@@ -1,9 +1,4 @@
-/*
- * TMP1075.h
- *
- *  Created on: Apr 7, 2020
- *      Author: ftor
- */
+
 
 #ifndef INC_TMP1075_H_
 #define INC_TMP1075_H_
@@ -19,7 +14,7 @@ typedef enum {
 
 
 #define TMP1075_SHUTDOWN_MODE            1
-#define TMP1075_CONTINUOS_CONVERSION     0
+#define TMP1075_CONTINUOS_CONV		     0
 
 #define TMP1075_CR_VERY_FAST	0  // 27.5 ms
 #define TMP1075_CR_FAST    		1  // 55 ms

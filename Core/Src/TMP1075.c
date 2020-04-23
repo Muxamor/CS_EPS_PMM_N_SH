@@ -136,7 +136,7 @@ ErrorStatus TMP1075_read_config(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_
 /** @brief  Sets the device in SHUTDOWN_MODE to conserve power or in CONTINUOS_CONVERSION.
 	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
-	@param mode - SHUTDOWN_MODE or CONTINUOS_CONVERSION mode of TMP1075 sensor.
+	@param mode - TMP1075_SHUTDOWN_MODE or TMP1075_CONTINUOS_CONV mode of TMP1075 sensor. 
 	@retval 0-OK, -1-Error
 */
 ErrorStatus TMP1075_set_mode(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mode){
