@@ -11,7 +11,7 @@
 #define CAN_ID_VAR_RAM					0x01
 #define CAN_RAM_ADDR					0x20000000  // end = 0x2003FFFF	size = 256 KB
 
-#define CAN_ID_IVAR_CMDS      			0x04
+#define CAN_ID_IVAR_REGCMD      		0x04
 #define CAN_ID_VAR_TELEMETRY 			0x05
 
 #define ERR_INVALID_PARAMS        	-1
@@ -73,7 +73,7 @@ struct {
     uint8_t CAN_Reset_to_default;           //+23           Сброс параметров в состояние "по умолчанию"
     uint8_t CAN_Perform_disclosure;         //+24           Выполнить раскрытие
 
-}CAN_IVar_Cmds;
+}CAN_IVar4_RegCmd;
 
 
 #pragma pack(1)
@@ -329,8 +329,8 @@ typedef struct {
 
     // size ТМИ0+ТМИ4+ТМИ7+ТМИ8 = 29 + 3 * 116 = 377
 
-} CAN_IVar_telemetry;
-CAN_IVar_telemetry CAN_telemetry;
+} CAN_IVar5_telemetry;
+CAN_IVar5_telemetry CAN_telemetry;
 
 #pragma pack(2)
 
@@ -354,7 +354,7 @@ int8_t CAN_RegisterAllVars();
 int8_t CAN_FilterAssign(uint8_t filter_num, CAN_typeIdxMask id, CAN_typeIdxMask mask);
 int8_t CAN_FilterDeassign(uint8_t filter_num);
 void CAN_RX_Handler(CAN_TypeDef *can_ref);
-void CAN_fill_telemetry_by_constants(CAN_IVar_telemetry *telemetry_constants);
+void CAN_fill_telemetry_by_constants(CAN_IVar5_telemetry *telemetry_constants);
 
 #endif
 

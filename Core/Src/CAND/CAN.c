@@ -5,7 +5,7 @@
 
 const CAN_typeRegistrationRec RegistrationRec[] = {
 /*{указатель на IVar, размер IVar, указатель на Callback, id_IVar, доступ}*/
-	{&CAN_IVar_Cmds, sizeof(CAN_IVar_Cmds), CAN_ProcCallbackCmds, CAN_ID_IVAR_CMDS, 0},
+	{&CAN_IVar4_RegCmd, sizeof(CAN_IVar4_RegCmd), CAN_ProcCallbackCmds, CAN_ID_IVAR_REGCMD, 0},
 	{&CAN_telemetry, sizeof(CAN_telemetry), CAN_ProcCallbackTelemetry, CAN_ID_VAR_TELEMETRY, 1},  //256k size, read-only, regarless offset
 	{&(*((uint32_t*) CAN_ROM_ADDR)), 4, CAN_ProcCallbackTelemetry, CAN_ID_VAR_ROM, 1},
 	{&(*((uint32_t*) CAN_RAM_ADDR)), 4, CAN_ProcCallbackTelemetry, CAN_ID_VAR_RAM, 1}
@@ -29,11 +29,11 @@ void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_
 
 void CAN_check_cmd_status(uint32_t *cmd_status){
 
-	for(uint8_t i = 0; i < 24; i++){
+	for(uint8_t i = 0; i < 32; i++){
 		if((*cmd_status >> i) & 0x01){
 			switch (i) {
 				case 21:
-					if(CAN_IVar_Cmds.CAN_Constant_mode == 1){
+					if(CAN_IVar4_RegCmd.CAN_Constant_mode == 1){
 						#ifdef DEBUGprintf
 							printf("fill telemetry struct by constants\n");
 							printf("size of tel-ry %d\n", sizeof(CAN_telemetry));
@@ -41,7 +41,7 @@ void CAN_check_cmd_status(uint32_t *cmd_status){
 						CAN_fill_telemetry_by_constants(&CAN_telemetry);
 						*cmd_status &= ~(1 << 21);
 					}
-					else if(CAN_IVar_Cmds.CAN_Constant_mode == 0){
+					else if(CAN_IVar4_RegCmd.CAN_Constant_mode == 0){
 						#ifdef DEBUGprintf
 							printf("fill telemetry struct by zero\n");
 						#endif
@@ -256,7 +256,7 @@ void CAN_RX_Handler(CAN_TypeDef *can_ref) {
 
 
 
-void CAN_fill_telemetry_by_constants(CAN_IVar_telemetry *telemetry_constants){
+void CAN_fill_telemetry_by_constants(CAN_IVar5_telemetry *telemetry_constants){
     // -------------------  ТМИ 0  ------------------ //
     telemetry_constants->CAN_Beacon_panel_median_temperature_pX		     =  0x74;
     telemetry_constants->CAN_Beacon_panel_median_temperature_nX		     =  0x75;
