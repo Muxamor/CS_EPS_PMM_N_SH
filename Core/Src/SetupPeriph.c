@@ -424,32 +424,6 @@ void GPIO_Init(void){
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
 
 	/*-------------------------------------------------------------------------------------*/
-	  GPIO_InitStruct.Pin = LL_GPIO_PIN_8|LL_GPIO_PIN_9;
-	  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-	  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
-	  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	  GPIO_InitStruct.Alternate = LL_GPIO_AF_9;
-	  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	  /**/
-	  GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
-	  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-	  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
-	  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	  GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
-	  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	  /**/
-	  GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
-	  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-	  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
-	  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	  GPIO_InitStruct.Alternate = LL_GPIO_AF_3;
-	  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-	/*-------------------------------------------------------------------------------------*/
 	/* Configure GPIO pin to control I2C bus multiplexor TMUX1209  (U5 and U18) */
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_12|LL_GPIO_PIN_13;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
@@ -607,6 +581,37 @@ void IWDG_Init(void){
 
 
 int CAN_Init(CAN_TypeDef *can_ref) {
+	/*-------------------------------------------------------------------------------------*/
+	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+	if(can_ref == CAN1){
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_8 | LL_GPIO_PIN_9;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		GPIO_InitStruct.Alternate = LL_GPIO_AF_9;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+	else if(can_ref == CAN2){
+		/**/
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		/**/
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		GPIO_InitStruct.Alternate = LL_GPIO_AF_3;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+    /*-------------------------------------------------------------------------------------*/
 	int tmout;
 	if(can_ref == CAN1) {
 		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN1RST;
