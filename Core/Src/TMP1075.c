@@ -1,4 +1,5 @@
 
+#include "stm32l4xx.h"
 #include "i2c_comm.h"
 #include "TMP1075.h"
 
@@ -19,6 +20,7 @@ ErrorStatus TMP1075_read_id(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *r
 /**	@brief	Reading raw data from temperature register.
 	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
+	@param read_data - pointer to get data in raw format.
 	@retval	0-OK, -1-Error
 */
 ErrorStatus TMP1075_read_raw_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
@@ -26,6 +28,46 @@ ErrorStatus TMP1075_read_raw_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr
 	int8_t err_status = I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x00, read_data);
 
 	return err_status;
+}
+
+/**	@brief	Reading data from temperature register and convert to float.
+	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param tmp1075_addr - 7-bit device address.
+	@param temp_value - pointer to get data in float format.
+	@retval	0-OK, -1-Error
+*/
+ErrorStatus TMP1075_read_float_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float *temp_value){
+
+	uint16_t ADC_CODE;
+
+	if( I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x00, &ADC_CODE) != SUCCESS){
+
+		return ERROR_N;
+	}
+
+	*temp_value = TMP1075_raw_to_float(ADC_CODE);
+
+	return SUCCESS;
+}
+
+/**	@brief	Reading data from temperature register and convert to int8_t (sign integer ).
+	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param tmp1075_addr - 7-bit device address.
+	@param temp_value - pointer to get data in int8_t format.
+	@retval	0-OK, -1-Error
+*/
+ErrorStatus TMP1075_read_int8_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, int8_t *temp_value){
+
+	uint16_t ADC_CODE;
+
+	if( I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x00, &ADC_CODE) != SUCCESS){
+
+		return ERROR_N;
+	}
+
+	*temp_value = TMP1075_raw_to_int(ADC_CODE);
+
+	return SUCCESS;
 }
 
 
@@ -94,7 +136,7 @@ ErrorStatus TMP1075_read_config(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_
 /** @brief  Sets the device in SHUTDOWN_MODE to conserve power or in CONTINUOS_CONVERSION.
 	@param *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param tmp1075_addr - 7-bit device address.
-	@param mode - SHUTDOWN_MODE or CONTINUOS_CONVERSION mode of TMP1075 sensor.
+	@param mode - TMP1075_SHUTDOWN_MODE or TMP1075_CONTINUOS_CONV mode of TMP1075 sensor. 
 	@retval 0-OK, -1-Error
 */
 ErrorStatus TMP1075_set_mode(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mode){

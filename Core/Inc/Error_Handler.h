@@ -20,13 +20,7 @@ typedef enum {
   SUCCESS = 0,
   ERROR = !SUCCESS,
 } ErrorStatus; */
-#define ERR_INVALID_PARAMS        	-1
-#define ERR_CAN_INIT_MODE         	-2
-#define ERR_CAN_NORMAL_MODE       	-3
-#define ERR_CAN_NO_FREE_FILTER    	-4
-#define ERR_CAN_NO_TXMAILBOXES    	-5
-#define ERR_CAN_ACCESS_RANGE      	-7
-#define ERR_CAN_DCL_INVALID       	-8
+
 
 #ifdef __cplusplus
  extern "C" {

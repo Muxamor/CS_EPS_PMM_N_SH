@@ -46,7 +46,7 @@ int main(void){
 	I2C4_Init();
 	LPUART1_Init();
 	USART3_Init();
-	UART5_Init();
+//	UART5_Init();
 	GPIO_Init();
 	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
 
@@ -60,7 +60,7 @@ int main(void){
 	status += CAN_Init(CAN2);
 	CAN_RegisterAllVars();
 
-	//SetupInterrupt();
+	SetupInterrupt();
 	//IWDG_Init();
 
 

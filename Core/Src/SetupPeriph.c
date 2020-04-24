@@ -16,7 +16,7 @@
 #include "stm32l4xx_ll_usart.h"
 #include  "Error_Handler.h"
 #include "SetupPeriph.h"
-
+#include "CAN.h"
 
 #include  <stdio.h>
 
@@ -400,6 +400,15 @@ void SetupInterrupt(void){
 	NVIC_EnableIRQ(UART5_IRQn);
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
+
+	/* CAN */
+	NVIC_SetPriority(CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
+	NVIC_EnableIRQ(CAN1_RX0_IRQn);
+	CAN1->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
+
+	NVIC_SetPriority(CAN2_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
+	NVIC_EnableIRQ(CAN2_RX0_IRQn);
+	CAN2->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
 		
 }
 
@@ -478,7 +487,16 @@ void GPIO_Init(void){
 	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_3);  // Disable write to FRAM2
 	/****************************************************************************************/
 
-		
+	/*-------------------------------------------------------------------------------------*/
+	/* Pins for detect Main/Backup mode for CPU  */
+	/** PD9 | PD10 | PD11  = 1 -> Main CPU mode
+		PD9 | PD10 | PD11  = 0 -> Backup CPU mode
+		*/
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_9|LL_GPIO_PIN_10|LL_GPIO_PIN_11;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  	/****************************************************************************************/
 
 }
 
@@ -624,6 +642,9 @@ int CAN_Init(CAN_TypeDef *can_ref) {
 		RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_CAN2RST;
 	}
 	else{
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_INVALID_PARAMS;
 	}
 	can_ref->MCR = CAN_MCR_INRQ;  //to init mode
@@ -633,6 +654,9 @@ int CAN_Init(CAN_TypeDef *can_ref) {
 		}
 	}
 	if(tmout == 0){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_CAN_INIT_MODE;
 	}
 	/*
@@ -656,13 +680,7 @@ int CAN_Init(CAN_TypeDef *can_ref) {
 		can_ref->FFA1R = 0;  //CAN1,2 assign to FIFO0
 	}
 	/*interrupt*/
-	can_ref->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
-	if(can_ref == CAN1){
-		NVIC_EnableIRQ(CAN1_RX0_IRQn);
-	}
-	else{
-		NVIC_EnableIRQ(CAN2_RX0_IRQn);
-	}
+
 	/****/
 	can_ref->MCR &= ~CAN_MCR_INRQ;  //to normal mode
 	for(tmout = 10000000; tmout > 0; tmout--){
@@ -671,6 +689,9 @@ int CAN_Init(CAN_TypeDef *can_ref) {
 		}
 	}
 	if(tmout == 0){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_CAN_NORMAL_MODE;
 	}
 

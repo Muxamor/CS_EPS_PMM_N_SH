@@ -19,7 +19,6 @@ void SetupInterrupt(void);
 void GPIO_Init(void);
 void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider);
 void IWDG_Init(void);
-int CAN_Init(CAN_TypeDef *can_ref);
 
 /*For control multiplexor TMUX1209  need use: */
 #define ENABLE_TMUX1209_I2C();        LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_0);

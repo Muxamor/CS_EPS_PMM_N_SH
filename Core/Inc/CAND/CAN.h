@@ -14,6 +14,14 @@
 #define CAN_ID_IVAR_CMDS      			0x04
 #define CAN_ID_VAR_TELEMETRY 			0x05
 
+#define ERR_INVALID_PARAMS        	-1
+#define ERR_CAN_INIT_MODE         	-2
+#define ERR_CAN_NORMAL_MODE       	-3
+#define ERR_CAN_NO_FREE_FILTER    	-4
+#define ERR_CAN_NO_TXMAILBOXES    	-5
+#define ERR_CAN_ACCESS_RANGE      	-7
+#define ERR_CAN_DCL_INVALID       	-8
+
 uint32_t CAN_cmd_mask_status;
 
 

@@ -40,6 +40,8 @@ Core/Src/TMP1075.c \
 Core/Src/FRAM.c \
 Core/Src/PCA9534.c \
 Core/Src/TCA9539.c \
+Core/Src/PMM/pmm_init.c \
+Core/Src/PMM/pmm_init_IC.c \
 Core/Src/PMM/pmm_savedata.c \
 Core/Src/stm32l4xx_it.c \
 Core/Src/syscalls.c \

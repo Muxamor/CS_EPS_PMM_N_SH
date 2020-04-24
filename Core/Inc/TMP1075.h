@@ -1,13 +1,9 @@
-/*
- * TMP1075.h
- *
- *  Created on: Apr 7, 2020
- *      Author: ftor
- */
+
 
 #ifndef INC_TMP1075_H_
 #define INC_TMP1075_H_
 
+#include "stm32l4xx.h"
 
 /*
 typedef enum {
@@ -18,7 +14,7 @@ typedef enum {
 
 
 #define TMP1075_SHUTDOWN_MODE            1
-#define TMP1075_CONTINUOS_CONVERSION     0
+#define TMP1075_CONTINUOS_CONV		     0
 
 #define TMP1075_CR_VERY_FAST	0  // 27.5 ms
 #define TMP1075_CR_FAST    		1  // 55 ms
@@ -36,6 +32,8 @@ typedef enum {
 
 ErrorStatus TMP1075_read_id(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data);
 ErrorStatus TMP1075_read_raw_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data);
+ErrorStatus TMP1075_read_float_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float *temp_value);
+ErrorStatus TMP1075_read_int8_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, int8_t *temp_value);
 float  TMP1075_raw_to_float(uint16_t ADC_CODE);
 int8_t TMP1075_raw_to_int(uint16_t ADC_CODE);
 uint16_t TMP1075_float_to_binary(float val);

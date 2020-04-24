@@ -29,40 +29,35 @@ void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_
 
 void CAN_check_cmd_status(uint32_t *cmd_status){
 
-	if(*cmd_status & (1 << 0)){
-		return;
-	}
-	else if(*cmd_status & (1 << 1)){
-		return;
-	}
-	else if(*cmd_status & (1 << 2)){
-		return;
-	}
-	/*
-	 * else if(*cmd_status & (1 << n)){
-	 * }
-	 */
-	else if(*cmd_status & (1 << 21)){
-		if(CAN_IVar_Cmds.CAN_Constant_mode == 1){
-			#ifdef DEBUGprintf
-				printf("fill telemetry struct by constants\n");
-				printf("size of tel-ry %d\n", sizeof(CAN_telemetry));
-			#endif
-			CAN_fill_telemetry_by_constants(&CAN_telemetry);
-			*cmd_status &= ~(1 << 21);
-		}
-		else if(CAN_IVar_Cmds.CAN_Constant_mode == 0){
-			#ifdef DEBUGprintf
-				printf("fill telemetry struct by zero\n");
-			#endif
-			for(uint16_t i = 0; i < sizeof(CAN_telemetry); i++){
-				*((uint8_t *)(&CAN_telemetry) + i) = 0;
+	for(uint8_t i = 0; i < 24; i++){
+		if((*cmd_status >> i) & 0x01){
+			switch (i) {
+				case 21:
+					if(CAN_IVar_Cmds.CAN_Constant_mode == 1){
+						#ifdef DEBUGprintf
+							printf("fill telemetry struct by constants\n");
+							printf("size of tel-ry %d\n", sizeof(CAN_telemetry));
+						#endif
+						CAN_fill_telemetry_by_constants(&CAN_telemetry);
+						*cmd_status &= ~(1 << 21);
+					}
+					else if(CAN_IVar_Cmds.CAN_Constant_mode == 0){
+						#ifdef DEBUGprintf
+							printf("fill telemetry struct by zero\n");
+						#endif
+						for(uint16_t i = 0; i < sizeof(CAN_telemetry); i++){
+							*((uint8_t *)(&CAN_telemetry) + i) = 0;
+						}
+						*cmd_status &= ~(1 << 21);
+					}
+					break;
+				default:
+					break;
 			}
-			*cmd_status &= ~(1 << 21);
+			if((*cmd_status >> i) == 0){
+				break;
+			}
 		}
-	}
-	else if(*cmd_status & (1 << 22)){
-		return;
 	}
 }
 
@@ -73,6 +68,9 @@ int8_t CAN_RegisterVar(int n, uint8_t dev_id) {
 	id.uf.VarId = RegistrationRec[n].ivar_id;
 	access_flgs = RegistrationRec[n].access_flgs;
 	if(n >= 14){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_CAN_NO_FREE_FILTER;
 	}
 	id.uf.Offset = 0;
@@ -97,6 +95,9 @@ int8_t CAN_RegisterVar(int n, uint8_t dev_id) {
 
 int8_t CAN_DeregisterVar(int filter_num) {
 	if((uint32_t)filter_num >= 14){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_INVALID_PARAMS;
 	}
 	CAN_FilterDeassign(filter_num);
@@ -110,6 +111,9 @@ int8_t CAN_Tx(CAN_TypeDef *can_ref, CAN_typeIdxMask id, void *p_data, uint16_t l
 	uint8_t tme;
 	uint64_t buff = 0;
 	if(((can_ref != CAN1)&&(can_ref != CAN2))||(leng > 8)){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_INVALID_PARAMS;
 	}
 	/*поиск свободного txmailbox-a*/
@@ -121,6 +125,9 @@ int8_t CAN_Tx(CAN_TypeDef *can_ref, CAN_typeIdxMask id, void *p_data, uint16_t l
 		tme = tme >> 1;
 	}
 	if(n >= 3){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_CAN_NO_TXMAILBOXES;
 	}
 	can_ref->sTxMailBox[n].TDTR = leng;
@@ -154,6 +161,9 @@ int8_t CAN_RegisterAllVars(){
 
 int8_t CAN_FilterAssign(uint8_t filter_num, CAN_typeIdxMask id, CAN_typeIdxMask mask) {
 	if(filter_num >= 14){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_INVALID_PARAMS;
 	}
 	CAN1->FMR |= 1;  //init mode
@@ -169,6 +179,9 @@ int8_t CAN_FilterAssign(uint8_t filter_num, CAN_typeIdxMask id, CAN_typeIdxMask 
 
 int8_t CAN_FilterDeassign(uint8_t filter_num) {
 	if(filter_num > 27){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERR_INVALID_PARAMS;
 	}
 	CAN1->FMR |= 1;  //init mode
@@ -196,6 +209,9 @@ void CAN_RX_Handler(CAN_TypeDef *can_ref) {
 		return;
 	}
 	if(pkt_leng > 8){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		state = ERR_CAN_DCL_INVALID;
 	}
 	else {
