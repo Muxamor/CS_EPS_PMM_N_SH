@@ -76,7 +76,7 @@ struct {
 }CAN_IVar4_RegCmd;
 
 
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct {
     //------------------------------------------------  Offset -------- Constant ---------------------- Description ------------------------//
     // -------------------  ТМИ 0  ------------------ //
@@ -332,7 +332,7 @@ typedef struct {
 } CAN_IVar5_telemetry;
 CAN_IVar5_telemetry CAN_telemetry;
 
-#pragma pack(2)
+#pragma pack(push, 2)
 
 typedef struct {
   void *VarPtr;
@@ -341,7 +341,7 @@ typedef struct {
   uint8_t ivar_id;
   uint8_t access_flgs;  //[0]=1 - read only; [1]=1 - regardless offset; [2]=1 - without filter
 }CAN_typeRegistrationRec;
-
+#pragma pack(pop)
 
 void CAN_ProcCallbackCmds(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state);
 void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state);

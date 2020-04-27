@@ -26,30 +26,34 @@ void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_
 	return;
 }
 
-
+void CAN_var5_constant_mode(uint32_t *cmd_status){
+	if(CAN_IVar4_RegCmd.CAN_Constant_mode == 1){
+		#ifdef DEBUGprintf
+			printf("fill telemetry struct by constants\n");
+			printf("size of tel-ry %d\n", sizeof(CAN_telemetry));
+		#endif
+		CAN_fill_telemetry_by_constants(&CAN_telemetry);
+		*cmd_status &= ~(1 << 21);
+	}
+	else if(CAN_IVar4_RegCmd.CAN_Constant_mode == 0){
+		#ifdef DEBUGprintf
+			printf("fill telemetry struct by zero\n");
+		#endif
+		for(uint16_t i = 0; i < sizeof(CAN_telemetry); i++){
+			*((uint8_t *)(&CAN_telemetry) + i) = 0;
+		}
+		*cmd_status &= ~(1 << 21);
+	}
+}
 void CAN_check_cmd_status(uint32_t *cmd_status){
+	NVIC_DisableIRQ(CAN1_RX0_IRQn);
+	NVIC_DisableIRQ(CAN2_RX0_IRQn);
 
 	for(uint8_t i = 0; i < 32; i++){
 		if((*cmd_status >> i) & 0x01){
 			switch (i) {
 				case 21:
-					if(CAN_IVar4_RegCmd.CAN_Constant_mode == 1){
-						#ifdef DEBUGprintf
-							printf("fill telemetry struct by constants\n");
-							printf("size of tel-ry %d\n", sizeof(CAN_telemetry));
-						#endif
-						CAN_fill_telemetry_by_constants(&CAN_telemetry);
-						*cmd_status &= ~(1 << 21);
-					}
-					else if(CAN_IVar4_RegCmd.CAN_Constant_mode == 0){
-						#ifdef DEBUGprintf
-							printf("fill telemetry struct by zero\n");
-						#endif
-						for(uint16_t i = 0; i < sizeof(CAN_telemetry); i++){
-							*((uint8_t *)(&CAN_telemetry) + i) = 0;
-						}
-						*cmd_status &= ~(1 << 21);
-					}
+					CAN_var5_constant_mode(cmd_status);
 					break;
 				default:
 					break;
@@ -59,6 +63,8 @@ void CAN_check_cmd_status(uint32_t *cmd_status){
 			}
 		}
 	}
+	NVIC_EnableIRQ(CAN1_RX0_IRQn);
+	NVIC_EnableIRQ(CAN2_RX0_IRQn);
 }
 
 int8_t CAN_RegisterVar(int n, uint8_t dev_id) {

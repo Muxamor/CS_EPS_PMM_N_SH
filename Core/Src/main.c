@@ -76,9 +76,13 @@ int main(void){
 		//	Error_Handler();
 
 #endif
+
+
 uint32_t last_cmd_mask_status = 0;
 CAN_cmd_mask_status = 0;
 	while (1){
+
+
 		#ifdef DEBUGprintf
 			if(last_cmd_mask_status != CAN_cmd_mask_status){
 				last_cmd_mask_status = CAN_cmd_mask_status;
