@@ -331,7 +331,7 @@ typedef struct {
 
 } CAN_IVar5_telemetry;
 CAN_IVar5_telemetry CAN_telemetry;
-
+#pragma pack(pop)
 #pragma pack(push, 2)
 
 typedef struct {
