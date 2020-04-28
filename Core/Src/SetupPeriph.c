@@ -264,7 +264,7 @@ void LPUART1_Init(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP; //Set PULL UP but default set PULL NO
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
@@ -302,11 +302,19 @@ void USART3_Init(void){
 	/**USART3 GPIO Configuration
 		PB10   ------> USART3_TX
 		PB11   ------> USART3_RX */
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_10|LL_GPIO_PIN_11;
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_10;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
+	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_11;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP; //Set PULL UP but default set PULL NO
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
 	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -334,7 +342,7 @@ void UART5_Init(void){
 
 	/* Peripheral clock enable */
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_UART5);
-	
+    	
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
 
@@ -353,7 +361,7 @@ void UART5_Init(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP; //Set PULL UP but default set PULL NO
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
 	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
@@ -367,6 +375,7 @@ void UART5_Init(void){
 	LL_USART_Init(UART5, &UART_InitStruct);
 	LL_USART_ConfigAsyncMode(UART5);
 	LL_USART_Enable(UART5);
+
 }
 
 /** @rief  This function setup interrupts for all ports and inside event .
@@ -401,11 +410,11 @@ void SetupInterrupt(void){
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
 
-	/* CAN */
+	/* CAN1 interrupt Init */
 	NVIC_SetPriority(CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
 	CAN1->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
 	NVIC_EnableIRQ(CAN1_RX0_IRQn);
-
+	/* CAN2 interrupt Init */
 	NVIC_SetPriority(CAN2_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
 	CAN2->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
 	NVIC_EnableIRQ(CAN2_RX0_IRQn);
@@ -600,9 +609,14 @@ void IWDG_Init(void){
 }
 
 
-int CAN_Init(CAN_TypeDef *can_ref) {
+int8_t CAN_Init(CAN_TypeDef *can_ref) {
 	/*-------------------------------------------------------------------------------------*/
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+	LL_PWR_EnableVddIO2();
+
+	/* GPIO Ports Clock Enable */
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+
 	if(can_ref == CAN1){
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_8 | LL_GPIO_PIN_9;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
@@ -632,33 +646,33 @@ int CAN_Init(CAN_TypeDef *can_ref) {
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	}
     /*-------------------------------------------------------------------------------------*/
-	int tmout;
+	int32_t tmout;
+
 	if(can_ref == CAN1) {
 		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN1RST;
-		RCC->APB1ENR1 |= RCC_APB1ENR1_CAN1EN;
+		RCC->APB1ENR1 |= RCC_APB1ENR1_CAN1EN;  //Enable clock  CAN1
 		RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_CAN1RST;
-	}
-	else if(can_ref == CAN2) {
+
+	}else if(can_ref == CAN2) {
 		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN2RST;
-		RCC->APB1ENR1 |= RCC_APB1ENR1_CAN2EN;
+		RCC->APB1ENR1 |= RCC_APB1ENR1_CAN2EN; //Enable clock  CAN2
 		RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_CAN2RST;
-	}
-	else{
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
+
+	}else{
+		Error_Handler();
 		return ERR_INVALID_PARAMS;
 	}
+
 	can_ref->MCR = CAN_MCR_INRQ;  //to init mode
+
 	for(tmout=10000; tmout>0; tmout--){
 		if(can_ref->MSR & CAN_MSR_INAK) {
 			break;
 		}
 	}
+
 	if(tmout == 0){
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
+		Error_Handler();
 		return ERR_CAN_INIT_MODE;
 	}
 	/*
@@ -681,19 +695,18 @@ int CAN_Init(CAN_TypeDef *can_ref) {
 		can_ref->FS1R = 0x0FFFFFFF;
 		can_ref->FFA1R = 0;  //CAN1,2 assign to FIFO0
 	}
-	/*interrupt*/
 
 	/****/
 	can_ref->MCR &= ~CAN_MCR_INRQ;  //to normal mode
+
 	for(tmout = 10000000; tmout > 0; tmout--){
 		if((can_ref->MSR & CAN_MSR_INAK) == 0) {
 			break;
 		}
 	}
+
 	if(tmout == 0){
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
+		Error_Handler();
 		return ERR_CAN_NORMAL_MODE;
 	}
 
