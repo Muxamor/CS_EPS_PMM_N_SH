@@ -3,7 +3,7 @@
 #ifndef INC_PMM_PMM_INIT_H_
 #define INC_PMM_PMM_INIT_H_
 
-
+#include "pmm_struct.h"
 
 void Init_PMM(_PMM *pmm);
 
