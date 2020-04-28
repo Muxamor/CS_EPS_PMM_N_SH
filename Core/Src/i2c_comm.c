@@ -50,6 +50,13 @@ ErrorStatus I2C_Read_byte_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t 
 
 	SlaveAddr1 = (uint8_t)(SlaveAddr << 1);
 
+	//Clear flags if the previous attempt to exchange was not successful.
+	LL_I2C_ClearFlag_TXE(I2Cx);
+	LL_I2C_ClearFlag_NACK(I2Cx);
+	LL_I2C_ClearFlag_BERR(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
 		return ERROR_N;
 	}
@@ -117,6 +124,12 @@ ErrorStatus I2C_Read_word_u16_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint
 	int8_t  j = 0;
 
 	SlaveAddr = (uint8_t)(SlaveAddr << 1);
+
+	//Clear flags if the previous attempt to exchange was not successful.
+	LL_I2C_ClearFlag_TXE(I2Cx);
+	LL_I2C_ClearFlag_NACK(I2Cx);
+	LL_I2C_ClearFlag_BERR(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
 
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
 		return ERROR_N;
@@ -190,6 +203,12 @@ ErrorStatus I2C_Write_byte_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size
 
 	SlaveAddr = (uint8_t)(SlaveAddr << 1);
 
+	//Clear flags if the previous attempt to exchange was not successful.
+	LL_I2C_ClearFlag_TXE(I2Cx);
+	LL_I2C_ClearFlag_NACK(I2Cx);
+	LL_I2C_ClearFlag_BERR(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
 		return ERROR_N;
 	}
@@ -250,6 +269,12 @@ ErrorStatus I2C_Write_word_u16_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t 
 	int8_t  j = 0;
 
 	SlaveAddr = (uint8_t)(SlaveAddr << 1);
+
+	//Clear flags if the previous attempt to exchange was not successful.
+	LL_I2C_ClearFlag_TXE(I2Cx);
+	LL_I2C_ClearFlag_NACK(I2Cx);
+	LL_I2C_ClearFlag_BERR(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
 
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != 0){
 		return ERROR_N;
@@ -317,7 +342,14 @@ ErrorStatus I2C_Write_array_u8_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t 
 	int8_t j = 0;
 
 	SlaveAddr = (uint8_t)(SlaveAddr << 1);
-	 if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
+
+	//Clear flags if the previous attempt to exchange was not successful.
+	LL_I2C_ClearFlag_TXE(I2Cx);
+	LL_I2C_ClearFlag_NACK(I2Cx);
+	LL_I2C_ClearFlag_BERR(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
 		return ERROR_N;
 	}
 
