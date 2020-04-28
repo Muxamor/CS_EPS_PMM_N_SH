@@ -8,14 +8,23 @@
 #include "PCA9534.h"
 #include "TMP1075.h"
 #include "FRAM.h"
-#include "CAN.h"
+#include "CAND/CAN.h"
+#include "CAND/CAN_cmd.h"
+
+#include "pmm_config.h"
+#include "pmm_init.h"
+
 #include  <stdio.h>
 
 /****************************TODO*************************
-1.  Need to think about delay 30 minuts. 
+1. Need to think about delay 30 minuts. 
+2. Need change constatn mode EN/Dis after teste with Doroshkin in CAN_cmd.c
+3. Need see use analog filter in I2C
 
 
 **********************************************************/
+
+extern uint32_t CAN_cmd_mask_status;
 
 //LL_mDelay(1);
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release
@@ -36,7 +45,7 @@
 
 int main(void){
 
-	//while(1);
+	CAN_cmd_mask_status = 0;
 
 	/** Initialization Periph STM32L496*/
 	LL_Init();
@@ -46,10 +55,12 @@ int main(void){
 	I2C4_Init();
 	LPUART1_Init();
 	USART3_Init();
-//	UART5_Init();
+	UART5_Init();
 	GPIO_Init();
 	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
 
+	SetupInterrupt();
+	//IWDG_Init();
 
 	int8_t status = 0;
 	status += TCA9539_conf_IO_dir_input(I2C3, TCA9539_I2C_ADDR, TCA9539_IO_ALL);
@@ -59,9 +70,6 @@ int main(void){
 	status += CAN_Init(CAN1);
 	status += CAN_Init(CAN2);
 	CAN_RegisterAllVars();
-
-	SetupInterrupt();
-	//IWDG_Init();
 
 
 //	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
@@ -77,9 +85,14 @@ int main(void){
 
 #endif
 
+//while(1){
 
+//}
+
+#ifdef DEBUGprintf
 uint32_t last_cmd_mask_status = 0;
-CAN_cmd_mask_status = 0;
+#endif
+
 	while (1){
 
 
@@ -92,7 +105,7 @@ CAN_cmd_mask_status = 0;
 			}
 		#endif
 
-		CAN_check_cmd_status(&CAN_cmd_mask_status);
+		CAN_Var4_cmd_parser(&CAN_cmd_mask_status);
 
 		LL_mDelay(1000);
 

@@ -43,6 +43,8 @@ Core/Src/TCA9539.c \
 Core/Src/PMM/pmm_init.c \
 Core/Src/PMM/pmm_init_IC.c \
 Core/Src/PMM/pmm_savedata.c \
+Core/Src/CAND/CAN.c \
+Core/Src/CAND/CAN_cmd.c \
 Core/Src/stm32l4xx_it.c \
 Core/Src/syscalls.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_dma.c \

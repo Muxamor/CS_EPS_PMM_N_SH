@@ -22,6 +22,7 @@
 #define ERR_CAN_ACCESS_RANGE      	-7
 #define ERR_CAN_DCL_INVALID       	-8
 
+
 uint32_t CAN_cmd_mask_status;
 
 
@@ -43,7 +44,7 @@ typedef union {
 }CAN_typeIdxMask;
 
 
-struct {
+struct CAN_IVar4 {
     // Массив командных регистров ключей разряда АБ
     uint8_t CAN_Charge_gate_1_AB1;  		//+0            Командный регистр ключа заряда ветви 1 АБ1
     uint8_t CAN_Discharge_gate_1_AB1;       //+1            Командный регистр ключа разряда ветви 1 АБ1
@@ -77,7 +78,8 @@ struct {
 
 
 #pragma pack(push, 1)
-typedef struct {
+
+struct CAN_IVar5{
     //------------------------------------------------  Offset -------- Constant ---------------------- Description ------------------------//
     // -------------------  ТМИ 0  ------------------ //
 
@@ -330,8 +332,10 @@ typedef struct {
     // size ТМИ0+ТМИ4+ТМИ7+ТМИ8 = 29 + 3 * 116 = 377
 
 } CAN_IVar5_telemetry;
-CAN_IVar5_telemetry CAN_telemetry;
+
 #pragma pack(pop)
+
+
 #pragma pack(push, 2)
 
 typedef struct {
@@ -341,12 +345,13 @@ typedef struct {
   uint8_t ivar_id;
   uint8_t access_flgs;  //[0]=1 - read only; [1]=1 - regardless offset; [2]=1 - without filter
 }CAN_typeRegistrationRec;
+
 #pragma pack(pop)
 
 void CAN_ProcCallbackCmds(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state);
 void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state);
 
-void CAN_check_cmd_status(uint32_t *cmd_status);
+
 int8_t CAN_RegisterVar(int n, uint8_t dev_id);
 int8_t CAN_DeregisterVar(int filter_num);
 int8_t CAN_Tx(CAN_TypeDef *can_ref, CAN_typeIdxMask id, void *p_data, uint16_t leng);
@@ -354,7 +359,7 @@ int8_t CAN_RegisterAllVars();
 int8_t CAN_FilterAssign(uint8_t filter_num, CAN_typeIdxMask id, CAN_typeIdxMask mask);
 int8_t CAN_FilterDeassign(uint8_t filter_num);
 void CAN_RX_Handler(CAN_TypeDef *can_ref);
-void CAN_fill_telemetry_by_constants(CAN_IVar5_telemetry *telemetry_constants);
+
 
 #endif
 
