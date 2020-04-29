@@ -1,8 +1,7 @@
 #ifndef INC_FRAM_H_
 #define INC_FRAM_H_
 
-//#define I2C_FRAM1_addr 			0b01010000
-//#define I2C_FRAM2_addr			0b01010001
+
 
 #define FRAM_Addr_segment_1		0x0000
 #define FRAM_Addr_segment_2		0x5555

@@ -12,6 +12,11 @@
 #define PMM_I2Cx_GPIOExt1 			I2C3 //I2C GPIO extender TCA9539 in PMM CPU block
 #define PMM_I2CADDR_GPIOExt1 		0x74 //I2C GPIO extender TCA9539 in PMM CPU block
 
+#define PMM_I2Cx_FRAM1 				I2C3 //FRAM in PMM CPU block
+#define PMM_I2CADDR_FRAM1 			0x50 //FRAM in PMM CPU block
+
+#define PMM_I2Cx_FRAM2 				I2C3 //FRAM in PMM CPU block
+#define PMM_I2CADDR_FRAM2 			0x51 //FRAM in PMM CPU block
 
 #define PMM_I2Cx_DeployADC 			I2C4 //I2C ADC ADS1015 in PMM Deploy block
 #define PMM_I2CADDR_DeployADC 		0x48 //I2C ADC ADS1015 in PMM Deploy block
