@@ -6,7 +6,11 @@
 const CAN_typeRegistrationRec RegistrationRec[] = {
 /*{указатель на IVar, размер IVar, указатель на Callback, id_IVar, доступ}*/
 	{&CAN_IVar4_RegCmd, sizeof(CAN_IVar4_RegCmd), CAN_ProcCallbackCmds, CAN_ID_IVAR_REGCMD, 0},
+<<<<<<< HEAD
 	{&CAN_telemetry, sizeof(CAN_telemetry), CAN_ProcCallbackTelemetry, CAN_ID_VAR_TELEMETRY, 1},  //256k size, read-only, regarless offset
+=======
+	{&CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry), CAN_ProcCallbackTelemetry, CAN_ID_VAR_TELEMETRY, 1},  //256k size, read-only, regarless offset
+>>>>>>> upstream/master
 	{&(*((uint32_t*) CAN_ROM_ADDR)), 4, CAN_ProcCallbackTelemetry, CAN_ID_VAR_ROM, 1},
 	{&(*((uint32_t*) CAN_RAM_ADDR)), 4, CAN_ProcCallbackTelemetry, CAN_ID_VAR_RAM, 1}
 };
@@ -26,6 +30,7 @@ void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_
 	return;
 }
 
+<<<<<<< HEAD
 void CAN_var5_constant_mode(uint32_t *cmd_status){
 	if(CAN_IVar4_RegCmd.CAN_Constant_mode == 1){
 		#ifdef DEBUGprintf
@@ -66,6 +71,8 @@ void CAN_check_cmd_status(uint32_t *cmd_status){
 	NVIC_EnableIRQ(CAN1_RX0_IRQn);
 	NVIC_EnableIRQ(CAN2_RX0_IRQn);
 }
+=======
+>>>>>>> upstream/master
 
 int8_t CAN_RegisterVar(int n, uint8_t dev_id) {
 	CAN_typeIdxMask id, mask;
@@ -74,9 +81,13 @@ int8_t CAN_RegisterVar(int n, uint8_t dev_id) {
 	id.uf.VarId = RegistrationRec[n].ivar_id;
 	access_flgs = RegistrationRec[n].access_flgs;
 	if(n >= 14){
+<<<<<<< HEAD
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
+=======
+		Error_Handler();
+>>>>>>> upstream/master
 		return ERR_CAN_NO_FREE_FILTER;
 	}
 	id.uf.Offset = 0;
@@ -117,9 +128,13 @@ int8_t CAN_Tx(CAN_TypeDef *can_ref, CAN_typeIdxMask id, void *p_data, uint16_t l
 	uint8_t tme;
 	uint64_t buff = 0;
 	if(((can_ref != CAN1)&&(can_ref != CAN2))||(leng > 8)){
+<<<<<<< HEAD
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
+=======
+		Error_Handler();
+>>>>>>> upstream/master
 		return ERR_INVALID_PARAMS;
 	}
 	/*поиск свободного txmailbox-a*/
@@ -131,9 +146,13 @@ int8_t CAN_Tx(CAN_TypeDef *can_ref, CAN_typeIdxMask id, void *p_data, uint16_t l
 		tme = tme >> 1;
 	}
 	if(n >= 3){
+<<<<<<< HEAD
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
+=======
+		Error_Handler();
+>>>>>>> upstream/master
 		return ERR_CAN_NO_TXMAILBOXES;
 	}
 	can_ref->sTxMailBox[n].TDTR = leng;
@@ -166,12 +185,22 @@ int8_t CAN_RegisterAllVars(){
 
 
 int8_t CAN_FilterAssign(uint8_t filter_num, CAN_typeIdxMask id, CAN_typeIdxMask mask) {
+<<<<<<< HEAD
 	if(filter_num >= 14){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
 		return ERR_INVALID_PARAMS;
 	}
+=======
+
+	if(filter_num >= 14){
+
+		Error_Handler();
+		return ERR_INVALID_PARAMS;
+	}
+
+>>>>>>> upstream/master
 	CAN1->FMR |= 1;  //init mode
 	id.std.IDE = mask.std.IDE = 1;  //to extendet mode
 	CAN1->sFilterRegister[filter_num].FR1 = CAN1->sFilterRegister[filter_num+14].FR1  =  *((uint32_t*)&id);
@@ -184,10 +213,16 @@ int8_t CAN_FilterAssign(uint8_t filter_num, CAN_typeIdxMask id, CAN_typeIdxMask 
 
 
 int8_t CAN_FilterDeassign(uint8_t filter_num) {
+<<<<<<< HEAD
 	if(filter_num > 27){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
+=======
+
+	if(filter_num > 27){
+		Error_Handler();
+>>>>>>> upstream/master
 		return ERR_INVALID_PARAMS;
 	}
 	CAN1->FMR |= 1;  //init mode
@@ -215,9 +250,14 @@ void CAN_RX_Handler(CAN_TypeDef *can_ref) {
 		return;
 	}
 	if(pkt_leng > 8){
+<<<<<<< HEAD
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
+=======
+		
+		Error_Handler();
+>>>>>>> upstream/master
 		state = ERR_CAN_DCL_INVALID;
 	}
 	else {
@@ -259,6 +299,7 @@ void CAN_RX_Handler(CAN_TypeDef *can_ref) {
 	}
 }
 
+<<<<<<< HEAD
 
 
 
@@ -558,3 +599,5 @@ void CAN_fill_telemetry_by_constants(CAN_IVar5_telemetry *telemetry_constants){
 
 
 
+=======
+>>>>>>> upstream/master

@@ -70,7 +70,7 @@
 									<listOptionValue builtIn="false" value="../Core/Inc/PMM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/PAM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/PDM"/>
-									<listOptionValue builtIn="false" value="../Core/Inc/BATT"/>
+									<listOptionValue builtIn="false" value="../Core/Inc/PBM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/CAND"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32L4xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/STM32L4xx_HAL_Driver/Inc"/>

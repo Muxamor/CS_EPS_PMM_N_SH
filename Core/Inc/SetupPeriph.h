@@ -18,6 +18,7 @@ void UART5_Init(void);
 void SetupInterrupt(void);
 void GPIO_Init(void);
 void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider);
+int8_t CAN_Init(CAN_TypeDef *can_ref);
 void IWDG_Init(void);
 
 /*For control multiplexor TMUX1209  need use: */
