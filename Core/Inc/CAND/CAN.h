@@ -345,12 +345,16 @@ struct CAN_IVar5{
 } CAN_IVar5_telemetry;
 <<<<<<< HEAD
 CAN_IVar5_telemetry CAN_telemetry;
+<<<<<<< HEAD
 =======
 
 #pragma pack(pop)
 
 >>>>>>> upstream/master
 
+=======
+#pragma pack(pop)
+>>>>>>> bceec80af37353708f3c523a439514966526de36
 #pragma pack(push, 2)
 
 typedef struct {

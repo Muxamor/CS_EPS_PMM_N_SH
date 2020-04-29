@@ -413,12 +413,12 @@ void SetupInterrupt(void){
 <<<<<<< HEAD
 	/* CAN */
 	NVIC_SetPriority(CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
-	NVIC_EnableIRQ(CAN1_RX0_IRQn);
 	CAN1->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
+	NVIC_EnableIRQ(CAN1_RX0_IRQn);
 
 	NVIC_SetPriority(CAN2_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
-	NVIC_EnableIRQ(CAN2_RX0_IRQn);
 	CAN2->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
+<<<<<<< HEAD
 =======
 	/* CAN1 interrupt Init */
 	NVIC_SetPriority(CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
@@ -429,6 +429,9 @@ void SetupInterrupt(void){
 	CAN2->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
 	NVIC_EnableIRQ(CAN2_RX0_IRQn);
 >>>>>>> upstream/master
+=======
+	NVIC_EnableIRQ(CAN2_RX0_IRQn);
+>>>>>>> bceec80af37353708f3c523a439514966526de36
 	/**********************************************/
 }
 
