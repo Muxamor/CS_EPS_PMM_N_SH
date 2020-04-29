@@ -8,16 +8,12 @@
 #include "PCA9534.h"
 #include "TMP1075.h"
 #include "FRAM.h"
-<<<<<<< HEAD
-#include "CAN.h"
-=======
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
 
 #include "pmm_config.h"
 #include "pmm_init.h"
 
->>>>>>> upstream/master
 #include  <stdio.h>
 
 /****************************TODO*************************
@@ -59,23 +55,10 @@ int main(void){
 	I2C4_Init();
 	LPUART1_Init();
 	USART3_Init();
-//	UART5_Init();
+	UART5_Init();
 	GPIO_Init();
 	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
 
-<<<<<<< HEAD
-
-	int8_t status = 0;
-	status += TCA9539_conf_IO_dir_input(I2C3, TCA9539_I2C_ADDR, TCA9539_IO_ALL);
-	status += TCA9539_Set_output_pin(I2C3, TCA9539_I2C_ADDR, TCA9539_IO_ALL);
-	status += TCA9539_conf_IO_dir_output(I2C3, TCA9539_I2C_ADDR,  TCA9539_IO_P17 | TCA9539_IO_P15); // Turn on only CANbus
-
-	status += CAN_Init(CAN1);
-	status += CAN_Init(CAN2);
-	CAN_RegisterAllVars();
-
-=======
->>>>>>> upstream/master
 	SetupInterrupt();
 	//IWDG_Init();
 
@@ -102,11 +85,6 @@ int main(void){
 
 #endif
 
-<<<<<<< HEAD
-
-uint32_t last_cmd_mask_status = 0;
-CAN_cmd_mask_status = 0;
-=======
 //while(1){
 
 //}
@@ -115,7 +93,6 @@ CAN_cmd_mask_status = 0;
 uint32_t last_cmd_mask_status = 0;
 #endif
 
->>>>>>> upstream/master
 	while (1){
 
 
@@ -128,11 +105,7 @@ uint32_t last_cmd_mask_status = 0;
 			}
 		#endif
 
-<<<<<<< HEAD
-		CAN_check_cmd_status(&CAN_cmd_mask_status);
-=======
 		CAN_Var4_cmd_parser(&CAN_cmd_mask_status);
->>>>>>> upstream/master
 
 		LL_mDelay(1000);
 

@@ -22,10 +22,7 @@
 #define ERR_CAN_ACCESS_RANGE      	-7
 #define ERR_CAN_DCL_INVALID       	-8
 
-<<<<<<< HEAD
-=======
 
->>>>>>> upstream/master
 uint32_t CAN_cmd_mask_status;
 
 
@@ -47,11 +44,7 @@ typedef union {
 }CAN_typeIdxMask;
 
 
-<<<<<<< HEAD
-struct {
-=======
 struct CAN_IVar4 {
->>>>>>> upstream/master
     // Массив командных регистров ключей разряда АБ
     uint8_t CAN_Charge_gate_1_AB1;  		//+0            Командный регистр ключа заряда ветви 1 АБ1
     uint8_t CAN_Discharge_gate_1_AB1;       //+1            Командный регистр ключа разряда ветви 1 АБ1
@@ -85,12 +78,8 @@ struct CAN_IVar4 {
 
 
 #pragma pack(push, 1)
-<<<<<<< HEAD
-typedef struct {
-=======
 
 struct CAN_IVar5{
->>>>>>> upstream/master
     //------------------------------------------------  Offset -------- Constant ---------------------- Description ------------------------//
     // -------------------  ТМИ 0  ------------------ //
 
@@ -343,18 +332,10 @@ struct CAN_IVar5{
     // size ТМИ0+ТМИ4+ТМИ7+ТМИ8 = 29 + 3 * 116 = 377
 
 } CAN_IVar5_telemetry;
-<<<<<<< HEAD
-CAN_IVar5_telemetry CAN_telemetry;
-<<<<<<< HEAD
-=======
 
 #pragma pack(pop)
 
->>>>>>> upstream/master
 
-=======
-#pragma pack(pop)
->>>>>>> bceec80af37353708f3c523a439514966526de36
 #pragma pack(push, 2)
 
 typedef struct {
@@ -364,20 +345,13 @@ typedef struct {
   uint8_t ivar_id;
   uint8_t access_flgs;  //[0]=1 - read only; [1]=1 - regardless offset; [2]=1 - without filter
 }CAN_typeRegistrationRec;
-<<<<<<< HEAD
-=======
 
->>>>>>> upstream/master
 #pragma pack(pop)
 
 void CAN_ProcCallbackCmds(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state);
 void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state);
 
-<<<<<<< HEAD
-void CAN_check_cmd_status(uint32_t *cmd_status);
-=======
 
->>>>>>> upstream/master
 int8_t CAN_RegisterVar(int n, uint8_t dev_id);
 int8_t CAN_DeregisterVar(int filter_num);
 int8_t CAN_Tx(CAN_TypeDef *can_ref, CAN_typeIdxMask id, void *p_data, uint16_t leng);
@@ -385,11 +359,7 @@ int8_t CAN_RegisterAllVars();
 int8_t CAN_FilterAssign(uint8_t filter_num, CAN_typeIdxMask id, CAN_typeIdxMask mask);
 int8_t CAN_FilterDeassign(uint8_t filter_num);
 void CAN_RX_Handler(CAN_TypeDef *can_ref);
-<<<<<<< HEAD
-void CAN_fill_telemetry_by_constants(CAN_IVar5_telemetry *telemetry_constants);
-=======
 
->>>>>>> upstream/master
 
 #endif
 

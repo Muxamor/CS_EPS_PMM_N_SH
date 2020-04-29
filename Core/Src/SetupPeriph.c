@@ -410,16 +410,6 @@ void SetupInterrupt(void){
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
 
-<<<<<<< HEAD
-	/* CAN */
-	NVIC_SetPriority(CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
-	CAN1->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
-	NVIC_EnableIRQ(CAN1_RX0_IRQn);
-
-	NVIC_SetPriority(CAN2_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
-	CAN2->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
-<<<<<<< HEAD
-=======
 	/* CAN1 interrupt Init */
 	NVIC_SetPriority(CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
 	CAN1->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
@@ -428,10 +418,6 @@ void SetupInterrupt(void){
 	NVIC_SetPriority(CAN2_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
 	CAN2->IER |= CAN_IER_FMPIE0;  //rx enable interrupt
 	NVIC_EnableIRQ(CAN2_RX0_IRQn);
->>>>>>> upstream/master
-=======
-	NVIC_EnableIRQ(CAN2_RX0_IRQn);
->>>>>>> bceec80af37353708f3c523a439514966526de36
 	/**********************************************/
 }
 
@@ -623,11 +609,6 @@ void IWDG_Init(void){
 }
 
 
-<<<<<<< HEAD
-int CAN_Init(CAN_TypeDef *can_ref) {
-	/*-------------------------------------------------------------------------------------*/
-	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-=======
 int8_t CAN_Init(CAN_TypeDef *can_ref) {
 	/*-------------------------------------------------------------------------------------*/
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -636,7 +617,6 @@ int8_t CAN_Init(CAN_TypeDef *can_ref) {
 	/* GPIO Ports Clock Enable */
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
 
->>>>>>> upstream/master
 	if(can_ref == CAN1){
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_8 | LL_GPIO_PIN_9;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
@@ -666,26 +646,6 @@ int8_t CAN_Init(CAN_TypeDef *can_ref) {
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	}
     /*-------------------------------------------------------------------------------------*/
-<<<<<<< HEAD
-	int tmout;
-	if(can_ref == CAN1) {
-		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN1RST;
-		RCC->APB1ENR1 |= RCC_APB1ENR1_CAN1EN;
-		RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_CAN1RST;
-	}
-	else if(can_ref == CAN2) {
-		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN2RST;
-		RCC->APB1ENR1 |= RCC_APB1ENR1_CAN2EN;
-		RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_CAN2RST;
-	}
-	else{
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
-		return ERR_INVALID_PARAMS;
-	}
-	can_ref->MCR = CAN_MCR_INRQ;  //to init mode
-=======
 	int32_t tmout;
 
 	if(can_ref == CAN1) {
@@ -705,22 +665,14 @@ int8_t CAN_Init(CAN_TypeDef *can_ref) {
 
 	can_ref->MCR = CAN_MCR_INRQ;  //to init mode
 
->>>>>>> upstream/master
 	for(tmout=10000; tmout>0; tmout--){
 		if(can_ref->MSR & CAN_MSR_INAK) {
 			break;
 		}
 	}
-<<<<<<< HEAD
-	if(tmout == 0){
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
-=======
 
 	if(tmout == 0){
 		Error_Handler();
->>>>>>> upstream/master
 		return ERR_CAN_INIT_MODE;
 	}
 	/*
@@ -743,32 +695,18 @@ int8_t CAN_Init(CAN_TypeDef *can_ref) {
 		can_ref->FS1R = 0x0FFFFFFF;
 		can_ref->FFA1R = 0;  //CAN1,2 assign to FIFO0
 	}
-<<<<<<< HEAD
-	/*interrupt*/
-
-	/****/
-	can_ref->MCR &= ~CAN_MCR_INRQ;  //to normal mode
-=======
 
 	/****/
 	can_ref->MCR &= ~CAN_MCR_INRQ;  //to normal mode
 
->>>>>>> upstream/master
 	for(tmout = 10000000; tmout > 0; tmout--){
 		if((can_ref->MSR & CAN_MSR_INAK) == 0) {
 			break;
 		}
 	}
-<<<<<<< HEAD
-	if(tmout == 0){
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
-=======
 
 	if(tmout == 0){
 		Error_Handler();
->>>>>>> upstream/master
 		return ERR_CAN_NORMAL_MODE;
 	}
 
