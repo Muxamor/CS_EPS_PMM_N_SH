@@ -42,7 +42,7 @@ uint8_t PMM_Detect_MasterBackupCPU(void){
 	@param rebot_pwr - pointre to return detect value: 1 - was power reboot, 0- was NO power reboot
 	@retval 0 - SUCCESS, 0 - ERROR_N.
  */
-ErrorStatus PMM_Detect_PowerRebootCPU(uint8_t *rebot_pwr){
+ErrorStatus PMM_Detect_PowerRebootCPU(uint8_t *pwr_reboot){
 
 	uint16_t read_data;
 
@@ -51,9 +51,9 @@ ErrorStatus PMM_Detect_PowerRebootCPU(uint8_t *rebot_pwr){
  	}
 
  	if(read_data == 0xFFFF){
- 		*rebot_pwr = 0;
+ 		*pwr_reboot = 0;
  	}else{
- 		*rebot_pwr = 1;
+ 		*pwr_reboot = 1;
  	}
 
  	return SUCCESS;

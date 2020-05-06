@@ -8,7 +8,7 @@
 void Init_PMM(_PMM *pmm);
 
 uint8_t PMM_Detect_MasterBackupCPU(void);
-ErrorStatus PMM_Detect_PowerRebootCPU(uint8_t *rebot_pwr);
+ErrorStatus PMM_Detect_PowerRebootCPU(uint8_t *pwr_reboot);
 
 
 #endif /* INC_PMM_PMM_INIT_H_ */

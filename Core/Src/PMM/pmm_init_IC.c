@@ -4,7 +4,7 @@
 
 
 
-ErrorStatus pmm_init_TMP1075(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
+ErrorStatus PMM_init_TMP1075(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
  	
  	if( TMP1075_set_mode(I2Cx, tmp1075_addr, TMP1075_CONTINUOS_CONV) != SUCCESS ){
  		return ERROR_N;

@@ -59,8 +59,15 @@ int main(void){
 	GPIO_Init();
 	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
 
+//Need test
+	uint8_t pwr_reboot= 6;
+	PMM_Detect_PowerRebootCPU(&pwr_reboot);
+
+
 	SetupInterrupt();
 	//IWDG_Init();
+
+
 
 	int8_t status = 0;
 	status += TCA9539_conf_IO_dir_input(I2C3, TCA9539_I2C_ADDR, TCA9539_IO_ALL);
@@ -78,9 +85,9 @@ int main(void){
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
+		printf("test  \n");
 #ifdef DEBUGprintf
 
-		printf("test  \n");
 		//	Error_Handler();
 
 #endif

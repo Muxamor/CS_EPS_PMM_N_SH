@@ -18,7 +18,9 @@ typedef struct{
 	uint8_t	:6;	
 
 	uint8_t CAN_constatnt_mode;			//= 1-Constant mode CANreg5 is ON, 0-Constant CANreg5 is OFF. 
+	
 
+	
 	uint32_t error_TMP1075_senser:1;	//= 1-error temp. sensor TMP1075, =0 -OK
 	uint32_t :31;
 

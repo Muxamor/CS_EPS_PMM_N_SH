@@ -462,12 +462,12 @@ void GPIO_Init(void){
 	LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_0);
 
 	/*For control multiplexor TMUX1209  need use:											*/
-	/*ENABLE_TMUX1209_I2C();       - Enable multiplexor TMUX1209 							*/
-	/*DISABLE_TMUX1209_I2C();		   - Disable multiplexor TMUX1209 						*/
-	/*SW_TMUX1209_I2C_main_PAM();  - Switch I2C line for comm. with the PAM module			*/
-	/*SW_TMUX1209_I2C_main_PDM();  - Switch I2C line for comm. with the PDM module  		*/
-	/*SW_TMUX1209_I2C_main_BAT();  - Switch I2C line for comm. with the Battery module		*/
-	/*SW_TMUX1209_I2C_main_PMM();	 - Switch I2C line for comm. with the PMM module		*/
+	/*ENABLE_TMUX1209_I2C();       	- Enable multiplexor TMUX1209 							*/
+	/*DISABLE_TMUX1209_I2C();		- Disable multiplexor TMUX1209 							*/
+	/*SW_TMUX1209_I2C_main_PAM();  	- Switch I2C line for comm. with the PAM module			*/
+	/*SW_TMUX1209_I2C_main_PDM();  	- Switch I2C line for comm. with the PDM module  		*/
+	/*SW_TMUX1209_I2C_main_BAT();  	- Switch I2C line for comm. with the Battery module		*/
+	/*SW_TMUX1209_I2C_main_PMM();	- Switch I2C line for comm. with the PMM module			*/
 	/****************************************************************************************/
 
 
@@ -612,7 +612,6 @@ void IWDG_Init(void){
 int8_t CAN_Init(CAN_TypeDef *can_ref) {
 	/*-------------------------------------------------------------------------------------*/
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-	LL_PWR_EnableVddIO2();
 
 	/* GPIO Ports Clock Enable */
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
