@@ -56,7 +56,7 @@ extern uint32_t CAN_cmd_mask_status;
 
 int main(void){
 
-	_PDM pdm_str = {0}, *pdm_ptr = &pdm_str;
+	_PDM pdm = {0}, *pdm_ptr = &pdm;
 
 	CAN_cmd_mask_status = 0;
 
