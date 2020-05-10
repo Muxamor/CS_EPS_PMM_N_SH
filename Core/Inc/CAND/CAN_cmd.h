@@ -8,6 +8,8 @@
 #ifndef INC_CAND_CAN_CMD_H_
 #define INC_CAND_CAN_CMD_H_
 
+
+
 /*
 typedef enum
 {
@@ -17,7 +19,7 @@ typedef enum
 
 
 
-void CAN_Var4_cmd_parser(uint32_t *cmd_status);
+void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr);
 void CAN_Var5_fill_telemetry_const(void);
 
 

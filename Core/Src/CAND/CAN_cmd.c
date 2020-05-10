@@ -1,13 +1,19 @@
 #include "stm32l4xx.h"
+
+#include "pdm_struct.h"
+#include "pdm_config.h"
+#include "pdm.h"
+
 #include "CAN.h"
 #include "CAN_cmd.h"
+
 #include  <stdio.h>
 
 extern struct CAN_IVar4 CAN_IVar4_RegCmd;
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 
 
-void CAN_Var4_cmd_parser(uint32_t *cmd_status){
+void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
 
 	uint8_t number_cmd_reg = 0;
 	uint32_t cmd_bit_flag = 0;
@@ -22,7 +28,106 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status){
 		if( cmd_bit_flag & 0x00000001 ){
 
 			switch (number_cmd_reg) {
+
+                case 12: //Enable/Disable power channel 1 (SOP1) 
+
+                    if( CAN_IVar4_RegCmd.CAN_PWR_CH1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 12 -> ENABLE power channel 1\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 12 -> DISABLE power channel 1\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+                    }
+                    break;
+
+                case 13: //Enable/Disable power channel 2 (SOP2) 
+
+                    if( CAN_IVar4_RegCmd.CAN_PWR_CH2 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 13 -> ENABLE power channel 2\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 13 -> DISABLE power channel 2\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+                    }
+                    break;
+
+                case 14: //Enable/Disable power channel 3 (BRK1) 
+
+                    if( CAN_IVar4_RegCmd.CAN_PWR_CH3 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 14 -> ENABLE power channel 3\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 14 -> DISABLE power channel 3\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
+                    }
+                    break;
+
+                case 15: //Enable/Disable power channel 4 (BRK2)  uint8_t CAN_PWR_CH4;
+
+                    if( CAN_IVar4_RegCmd.CAN_PWR_CH4 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 15 -> ENABLE power channel 4\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 15 -> DISABLE power channel 4\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
+                    }
+                    break;
+
+                case 16: //Enable/Disable power channel 5 
+
+                    if( CAN_IVar4_RegCmd.CAN_PWR_CH5 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 16 -> ENABLE power channel 5\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 16 -> DISABLE power channel 5\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
+                    }
+                    break;
+
+                case 17: //Enable/Disable power channel 6 
+
+                    if( CAN_IVar4_RegCmd.CAN_PWR_CH6 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 17 -> ENABLE power channel 6\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 17 -> DISABLE power channel 6\n");
+                        #endif
+                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
+                    }
+                    break;
+
+                
 				case 21://Constant mode command
+
 					if( CAN_IVar4_RegCmd.CAN_Constant_mode == 0x01 ){
 
 						/* This only for test with Dorohkin, need delet after test*/
@@ -70,6 +175,13 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status){
 /*void CAN_Var5_fill_telemetry(){
 }
 */
+
+ uint8_t CAN_PWR_CH1;                    //+12           Командный регистр канал питаня 1 (СОП1)
+    uint8_t CAN_PWR_CH2;                    //+13           Командный регистр канал питаня 2 (СОП2)
+    uint8_t CAN_PWR_CH3;                    //+14           Командный регистр канал питаня 3 (БРК1)
+    uint8_t CAN_PWR_CH4;                    //+15           Командный регистр канал питаня 4 (БРК2)
+    uint8_t CAN_PWR_CH5;                    //+16           Командный регистр канал питаня 5 ( - )
+    uint8_t CAN_PWR_CH6;                    //+17           Командный регистр канал питаня 6 ( - )
 
 void CAN_Var5_fill_telemetry_const(void){
 

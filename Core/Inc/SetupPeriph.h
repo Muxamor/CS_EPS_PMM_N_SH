@@ -31,7 +31,7 @@ void IWDG_Init(void);
 #define SW_TMUX1209_I2C_main_PDM();   LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_12); \
                                        LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_13);
 
-#define SW_TMUX1209_I2C_main_BAT();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
+#define SW_TMUX1209_I2C_main_PBM();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
                                        LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_13);
 
 #define SW_TMUX1209_I2C_main_PMM();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \

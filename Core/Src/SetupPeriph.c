@@ -466,7 +466,7 @@ void GPIO_Init(void){
 	/*DISABLE_TMUX1209_I2C();		- Disable multiplexor TMUX1209 							*/
 	/*SW_TMUX1209_I2C_main_PAM();  	- Switch I2C line for comm. with the PAM module			*/
 	/*SW_TMUX1209_I2C_main_PDM();  	- Switch I2C line for comm. with the PDM module  		*/
-	/*SW_TMUX1209_I2C_main_BAT();  	- Switch I2C line for comm. with the Battery module		*/
+	/*SW_TMUX1209_I2C_main_PBM();  	- Switch I2C line for comm. with the PBM module			*/
 	/*SW_TMUX1209_I2C_main_PMM();	- Switch I2C line for comm. with the PMM module			*/
 	/****************************************************************************************/
 

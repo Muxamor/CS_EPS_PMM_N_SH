@@ -8,11 +8,22 @@
 #include "PCA9534.h"
 #include "TMP1075.h"
 #include "FRAM.h"
-#include "CAND/CAN.h"
-#include "CAND/CAN_cmd.h"
+
+#include "pdm_config.h"
+#include "pdm_struct.h"
+#include "pdm_init.h"
+#include "pdm.h"
+
 
 #include "pmm_config.h"
 #include "pmm_init.h"
+
+#include "CAND/CAN.h"
+#include "CAND/CAN_cmd.h"
+
+
+
+
 
 #include  <stdio.h>
 
@@ -45,6 +56,8 @@ extern uint32_t CAN_cmd_mask_status;
 
 int main(void){
 
+	_PDM pdm_str = {0}, *pdm_ptr = &pdm_str;
+
 	CAN_cmd_mask_status = 0;
 
 	/** Initialization Periph STM32L496*/
@@ -57,18 +70,12 @@ int main(void){
 	USART3_Init();
 	UART5_Init();
 	GPIO_Init();
+
 	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
+	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
-//Need test
-	uint8_t pwr_reboot= 6;
-	PMM_Detect_PowerRebootCPU(&pwr_reboot);
-
-
-	SetupInterrupt();
-	//IWDG_Init();
-
-
-
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	int8_t status = 0;
 	status += TCA9539_conf_IO_dir_input(I2C3, TCA9539_I2C_ADDR, TCA9539_IO_ALL);
 	status += TCA9539_Set_output_pin(I2C3, TCA9539_I2C_ADDR, TCA9539_IO_ALL);
@@ -77,21 +84,35 @@ int main(void){
 	status += CAN_Init(CAN1);
 	status += CAN_Init(CAN2);
 	CAN_RegisterAllVars();
+//---------------------------------------------------
+
+	SetupInterrupt();
+	//IWDG_Init();
+
+	PDM_init( pdm_ptr );
+
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
+
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
+	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
 
 
-//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
-//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+//Need test!!!!!!!!!!!!
+	uint8_t pwr_reboot= 6;
+	PMM_Detect_PowerRebootCPU(&pwr_reboot);
+//!!!!!!!
 
-		printf("test  \n");
-#ifdef DEBUGprintf
-
-		//	Error_Handler();
-
-#endif
-
+ 
 //while(1){
 
 //}
@@ -112,11 +133,28 @@ uint32_t last_cmd_mask_status = 0;
 			}
 		#endif
 
-		CAN_Var4_cmd_parser(&CAN_cmd_mask_status);
+		CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr);
 
 		LL_mDelay(1000);
 
 	}
 
 }
+
+
+/*
+
+//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
+//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
+
+//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+
+		printf("test  \n");
+#ifdef DEBUGprintf
+
+		//	Error_Handler();
+
+#endif
+*/
 
