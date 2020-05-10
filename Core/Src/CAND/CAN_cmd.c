@@ -35,13 +35,13 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 12 -> ENABLE power channel 1\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 12 -> DISABLE power channel 1\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
                     }
                     break;
 
@@ -51,13 +51,13 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 13 -> ENABLE power channel 2\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 13 -> DISABLE power channel 2\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
                     }
                     break;
 
@@ -67,13 +67,13 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 14 -> ENABLE power channel 3\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 14 -> DISABLE power channel 3\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
                     }
                     break;
 
@@ -83,13 +83,13 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 15 -> ENABLE power channel 4\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 15 -> DISABLE power channel 4\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
                     }
                     break;
 
@@ -99,13 +99,13 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 16 -> ENABLE power channel 5\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 16 -> DISABLE power channel 5\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
                     }
                     break;
 
@@ -115,13 +115,13 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 17 -> ENABLE power channel 6\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. 17 -> DISABLE power channel 6\n");
                         #endif
-                        PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
+                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
                     }
                     break;
 

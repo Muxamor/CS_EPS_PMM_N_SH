@@ -25,8 +25,9 @@ typedef struct{
 	uint16_t PWR_CH5_Power;
 	uint16_t PWR_CH6_Power;
 
-	uint16_t PWR_CH1_State_eF_in  :1; //0-OFF, 1-ON. State power channel input Efuse
-	uint16_t PWR_CH1_State_eF_out :1; //0-OFF, 1-ON. State power channel output Efuse
+	//State power channel which need ON or OFF 
+	uint16_t PWR_CH1_State_eF_in  :1; //0-DISABLE, 1-ENABLE. State power channel input Efuse
+	uint16_t PWR_CH1_State_eF_out :1; //0-DISABLE, 1-ENABLE. State power channel output Efuse
 	uint16_t PWR_CH2_State_eF_in  :1;   
 	uint16_t PWR_CH2_State_eF_out :1; 
 	uint16_t PWR_CH3_State_eF_in  :1;   
@@ -39,8 +40,23 @@ typedef struct{
 	uint16_t PWR_CH6_State_eF_out :1; 
 	uint16_t :4;
 
-	uint16_t PWR_CH1_PG_eF_in  :1; //0-OK, 1-Error. Power good channel status input eFuse  
-	uint16_t PWR_CH1_PG_eF_out :1; //0-OK, 1-Error. Power good channel status output eFuse
+	//Shows Error if output pin value I2C GPIO Extender not same with PWR_CHx_State_eF_in and PWR_CHx_State_eF_out
+	uint16_t Error_PWR_CH1_State_eF_in  :1; //0-DISABLE, 1-ENABLE. State power channel input Efuse
+	uint16_t Error_PWR_CH1_State_eF_out :1; 
+	uint16_t Error_PWR_CH2_State_eF_in  :1;   
+	uint16_t Error_PWR_CH2_State_eF_out :1; 
+	uint16_t Error_PWR_CH3_State_eF_in  :1;   
+	uint16_t Error_PWR_CH3_State_eF_out :1; 	
+	uint16_t Error_PWR_CH4_State_eF_in  :1;   
+	uint16_t Error_PWR_CH4_State_eF_out :1; 
+	uint16_t Error_PWR_CH5_State_eF_in  :1;   
+	uint16_t Error_PWR_CH5_State_eF_out :1; 
+	uint16_t Error_PWR_CH6_State_eF_in  :1;   
+	uint16_t Error_PWR_CH6_State_eF_out :1; 
+	uint16_t :4;
+
+	uint16_t PWR_CH1_PG_eF_in  :1; //0-OK, 1-ERROR. Power good channel status input eFuse  
+	uint16_t PWR_CH1_PG_eF_out :1; //0-OK, 1-ERROR. Power good channel status output eFuse
 	uint16_t PWR_CH2_PG_eF_in  :1;    
 	uint16_t PWR_CH2_PG_eF_out :1; 
 	uint16_t PWR_CH3_PG_eF_in  :1;    
@@ -75,6 +91,7 @@ typedef struct{
 	uint16_t Error_temp_sensor_4 :1;
 	uint16_t :3;
 	
+
 
 }_PDM;
 

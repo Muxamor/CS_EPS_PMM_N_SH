@@ -91,19 +91,19 @@ int main(void){
 
 	PDM_init( pdm_ptr );
 
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
 
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
-	PDM_ctrl_pwr_channel( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
+	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
 
 
 

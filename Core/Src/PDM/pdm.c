@@ -6,7 +6,7 @@
 #include "pdm.h"
 
 
-/** @brief  Control power channel (enable/disable).
+/** @brief  Set state (enable/disable) power channel.
 	@param  *pdm_ptr - pointer to struct which save all information about PDM.
 	@param  number_pwr_channel - number channel on/off:
 								PDM_PWR_Channel_1 
@@ -19,7 +19,7 @@
 	@param  state_channel - 0- disable power channel, 1 - enable power channel. (ENABLE, DISABLE).
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_ptr, uint8_t number_pwr_channel, uint8_t state_channel ){
+ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uint8_t state_channel ){
 
 	I2C_TypeDef *I2Cx;
 	uint8_t I2C_tca9539_addr = 0;
@@ -42,11 +42,11 @@ ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			pin_out_eFuse = TCA9539_IO_P02; 		//EN_eFusee_out_ch1 (U19)
 
 			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH1_State_eF_in = 1; 
-				pdm_ptr->PWR_CH1_State_eF_out = 1; 
+				pdm_ptr->PWR_CH1_State_eF_in = ENABLE; 
+				pdm_ptr->PWR_CH1_State_eF_out = ENABLE; 
 			}else{ // DISABLE
-				pdm_ptr->PWR_CH1_State_eF_in = 0; 
-				pdm_ptr->PWR_CH1_State_eF_out = 0; 
+				pdm_ptr->PWR_CH1_State_eF_in = DISABLE; 
+				pdm_ptr->PWR_CH1_State_eF_out = DISABLE; 
 			}
 			break;
 
@@ -58,11 +58,11 @@ ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			pin_out_eFuse = TCA9539_IO_P02;			//EN_eFusee_out_ch2 (U20)
 
 			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH2_State_eF_in = 1; 
-				pdm_ptr->PWR_CH2_State_eF_out = 1; 
+				pdm_ptr->PWR_CH2_State_eF_in = ENABLE; 
+				pdm_ptr->PWR_CH2_State_eF_out = ENABLE; 
 			}else{ // DISABLE
-				pdm_ptr->PWR_CH2_State_eF_in = 0; 
-				pdm_ptr->PWR_CH2_State_eF_out = 0; 
+				pdm_ptr->PWR_CH2_State_eF_in = DISABLE; 
+				pdm_ptr->PWR_CH2_State_eF_out = DISABLE; 
 			}
 			break;
 
@@ -74,11 +74,11 @@ ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			pin_out_eFuse = TCA9539_IO_P07; 		//EN_eFusee_out_ch3 (U19)
 
 			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH3_State_eF_in = 1; 
-				pdm_ptr->PWR_CH3_State_eF_out = 1; 
+				pdm_ptr->PWR_CH3_State_eF_in = ENABLE; 
+				pdm_ptr->PWR_CH3_State_eF_out = ENABLE; 
 			}else{ // DISABLE
-				pdm_ptr->PWR_CH3_State_eF_in = 0; 
-				pdm_ptr->PWR_CH3_State_eF_out = 0; 
+				pdm_ptr->PWR_CH3_State_eF_in = DISABLE; 
+				pdm_ptr->PWR_CH3_State_eF_out = DISABLE; 
 			}
 			break;
 
@@ -90,11 +90,11 @@ ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			pin_out_eFuse = TCA9539_IO_P07;			//EN_eFusee_out_ch4 (U20)
 
 			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH4_State_eF_in = 1; 
-				pdm_ptr->PWR_CH4_State_eF_out = 1; 
+				pdm_ptr->PWR_CH4_State_eF_in = ENABLE; 
+				pdm_ptr->PWR_CH4_State_eF_out = ENABLE; 
 			}else{ // DISABLE
-				pdm_ptr->PWR_CH4_State_eF_in = 0; 
-				pdm_ptr->PWR_CH4_State_eF_out = 0; 
+				pdm_ptr->PWR_CH4_State_eF_in = DISABLE; 
+				pdm_ptr->PWR_CH4_State_eF_out = DISABLE; 
 			}
 			break;
 
@@ -106,11 +106,11 @@ ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			pin_out_eFuse = TCA9539_IO_P14;			//EN_eFusee_out_ch5 (U19)
 
 			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH5_State_eF_in = 1; 
-				pdm_ptr->PWR_CH5_State_eF_out = 1; 
+				pdm_ptr->PWR_CH5_State_eF_in = ENABLE; 
+				pdm_ptr->PWR_CH5_State_eF_out = ENABLE; 
 			}else{ // DISABLE
-				pdm_ptr->PWR_CH5_State_eF_in = 0; 
-				pdm_ptr->PWR_CH5_State_eF_out = 0; 
+				pdm_ptr->PWR_CH5_State_eF_in = DISABLE; 
+				pdm_ptr->PWR_CH5_State_eF_out = DISABLE; 
 			} 
 			break;
 
@@ -122,11 +122,11 @@ ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			pin_out_eFuse = TCA9539_IO_P14;			//EN_eFusee_out_ch6 (U20)
 
 			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH6_State_eF_in = 1; 
-				pdm_ptr->PWR_CH6_State_eF_out = 1; 
+				pdm_ptr->PWR_CH6_State_eF_in = ENABLE; 
+				pdm_ptr->PWR_CH6_State_eF_out = ENABLE; 
 			}else{ // DISABLE
-				pdm_ptr->PWR_CH6_State_eF_in = 0; 
-				pdm_ptr->PWR_CH6_State_eF_out = 0; 
+				pdm_ptr->PWR_CH6_State_eF_in = DISABLE; 
+				pdm_ptr->PWR_CH6_State_eF_out = DISABLE; 
 			}
 			break;
 
