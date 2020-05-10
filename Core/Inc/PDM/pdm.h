@@ -17,7 +17,7 @@
 #define PDM_PWR_Channel_5 			0x05
 #define PDM_PWR_Channel_6 			0x06
 
-ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_str_ptr, uint8_t number_pwr_channel, uint8_t state_channel );
+ErrorStatus PDM_ctrl_pwr_channel( _PDM *pdm_ptr, uint8_t number_pwr_channel, uint8_t state_channel );
 
 
 #endif /* INC_PDM_PDM_H_ */
