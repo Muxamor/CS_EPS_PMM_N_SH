@@ -3,6 +3,7 @@
 #include "pdm_struct.h"
 #include "pdm_config.h"
 #include "TCA9539.h"
+#include "TMP1075.h"
 #include "pdm.h"
 
 
@@ -21,7 +22,7 @@
 */
 ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uint8_t state_channel ){
 
-	uint8_t error_I2C = 1 ; //0-OK 1-ERROR
+	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 	uint8_t i=0;
 	_PDM_pins pdm_pins;
 
@@ -127,7 +128,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 		LL_mDelay( pdm_i2c_delay_att_conn );
 
 		if( i == (pdm_i2c_attempt_conn - 1) ) {
-			error_I2C = ERROR; 
+			error_I2C = ERROR_N;
 		}
 	}
 
@@ -149,7 +150,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			LL_mDelay( pdm_i2c_delay_att_conn );
 
 			if( i == (pdm_i2c_attempt_conn - 1) ) {
-				error_I2C = ERROR; 
+				error_I2C = ERROR_N; 
 			}
 		}
 	}
@@ -201,7 +202,7 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 
 	uint8_t read_val_pin_EN_in_eF = 0;
 	uint8_t read_val_pin_EN_out_eF = 0;
-	uint8_t error_I2C = 1 ; //0-OK 1-ERROR
+	int8_t error_I2C = ERROR_N; //0-OK -1 - ERROR_N
 	uint8_t i = 0;
 	_PDM_pins pdm_pins;
 
@@ -227,7 +228,7 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 		LL_mDelay( pdm_i2c_delay_att_conn );
 
 		if( i == (pdm_i2c_attempt_conn - 1) ) {
-			error_I2C = ERROR; 
+			error_I2C = ERROR_N;
 		}
 	}
 
@@ -350,3 +351,82 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 
 	return SUCCESS;
 }
+
+
+/** @brief  Get temperature from TMP1075 sensor. 
+	@param  *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  tmp1075_addr - I2C sensor address 
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PDM_Get_temp_TMP1075( I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, _PDM *pdm_ptr ){
+
+	int8_t temp_value;
+	uint8_t i = 0;
+	int8_t error_I2C = SUCCESS; 
+
+	for( i = 0; i < pdm_i2c_attempt_conn; i++ ){ //Read temperature from TMP1075 sensor. 
+
+		if( TMP1075_read_int8_temperature( I2Cx,tmp1075_addr, &temp_value) == SUCCESS ){
+			break;
+		}
+
+		LL_mDelay( pdm_i2c_delay_att_conn );
+
+		if( i == (pdm_i2c_attempt_conn - 1) ) {
+			error_I2C = ERROR_N;
+		}
+	}
+
+	switch( tmp1075_addr ){
+
+		case PDM_I2CADDR_TMP1075_1:
+
+			if( error_I2C == SUCCESS ){
+				pdm_ptr->Temp_sensor_1 = temp_value;
+				pdm_ptr->Error_temp_sensor_1 = SUCCESS; //No error
+			}else{ //Error case 
+				pdm_ptr->Temp_sensor_1 = 0xFF;
+				pdm_ptr->Error_temp_sensor_1 = ERROR; //No error
+			}
+			break;
+
+		case PDM_I2CADDR_TMP1075_2:
+
+			if(error_I2C == SUCCESS ){
+				pdm_ptr->Temp_sensor_2 = temp_value;
+				pdm_ptr->Error_temp_sensor_2 = SUCCESS; //No error
+			}else{ //Error case 
+				pdm_ptr->Temp_sensor_2 = 0xFF;
+				pdm_ptr->Error_temp_sensor_2 = ERROR; //No error
+			}
+			break;
+
+		case PDM_I2CADDR_TMP1075_3:
+
+			if( error_I2C == SUCCESS){
+				pdm_ptr->Temp_sensor_3 = temp_value;
+				pdm_ptr->Error_temp_sensor_3 = SUCCESS; //No error
+			}else{ //Error case 
+				pdm_ptr->Temp_sensor_3 = 0xFF;
+				pdm_ptr->Error_temp_sensor_3 = ERROR; //No error
+			}
+			break;
+
+		case PDM_I2CADDR_TMP1075_4:
+
+			if( error_I2C == SUCCESS ){
+				pdm_ptr->Temp_sensor_3 = temp_value;
+				pdm_ptr->Error_temp_sensor_3 = SUCCESS; //No error
+			}else{ //Error case 
+				pdm_ptr->Temp_sensor_3 = 0xFF;
+				pdm_ptr->Error_temp_sensor_3 = ERROR; //No error
+			}
+			break;
+			
+		default:
+			break;
+	}
+
+	return error_I2C;
+}
+
