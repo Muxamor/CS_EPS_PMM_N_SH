@@ -41,6 +41,7 @@ Core/Src/FRAM.c \
 Core/Src/PCA9534.c \
 Core/Src/TCA9539.c \
 Core/Src/ADS1015.c \
+Core/Src/PDM/pdm_config.c \
 Core/Src/PDM/pdm_init_IC.c \
 Core/Src/PDM/pdm_init.c \
 Core/Src/PDM/pdm.c \

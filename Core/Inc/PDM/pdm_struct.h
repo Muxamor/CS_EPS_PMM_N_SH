@@ -41,7 +41,7 @@ typedef struct{
 	uint16_t :4;
 
 	//Shows Error if output pin value I2C GPIO Extender not same with PWR_CHx_State_eF_in and PWR_CHx_State_eF_out
-	uint16_t Error_PWR_CH1_State_eF_in  :1; //0-DISABLE, 1-ENABLE. State power channel input Efuse
+	uint16_t Error_PWR_CH1_State_eF_in  :1; //0-OK, 1-ERROR.
 	uint16_t Error_PWR_CH1_State_eF_out :1; 
 	uint16_t Error_PWR_CH2_State_eF_in  :1;   
 	uint16_t Error_PWR_CH2_State_eF_out :1; 
@@ -91,8 +91,7 @@ typedef struct{
 	uint16_t Error_temp_sensor_4 :1;
 	uint16_t :3;
 	
-
-
+	
 }_PDM;
 
 
