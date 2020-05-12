@@ -40,8 +40,13 @@ Core/Src/TMP1075.c \
 Core/Src/FRAM.c \
 Core/Src/PCA9534.c \
 Core/Src/TCA9539.c \
-Core/Src/PMM/pmm_init.c \
+Core/Src/ADS1015.c \
+Core/Src/PDM/pdm_config.c \
+Core/Src/PDM/pdm_init_IC.c \
+Core/Src/PDM/pdm_init.c \
+Core/Src/PDM/pdm.c \
 Core/Src/PMM/pmm_init_IC.c \
+Core/Src/PMM/pmm_init.c \
 Core/Src/PMM/pmm_savedata.c \
 Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
