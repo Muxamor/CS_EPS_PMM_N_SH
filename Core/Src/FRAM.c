@@ -3,6 +3,31 @@
 #include "i2c_comm.h"
 #include "FRAM.h"
 
+
+/** @brief	Erasing all FRAM's cells.
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	I2C_fram_addr - pointer to struct with configuration data.
+	@param 	fram_size - size of FRAM in bytes.
+			FRAM_SIZE_64KB : 0x2000
+	@retval 0 - SUCCESS, -1 - ERROR
+*/
+ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_size){
+
+	ErrorStatus error_status = 0;
+	uint32_t i;
+	FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
+	for(i = 0; i < fram_size; i++){
+		error_status += I2C_Write_byte_St(I2Cx, I2C_fram_addr, I2C_SIZE_REG_ADDR_U16, i, 0xFF);
+	}
+	FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
+	if(error_status != SUCCESS ){
+		return ERROR_N;
+	}
+
+	return SUCCESS;
+}
+
+
 /** @brief  Set write protection for both FRAM.
 	@param  access_flag - FRAM_WRITE_PROTECTION_ENABLE or FRAM_WRITE_PROTECTION_DISABLE.
 	@retval	0 - SUCCESS, -1 - ERROR

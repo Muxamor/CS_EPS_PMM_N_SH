@@ -16,7 +16,7 @@
 #include "stm32l4xx_ll_usart.h"
 #include  "Error_Handler.h"
 #include "SetupPeriph.h"
-#include "CAN.h"
+#include "CAND/CAN.h"
 
 #include  <stdio.h>
 
@@ -609,13 +609,15 @@ void IWDG_Init(void){
 }
 
 
+
+
 int8_t CAN_Init(CAN_TypeDef *can_ref) {
 	/*-------------------------------------------------------------------------------------*/
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-	LL_PWR_EnableVddIO2();
-
-	/* GPIO Ports Clock Enable */
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+//	LL_PWR_EnableVddIO2();
+//
+//	/* GPIO Ports Clock Enable */
+//	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
 
 	if(can_ref == CAN1){
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_8 | LL_GPIO_PIN_9;

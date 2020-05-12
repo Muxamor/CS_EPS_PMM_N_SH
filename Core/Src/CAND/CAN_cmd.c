@@ -1,6 +1,6 @@
 #include "stm32l4xx.h"
-#include "CAN.h"
-#include "CAN_cmd.h"
+#include "CAND/CAN.h"
+#include "CAND/CAN_cmd.h"
 #include  <stdio.h>
 
 extern struct CAN_IVar4 CAN_IVar4_RegCmd;
@@ -25,11 +25,11 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status){
 				case 21://Constant mode command
 					if( CAN_IVar4_RegCmd.CAN_Constant_mode == 0x01 ){
 
-						/* This only for test with Dorohkin, need delet after test*/
-							#ifdef DEBUGprintf// Only for test with Dorohkin !!!!!!!!!!!!!!!!!! 
-								printf("fill telemetry struct by constants\n");// Only for test with Dorohkin !!!!!!!!!!!!!!!!!! 
-								printf("size of tel-ry %d\n", sizeof(CAN_IVar5_telemetry));// Only for test with Dorohkin !!!!!!!!!!!!!!!!!! 
-							#endif// Only for test with Dorohkin !!!!!!!!!!!!!!!!!! 
+						/* This only for test with Dorohkin, need delete after test*/
+							#ifdef DEBUGprintf// Only for test with Dorohkin !!!!!!!!!!!!!!!!!!
+								printf("fill telemetry struct by constants\n");// Only for test with Dorohkin !!!!!!!!!!!!!!!!!!
+								printf("size of tel-ry %d\n", sizeof(CAN_IVar5_telemetry));// Only for test with Dorohkin !!!!!!!!!!!!!!!!!!
+							#endif// Only for test with Dorohkin !!!!!!!!!!!!!!!!!!
 						/***********************************************************/
 
 						#ifdef DEBUGprintf
@@ -38,7 +38,7 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status){
 						CAN_Var5_fill_telemetry_const();
 						//Need write config to PMM struct
 					}else{
-						/* This only for test with Dorohkin, need delet after test*/
+						/* This only for test with Dorohkin, need delete after test*/
 							printf("fill telemetry struct by zero\n");
 							for(uint16_t j = 0; j < sizeof(CAN_IVar5_telemetry); j++){
 								*((uint8_t *)(&CAN_IVar5_telemetry) + j) = 0;
@@ -48,7 +48,7 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status){
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. 21 -> Disable constant mode\n");
 						#endif
-						//Need vrite config to PMM struct
+						//Need write config to PMM struct
 					}
 					break;
 

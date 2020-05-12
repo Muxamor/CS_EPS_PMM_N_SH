@@ -3,7 +3,7 @@
 #include "stm32l4xx_ll_system.h"
 #include "stm32l4xx_it.h"
 #include "CAND/CAN.h"
-
+#include "TIM_delay.h"
 /******************************************************************************/
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */ 
 /******************************************************************************/
@@ -114,6 +114,13 @@ void CAN2_RX0_IRQHandler() {
 	#ifdef DEBUGprintf
 		printf("RX_CAN2\n");
 	#endif
+}
+
+void TIM2_IRQHandler(void){
+	TIM_finished = 1;
+	TIM2->SR &= ~TIM_SR_UIF;
+	TIM2->DIER &= ~TIM_DIER_UIE; // без этого зацикливается в прерывании
+	printf("finished\n");
 }
 
 
