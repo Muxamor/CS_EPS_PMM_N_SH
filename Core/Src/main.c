@@ -14,7 +14,7 @@
 #include "pdm_init.h"
 #include "pdm.h"
 
-
+#include "pmm_deploy.h"
 #include "pmm_config.h"
 #include "pmm_init.h"
 
@@ -40,7 +40,7 @@ extern uint32_t CAN_cmd_mask_status;
 //LL_mDelay(1);
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release
 
-#define TCA9539_I2C_ADDR					0b01110100
+#define TCA9539_I2C_ADDR					0x74
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
   (byte & 0x80 ? '1' : '0'), \
@@ -117,8 +117,14 @@ int main(void){
 
 //}
 
+//-------- Enable PMM I2C ------------------//
+LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_0);
+LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12);
+LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_13);
+//--------------------------------------//
 #ifdef DEBUGprintf
 uint32_t last_cmd_mask_status = 0;
+
 #endif
 
 	while (1){
@@ -136,6 +142,9 @@ uint32_t last_cmd_mask_status = 0;
 		CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr);
 
 		LL_mDelay(1000);
+
+
+		PMM_Deploy();
 
 	}
 

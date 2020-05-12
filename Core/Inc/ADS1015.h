@@ -1,16 +1,9 @@
-/*
- * ADS1015.h
- *
- *  Created on: 19 апр. 2020 г.
- *      Author: ftor
- */
-
 #ifndef INC_ADS1015_H_
 #define INC_ADS1015_H_
 
 /*
 typedef enum {
-  ERROR_N = -1,	
+  ERROR_N = -1,
   SUCCESS = 0,
   ERROR = !SUCCESS,
 } ErrorStatus; */
@@ -78,15 +71,17 @@ typedef enum {
 float ADS1015_raw_to_Volts(float LSB_ADC_SIZE, int16_t raw_adc);
 int16_t ADS1015_Volts_to_raw(float LSB_ADC_SIZE, float volts );
 
-ErrorStatus ADS1015_read_mVolts_int16(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, int16_t *meas_voltage);
-ErrorStatus ADS1015_read_Volts_float(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float *meas_voltage);
+ErrorStatus ADS1015_get_lsb(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *lsb);
+
+ErrorStatus ADS1015_read_mVolts_int16(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *meas_voltage);
+ErrorStatus ADS1015_read_Volts_float(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *meas_voltage);
 
 ErrorStatus ADS1015_read_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint16_t *config);
 ErrorStatus ADS1015_read_conv_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *data);
 ErrorStatus ADS1015_read_lo_thresh_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *read_data);
-ErrorStatus ADS1015_read_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float *read_data);
+ErrorStatus ADS1015_read_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *read_data);
 ErrorStatus ADS1015_read_hi_thresh_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *read_data);
-ErrorStatus ADS1015_read_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float *read_data);
+ErrorStatus ADS1015_read_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *read_data);
 
 ErrorStatus ADS1015_read_conv_status(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *status);
 ErrorStatus ADS1015_read_mux(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config);
@@ -109,7 +104,7 @@ ErrorStatus ADS1015_setup_comp_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr,
 ErrorStatus ADS1015_setup_comp_pol(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t polarity);
 ErrorStatus ADS1015_setup_latching_comp(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t mode);
 ErrorStatus ADS1015_setup_comp_queue(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t mode);
-ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float th_val_volts);
-ErrorStatus ADS1015_setup_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float th_val_volts);
+ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float th_val_volts);
+ErrorStatus ADS1015_setup_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float th_val_volts);
 
 #endif /* INC_ADS1015_H_ */

@@ -11,6 +11,7 @@
 #define FRAM_WRITE_PROTECTION_ENABLE	1
 #define FRAM_WRITE_PROTECTION_DISABLE	0
 
+#define FRAM_SIZE_64KB			0x2000
 
 /*
 typedef enum {
@@ -19,6 +20,7 @@ typedef enum {
   ERROR = !SUCCESS,
 } ErrorStatus; */
 
+ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_size);
 
 ErrorStatus FRAM_set_write_access(uint8_t access_flag);
 
