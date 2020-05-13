@@ -11,9 +11,7 @@
 */
 ErrorStatus TMP1075_read_id(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-	int8_t err_status = I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x0F, read_data);
-
-	return err_status;
+	return I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x0F, read_data);
 }
 
 
@@ -25,9 +23,7 @@ ErrorStatus TMP1075_read_id(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *r
 */
 ErrorStatus TMP1075_read_raw_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-	int8_t err_status = I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x00, read_data);
-
-	return err_status;
+	return I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x00, read_data);
 }
 
 /**	@brief	Reading data from temperature register and convert to float.
@@ -41,7 +37,6 @@ ErrorStatus TMP1075_read_float_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_ad
 	uint16_t ADC_CODE;
 
 	if( I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x00, &ADC_CODE) != SUCCESS){
-
 		return ERROR_N;
 	}
 
@@ -61,7 +56,6 @@ ErrorStatus TMP1075_read_int8_temperature(I2C_TypeDef *I2Cx, uint8_t tmp1075_add
 	uint16_t ADC_CODE;
 
 	if( I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x00, &ADC_CODE) != SUCCESS){
-
 		return ERROR_N;
 	}
 
@@ -110,11 +104,11 @@ int8_t TMP1075_raw_to_int(uint16_t ADC_CODE){
 */
 uint16_t TMP1075_float_to_binary(float val_temp){
 
-	 int16_t ADC_data_int = 0;
+	int16_t ADC_data_int = 0;
 
-	 ADC_data_int = (int16_t)(val_temp/0.0625);
+	ADC_data_int = (int16_t)(val_temp/0.0625);
 
-	 ADC_data_int = (int16_t)(ADC_data_int<<4);
+	ADC_data_int = (int16_t)(ADC_data_int<<4);
 
 	return ((uint16_t)ADC_data_int);
 }
@@ -127,9 +121,7 @@ uint16_t TMP1075_float_to_binary(float val_temp){
 */
 ErrorStatus TMP1075_read_config(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
-	int8_t err_status = I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, read_data);
-
-	return err_status;
+	return I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, read_data);
 }
 
 
@@ -144,21 +136,24 @@ ErrorStatus TMP1075_set_mode(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t mo
 	uint16_t last_state;
 	uint16_t current_state;
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &last_state) != SUCCESS ){
+		return ERROR_N;
+	}
+
 	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(1 << 8))) | (mode << 8)) ) != SUCCESS ){
 		return ERROR_N;
 	}
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-	if((current_state & (~(1 << 8)))  | (mode << 8)){
-
-		return SUCCESS;
-
-	}else{
-
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &current_state) != SUCCESS ){
 		return ERROR_N;
 	}
 
+	if((current_state & (~(1 << 8)))  | (mode << 8)){
+		return SUCCESS;
+
+	}else{
+		return ERROR_N;
+	}
 }
 
 
@@ -177,14 +172,19 @@ ErrorStatus TMP1075_set_time_conversion(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr,
 	uint16_t last_state;
 	uint16_t current_state;
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &last_state) != SUCCESS ){
+		return ERROR_N;
+	}
+
 	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(3 << 13))) | (time << 13)) )!= SUCCESS ){
 		return ERROR_N;
 	}
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-	if(((last_state & (~(3 << 13))) | (time << 13)) != current_state){
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &current_state) != SUCCESS ){
+		return ERROR_N;
+	}
 
+	if( ( (last_state & (~(3 << 13))) | (time << 13) ) != current_state ){
 		return ERROR_N;
 	}
 
@@ -202,14 +202,19 @@ ErrorStatus TMP1075_one_shot_conversion_start(I2C_TypeDef *I2Cx, uint8_t tmp1075
 	uint16_t last_state;
 	uint16_t current_state;
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &last_state) != SUCCESS ){
+		return ERROR_N;
+	}
+
 	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t) ((last_state & (~(1 << 15))) | (1 << 15)) ) != SUCCESS ){
 		return ERROR_N;
 	}
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-	if(((last_state & (~(1 << 15))) | (1 << 15)) != current_state){
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &current_state) != SUCCESS ){
+		return ERROR_N;
+	}
 
+	if(((last_state & (~(1 << 15))) | (1 << 15)) != current_state){
 		return ERROR_N;
 	}
 
@@ -224,12 +229,11 @@ ErrorStatus TMP1075_one_shot_conversion_start(I2C_TypeDef *I2Cx, uint8_t tmp1075
 */
 ErrorStatus TMP1075_disable_ALERT_pin(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
 
-	if( TMP1075_set_low_limit( I2Cx, tmp1075_addr, -128) == -1){
+	if( TMP1075_set_low_limit( I2Cx, tmp1075_addr, -128) != SUCCESS){
 		return ERROR_N;
 	}
 
-	if( TMP1075_set_high_limit(I2Cx, tmp1075_addr, 127.9375) == -1){
-
+	if( TMP1075_set_high_limit(I2Cx, tmp1075_addr, 127.9375) != SUCCESS){
 		return ERROR_N;
 	}
 
@@ -250,13 +254,19 @@ ErrorStatus TMP1075_set_mode_ALERT_pin(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, 
 	uint16_t last_state;
 	uint16_t current_state;
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &last_state) != SUCCESS ){
+		return ERROR_N;
+	}
+
 	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01,  (uint16_t)(( last_state & (~(1 << 9)) ) | (mode << 9))  ) != SUCCESS ){
 		return ERROR_N;
 	}
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-	if(((last_state & (~(1 << 9))) | (mode << 9)) != current_state){
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &current_state) != SUCCESS ){
+		return ERROR_N;
+	}
+
+	if( ( (last_state & (~(1 << 9))) | (mode << 9) ) != current_state ){
 
 		return ERROR_N;
 	}
@@ -278,14 +288,19 @@ ErrorStatus TMP1075_ALERT_active_level(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, 
 	uint16_t last_state;
 	uint16_t current_state;
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &last_state) != SUCCESS ){
+		return ERROR_N;
+	}
+
 	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)(( last_state & (~(1 << 10))) | (mode << 10)) ) != SUCCESS ){
 		return ERROR_N;
 	}
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-	if(((last_state & (~(1 << 10))) | (mode << 10)) != current_state){
+	if( TMP1075_read_config( I2Cx, tmp1075_addr, &current_state ) != SUCCESS ){
+		return ERROR_N;
+	}
 
+	if( ( (last_state & (~(1 << 10))) | (mode << 10) ) != current_state ){
 		return ERROR_N;
 	}
 
@@ -308,19 +323,23 @@ ErrorStatus TMP1075_ALERT_sensitivity(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, u
 	uint16_t last_state;
 	uint16_t current_state;
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &last_state);
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &last_state) != SUCCESS ){
+		return ERROR_N;
+	}
+
 	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x01, (uint16_t)((last_state & (~(3 << 11))) | (mode<< 11)) ) != SUCCESS ) {
 		return ERROR_N;
 	}
 
-	TMP1075_read_config(I2Cx, tmp1075_addr, &current_state);
-	if(((last_state & (~(3 << 11))) | (mode << 11)) != current_state){
-
+	if( TMP1075_read_config(I2Cx, tmp1075_addr, &current_state) != SUCCESS ){
 		return ERROR_N;
 	}
 
-	return SUCCESS;
-   
+	if(((last_state & (~(3 << 11))) | (mode << 11)) != current_state){
+		return ERROR_N;
+	}
+
+	return SUCCESS;  
 }
 
 
@@ -339,12 +358,13 @@ ErrorStatus TMP1075_set_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float
 
 	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x02, low_limit_temp) != SUCCESS ){
 		return ERROR_N;
-	};
-	
-	TMP1075_get_low_limit(I2Cx, tmp1075_addr, &get_reg_data);
+	}
+
+	if( TMP1075_get_low_limit(I2Cx, tmp1075_addr, &get_reg_data) != SUCCESS ){
+		return ERROR_N;
+	}
 	
 	if( low_limit_temp != get_reg_data ){
-
 		return ERROR_N;
 	}
 
@@ -366,14 +386,14 @@ ErrorStatus TMP1075_set_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, floa
 	high_limit_temp = TMP1075_float_to_binary(high_limit);
 
 	if( I2C_Write_word_u16_St(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x03, high_limit_temp) != SUCCESS ){
-
 		return ERROR_N;
 	}
 
-	TMP1075_get_high_limit(I2Cx, tmp1075_addr, &get_reg_data);
-	
-	if( high_limit_temp != get_reg_data ){
+	if( TMP1075_get_high_limit(I2Cx, tmp1075_addr, &get_reg_data) != SUCCESS ){
+		return ERROR_N;
+	}
 
+	if( high_limit_temp != get_reg_data ){
 		return ERROR_N;
 	}
 	
@@ -389,7 +409,6 @@ ErrorStatus TMP1075_set_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, floa
 ErrorStatus TMP1075_get_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
 	return I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr,  I2C_SIZE_REG_ADDR_U8, (uint32_t)0x02, read_data);
-
 }
 
 
@@ -401,6 +420,5 @@ ErrorStatus TMP1075_get_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint1
 ErrorStatus TMP1075_get_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data){
 
 	return I2C_Read_word_u16_St_ReSt(I2Cx, tmp1075_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)0x03, read_data);
-
 }
 

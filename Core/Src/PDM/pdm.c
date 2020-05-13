@@ -11,7 +11,7 @@
 
 /** @brief  Set state (enable/disable) power channel.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  number_pwr_channel - number channel on/off:
+	@param  number_pwr_channel - number of channel :
 								PDM_PWR_Channel_1 
 								PDM_PWR_Channel_2
 								PDM_PWR_Channel_3
@@ -19,7 +19,9 @@
 								PDM_PWR_Channel_5
 								PDM_PWR_Channel_6 
 
-	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel. (ENABLE, DISABLE).
+	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
+								ENABLE 
+								DISABLE
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uint8_t state_channel ){
