@@ -31,7 +31,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 	_PDM_pins pdm_pins;
 
 
-	if( (state_channel != ENABLE) || (state_channel != DISABLE) ){
+	if( (state_channel != ENABLE) && (state_channel != DISABLE) ){
 		return ERROR_N;
 	}
 

@@ -29,8 +29,7 @@
 
 /****************************TODO*************************
 1. Need to think about delay 30 minuts. 
-2. Need change constatn mode EN/Dis after teste with Doroshkin in CAN_cmd.c
-3. Need see use analog filter in I2C
+2. Need change constatn mode EN/Dis after teste with Doroshkin in CAN_cmd.c (delete debug)
 
 
 **********************************************************/
@@ -89,7 +88,11 @@ int main(void){
 	SetupInterrupt();
 	//IWDG_Init();
 
+//******************************************************************
+	ENABLE_TMUX1209_I2C();   
 	PDM_init( pdm_ptr );
+	LL_mDelay(100); //Delay for startup power supply
+	
 
 	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
 	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
@@ -98,24 +101,20 @@ int main(void){
 	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
 	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
 
-	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
-	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
-	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
-	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
-	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
-	PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
-
+	//PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+	//PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+	//PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
+	//PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
+	//PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
+	//PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
+//******************************************************************
 
 
 //Need test!!!!!!!!!!!!
-	uint8_t pwr_reboot= 6;
-	PMM_Detect_PowerRebootCPU(&pwr_reboot);
+	//uint8_t pwr_reboot= 6;
+//	PMM_Detect_PowerRebootCPU(&pwr_reboot);
 //!!!!!!!
 
- 
-//while(1){
-
-//}
 
 #ifdef DEBUGprintf
 uint32_t last_cmd_mask_status = 0;
@@ -133,9 +132,9 @@ uint32_t last_cmd_mask_status = 0;
 			}
 		#endif
 
-		CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr);
-
-		LL_mDelay(1000);
+		if(CAN_cmd_mask_status != 0){
+			CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr);
+		}
 
 	}
 
