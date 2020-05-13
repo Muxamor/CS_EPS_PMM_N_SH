@@ -1,21 +1,10 @@
-/*
- * ADS1015.c
- *
- *  Created on: 19 апр. 2020 г.
- *      Author: ftor
- */
 #include "stm32l4xx.h"
 #include "i2c_comm.h"
 #include "ADS1015.h"
 
-/**********************************TO DO ************************************/
-/* In the next version lib, need implement a range measurement request		*/
-/* from the register FSR and will not need to pass in function LSB_ADC_SIZE	*/  
-/****************************************************************************/
-
 
 /** @brief	Converting RAW code ADC to Volts.
-	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR 
+	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR
 			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
 			ADS1015_LSB_SIZE_FSR_4096mV = 0.002 V - with FSR  ±4.096V
 			ADS1015_LSB_SIZE_FSR_2048mV = 0.001 V - with FSR  ±2.048V
@@ -31,8 +20,8 @@ float ADS1015_raw_to_Volts(float LSB_ADC_SIZE, int16_t raw_adc){
 }
 
 
-/** @brief	Converting voltw to ADC code(raw).
-	@param	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR 
+/** @brief	Converting volts to ADC code(raw).
+	@param	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR
 			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
 			ADS1015_LSB_SIZE_FSR_4096mV = 0.002 V - with FSR  ±4.096V
 			ADS1015_LSB_SIZE_FSR_2048mV = 0.001 V - with FSR  ±2.048V
@@ -40,7 +29,7 @@ float ADS1015_raw_to_Volts(float LSB_ADC_SIZE, int16_t raw_adc){
 			ADS1015_LSB_SIZE_FSR_512mV	= 0.000250 V - with FSR  ±0.512V
 			ADS1015_LSB_SIZE_FSR_256mV	= 0.000125 V - with FSR  ±0.256V
 	@param 	volts - voltage value that will be converted to ADC code.
-	@retval ADC code in RAW format 
+	@retval ADC code in RAW format
 */
 int16_t ADS1015_Volts_to_raw(float LSB_ADC_SIZE, float volts ){
 
@@ -48,23 +37,73 @@ int16_t ADS1015_Volts_to_raw(float LSB_ADC_SIZE, float volts ){
 }
 
 
-/** @brief	Read voltage from ADC in milivolts int16 format.
+/** @brief	Read ADS lsb size in float format.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
-	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR 
+	@param 	*lsb - current LSB quant size ADC with diff. FSR. It will consist one of next values:
 			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
 			ADS1015_LSB_SIZE_FSR_4096mV = 0.002 V - with FSR  ±4.096V
 			ADS1015_LSB_SIZE_FSR_2048mV = 0.001 V - with FSR  ±2.048V
 			ADS1015_LSB_SIZE_FSR_1024mV = 0.000500 V - with FSR  ±1.0424V
 			ADS1015_LSB_SIZE_FSR_512mV	= 0.000250 V - with FSR  ±0.512V
 			ADS1015_LSB_SIZE_FSR_256mV	= 0.000125 V - with FSR  ±0.256V
-	@param 	*meas_voltage - pointer to store measured voltage in milivolts int16 format.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus ADS1015_read_mVolts_int16(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, int16_t *meas_voltage){
+ErrorStatus ADS1015_get_lsb(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *lsb){
+
+	uint8_t ADC_FSR = -1;
+
+	if(ADS1015_read_gain_FSR(I2Cx, I2C_ADS1015_addr, &ADC_FSR) != SUCCESS ){
+		return ERROR_N;
+	}
+	switch (ADC_FSR) {
+		case 0:
+			*lsb = ADS1015_LSB_SIZE_FSR_6144mV;
+			break;
+		case 1:
+			*lsb = ADS1015_LSB_SIZE_FSR_4096mV;
+			break;
+		case 2:
+			*lsb = ADS1015_LSB_SIZE_FSR_2048mV;
+			break;
+		case 3:
+			*lsb = ADS1015_LSB_SIZE_FSR_1024mV;
+			break;
+		case 4:
+			*lsb = ADS1015_LSB_SIZE_FSR_512mV;
+			break;
+		case 5:
+			*lsb = ADS1015_LSB_SIZE_FSR_256mV;
+			break;
+		case 6:
+			*lsb = ADS1015_LSB_SIZE_FSR_256mV;
+			break;
+		case 7:
+			*lsb = ADS1015_LSB_SIZE_FSR_256mV;
+			break;
+		default:
+			return ERROR_N;
+			break;
+	}
+	return SUCCESS;
+}
+
+
+/** @brief	Read voltage from ADC in millivolts int16 format.
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	I2C_ADS1015_addr - 7-bit device address.
+	@param 	*meas_voltage - pointer to store measured voltage in millivolts int16 format.
+	@retval 0-OK, -1-ERROR_N
+*/
+ErrorStatus ADS1015_read_mVolts_int16(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *meas_voltage){
 
 	int16_t raw_adc = 0;
 	float adc_meas_voltage = 0;
+	float LSB_ADC_SIZE = 0;
+
+	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS){
+		return ERROR_N;
+	}
 
 	if(ADS1015_read_conv_reg(I2Cx, I2C_ADS1015_addr, &raw_adc) != SUCCESS ){
 		return ERROR_N;
@@ -81,20 +120,17 @@ ErrorStatus ADS1015_read_mVolts_int16(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_add
 /** @brief	Read voltage from ADC in float format.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
-	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR 
-			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
-			ADS1015_LSB_SIZE_FSR_4096mV = 0.002 V - with FSR  ±4.096V
-			ADS1015_LSB_SIZE_FSR_2048mV = 0.001 V - with FSR  ±2.048V
-			ADS1015_LSB_SIZE_FSR_1024mV = 0.000500 V - with FSR  ±1.0424V
-			ADS1015_LSB_SIZE_FSR_512mV	= 0.000250 V - with FSR  ±0.512V
-			ADS1015_LSB_SIZE_FSR_256mV	= 0.000125 V - with FSR  ±0.256V
 	@param 	*meas_voltage - pointer to store measured voltage in float format.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus ADS1015_read_Volts_float(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float *meas_voltage){
+ErrorStatus ADS1015_read_Volts_float(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *meas_voltage){
 
 	int16_t raw_adc = 0;
+	float LSB_ADC_SIZE = 0;
 
+	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS){
+		return ERROR_N;
+	}
 	if(ADS1015_read_conv_reg(I2Cx, I2C_ADS1015_addr, &raw_adc) != SUCCESS ){
 		return ERROR_N;
 	}
@@ -164,20 +200,17 @@ ErrorStatus ADS1015_read_lo_thresh_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 /** @brief	Reading value in voltage low threshold register .
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
-	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR 
-			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
-			ADS1015_LSB_SIZE_FSR_4096mV = 0.002 V - with FSR  ±4.096V
-			ADS1015_LSB_SIZE_FSR_2048mV = 0.001 V - with FSR  ±2.048V
-			ADS1015_LSB_SIZE_FSR_1024mV = 0.000500 V - with FSR  ±1.0424V
-			ADS1015_LSB_SIZE_FSR_512mV	= 0.000250 V - with FSR  ±0.512V
-			ADS1015_LSB_SIZE_FSR_256mV	= 0.000125 V - with FSR  ±0.256V
 	@param 	*read_data - pointer to store value of low threshold register in voltage in float format.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus ADS1015_read_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float *read_data){
+ErrorStatus ADS1015_read_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *read_data){
 
 	int16_t raw_data_th_lo;
+	float LSB_ADC_SIZE = 0;
 
+	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS){
+		return ERROR_N;
+	}
 	if( ADS1015_read_lo_thresh_reg(I2Cx, I2C_ADS1015_addr, &raw_data_th_lo) != SUCCESS ){
 		return ERROR_N;
 	}
@@ -211,20 +244,17 @@ ErrorStatus ADS1015_read_hi_thresh_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 /** @brief	Reading value in voltage high threshold register .
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
-	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR 
-			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
-			ADS1015_LSB_SIZE_FSR_4096mV = 0.002 V - with FSR  ±4.096V
-			ADS1015_LSB_SIZE_FSR_2048mV = 0.001 V - with FSR  ±2.048V
-			ADS1015_LSB_SIZE_FSR_1024mV = 0.000500 V - with FSR  ±1.0424V
-			ADS1015_LSB_SIZE_FSR_512mV	= 0.000250 V - with FSR  ±0.512V
-			ADS1015_LSB_SIZE_FSR_256mV	= 0.000125 V - with FSR  ±0.256V
 	@param 	*read_data - pointer to store value of high threshold register in voltage in float format.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus ADS1015_read_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float *read_data){
+ErrorStatus ADS1015_read_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *read_data){
 
 	int16_t raw_data_th_hi;
+	float LSB_ADC_SIZE = 0;
 
+	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS){
+		return ERROR_N;
+	}
 	if( ADS1015_read_hi_thresh_reg(I2Cx, I2C_ADS1015_addr, &raw_data_th_hi) != SUCCESS ){
 		return ERROR_N;
 	}
@@ -286,7 +316,7 @@ ErrorStatus ADS1015_read_mux(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_
 }
 
 
-/** @brief	Reading gain amplifier configuration. These bits set the FSR (Full-Scale Range) of the programmable gain amplifier. 
+/** @brief	Reading gain amplifier configuration. These bits set the FSR (Full-Scale Range) of the programmable gain amplifier.
 			These bits serve no function on the ADS1013.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
@@ -754,20 +784,17 @@ ErrorStatus ADS1015_setup_comp_queue(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 /** @brief	Writing value in voltage to low threshold configuration.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
-	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR 
-			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
-			ADS1015_LSB_SIZE_FSR_4096mV = 0.002 V - with FSR  ±4.096V
-			ADS1015_LSB_SIZE_FSR_2048mV = 0.001 V - with FSR  ±2.048V
-			ADS1015_LSB_SIZE_FSR_1024mV = 0.000500 V - with FSR  ±1.0424V
-			ADS1015_LSB_SIZE_FSR_512mV	= 0.000250 V - with FSR  ±0.512V
-			ADS1015_LSB_SIZE_FSR_256mV	= 0.000125 V - with FSR  ±0.256V
 	@param 	th_val_volts - Low threshold value in Volts
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float th_val_volts){
+ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float th_val_volts){
 
 	int16_t raw_data;
+	float LSB_ADC_SIZE = 0;
 
+	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS ){
+		return ERROR_N;
+	}
 	raw_data = ADS1015_Volts_to_raw( LSB_ADC_SIZE, th_val_volts );
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_LOW_THRESH_REG_ADDR, (uint16_t)raw_data ) != SUCCESS ){
@@ -781,20 +808,17 @@ ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 /** @brief	Writing value  in voltage to high threshold configuration.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
-	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR 
-			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
-			ADS1015_LSB_SIZE_FSR_4096mV = 0.002 V - with FSR  ±4.096V
-			ADS1015_LSB_SIZE_FSR_2048mV = 0.001 V - with FSR  ±2.048V
-			ADS1015_LSB_SIZE_FSR_1024mV = 0.000500 V - with FSR  ±1.0424V
-			ADS1015_LSB_SIZE_FSR_512mV	= 0.000250 V - with FSR  ±0.512V
-			ADS1015_LSB_SIZE_FSR_256mV	= 0.000125 V - with FSR  ±0.256V
 	@param 	th_val_volts - High threshold value in Volts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus ADS1015_setup_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float LSB_ADC_SIZE, float th_val_volts){
+ErrorStatus ADS1015_setup_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float th_val_volts){
 
 	int16_t raw_data;
+	float LSB_ADC_SIZE = 0;
 
+	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS ){
+		return ERROR_N;
+	}
 	raw_data = ADS1015_Volts_to_raw( LSB_ADC_SIZE, th_val_volts );
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_HIGH_THRESH_REG_ADDR, (uint16_t)raw_data ) != SUCCESS ){
@@ -803,6 +827,3 @@ ErrorStatus ADS1015_setup_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 
 	return SUCCESS;
 }
-
-
-
