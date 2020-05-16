@@ -694,7 +694,7 @@ ErrorStatus INA231_set_sol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((1 << 15) | read_reg);
+	write_reg = (uint16_t)((1 << 15) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -716,7 +716,7 @@ ErrorStatus INA231_reset_sol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((0 << 15) | read_reg);
+	write_reg = (uint16_t)((~(1 << 15)) & read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -740,7 +740,7 @@ ErrorStatus INA231_set_sul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((1 << 14) | read_reg);
+	write_reg = (uint16_t)((1 << 14) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -762,7 +762,7 @@ ErrorStatus INA231_reset_sul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((0 << 14) | read_reg);
+	write_reg = (uint16_t)((~(1 << 14)) & read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -786,7 +786,7 @@ ErrorStatus INA231_set_bol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((1 << 13) | read_reg);
+	write_reg = (uint16_t)((1 << 13) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -808,7 +808,7 @@ ErrorStatus INA231_reset_bol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((0 << 13) | read_reg);
+	write_reg = (uint16_t)((~(1 << 13)) & read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -832,7 +832,7 @@ ErrorStatus INA231_set_bul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((1 << 12) | read_reg);
+	write_reg = (uint16_t)((1 << 12) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -854,7 +854,7 @@ ErrorStatus INA231_reset_bul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((0 << 12) | read_reg);
+	write_reg = (uint16_t)((~(1 << 12)) & read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -878,7 +878,7 @@ ErrorStatus INA231_set_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((1 << 11) | read_reg);
+	write_reg = (uint16_t)((1 << 11) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -900,7 +900,7 @@ ErrorStatus INA231_reset_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((0 << 11) | read_reg);
+	write_reg = (uint16_t)((~(1 << 11)) & read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -925,7 +925,7 @@ ErrorStatus INA231_set_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((1 << 10) | read_reg);
+	write_reg = (uint16_t)((1 << 10) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -947,7 +947,7 @@ ErrorStatus INA231_reset_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((0 << 10) | read_reg);
+	write_reg = (uint16_t)((~(1 << 10)) & read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -955,153 +955,6 @@ ErrorStatus INA231_reset_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	return SUCCESS;
 }
-
-
-///** @brief	Set "Alert Function Flag" bit. Although only one alert function at a time can be monitored
-//  			at the ALERT pin, the Conversion Ready bit (CNVR, bit 10) can also be enabled to assert the
-//  			ALERT pin. Reading the Alert Function Flag bit after an alert can help determine if the alert
-//  			function was the source of the alert. When the Alert Latch Enable bit is set to Latch mode,
-//  			the Alert Function Flag bit clears only when the Mask/Enable register is read. When the
-//  			Alert Latch Enable bit is set to Transparent mode, the Alert Function Flag bit is cleared
-//			after the next conversion that does not result in an alert condition.
-//	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-//	@param 	I2C_INA231_addr - 7-bit device address.
-//	@retval 0-OK, -1-ERROR_N
-//*/
-//ErrorStatus INA231_set_aff(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
-//
-//	uint16_t read_reg;
-//	uint16_t write_reg;
-//
-//	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//	write_reg = (uint8_t)((1 << 4) | read_reg);
-//
-//	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//
-//	return SUCCESS;
-//}
-//
-///** @brief	Reset "Alert Function Flag" bit.
-//	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-//	@param 	I2C_INA231_addr - 7-bit device address.
-//	@retval 0-OK, -1-ERROR_N
-//*/
-//ErrorStatus INA231_reset_aff(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
-//
-//	uint16_t read_reg;
-//	uint16_t write_reg;
-//
-//	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//	write_reg = (uint8_t)((0 << 4) | read_reg);
-//
-//	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//
-//	return SUCCESS;
-//}
-
-
-///** @brief	Set "Conversion Ready Flag" bit. Although the INA231 can be read at any time, and the data from
-//  			the last conversion are available, this bit is provided to help coordinate single-shot or triggered
-//  			conversions. This bit is set after all conversions, averaging, and	multiplications are complete.
-//  			This bit clears under the following conditions in single-shot mode:
-//			1) Writing to the Configuration register (except for power-down or disable selections)
-//			2) Reading the Mask/Enable register
-//	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-//	@param 	I2C_INA231_addr - 7-bit device address.
-//	@retval 0-OK, -1-ERROR_N
-//*/
-//ErrorStatus INA231_set_cvrf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
-//
-//	uint16_t read_reg;
-//	uint16_t write_reg;
-//
-//	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//	write_reg = (uint8_t)((1 << 3) | read_reg);
-//
-//	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//
-//	return SUCCESS;
-//}
-//
-///** @brief	Reset "Conversion Ready Flag" bit.
-//	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-//	@param 	I2C_INA231_addr - 7-bit device address.
-//	@retval 0-OK, -1-ERROR_N
-//*/
-//ErrorStatus INA231_reset_cvrf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
-//
-//	uint16_t read_reg;
-//	uint16_t write_reg;
-//
-//	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//	write_reg = (uint8_t)((0 << 3) | read_reg);
-//
-//	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//
-//	return SUCCESS;
-//}
-
-
-///** @brief	Set "Math Overflow Flag" bit. This bit is set to 1 if an arithmetic operation results in
-//  			an overflow error; it indicates that current and power data may be invalid.
-//	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-//	@param 	I2C_INA231_addr - 7-bit device address.
-//	@retval 0-OK, -1-ERROR_N
-//*/
-//ErrorStatus INA231_set_ovf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
-//
-//	uint16_t read_reg;
-//	uint16_t write_reg;
-//
-//	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//	write_reg = (uint8_t)((1 << 2) | read_reg);
-//
-//	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//
-//	return SUCCESS;
-//}
-//
-///** @brief	Reset "Math Overflow Flag" bit.
-//	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-//	@param 	I2C_INA231_addr - 7-bit device address.
-//	@retval 0-OK, -1-ERROR_N
-//*/
-//ErrorStatus INA231_reset_ovf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
-//
-//	uint16_t read_reg;
-//	uint16_t write_reg;
-//
-//	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//	write_reg = (uint8_t)((0 << 2) | read_reg);
-//
-//	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
-//		return ERROR_N;
-//	}
-//
-//	return SUCCESS;
-//}
 
 
 /** @brief	Set "Alert Polarity" bit. Configures the latching feature of the ALERT pin and the flag bits.
@@ -1119,7 +972,7 @@ ErrorStatus INA231_set_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((1 << 1) | read_reg);
+	write_reg = (uint16_t)((1 << 1) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -1143,7 +996,7 @@ ErrorStatus INA231_reset_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((0 << 1) | read_reg);
+	write_reg = (uint16_t)((~(1 << 1)) & read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -1171,7 +1024,7 @@ ErrorStatus INA231_set_len(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)(1 | read_reg);
+	write_reg = (uint16_t)((1 << 0) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -1198,7 +1051,7 @@ ErrorStatus INA231_reset_len(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)(0 | read_reg);
+	write_reg = (uint16_t)((~(1 << 0)) & read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;
@@ -1222,7 +1075,7 @@ ErrorStatus INA231_power_reset(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CONFIGURATION_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	write_reg = (uint8_t)((1 << 15) | read_reg);
+	write_reg = (uint16_t)((1 << 15) | read_reg);
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CONFIGURATION_REG_ADDR, write_reg) != SUCCESS){
 		return ERROR_N;

@@ -20,13 +20,13 @@
 #define INA231_ALERT_LIMIT_REG_ADDR				0x07
 
 #define INA231_AVERAGING_NUM_1					0x00
-#define INA231_AVERAGING_NUM_4					0x00
-#define INA231_AVERAGING_NUM_16					0x00
-#define INA231_AVERAGING_NUM_64					0x00
-#define INA231_AVERAGING_NUM_128				0x00
-#define INA231_AVERAGING_NUM_256				0x00
-#define INA231_AVERAGING_NUM_512				0x00
-#define INA231_AVERAGING_NUM_1024				0x00
+#define INA231_AVERAGING_NUM_4					0x01
+#define INA231_AVERAGING_NUM_16					0x02
+#define INA231_AVERAGING_NUM_64					0x03
+#define INA231_AVERAGING_NUM_128				0x04
+#define INA231_AVERAGING_NUM_256				0x05
+#define INA231_AVERAGING_NUM_512				0x06
+#define INA231_AVERAGING_NUM_1024				0x07
 
 #define INA231_CONVERSION_TIME_140us			0x00
 #define INA231_CONVERSION_TIME_204us			0x01
@@ -102,12 +102,6 @@ ErrorStatus INA231_set_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
 ErrorStatus INA231_reset_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
 ErrorStatus INA231_set_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
 ErrorStatus INA231_reset_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
-//ErrorStatus INA231_set_aff(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
-//ErrorStatus INA231_reset_aff(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
-//ErrorStatus INA231_set_cvrf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
-//ErrorStatus INA231_reset_cvrf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
-//ErrorStatus INA231_set_ovf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
-//ErrorStatus INA231_reset_ovf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
 ErrorStatus INA231_set_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
 ErrorStatus INA231_reset_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
 ErrorStatus INA231_set_len(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
