@@ -1377,7 +1377,7 @@ ErrorStatus INA231_meas_bus_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, fl
 	@param 	*bus_voltage - pointer to store measured bus voltage value in milliVolts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_bus_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *bus_voltage){
+ErrorStatus INA231_meas_bus_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *bus_voltage){
 
 	uint16_t bus_volt_reg;
 
@@ -1385,7 +1385,7 @@ ErrorStatus INA231_meas_bus_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint
 		return ERROR_N;
 	}
 
-	*bus_voltage = (uint16_t)((bus_volt_reg * 100) / 8);
+	*bus_voltage = (uint32_t)((bus_volt_reg * 10) / 8);
 
 	return SUCCESS;
 }
@@ -1406,7 +1406,7 @@ ErrorStatus INA231_meas_shunt_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, 
 		return ERROR_N;
 	}
 
-	*shunt_voltage = (float)(lsb * bus_volt_reg);
+	*shunt_voltage = (float)(lsb * shunt_volt_reg);
 
 	return SUCCESS;
 }
@@ -1417,7 +1417,7 @@ ErrorStatus INA231_meas_shunt_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, 
 	@param 	*shunt_voltage - pointer to store measured shunt voltage value in milliVolts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_shunt_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *shunt_voltage){
+ErrorStatus INA231_meas_shunt_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *shunt_voltage){
 
 	uint16_t shunt_volt_reg;
 
@@ -1425,7 +1425,7 @@ ErrorStatus INA231_meas_shunt_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, ui
 		return ERROR_N;
 	}
 
-	*shunt_voltage = (uint16_t)(bus_volt_reg / 400);
+	*shunt_voltage = (uint32_t)(shunt_volt_reg / 400);
 
 	return SUCCESS;
 }
