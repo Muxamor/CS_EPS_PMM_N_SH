@@ -2,6 +2,13 @@
 #include "i2c_comm.h"
 #include "ADS1015.h"
 
+/**********************************TO DO ************************************/
+/* In the next version lib, need implement a range measurement request		*/
+/* from the register FSR and will not need to pass in function LSB_ADC_SIZE	*/
+/****************************************************************************/
+
+
+
 
 /** @brief	Converting RAW code ADC to Volts.
 	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR
