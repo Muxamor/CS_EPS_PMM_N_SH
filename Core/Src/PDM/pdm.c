@@ -145,6 +145,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 
 			if( state_channel == ENABLE ){
 				error_I2C = TCA9539_Set_output_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_out_eFuse );
+				//TO DO. Need add checking Power Good signal.
 
 			}else if( state_channel == DISABLE ){
 				error_I2C = TCA9539_Reset_output_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_out_eFuse );
