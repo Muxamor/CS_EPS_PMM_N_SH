@@ -156,7 +156,7 @@ ErrorStatus TCA9539_read_output_pin(I2C_TypeDef *I2Cx, uint8_t tca9539_I2C_addr,
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	tca9539_I2C_addr - 8-bit device address.
 	@param 	pin - pin number (TCA9539_IO_P00...TCA9539_IO_P07, TCA9539_IO_P10...TCA9539_IO_P17).
-	@param 	*read_data - pointer to variable where will be store value of pin of input register.
+	@param 	*read_data - pointer to variable 1 or 0 where will be store value of pin of input register.
 	@retval 0-OK, ERROR_N-Error
 */
 ErrorStatus TCA9539_read_input_pin(I2C_TypeDef *I2Cx, uint8_t tca9539_I2C_addr, uint16_t pin, uint8_t *read_data){

@@ -363,6 +363,149 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 	return SUCCESS;
 }
 
+
+
+/** @brief  Get Power Good power channel status 
+	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
+	@param  number_pwr_channel - number channel on/off:
+								PDM_PWR_Channel_1 
+								PDM_PWR_Channel_2
+								PDM_PWR_Channel_3
+								PDM_PWR_Channel_4
+								PDM_PWR_Channel_5
+								PDM_PWR_Channel_6 
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
+
+
+	uint8_t i = 0;
+	uint8_t read_val_pin_PG_in_eF = 1;
+	uint8_t read_val_pin_PG_out_eF = 1;
+	int8_t error_I2C = ERROR_N; 
+	_PDM_pins pdm_pins;
+
+
+	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM 
+
+	//Get real state value pins TCA9539. 	
+	pdm_pins = PDM_pin_table(number_pwr_channel);
+
+	i=0;
+ 	error_I2C = ERROR_N;
+
+	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read real value input pin PG.  
+
+		error_I2C =  TCA9539_read_input_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_PG_in_eFuse, &read_val_pin_PG_in_eF);
+
+		if( error_I2C == SUCCESS ){
+			 error_I2C = TCA9539_read_input_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_PG_out_eFuse, &read_val_pin_PG_out_eF);
+		}
+ 
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pdm_i2c_delay_att_conn );
+		}
+	}
+
+
+		switch( number_pwr_channel ){
+
+		case  PDM_PWR_Channel_1:
+			if( (pdm_ptr->PWR_CH1_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH1_State_eF_out == ENABLE) ){
+
+				 pdm_ptr->PWR_CH1_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+				 pdm_ptr->PWR_CH1_PG_eF_out = read_val_pin_PG_out_eF;
+			}else{
+
+				pdm_ptr->PWR_CH1_PG_eF_in = 0;  // OK because power channel is not Enable
+				pdm_ptr->PWR_CH1_PG_eF_out = 0;
+			}
+			break;
+
+		case  PDM_PWR_Channel_2:
+			if( (pdm_ptr->PWR_CH2_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH2_State_eF_out == ENABLE) ){
+
+				 pdm_ptr->PWR_CH2_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+				 pdm_ptr->PWR_CH2_PG_eF_out = read_val_pin_PG_out_eF;
+			}else{
+
+				pdm_ptr->PWR_CH2_PG_eF_in = 0;
+				pdm_ptr->PWR_CH2_PG_eF_out = 0;
+			}
+			break;
+
+		case  PDM_PWR_Channel_3:
+			if( (pdm_ptr->PWR_CH3_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH3_State_eF_out == ENABLE) ){
+
+				 pdm_ptr->PWR_CH3_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+				 pdm_ptr->PWR_CH3_PG_eF_out = read_val_pin_PG_out_eF;
+			}else{
+
+				pdm_ptr->PWR_CH3_PG_eF_in = 0;
+				pdm_ptr->PWR_CH3_PG_eF_out = 0;
+			}
+			break;
+
+		case  PDM_PWR_Channel_4:
+			if( (pdm_ptr->PWR_CH4_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH4_State_eF_out == ENABLE) ){
+
+				 pdm_ptr->PWR_CH4_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+				 pdm_ptr->PWR_CH4_PG_eF_out = read_val_pin_PG_out_eF;
+			}else{
+
+				pdm_ptr->PWR_CH4_PG_eF_in = 0;
+				pdm_ptr->PWR_CH4_PG_eF_out = 0;
+			}
+			break;
+
+		case  PDM_PWR_Channel_5:
+			if( (pdm_ptr->PWR_CH5_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH5_State_eF_out == ENABLE) ){
+
+				 pdm_ptr->PWR_CH5_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+				 pdm_ptr->PWR_CH5_PG_eF_out = read_val_pin_PG_out_eF;
+			}else{
+
+				pdm_ptr->PWR_CH5_PG_eF_in = 0;
+				pdm_ptr->PWR_CH5_PG_eF_out = 0;
+			}
+			break;
+
+		case  PDM_PWR_Channel_6:
+			if( (pdm_ptr->PWR_CH6_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH6_State_eF_out == ENABLE) ){
+
+				 pdm_ptr->PWR_CH6_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+				 pdm_ptr->PWR_CH6_PG_eF_out = read_val_pin_PG_out_eF;
+			}else{
+
+				pdm_ptr->PWR_CH6_PG_eF_in = 0;
+				pdm_ptr->PWR_CH6_PG_eF_out = 0;
+			}
+			break;
+
+		default:
+			error_I2C = ERROR_N;
+			break;
+	
+
+
+		}
+
+	return error_I2C;
+}
+
+/** @brief  Get Power Good power channel status 
+	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*//*
+ErrorStatus PDM_Get_PG_ALL_PWR_CH( _PDM *pdm_ptr ){
+	
+}
+
+*/
+
+
+
 /** @brief  Get temperature from temp. sensor on PDM . 
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
@@ -461,4 +604,8 @@ ErrorStatus PDM_Get_temp_TMP1075( I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, _PDM 
 
 	return error_I2C;
 }
+
+
+
+
 
