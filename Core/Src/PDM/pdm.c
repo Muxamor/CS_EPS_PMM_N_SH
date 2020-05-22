@@ -122,10 +122,14 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
 		if( state_channel == ENABLE ){
-			error_I2C = TCA9539_Set_output_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse );
+
+			error_I2C = TCA9539_conf_IO_dir_input( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse ); // Input pin -  because hardware auto-enable
 
 		}else if( state_channel == DISABLE ){
-			error_I2C = TCA9539_Reset_output_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse );
+			if ( TCA9539_Reset_output_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse ) == SUCCESS ){
+
+				error_I2C = TCA9539_conf_IO_dir_output( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse );
+			}
 		}
  
 		if( error_I2C != SUCCESS ){
@@ -136,7 +140,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 
 	if( error_I2C == SUCCESS ){//Enable/Disable OUTPUT Efuse power channel.
 
-		LL_mDelay(20); //Delay for startup power supply
+		LL_mDelay(40); //Delay for startup power supply
 
 		i=0;
  		error_I2C = ERROR_N;
@@ -144,11 +148,14 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
 			if( state_channel == ENABLE ){
-				error_I2C = TCA9539_Set_output_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_out_eFuse );
-				//TO DO. Need add checking Power Good signal.
+				error_I2C = TCA9539_conf_IO_dir_input( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse ); // Input pin -  because hardware auto-enable
+				
 
 			}else if( state_channel == DISABLE ){
-				error_I2C = TCA9539_Reset_output_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_out_eFuse );
+				if ( TCA9539_Reset_output_pin( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse ) == SUCCESS ){
+
+					error_I2C = TCA9539_conf_IO_dir_output( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse );
+				}
 			}
  
 			if( error_I2C != SUCCESS ){
