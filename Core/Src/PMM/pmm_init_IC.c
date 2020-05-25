@@ -62,7 +62,7 @@ ErrorStatus PMM_init_TMP1075(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
 	return SUCCESS;
 }
 
-//!!!!! TEMP 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TEMP   FN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /** @brief  Default Init I2C GPIO extenders ( Ext1 (U3) ) on PMM module.
 	@param  *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param  tca9539_addr - I2C address GPIO Exneder
