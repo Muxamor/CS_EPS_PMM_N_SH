@@ -9,6 +9,15 @@
 
 #include "pdm_init_IC.h"
 
+
+/*********************** TODO *********************/
+//1. Возможно PDM_init_I2C_GPIOExt убрать в дубующем и прописывать направления всегда при установке.
+// Обеспечивая презапись регистра (защита от радиации). 
+
+/**************************************************/
+
+
+
 /** @brief  Init TMP1075 sensor on PDM module
 	@param  *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param  tmp1075_addr - I2C sensor address 

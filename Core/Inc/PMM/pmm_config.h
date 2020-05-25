@@ -41,4 +41,7 @@
 
 
 
+#define pmm_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
+#define pmm_i2c_delay_att_conn		5 	 //ms Delay between attempts connection through I2C in millisecond
+
 #endif /* INC_PMM_PMM_CONFIG_H_ */
