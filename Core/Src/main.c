@@ -16,7 +16,10 @@
 
 
 #include "pmm_config.h"
+#include "pmm_struct.h"
+#include "pmm_init_IC.h"
 #include "pmm_init.h"
+#include "pmm_ctrl.h"
 
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
@@ -30,6 +33,7 @@
 /****************************TODO*************************
 1. Need to think about delay 30 minuts. 
 2. Need change constatn mode EN/Dis after teste with Doroshkin in CAN_cmd.c (delete debug)
+3. In PDM module  необходимо добавить переинициализацую входов каждый раз при обращении.
 
 
 **********************************************************/
@@ -39,7 +43,7 @@ extern uint32_t CAN_cmd_mask_status;
 //LL_mDelay(1);
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release
 
-#define TCA9539_I2C_ADDR					0b01110100
+//#define TCA9539_I2C_ADDR					0b01110100
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
   (byte & 0x80 ? '1' : '0'), \
@@ -56,6 +60,7 @@ extern uint32_t CAN_cmd_mask_status;
 int main(void){
 
 	_PDM pdm = {0}, *pdm_ptr = &pdm;
+	_PMM pmm = {0}, *pmm_ptr = &pmm;
 
 	CAN_cmd_mask_status = 0;
 
@@ -75,13 +80,14 @@ int main(void){
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	int8_t status = 0;
-	status += TCA9539_conf_IO_dir_input(I2C3, TCA9539_I2C_ADDR, TCA9539_IO_ALL);
-	status += TCA9539_Set_output_pin(I2C3, TCA9539_I2C_ADDR, TCA9539_IO_ALL);
-	status += TCA9539_conf_IO_dir_output(I2C3, TCA9539_I2C_ADDR,  TCA9539_IO_P17 | TCA9539_IO_P15); // Turn on only CANbus
 
-	status += CAN_Init(CAN1);
-	status += CAN_Init(CAN2);
+	PMM_default_init_I2C_GPIOExt1(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1); //Temp function
+
+	PMM_Set_state_PWR_CAN( pmm_ptr, CANmain, ENABLE );
+	PMM_Set_state_PWR_CAN( pmm_ptr, CANbackup, ENABLE );
+
+	CAN_Init(CAN1);
+	CAN_Init(CAN2);
 	CAN_RegisterAllVars();
 //---------------------------------------------------
 

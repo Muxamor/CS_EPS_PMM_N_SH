@@ -27,7 +27,6 @@ ErrorStatus PMM_Set_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel, u
 	I2C_TypeDef *I2Cx;
 	uint8_t tca9539_I2C_addr;
 	uint16_t tca9539_pin_num;
-	uint8_t read_val_pin_EN;
 
 
 	if( (state_channel != ENABLE) && (state_channel != DISABLE) ){
@@ -99,51 +98,78 @@ ErrorStatus PMM_Set_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel, u
 
 
 	if( error_I2C == SUCCESS ){
-		pmm_ptr->Error_I2C_GPIO_Ext1 = SUCCESS;
-	}else{
-		pmm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
+		error_I2C = PMM_Check_state_PWR_CAN( pmm_ptr, num_CAN_pwr_channel );
+
 	}
 
+	return error_I2C;
+}
+
+
+/** @brief  Checking the state of the CAN power.
+	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
+	@param  num_CAN_pwr_channel - number of channel :
+								CANmain
+								CANbackup
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PMM_Check_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel ){
+
+	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+	uint8_t i = 0;
+	uint16_t tca9539_pin_num;
+	uint8_t read_val_pin_EN;
+
+
+	if(num_CAN_pwr_channel == CANmain ){
+		tca9539_pin_num = TCA9539_IO_P17;
+
+	}else if( num_CAN_pwr_channel == CANbackup ){
+		tca9539_pin_num = TCA9539_IO_P15;
+
+	}else{
+		return ERROR_N;
+	}
+
+
+	i=0;
+	error_I2C = ERROR_N;
+
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+		error_I2C = TCA9539_read_input_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, tca9539_pin_num, &read_val_pin_EN);
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pmm_i2c_delay_att_conn );
+		}
+	}
+	
 
 	if( error_I2C == SUCCESS ){
 
-		if( error_I2C == SUCCESS ){
-			i=0;
-		 	error_I2C = ERROR_N;
+		pmm_ptr->Error_I2C_GPIO_Ext1 = SUCCESS;
 
-			while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+		if(num_CAN_pwr_channel == CANmain ){
 
-				error_I2C = TCA9539_read_input_pin( I2Cx, tca9539_I2C_addr, tca9539_pin_num, &read_val_pin_EN);
-
-				if( error_I2C != SUCCESS ){
-					i++;
-					LL_mDelay( pmm_i2c_delay_att_conn );
-				}
+			if( pmm_ptr->PWR_State_CANmain == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_CANmain = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_CANmain = 1; ///0-ERROR
 			}
 
-		}
+		}else if( num_CAN_pwr_channel == CANbackup ){
 
-		if( error_I2C == SUCCESS ){
-
-			if(num_CAN_pwr_channel == CANmain ){
-
-				if(state_channel == read_val_pin_EN ){
-					pmm_ptr->Error_PWR_State_CANmain = 0; ///0-OK
-				}else{
-					pmm_ptr->Error_PWR_State_CANmain = 1; ///0-ERROR
-				}
-
-			}else if( num_CAN_pwr_channel == CANbackup ){
-
-				if(state_channel == read_val_pin_EN ){
-						pmm_ptr->Error_PWR_State_CANbackup = 0; ///0-OK
-				}else{
-						pmm_ptr->Error_PWR_State_CANbackup = 1; ///0-ERROR
-				}
+			if( pmm_ptr->PWR_State_CANbackup == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_CANbackup = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_CANbackup = 1; ///0-ERROR
 			}
 		}
+
+	}else{
+		pmm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
 	}
-
-
+	
 	return error_I2C;
 }
