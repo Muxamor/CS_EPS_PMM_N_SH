@@ -13,8 +13,8 @@
 typedef struct{
 
 	uint8_t Main_Backup_mode_CPU 	:1; //= 1-Main, =0-Backup mode CPU. 
-	uint8_t Detect_Active_CPU 		:1;	//= 1-Main CPU is activ, Backup CPU is passive. 
-										//= 0-Main CPU is passive, Backup CPU is activ. 
+	uint8_t Detect_Active_CPU 		:1;	//= 0-Main CPU is active, Backup CPU is passive.
+										//= 1-Main CPU is passive, Backup CPU is active.
 	uint8_t CAN_constatnt_mode		:1;	//= 1-Constant mode CANreg5 is ON, 0-Constant CANreg5 is OFF.
 	uint8_t	:5;
 

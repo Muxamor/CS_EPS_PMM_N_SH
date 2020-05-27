@@ -10,6 +10,13 @@
 
 #include "pmm_ctrl.h"
 
+/**********************TO DO ***********************************/
+/*1. Change PMM_Set_MUX_CAN_CPUm_CPUb after 08.06
+ *
+ *
+ *
+ */
+
 /** @brief  Set state (enable/disable) CAN power channel.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
 	@param  num_CAN_pwr_channel - number of channel :
@@ -33,7 +40,6 @@ ErrorStatus PMM_Set_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel, u
 		return ERROR_N;
 	}
 
-	SW_TMUX1209_I2C_main_PMM();// Switch MUX to PDM I2C bus on PMM
 
 	I2Cx = PMM_I2Cx_GPIOExt1;
 	tca9539_I2C_addr = PMM_I2CADDR_GPIOExt1;
@@ -131,7 +137,6 @@ ErrorStatus PMM_Check_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel 
 		return ERROR_N;
 	}
 
-
 	i=0;
 	error_I2C = ERROR_N;
 
@@ -173,3 +178,42 @@ ErrorStatus PMM_Check_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel 
 	
 	return error_I2C;
 }
+
+//********************change FN PMM_Set_MUX_CAN_CPUm_CPUb after 08.06 *********************//
+/** @brief  Setup multiplexor. CAN bus switching between CPUm and CPUb.
+	@param  num_CAN_pwr_channel - number of channel :
+								CPUmain
+								CPUbackup
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( uint8_t active_CPU ){
+
+	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+	uint8_t i = 0;
+
+
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+		if( active_CPU == CPUmain ){
+			error_I2C = TCA9539_conf_IO_dir_input( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+
+		}else if(  active_CPU == CPUbackup ){
+			error_I2C = TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			error_I2C = TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+
+		}else{
+			error_I2C = ERROR_N;
+		}
+
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pmm_i2c_delay_att_conn );
+		}
+	}
+
+	return error_I2C;
+}
+
+
+

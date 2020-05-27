@@ -3,6 +3,7 @@
 #include "stm32l4xx_ll_system.h"
 #include "stm32l4xx_it.h"
 #include "CAND/CAN.h"
+#include "uart_comm.h"
 
 /******************************************************************************/
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */ 
@@ -71,24 +72,45 @@ void SysTick_Handler(void){
 /* please refer to the startup file (startup_stm32l4xx.s).                    */
 /******************************************************************************/
 
+
+extern uint8_t UART_CHANGE_ACTIVE_CPU_FLAG;
+
 /** @brief This function handles LPUARTq global interrupt */
 void LPUART1_IRQHandler(void){
 
-	//uint8_t input_byte = 0;
+
+
+	uint8_t input_byte = 0;
 	if(LL_LPUART_IsActiveFlag_RXNE(LPUART1)){
-		//input_byte = LL_LPUART_ReceiveData8(LPUART1);
+
+		input_byte = LL_LPUART_ReceiveData8(LPUART1);
+
+		if(input_byte == 0xAA || input_byte == 0xBB ){
+
+			UART_CHANGE_ACTIVE_CPU_FLAG = 1;
+		}
 	}
+
+
 
 }
 
 /** @brief This function handles UART5 global interrupt */
 void UART5_IRQHandler(void){
 
-	//uint8_t input_byte = 0;
+	uint8_t input_byte = 0;
 	if(LL_USART_IsActiveFlag_RXNE(UART5)){
+
 		//input_byte = LL_USART_ReceiveData8(UART5);
+		input_byte = LL_USART_ReceiveData8(UART5);
+
+		if(input_byte == 0xAA || input_byte == 0xBB ){
+			UART_CHANGE_ACTIVE_CPU_FLAG = 1;
+		}
 	}
 }
+
+
 
 /** @brief This function handles USART3 global interrupt */
 void USART3_IRQHandler(void){

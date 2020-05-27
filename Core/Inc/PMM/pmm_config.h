@@ -43,6 +43,9 @@
 #define CANmain 	0x00
 #define CANbackup	0x01
 
+#define CPUmain 	0x00
+#define CPUbackup	0x01
+
 #define pmm_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
 #define pmm_i2c_delay_att_conn		5 	 //ms Delay between attempts connection through I2C in millisecond
 

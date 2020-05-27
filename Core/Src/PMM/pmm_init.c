@@ -31,9 +31,9 @@ uint8_t PMM_Detect_MasterBackupCPU(void){
 			+LL_GPIO_IsInputPinSet(GPIOD, LL_GPIO_PIN_11);
 	
 	if( mode >= 2 ){
-		return 1;  //Main mode CPU
+		return 0;  //Main mode CPU
 	} else{
-		return 0;  //Backup mode CPU
+		return 1;  //Backup mode CPU
 	}
 
 }

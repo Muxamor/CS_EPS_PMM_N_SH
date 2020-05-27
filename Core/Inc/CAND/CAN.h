@@ -70,7 +70,7 @@ struct CAN_IVar4 {
     uint8_t CAN_Line_VBAT2;                 //+19           Командный регистр линии VBAT2 (МС)
     uint8_t CAN_Turn_SES_mode;              //+20			Установить режим СЭС
     uint8_t CAN_Constant_mode;				//+21			Перейти в режим констант
-    uint8_t CAN_Turn_main_backup_mode;      //+22		    Переключатель основной/резервный
+    uint8_t CAN_Switch_active_CPU;      //+22		    Переключатель основной/резервный
     uint8_t CAN_Reset_to_default;           //+23           Сброс параметров в состояние "по умолчанию"
     uint8_t CAN_Perform_disclosure;         //+24           Выполнить раскрытие
 

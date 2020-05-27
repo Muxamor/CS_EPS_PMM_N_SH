@@ -4,6 +4,13 @@
 #include "pdm_config.h"
 #include "pdm.h"
 
+
+#include "pmm_struct.h"
+#include "pmm_config.h"
+#include "pmm_ctrl.h"
+
+#include "uart_comm.h"
+
 #include "CAN.h"
 #include "CAN_cmd.h"
 
@@ -13,7 +20,7 @@ extern struct CAN_IVar4 CAN_IVar4_RegCmd;
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 
 
-void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
+void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr ){
 
 	uint8_t number_cmd_reg = 0;
 	uint32_t cmd_bit_flag = 0;
@@ -157,6 +164,28 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
 					}
 					break;
 
+				case 22: // Switch active CPU (CPUmain active or CPUbackup )
+
+					if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x00 ){
+
+						#ifdef DEBUGprintf
+							printf("Get comm. reg. 22 -> Set active CPUmain\n");
+						#endif
+
+						PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
+
+					}else if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x01 ){
+
+						#ifdef DEBUGprintf
+							printf("Get comm. reg. 22 -> Set active CPUbackup\n");
+						#endif
+
+						LPUART_send_byte( LPUART1, 0xAA );
+
+						//PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
+					}
+					break;
+
 				default:
 					break;
 			}
@@ -176,12 +205,6 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr){
 }
 */
 
- uint8_t CAN_PWR_CH1;                    //+12           Командный регистр канал питаня 1 (СОП1)
-    uint8_t CAN_PWR_CH2;                    //+13           Командный регистр канал питаня 2 (СОП2)
-    uint8_t CAN_PWR_CH3;                    //+14           Командный регистр канал питаня 3 (БРК1)
-    uint8_t CAN_PWR_CH4;                    //+15           Командный регистр канал питаня 4 (БРК2)
-    uint8_t CAN_PWR_CH5;                    //+16           Командный регистр канал питаня 5 ( - )
-    uint8_t CAN_PWR_CH6;                    //+17           Командный регистр канал питаня 6 ( - )
 
 void CAN_Var5_fill_telemetry_const(void){
 

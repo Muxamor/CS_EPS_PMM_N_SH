@@ -8,6 +8,13 @@
 #include "TMP1075.h"
 #include "pdm.h"
 
+/*********************** TODO *********************/
+/**
+ * 1. В функции PDM_Get_PG_PWR_CH прописать установку напрвления перед тем как читать.(Защита от радиации)
+ *
+ */
+
+
 
 /** @brief  Set state (enable/disable) power channel.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
@@ -409,7 +416,7 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 	}
 
 
-		switch( number_pwr_channel ){
+	switch( number_pwr_channel ){
 
 		case  PDM_PWR_Channel_1:
 			if( (pdm_ptr->PWR_CH1_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH1_State_eF_out == ENABLE) ){
@@ -489,7 +496,7 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 	
 
 
-		}
+	}
 
 	return error_I2C;
 }
