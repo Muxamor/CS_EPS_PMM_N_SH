@@ -39,7 +39,7 @@
 #define PMM_I2Cx_VBAT2_B_INA231		I2C4 //I2C INA231 line VBAT2 Backup Efuse
 #define PMM_I2CADDR_VBAT2_B_INA231 	0x45 //I2C INA231 line VBAT2 Backup Efuse
 
-#define FRAM_SIZE_64KB			0x2000
+#define FRAM_SIZE_64KB				0x2000
 
 #define PMM_PWR_CANmain 			0x00
 #define PMM_PWR_CANbackup			0x01
@@ -47,6 +47,7 @@
 #define PMM_PWR_VBAT_1_eF_2			0x03
 #define PMM_PWR_VBAT_2_eF_1			0x04
 #define PMM_PWR_VBAT_2_eF_2			0x05
+#define PMM_PWR_PBMs_Logic			0x06
 
 #define CPUmain 	0x00
 #define CPUbackup	0x01

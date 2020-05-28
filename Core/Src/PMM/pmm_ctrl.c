@@ -28,6 +28,8 @@
 								PMM_PWR_VBAT_1_eF_2 
 								PMM_PWR_VBAT_2_eF_1 
 								PMM_PWR_VBAT_2_eF_2 
+								PMM_PWR_PBMs_Logic
+
 	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
 								ENABLE
 								DISABLE
@@ -104,6 +106,15 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 			pmm_ptr->PWR_State_Vbat2_eF2 = DISABLE;
 		}
 
+	}else if( num_pwr_channel == PMM_PWR_PBMs_Logic ){
+		tca9539_pin_num = TCA9539_IO_P04;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_PBMs_Logic = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_PBMs_Logic = DISABLE;
+		}
+
 	}else{
 		return ERROR_N;
 	}
@@ -163,7 +174,8 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 								PMM_PWR_VBAT_1_eF_1 
 								PMM_PWR_VBAT_1_eF_2 
 								PMM_PWR_VBAT_2_eF_1 
-								PMM_PWR_VBAT_2_eF_2 
+								PMM_PWR_VBAT_2_eF_2
+								PMM_PWR_PBMs_Logic
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
@@ -191,6 +203,9 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 
 	}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_2 ){
 		tca9539_pin_num = TCA9539_IO_P03;
+
+	}else if( num_pwr_channel == PMM_PWR_PBMs_Logic ){
+		tca9539_pin_num = TCA9539_IO_P04;
 
 	}else{
 		return ERROR_N;
@@ -240,7 +255,7 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 
 		}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_2 ){
 
-			if( pmm_ptr-> PWR_State_Vbat1_eF2 == read_val_pin_EN ){
+			if( pmm_ptr->PWR_State_Vbat1_eF2 == read_val_pin_EN ){
 				pmm_ptr->Error_PWR_State_Vbat1_eF2 = 0; ///0-OK
 			}else{
 				pmm_ptr->Error_PWR_State_Vbat1_eF2 = 1; ///0-ERROR
@@ -248,7 +263,7 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 
 		}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_1 ){
 
-			if( pmm_ptr-> PWR_State_Vbat2_eF1 == read_val_pin_EN ){
+			if( pmm_ptr->PWR_State_Vbat2_eF1 == read_val_pin_EN ){
 				pmm_ptr->Error_PWR_State_Vbat2_eF1 = 0; ///0-OK
 			}else{
 				pmm_ptr->Error_PWR_State_Vbat2_eF1 = 1; ///0-ERROR
@@ -256,10 +271,18 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 
 		}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_2 ){
 
-			if( pmm_ptr-> PWR_State_Vbat2_eF2 == read_val_pin_EN ){
+			if( pmm_ptr->PWR_State_Vbat2_eF2 == read_val_pin_EN ){
 				pmm_ptr->Error_PWR_State_Vbat2_eF2 = 0; ///0-OK
 			}else{
 				pmm_ptr->Error_PWR_State_Vbat2_eF2 = 1; ///0-ERROR
+			}
+
+		}else if( num_pwr_channel == PMM_PWR_PBMs_Logic ){
+
+			if( pmm_ptr->PWR_State_PBMs_Logic == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_PBMs_Logic = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_PBMs_Logic = 1; ///0-ERROR
 			}
 		}
 
