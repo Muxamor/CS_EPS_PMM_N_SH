@@ -19,7 +19,7 @@ typedef enum
 
 
 
-void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr);
+void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr);
 void CAN_Var5_fill_telemetry_const(void);
 
 

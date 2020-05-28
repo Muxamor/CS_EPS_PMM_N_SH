@@ -23,7 +23,7 @@
 #define ERR_CAN_DCL_INVALID       	-8
 
 
-uint32_t CAN_cmd_mask_status;
+uint64_t CAN_cmd_mask_status;
 
 
 typedef union {

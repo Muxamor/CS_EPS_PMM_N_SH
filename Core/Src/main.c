@@ -36,7 +36,7 @@
 
 **********************************************************/
 
-extern uint32_t CAN_cmd_mask_status;
+extern uint64_t CAN_cmd_mask_status;
 
 uint8_t UART_CHANGE_ACTIVE_CPU_FLAG=0;
 
@@ -74,6 +74,13 @@ int main(void){
 	//PMM_Detect_PowerRebootCPU(&pwr_reboot);
 	//!!!!!!!
 
+
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight unit befor 08.06.2020
+	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
+	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
 
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
@@ -137,7 +144,10 @@ int main(void){
 				CAN_Init(CAN2);
 				CAN_RegisterAllVars();
 
+				ENABLE_TMUX1209_I2C();
+
 				UART_CHANGE_ACTIVE_CPU_FLAG = 0;
+
 			}
 
 

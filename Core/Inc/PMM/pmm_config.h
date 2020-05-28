@@ -39,6 +39,7 @@
 #define PMM_I2Cx_VBAT2_B_INA231		I2C4 //I2C INA231 line VBAT2 Backup Efuse
 #define PMM_I2CADDR_VBAT2_B_INA231 	0x45 //I2C INA231 line VBAT2 Backup Efuse
 
+#define FRAM_SIZE_64KB			0x2000
 
 #define CANmain 	0x00
 #define CANbackup	0x01

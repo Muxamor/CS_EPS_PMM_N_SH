@@ -11,7 +11,7 @@
 #define FRAM_WRITE_PROTECTION_ENABLE	1
 #define FRAM_WRITE_PROTECTION_DISABLE	0
 
-#define FRAM_SIZE_64KB			0x2000
+
 
 /*
 typedef enum {

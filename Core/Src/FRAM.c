@@ -14,12 +14,16 @@
 ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_size){
 
 	ErrorStatus error_status = 0;
-	uint32_t i;
+	uint32_t i = 0;
+
 	FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
+
 	for(i = 0; i < fram_size; i++){
 		error_status += I2C_Write_byte_St(I2Cx, I2C_fram_addr, I2C_SIZE_REG_ADDR_U16, i, 0xFF);
 	}
+
 	FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
+
 	if(error_status != SUCCESS ){
 		return ERROR_N;
 	}

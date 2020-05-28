@@ -1,4 +1,7 @@
 #include "stm32l4xx.h"
+//#include "stm32l4xx_ll_utils.h"
+#include "stm32l4xx_ll_gpio.h"
+#include "SetupPeriph.h"
 
 #include "pdm_struct.h"
 #include "pdm_config.h"
@@ -20,19 +23,19 @@ extern struct CAN_IVar4 CAN_IVar4_RegCmd;
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 
 
-void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr ){
+void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr ){
 
 	uint8_t number_cmd_reg = 0;
-	uint32_t cmd_bit_flag = 0;
+	uint64_t cmd_bit_flag = 0;
 
 	NVIC_DisableIRQ(CAN1_RX0_IRQn);
 	NVIC_DisableIRQ(CAN2_RX0_IRQn);
 
-	for( number_cmd_reg = 0; number_cmd_reg < 32; number_cmd_reg++ ){
+	for( number_cmd_reg = 0; number_cmd_reg < 64; number_cmd_reg++ ){
 
 		cmd_bit_flag = (*cmd_status) >> number_cmd_reg;
 
-		if( cmd_bit_flag & 0x00000001 ){
+		if( cmd_bit_flag & 0x0000000000000001 ){
 
 			switch (number_cmd_reg) {
 
@@ -165,7 +168,7 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr ){
 					break;
 
 				case 22: // Switch active CPU (CPUmain active or CPUbackup )
-
+ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Temporary implementation delet after 08.06.2020
 					if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x00 ){
 
 						#ifdef DEBUGprintf
@@ -180,6 +183,8 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr ){
 							printf("Get comm. reg. 22 -> Set active CPUbackup\n");
 						#endif
 
+                        DISABLE_TMUX1209_I2C(); 
+
 						LPUART_send_byte( LPUART1, 0xAA );
 
 						//PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
@@ -190,7 +195,7 @@ void CAN_Var4_cmd_parser(uint32_t *cmd_status, _PDM *pdm_ptr ){
 					break;
 			}
 
-			if( ( cmd_bit_flag & 0xFFFFFFFE ) == 0 ){
+			if( ( cmd_bit_flag & 0xFFFFFFFFFFFFFFFE ) == 0 ){
 				break;
 			}
 		}
@@ -360,7 +365,7 @@ void CAN_Var5_fill_telemetry_const(void){
     CAN_IVar5_telemetry.CAN_Channel5_voltage                            =	0xEAEB;
     CAN_IVar5_telemetry.CAN_Channel6_voltage                            =	0xECED;
 
-    CAN_IVar5_telemetry.CAN_Opening_elements_state                      =	0xEEEF;
+   // CAN_IVar5_telemetry.CAN_Opening_elements_state                      =	0xEEEF;
     CAN_IVar5_telemetry.CAN_SES_module_data_array2[0]                   =	0xF0;
     CAN_IVar5_telemetry.CAN_SES_module_data_array2[1]                   =  0xF1;
     CAN_IVar5_telemetry.CAN_SES_module_data_array2[2]                   =  0xF2;
