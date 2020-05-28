@@ -21,28 +21,37 @@ typedef struct{
 	uint8_t EPS_Mode;                   // Mode of operation EPS
 
 	
-	uint8_t PWR_State_CANmain		:1; //0-DISABLE, 1-ENABLE. State power main CAN.
-	uint8_t PWR_State_CANbackup		:1; //0-DISABLE, 1-ENABLE. State power backup CAN.
-	uint8_t PWR_State_Vbat1_eF1     :1; //0-DISABLE, 1-ENABLE. State power battery bus output 1 eFuse 1 
-	uint8_t PWR_State_Vbat1_eF2		:1; //0-DISABLE, 1-ENABLE. State power battery bus output 1 eFuse 2 
-	uint8_t PWR_State_Vbat2_eF1     :1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 1 
-	uint8_t PWR_State_Vbat2_eF2		:1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 2
-	uint8_t PWR_State_PBMs_Logic	:1; //0-DISABLE, 1-ENABLE. State power PBM -modules logic power 
-	uint8_t :1;
-	
-	uint32_t Error_TMP1075_sensor		:1;	//=0 -OK, = 1-error temp. sensor TMP1075
-	uint32_t Error_PWR_State_CANmain	:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_State_CANbackup	:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_State_Vbat1_eF1	:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_State_Vbat1_eF2	:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_State_Vbat2_eF1	:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_State_Vbat2_eF2	:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_State_PBMs_Logic	:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_I2C_GPIO_Ext1 		:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
-	uint32_t Error_I2C_GPIO_Ext2 		:1;
-	uint32_t :22;
+	uint16_t PWR_State_CANmain			:1; //0-DISABLE, 1-ENABLE. State power main CAN.
+	uint16_t PWR_State_CANbackup		:1; //0-DISABLE, 1-ENABLE. State power backup CAN.
+	uint16_t PWR_State_Vbat1_eF1   		:1; //0-DISABLE, 1-ENABLE. State power battery bus output 1 eFuse 1 
+	uint16_t PWR_State_Vbat1_eF2		:1; //0-DISABLE, 1-ENABLE. State power battery bus output 1 eFuse 2 
+	uint16_t PWR_State_Vbat2_eF1     	:1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 1 
+	uint16_t PWR_State_Vbat2_eF2		:1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 2
+	uint16_t PWR_State_PBMs_Logic		:1; //0-DISABLE, 1-ENABLE. State power PBM -modules logic power 
+	uint16_t PWR_State_Deploy_Logic 	:1; //0-DISABLE, 1-ENABLE. State power Deploy logic 
+	uint16_t PWR_State_Deploy_Power 	:1; //0-DISABLE, 1-ENABLE. State power Deploy power 
+	uint16_t PWR_State_5V_Bus 			:1; //0-DISABLE, 1-ENABLE. State power 5V bus 
+	uint16_t PWR_State_3_3V_Bus 		:1; //0-DISABLE, 1-ENABLE. State power 3.3V bus 
+	uint16_t :5;
 
-	uint32_t reboot_counter; 			//increment this counter after each rebootv (power up).
+	uint32_t Error_TMP1075_sensor			:1;	//=0 -OK, = 1-error temp. sensor TMP1075
+	uint32_t Error_PWR_State_CANmain		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_CANbackup		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Vbat1_eF1		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Vbat1_eF2		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Vbat2_eF1		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Vbat2_eF2		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_PBMs_Logic		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Deploy_Logic	:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Deploy_Power	:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_5V_Bus			:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_3_3V_Bus		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_I2C_GPIO_Ext1 			:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
+	uint32_t Error_I2C_GPIO_Ext2 			:1;
+	uint32_t :18;
+
+	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up).
+	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up).
 
 
 }_PMM;

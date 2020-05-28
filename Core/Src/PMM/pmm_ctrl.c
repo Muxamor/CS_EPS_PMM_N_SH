@@ -29,7 +29,8 @@
 								PMM_PWR_VBAT_2_eF_1 
 								PMM_PWR_VBAT_2_eF_2 
 								PMM_PWR_PBMs_Logic
-
+								PMM_PWR_5V_Bus				
+								PMM_PWR_3_3V_Bus			
 	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
 								ENABLE
 								DISABLE
@@ -115,6 +116,42 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 			pmm_ptr->PWR_State_PBMs_Logic = DISABLE;
 		}
 
+	}else if( num_pwr_channel == PMM_PWR_Deploy_Logic ){
+		tca9539_pin_num = TCA9539_IO_P10;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_Deploy_Logic = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_Deploy_Logic = DISABLE;
+		}
+
+	}else if( num_pwr_channel == PMM_PWR_Deploy_Power ){
+		tca9539_pin_num = TCA9539_IO_P11;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_Deploy_Power = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_Deploy_Power = DISABLE;
+		}
+
+	}else if( num_pwr_channel == PMM_PWR_5V_Bus ){
+		tca9539_pin_num = TCA9539_IO_P05;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_5V_Bus = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_5V_Bus = DISABLE;
+		}
+
+	}else if( num_pwr_channel == PMM_PWR_3_3V_Bus ){
+		tca9539_pin_num = TCA9539_IO_P06;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_3_3V_Bus = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_3_3V_Bus = DISABLE;
+		}
+
 	}else{
 		return ERROR_N;
 	}
@@ -176,6 +213,10 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 								PMM_PWR_VBAT_2_eF_1 
 								PMM_PWR_VBAT_2_eF_2
 								PMM_PWR_PBMs_Logic
+								PMM_PWR_Deploy_Logic
+								PMM_PWR_Deploy_Power
+								PMM_PWR_5V_Bus				
+								PMM_PWR_3_3V_Bus	
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
@@ -206,6 +247,18 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 
 	}else if( num_pwr_channel == PMM_PWR_PBMs_Logic ){
 		tca9539_pin_num = TCA9539_IO_P04;
+
+	}else if( num_pwr_channel == PMM_PWR_Deploy_Logic ){
+		tca9539_pin_num = TCA9539_IO_P10;
+
+	}else if( num_pwr_channel == PMM_PWR_Deploy_Power ){
+		tca9539_pin_num = TCA9539_IO_P11;
+
+	}else if( num_pwr_channel == PMM_PWR_5V_Bus ){
+		tca9539_pin_num = TCA9539_IO_P05;
+
+	}else if( num_pwr_channel == PMM_PWR_3_3V_Bus ){
+		tca9539_pin_num = TCA9539_IO_P06;
 
 	}else{
 		return ERROR_N;
@@ -284,6 +337,39 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 			}else{
 				pmm_ptr->Error_PWR_State_PBMs_Logic = 1; ///0-ERROR
 			}
+
+		}else if( num_pwr_channel == PMM_PWR_Deploy_Logic ){
+
+			if( pmm_ptr->PWR_State_Deploy_Logic == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_Deploy_Logic = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_Deploy_Logic = 1; ///0-ERROR
+			}
+
+		}else if( num_pwr_channel == PMM_PWR_Deploy_Power ){
+
+			if( pmm_ptr->PWR_State_Deploy_Power == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_Deploy_Power = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_Deploy_Power = 1; ///0-ERROR
+			}
+		
+		}else if( num_pwr_channel == PMM_PWR_5V_Bus ){
+
+			if( pmm_ptr->PWR_State_5V_Bus == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_5V_Bus = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_5V_Bus = 1; ///0-ERROR
+			}
+
+		}else if( num_pwr_channel == PMM_PWR_3_3V_Bus ){
+
+			if( pmm_ptr->PWR_State_3_3V_Bus == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_3_3V_Bus = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_3_3V_Bus = 1; ///0-ERROR
+			}
+
 		}
 
 	}else{

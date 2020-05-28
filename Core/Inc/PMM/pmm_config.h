@@ -41,16 +41,6 @@
 
 #define FRAM_SIZE_64KB				0x2000
 
-#define PMM_PWR_CANmain 			0x00
-#define PMM_PWR_CANbackup			0x01
-#define PMM_PWR_VBAT_1_eF_1			0x02
-#define PMM_PWR_VBAT_1_eF_2			0x03
-#define PMM_PWR_VBAT_2_eF_1			0x04
-#define PMM_PWR_VBAT_2_eF_2			0x05
-#define PMM_PWR_PBMs_Logic			0x06
-
-#define CPUmain 	0x00
-#define CPUbackup	0x01
 
 #define pmm_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
 #define pmm_i2c_delay_att_conn		5 	 //ms Delay between attempts connection through I2C in millisecond
