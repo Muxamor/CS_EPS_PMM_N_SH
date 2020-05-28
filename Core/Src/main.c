@@ -32,6 +32,7 @@
 1. Need to think about delay 30 minuts. 
 2. Need change constatn mode EN/Dis after teste with Doroshkin in CAN_cmd.c (delete debug)
 3. In PDM module  необходимо добавить переинициализацую входов каждый раз при обращении.
+4. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ? 
 
 
 **********************************************************/
@@ -115,7 +116,7 @@ int main(void){
 
 			if(CAN_cmd_mask_status != 0){
 
-				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr);
+				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
 			}
 
 
@@ -152,7 +153,7 @@ int main(void){
 
 
 			if(CAN_cmd_mask_status != 0){
-				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr);
+				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
 			}
 
 

@@ -23,7 +23,7 @@ extern struct CAN_IVar4 CAN_IVar4_RegCmd;
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 
 
-void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr ){
+void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
 	uint8_t number_cmd_reg = 0;
 	uint64_t cmd_bit_flag = 0;
@@ -135,6 +135,41 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr ){
                     }
                     break;
 
+                 case 18: //Enable/Disable power channel VBAT1
+
+                    if( CAN_IVar4_RegCmd.CAN_PWR_VBAT1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 18 -> ENABLE power VBAT1\n");
+                        #endif
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_1, ENABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_2, ENABLE ); 
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 18 -> DISABLE power VBAT1\n");
+                        #endif
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_1, DISABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_2, DISABLE );
+                    }
+                    break;
+
+                case 19: //Enable/Disable power channel VBAT2
+
+                    if( CAN_IVar4_RegCmd.CAN_PWR_VBAT2 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 19 -> ENABLE power VBAT2\n");
+                        #endif
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_1, ENABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_2, ENABLE ); 
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. 19 -> DISABLE power VBAT2\n");
+                        #endif
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_1, DISABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_2, DISABLE );
+                    }
+                    break;
                 
 				case 21://Constant mode command
 
