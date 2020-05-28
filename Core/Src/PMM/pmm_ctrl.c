@@ -17,17 +17,23 @@
  *
  */
 
-/** @brief  Set state (enable/disable) CAN power channel.
+
+
+/** @brief  Set state (enable/disable) PMM power channel.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
-	@param  num_CAN_pwr_channel - number of channel :
-								CANmain
-								CANbackup
+	@param  num_pwr_channel - number of channel PMM :
+								PMM_PWR_CANmain
+								PMM_PWR_CANbackup
+								PMM_PWR_VBAT_1_eF_1 
+								PMM_PWR_VBAT_1_eF_2 
+								PMM_PWR_VBAT_2_eF_1 
+								PMM_PWR_VBAT_2_eF_2 
 	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
 								ENABLE
 								DISABLE
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PMM_Set_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel, uint8_t state_channel ){
+ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_t state_channel ){
 
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 	uint8_t i = 0;
@@ -44,7 +50,7 @@ ErrorStatus PMM_Set_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel, u
 	I2Cx = PMM_I2Cx_GPIOExt1;
 	tca9539_I2C_addr = PMM_I2CADDR_GPIOExt1;
 
-	if(num_CAN_pwr_channel == CANmain ){
+	if(num_pwr_channel == PMM_PWR_CANmain ){
 		tca9539_pin_num = TCA9539_IO_P17;
 
 		if( state_channel == ENABLE ){
@@ -53,13 +59,49 @@ ErrorStatus PMM_Set_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel, u
 			pmm_ptr->PWR_State_CANmain = DISABLE;
 		}
 
-	}else if( num_CAN_pwr_channel == CANbackup ){
+	}else if( num_pwr_channel == PMM_PWR_CANbackup ){
 		tca9539_pin_num = TCA9539_IO_P15;
 
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_State_CANbackup = ENABLE;
 		}else{
 			pmm_ptr->PWR_State_CANbackup = DISABLE;
+		}
+
+	}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_1 ){
+		tca9539_pin_num = TCA9539_IO_P00;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_Vbat1_eF1 = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_Vbat1_eF1 = DISABLE;
+		}
+
+	}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_2 ){
+		tca9539_pin_num = TCA9539_IO_P02;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_Vbat1_eF2 = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_Vbat1_eF2 = DISABLE;
+		}
+
+	}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_1 ){
+		tca9539_pin_num = TCA9539_IO_P01;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_Vbat2_eF1 = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_Vbat2_eF1 = DISABLE;
+		}
+
+	}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_2 ){
+		tca9539_pin_num = TCA9539_IO_P03;
+
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_State_Vbat2_eF2 = ENABLE;
+		}else{
+			pmm_ptr->PWR_State_Vbat2_eF2 = DISABLE;
 		}
 
 	}else{
@@ -104,7 +146,7 @@ ErrorStatus PMM_Set_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel, u
 
 
 	if( error_I2C == SUCCESS ){
-		error_I2C = PMM_Check_state_PWR_CAN( pmm_ptr, num_CAN_pwr_channel );
+		error_I2C = PMM_Check_state_PWR_CH( pmm_ptr, num_pwr_channel );
 
 	}
 
@@ -112,14 +154,19 @@ ErrorStatus PMM_Set_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel, u
 }
 
 
-/** @brief  Checking the state of the CAN power.
+
+/** @brief  Checking the state of the PMM power channel.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
-	@param  num_CAN_pwr_channel - number of channel :
-								CANmain
-								CANbackup
+	@param  num_pwr_channel - number of channel PMM :
+								PMM_PWR_CANmain
+								PMM_PWR_CANbackup
+								PMM_PWR_VBAT_1_eF_1 
+								PMM_PWR_VBAT_1_eF_2 
+								PMM_PWR_VBAT_2_eF_1 
+								PMM_PWR_VBAT_2_eF_2 
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PMM_Check_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel ){
+ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 	uint8_t i = 0;
@@ -127,11 +174,23 @@ ErrorStatus PMM_Check_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel 
 	uint8_t read_val_pin_EN;
 
 
-	if(num_CAN_pwr_channel == CANmain ){
+	if(num_pwr_channel == PMM_PWR_CANmain ){
 		tca9539_pin_num = TCA9539_IO_P17;
 
-	}else if( num_CAN_pwr_channel == CANbackup ){
+	}else if( num_pwr_channel == PMM_PWR_CANbackup ){
 		tca9539_pin_num = TCA9539_IO_P15;
+
+	}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_1 ){
+		tca9539_pin_num = TCA9539_IO_P00;
+
+	}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_2 ){
+		tca9539_pin_num = TCA9539_IO_P02;
+
+	}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_1 ){
+		tca9539_pin_num = TCA9539_IO_P01;
+
+	}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_2 ){
+		tca9539_pin_num = TCA9539_IO_P03;
 
 	}else{
 		return ERROR_N;
@@ -155,7 +214,7 @@ ErrorStatus PMM_Check_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel 
 
 		pmm_ptr->Error_I2C_GPIO_Ext1 = SUCCESS;
 
-		if(num_CAN_pwr_channel == CANmain ){
+		if(num_pwr_channel == PMM_PWR_CANmain ){
 
 			if( pmm_ptr->PWR_State_CANmain == read_val_pin_EN ){
 				pmm_ptr->Error_PWR_State_CANmain = 0; ///0-OK
@@ -163,12 +222,44 @@ ErrorStatus PMM_Check_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel 
 				pmm_ptr->Error_PWR_State_CANmain = 1; ///0-ERROR
 			}
 
-		}else if( num_CAN_pwr_channel == CANbackup ){
+		}else if( num_pwr_channel == PMM_PWR_CANbackup ){
 
 			if( pmm_ptr->PWR_State_CANbackup == read_val_pin_EN ){
 				pmm_ptr->Error_PWR_State_CANbackup = 0; ///0-OK
 			}else{
 				pmm_ptr->Error_PWR_State_CANbackup = 1; ///0-ERROR
+			}
+
+		}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_1 ){
+
+			if( pmm_ptr->PWR_State_Vbat1_eF1 == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_Vbat1_eF1 = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_Vbat1_eF1 = 1; ///0-ERROR
+			}
+
+		}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_2 ){
+
+			if( pmm_ptr-> PWR_State_Vbat1_eF2 == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_Vbat1_eF2 = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_Vbat1_eF2 = 1; ///0-ERROR
+			}
+
+		}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_1 ){
+
+			if( pmm_ptr-> PWR_State_Vbat2_eF1 == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_Vbat2_eF1 = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_Vbat2_eF1 = 1; ///0-ERROR
+			}
+
+		}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_2 ){
+
+			if( pmm_ptr-> PWR_State_Vbat2_eF2 == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_State_Vbat2_eF2 = 0; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_State_Vbat2_eF2 = 1; ///0-ERROR
 			}
 		}
 
@@ -178,6 +269,7 @@ ErrorStatus PMM_Check_state_PWR_CAN( _PMM *pmm_ptr, uint8_t num_CAN_pwr_channel 
 	
 	return error_I2C;
 }
+
 
 //********************change FN PMM_Set_MUX_CAN_CPUm_CPUb after 08.06 *********************//
 /** @brief  Setup multiplexor. CAN bus switching between CPUm and CPUb.

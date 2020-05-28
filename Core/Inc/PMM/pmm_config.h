@@ -41,8 +41,12 @@
 
 #define FRAM_SIZE_64KB			0x2000
 
-#define CANmain 	0x00
-#define CANbackup	0x01
+#define PMM_PWR_CANmain 			0x00
+#define PMM_PWR_CANbackup			0x01
+#define PMM_PWR_VBAT_1_eF_1			0x02
+#define PMM_PWR_VBAT_1_eF_2			0x03
+#define PMM_PWR_VBAT_2_eF_1			0x04
+#define PMM_PWR_VBAT_2_eF_2			0x05
 
 #define CPUmain 	0x00
 #define CPUbackup	0x01

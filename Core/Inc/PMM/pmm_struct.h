@@ -30,11 +30,15 @@ typedef struct{
 	uint8_t :2;
 	
 	uint32_t Error_TMP1075_senser		:1;	//=0 -OK, = 1-error temp. sensor TMP1075
-	uint32_t Error_PWR_State_CANmain	:1;
-	uint32_t Error_PWR_State_CANbackup	:1;
+	uint32_t Error_PWR_State_CANmain	:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_CANbackup	:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Vbat1_eF1	:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Vbat1_eF2	:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Vbat2_eF1	:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_State_Vbat2_eF2	:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_I2C_GPIO_Ext1 		:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
 	uint32_t Error_I2C_GPIO_Ext2 		:1;
-	uint32_t :27;
+	uint32_t :23;
 
 	uint32_t reboot_counter; 			//increment this counter after each rebootv (power up).
 

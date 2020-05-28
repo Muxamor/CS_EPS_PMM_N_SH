@@ -91,8 +91,8 @@ int main(void){
 
 		//PMM_default_init_I2C_GPIOExt1(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1); //Temp function
 
-		PMM_Set_state_PWR_CAN( pmm_ptr, CANmain, ENABLE );
-		PMM_Set_state_PWR_CAN( pmm_ptr, CANbackup, ENABLE );
+		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANmain, ENABLE );
+		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
 		LL_mDelay(40);
 
 
@@ -128,8 +128,8 @@ int main(void){
 
 
 		LL_mDelay(200);
-		PMM_Set_state_PWR_CAN( pmm_ptr, CANmain, ENABLE );
-		PMM_Set_state_PWR_CAN( pmm_ptr, CANbackup, ENABLE );
+		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANmain, ENABLE );
+		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
 		LL_mDelay(40);
 
 		while(1){
