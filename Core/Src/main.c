@@ -141,7 +141,7 @@ int main(void){
 
 		while(1){
 
-			if(UART_CHANGE_ACTIVE_CPU_FLAG == 1 || read_val_pin == 1){
+			if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 || read_val_pin == 1 ){
 				PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
 				LL_mDelay(40);
 
