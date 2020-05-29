@@ -43,13 +43,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_CH1 == 0x01 ){
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 28 -> ENABLE power channel 1\n");
+                            printf("Get comm. reg. %d -> ENABLE power channel 1\n", CAN_PWR_CH1_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 28 -> DISABLE power channel 1\n");
+                            printf("Get comm. reg. %d -> DISABLE power channel 1\n", CAN_PWR_CH1_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
                     }
@@ -59,13 +59,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_CH2 == 0x01 ){
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 29 -> ENABLE power channel 2\n");
+                            printf("Get comm. reg. %d -> ENABLE power channel 2\n", CAN_PWR_CH2_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 29 -> DISABLE power channel 2\n");
+                            printf("Get comm. reg. %d -> DISABLE power channel 2\n", CAN_PWR_CH2_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
                     }
@@ -75,13 +75,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_CH3 == 0x01 ){
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 30 -> ENABLE power channel 3\n");
+                            printf("Get comm. reg. %d -> ENABLE power channel 3\n", CAN_PWR_CH3_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 30 -> DISABLE power channel 3\n");
+                            printf("Get comm. reg. %d -> DISABLE power channel 3\n", CAN_PWR_CH3_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
                     }
@@ -91,13 +91,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_CH4 == 0x01 ){
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 31 -> ENABLE power channel 4\n");
+                            printf("Get comm. reg. %d -> ENABLE power channel 4\n", CAN_PWR_CH4_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 31 -> DISABLE power channel 4\n");
+                            printf("Get comm. reg. %d -> DISABLE power channel 4\n", CAN_PWR_CH4_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
                     }
@@ -107,13 +107,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_CH5 == 0x01 ){
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 32 -> ENABLE power channel 5\n");
+                            printf("Get comm. reg. %d -> ENABLE power channel 5\n", CAN_PWR_CH5_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 32 -> DISABLE power channel 5\n");
+                            printf("Get comm. reg. %d -> DISABLE power channel 5\n", CAN_PWR_CH5_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
                     }
@@ -123,13 +123,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_CH6 == 0x01 ){
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 33 -> ENABLE power channel 6\n");
+                            printf("Get comm. reg. %d -> ENABLE power channel 6\n", CAN_PWR_CH6_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 33 -> DISABLE power channel 6\n");
+                            printf("Get comm. reg. %d -> DISABLE power channel 6\n", CAN_PWR_CH6_offset);
                         #endif
                         PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
                     }
@@ -139,14 +139,14 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_VBAT1 == 0x01 ){
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 34 -> ENABLE power VBAT1\n");
+                            printf("Get comm. reg. %d -> ENABLE power VBAT1\n", CAN_PWR_VBAT1_offset);
                         #endif
                         PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_1, ENABLE );
                         PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_2, ENABLE ); 
 
                     }else{
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 34 -> DISABLE power VBAT1\n");
+                            printf("Get comm. reg. %d -> DISABLE power VBAT1\n", CAN_PWR_VBAT1_offset);
                         #endif
                         PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_1, DISABLE );
                         PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_2, DISABLE );
@@ -157,14 +157,14 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_VBAT2 == 0x01 ){
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 35 -> ENABLE power VBAT2\n");
+                            printf("Get comm. reg. %d -> ENABLE power VBAT2\n", CAN_PWR_VBAT2_offset);
                         #endif
                         PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_1, ENABLE );
                         PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_2, ENABLE ); 
 
                     }else{
                         #ifdef DEBUGprintf
-                            printf("Get comm. reg. 35 -> DISABLE power VBAT2\n");
+                            printf("Get comm. reg. %d -> DISABLE power VBAT2\n", CAN_PWR_VBAT2_offset);
                         #endif
                         PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_1, DISABLE );
                         PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_2, DISABLE );
@@ -174,29 +174,15 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 				case CAN_Constant_mode_offset://Constant mode command
 
 					if( CAN_IVar4_RegCmd.CAN_Constant_mode == 0x01 ){
-
-						/* This only for test with Dorohkin, need delet after test*/
-							#ifdef DEBUGprintf// Only for test with Dorohkin !!!!!!!!!!!!!!!!!! 
-								printf("fill telemetry struct by constants\n");// Only for test with Dorohkin !!!!!!!!!!!!!!!!!! 
-								printf("size of tel-ry %d\n", sizeof(CAN_IVar5_telemetry));// Only for test with Dorohkin !!!!!!!!!!!!!!!!!! 
-							#endif// Only for test with Dorohkin !!!!!!!!!!!!!!!!!! 
-						/***********************************************************/
-
 						#ifdef DEBUGprintf
-							printf("Get comm. reg. 4 -> Enable constant mode\n");
+							printf("Get comm. reg. %d -> Enable constant mode\n", CAN_Constant_mode_offset);
 						#endif
 						CAN_Var5_fill_telemetry_const();
 						//Need write config to PMM struct
-					}else{
-						/* This only for test with Dorohkin, need delet after test*/
-							printf("fill telemetry struct by zero\n");
-							for(uint16_t j = 0; j < sizeof(CAN_IVar5_telemetry); j++){
-								*((uint8_t *)(&CAN_IVar5_telemetry) + j) = 0;
-							}
-						/***********************************************************/
 
+					}else{
 						#ifdef DEBUGprintf
-							printf("Get comm. reg. 4 -> Disable constant mode\n");
+							printf("Get comm. reg. %d -> Disable constant mode\n", CAN_Constant_mode_offset);
 						#endif
 						//Need vrite config to PMM struct
 					}
@@ -207,7 +193,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 					if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x00 ){
 
 						#ifdef DEBUGprintf
-							printf("Get comm. reg. 37 -> Set active CPUmain\n");
+							printf("Get comm. reg. %d -> Set active CPUmain\n", CAN_Switch_active_CPU_offset);
 						#endif
 
 						PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
@@ -215,7 +201,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 					}else if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x01 ){
 
 						#ifdef DEBUGprintf
-							printf("Get comm. reg. 37 -> Set active CPUbackup\n");
+							printf("Get comm. reg. %d -> Set active CPUbackup\n", CAN_Switch_active_CPU_offset);
 						#endif
 
                         DISABLE_TMUX1209_I2C(); 

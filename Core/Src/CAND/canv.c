@@ -1,5 +1,7 @@
 #include <stm32l496xx.h>
 #define _OWN_HEADER_
+
+#include <stdio.h>
 #include "canv.h"
 
 #define __dsb(v)  asm(" dsb")

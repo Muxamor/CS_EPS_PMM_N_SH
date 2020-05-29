@@ -410,6 +410,14 @@ void SetupInterrupt(void){
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
 
+	/* CAN1 interrupt Init */
+	//CAN interrupt initialization is in ../Core/Src/CAND/canv.c
+	/**********************************************/
+
+	/* CAN2 interrupt Init */
+	//CAN interrupt initialization is in ../Core/Src/CAND/canv.c
+	/**********************************************/
+
 }
 
 /** @brief GPIO Initialization Function
@@ -584,7 +592,7 @@ void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider){
 
 /** @brief IWDG Initialization Function
 	* @param None
-	* @retval Noneb
+	* @retval None
  */
 void IWDG_Init(void){
 
@@ -598,6 +606,18 @@ void IWDG_Init(void){
 	LL_IWDG_ReloadCounter(IWDG);
 
 }
+
+/** @brief Init CAN
+	* @param None
+	* @retval None
+ */
+//CAN initialization function is in ../Core/Src/CAND/canv.c
+
+
+/** @brief Init. GPIO CAN.
+	* @param None
+	* @retval None
+ */
 int8_t CAN_Init_GPIO(CAN_TypeDef *can_ref) {
 	/*-------------------------------------------------------------------------------------*/
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};

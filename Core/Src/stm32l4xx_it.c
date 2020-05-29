@@ -123,11 +123,12 @@ void USART3_IRQHandler(void){
 
 
 
+/** @brief This function handles CAN1 global interrupt */
+//interrupt handler is in ../Core/Src/CAND/canv.c
 
 
-
-
-
+/** @brief This function handles CAN2 global interrupt */
+//interrupt handler is in ../Core/Src/CAND/canv.c
 
 
 
