@@ -129,16 +129,19 @@ int main(void){
 	}else{ // Backup Mode CPU Main_Backup_mode_CPU = 0;
 
 		uint8_t mas_string[] = "Set active CPUbackup\r\n";
-
+		uint8_t read_val_pin = 0;
 
 		LL_mDelay(200);
 		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANmain, ENABLE );
 		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
 		LL_mDelay(40);
 
+
+		TCA9539_read_input_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1 , TCA9539_IO_P14, &read_val_pin);
+
 		while(1){
 
-			if(UART_CHANGE_ACTIVE_CPU_FLAG == 1){
+			if(UART_CHANGE_ACTIVE_CPU_FLAG == 1 || read_val_pin == 1){
 				PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
 				LL_mDelay(40);
 
