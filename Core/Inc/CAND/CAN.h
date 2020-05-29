@@ -3,7 +3,7 @@
 #include "main.h"
 #include "Error_Handler.h"
 
-#define CAN_ID_DEV            			0x04
+#define CAN_ID_DEV            			0x03
 
 #define CAN_ID_VAR_ROM					0x00
 #define CAN_ROM_ADDR					0x08000000  // end = 0x0801FFFF	size = 1024 KB
