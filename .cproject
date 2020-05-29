@@ -41,6 +41,7 @@
 									<listOptionValue builtIn="false" value="../Core/Inc/PDM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/BATT"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/CAND"/>
+									<listOptionValue builtIn="false" value="/CS_EPS_PMM_N_SH/Core/Inc/FLASH"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1059973731" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -72,6 +73,7 @@
 									<listOptionValue builtIn="false" value="../Core/Inc/PDM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/PBM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/CAND"/>
+									<listOptionValue builtIn="false" value="../Core/Inc/FLASH"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32L4xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/STM32L4xx_HAL_Driver/Inc"/>
 								</option>
@@ -154,6 +156,7 @@
 									<listOptionValue builtIn="false" value="../Core/Inc/PDM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/BATT"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/CAND"/>
+									<listOptionValue builtIn="false" value="/CS_EPS_PMM_N_SH/Core/Inc/FLASH"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1244202920" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -187,6 +190,7 @@
 									<listOptionValue builtIn="false" value="../Core/Inc/PMM"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32L4xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/STM32L4xx_HAL_Driver/Inc"/>
+									<listOptionValue builtIn="false" value="/CS_EPS_PMM_N_SH/Core/Inc/FLASH"/>
 								</option>
 								<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.warnings.extra.1759235584" name="Enable extra warning flags (-Wextra)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.warnings.extra" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.warnings.pedantic.1592446053" name="Issue all warnings demanded by strict ISO C and ISO C++ (-pedantic)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.warnings.pedantic" useByScannerDiscovery="false" value="true" valueType="boolean"/>

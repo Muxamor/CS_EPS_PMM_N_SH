@@ -23,6 +23,7 @@
 
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
+#include "CAND/canv.h"
 
 #include "uart_comm.h"
 
@@ -50,6 +51,7 @@ int main(void){
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 
 	CAN_cmd_mask_status = 0;
+	uint32_t CAN_BTR = (0x00 << 24) | (0x01 << 20) | (12 << 16) | (4 << 0); // SJW = 1; TS2 = 1+1; TS1 = 12+1; Prescaler = 40;
 
 	/** Initialization Periph STM32L496*/
 	LL_Init();
@@ -96,9 +98,10 @@ int main(void){
 		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
 		LL_mDelay(40);
 
-
-		CAN_Init(CAN1);
-		CAN_Init(CAN2);
+		CAN_Init_GPIO(CAN1);
+		CAN_Init_GPIO(CAN2);
+		CAN_Init(CAN1, CAN_BTR);
+		CAN_Init(CAN2, CAN_BTR);
 		CAN_RegisterAllVars();
 		//---------------------------------------------------
 
@@ -141,8 +144,10 @@ int main(void){
 
 				USART_send_string( UART5, mas_string);
 
-				CAN_Init(CAN1);
-				CAN_Init(CAN2);
+				CAN_Init_GPIO(CAN1);
+				CAN_Init_GPIO(CAN2);
+				CAN_Init(CAN1, CAN_BTR);
+				CAN_Init(CAN2, CAN_BTR);
 				CAN_RegisterAllVars();
 
 				ENABLE_TMUX1209_I2C();
