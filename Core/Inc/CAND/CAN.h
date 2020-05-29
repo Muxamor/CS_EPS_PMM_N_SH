@@ -351,14 +351,7 @@ typedef struct {
 void CAN_ProcCallbackCmds(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state);
 void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state);
 
-
-int8_t CAN_RegisterVar(int n, uint8_t dev_id);
-int8_t CAN_DeregisterVar(int filter_num);
-int8_t CAN_Tx(CAN_TypeDef *can_ref, CAN_typeIdxMask id, void *p_data, uint16_t leng);
 int8_t CAN_RegisterAllVars();
-int8_t CAN_FilterAssign(uint8_t filter_num, CAN_typeIdxMask id, CAN_typeIdxMask mask);
-int8_t CAN_FilterDeassign(uint8_t filter_num);
-void CAN_RX_Handler(CAN_TypeDef *can_ref);
 
 
 #endif

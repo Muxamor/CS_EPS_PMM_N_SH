@@ -121,22 +121,6 @@ void USART3_IRQHandler(void){
 	}
 }
 
-void CAN1_RX0_IRQHandler() {
-	CAN_RX_Handler(CAN1);
-
-	#ifdef DEBUGprintf
-		printf("RX_CAN1\n");
-	#endif
-}
-
-
-void CAN2_RX0_IRQHandler() {
-	CAN_RX_Handler(CAN2);
-
-	#ifdef DEBUGprintf
-		printf("RX_CAN2\n");
-	#endif
-}
 
 
 
