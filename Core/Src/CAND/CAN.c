@@ -24,7 +24,7 @@ void CAN_ProcCallbackCmds(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t len
 	  if(id.std.RTR == 0)
 //		  CAN_cmd_mask_status |= (1 << id.uf.Offset);
 		  for(uint16_t i = 0; i < leng; i++){
-			  CAN_cmd_mask_status |= (1 << (id.uf.Offset + i));
+			  CAN_cmd_mask_status = CAN_cmd_mask_status | ( ( (uint64_t)1 ) << (id.uf.Offset + i) );
 		  }
 }
 
