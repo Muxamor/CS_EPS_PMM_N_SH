@@ -156,6 +156,7 @@ int main(void){
 				ENABLE_TMUX1209_I2C();
 
 				UART_CHANGE_ACTIVE_CPU_FLAG = 0;
+				read_val_pin = 0;
 
 			}
 
