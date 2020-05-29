@@ -81,7 +81,7 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_2 ){
-		tca9539_pin_num = TCA9539_IO_P02;
+		tca9539_pin_num = TCA9539_IO_P01;
 
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_State_Vbat1_eF2 = ENABLE;
@@ -90,7 +90,7 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_1 ){
-		tca9539_pin_num = TCA9539_IO_P01;
+		tca9539_pin_num = TCA9539_IO_P02;
 
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_State_Vbat2_eF1 = ENABLE;
@@ -237,10 +237,10 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 		tca9539_pin_num = TCA9539_IO_P00;
 
 	}else if( num_pwr_channel == PMM_PWR_VBAT_1_eF_2 ){
-		tca9539_pin_num = TCA9539_IO_P02;
+		tca9539_pin_num = TCA9539_IO_P01;
 
 	}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_1 ){
-		tca9539_pin_num = TCA9539_IO_P01;
+		tca9539_pin_num = TCA9539_IO_P02;
 
 	}else if( num_pwr_channel == PMM_PWR_VBAT_2_eF_2 ){
 		tca9539_pin_num = TCA9539_IO_P03;
