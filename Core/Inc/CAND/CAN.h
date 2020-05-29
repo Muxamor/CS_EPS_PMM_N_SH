@@ -22,7 +22,16 @@
 #define ERR_CAN_ACCESS_RANGE      	-7
 #define ERR_CAN_DCL_INVALID       	-8
 
-
+#define CAN_Constant_mode_offset	4
+#define CAN_PWR_CH1_offset			28
+#define CAN_PWR_CH2_offset			29
+#define CAN_PWR_CH3_offset			30
+#define CAN_PWR_CH4_offset			31
+#define CAN_PWR_CH5_offset			32
+#define CAN_PWR_CH6_offset			33
+#define CAN_PWR_VBAT1_offset		34
+#define CAN_PWR_VBAT2_offset		35
+#define CAN_Switch_active_CPU_offset 37
 uint64_t CAN_cmd_mask_status;
 
 
@@ -45,34 +54,51 @@ typedef union {
 
 
 struct CAN_IVar4 {
+
+	uint8_t CAN_time_byte0;					//+0
+	uint8_t CAN_time_byte1;					//+1
+	uint8_t CAN_time_byte2;					//+2
+	uint8_t CAN_time_byte3;					//+3
+    uint8_t CAN_Constant_mode;				//+4			1 - Перейти в режим констант; 0 - штатный режим
+    uint8_t CAN_Common_cmd0;				//+5
+    uint8_t CAN_Common_cmd1;				//+6
+    uint8_t CAN_Common_cmd2;				//+7
+    uint8_t CAN_Common_cmd3;				//+8
+    uint8_t CAN_Common_cmd4;				//+9
+    uint8_t CAN_Common_cmd5;				//+10
+    uint8_t CAN_Common_cmd6;				//+11
+    uint8_t CAN_Common_cmd7;				//+12
+    uint8_t CAN_Common_cmd8;				//+13
+    uint8_t CAN_Common_cmd9;				//+14
+    uint8_t CAN_Common_cmd10;				//+15
+
     // Массив командных регистров ключей разряда АБ
-    uint8_t CAN_Charge_gate_1_AB1;  		//+0            Командный регистр ключа заряда ветви 1 АБ1
-    uint8_t CAN_Discharge_gate_1_AB1;       //+1            Командный регистр ключа разряда ветви 1 АБ1
-    uint8_t CAN_Charge_gate_2_AB1;  		//+2            Командный регистр ключа заряда ветви 2 АБ1
-    uint8_t CAN_Discharge_gate_2_AB1;       //+3            Командный регистр ключа разряда ветви 2 АБ1
-    uint8_t CAN_Charge_gate_1_AB2;   		//+4            Командный регистр ключа заряда ветви 1 АБ2
-    uint8_t CAN_Discharge_gate_1_AB2;   	//+5            Командный регистр ключа разряда ветви 1 АБ2
-    uint8_t CAN_Charge_gate_2_AB2;   		//+6            Командный регистр ключа заряда ветви 2 АБ2
-    uint8_t CAN_Discharge_gate_2_AB2;   	//+7            Командный регистр ключа разряда ветви 2 АБ2
-    uint8_t CAN_Charge_gate_1_AB3;   		//+8            Командный регистр ключа заряда ветви 1 АБ3
-    uint8_t CAN_Discharge_gate_1_AB3;   	//+9            Командный регистр ключа разряда ветви 1 АБ3
-    uint8_t CAN_Charge_gate_2_AB3;   		//+10           Командный регистр ключа заряда ветви 2 АБ3
-    uint8_t CAN_Discharge_gate_2_AB3;   	//+11           Командный регистр ключа разряда ветви 2 АБ3
+    uint8_t CAN_Charge_gate_1_AB1;  		//+16            Командный регистр ключа заряда ветви 1 АБ1
+    uint8_t CAN_Discharge_gate_1_AB1;       //+17            Командный регистр ключа разряда ветви 1 АБ1
+    uint8_t CAN_Charge_gate_2_AB1;  		//+18            Командный регистр ключа заряда ветви 2 АБ1
+    uint8_t CAN_Discharge_gate_2_AB1;       //+19            Командный регистр ключа разряда ветви 2 АБ1
+    uint8_t CAN_Charge_gate_1_AB2;   		//+20            Командный регистр ключа заряда ветви 1 АБ2
+    uint8_t CAN_Discharge_gate_1_AB2;   	//+21            Командный регистр ключа разряда ветви 1 АБ2
+    uint8_t CAN_Charge_gate_2_AB2;   		//+22            Командный регистр ключа заряда ветви 2 АБ2
+    uint8_t CAN_Discharge_gate_2_AB2;   	//+23            Командный регистр ключа разряда ветви 2 АБ2
+    uint8_t CAN_Charge_gate_1_AB3;   		//+24            Командный регистр ключа заряда ветви 1 АБ3
+    uint8_t CAN_Discharge_gate_1_AB3;   	//+25            Командный регистр ключа разряда ветви 1 АБ3
+    uint8_t CAN_Charge_gate_2_AB3;   		//+26            Командный регистр ключа заряда ветви 2 АБ3
+    uint8_t CAN_Discharge_gate_2_AB3;   	//+27            Командный регистр ключа разряда ветви 2 АБ3
 
     // Массив командных регистров линий питания
-    uint8_t CAN_PWR_CH1;                    //+12           Командный регистр канал питаня 1 (СОП1)
-    uint8_t CAN_PWR_CH2;                    //+13           Командный регистр канал питаня 2 (СОП2)
-    uint8_t CAN_PWR_CH3;                    //+14           Командный регистр канал питаня 3 (БРК1)
-    uint8_t CAN_PWR_CH4;                    //+15           Командный регистр канал питаня 4 (БРК2)
-    uint8_t CAN_PWR_CH5;                    //+16           Командный регистр канал питаня 5 ( - )
-    uint8_t CAN_PWR_CH6;                    //+17           Командный регистр канал питаня 6 ( - )
-    uint8_t CAN_PWR_VBAT1;                  //+18           Командный регистр линии VBAT1 (МС)
-    uint8_t CAN_PWR_VBAT2;                  //+19           Командный регистр линии VBAT2 (МС)
-    uint8_t CAN_Turn_SES_mode;              //+20			Установить режим СЭС
-    uint8_t CAN_Constant_mode;				//+21			Перейти в режим констант
-    uint8_t CAN_Switch_active_CPU;          //+22		    Переключатель основной/резервный
-    uint8_t CAN_Reset_to_default;           //+23           Сброс параметров в состояние "по умолчанию"
-    uint8_t CAN_Perform_disclosure;         //+24           Выполнить раскрытие
+    uint8_t CAN_PWR_CH1;                    //+28           Командный регистр канал питаня 1 (СОП1)
+    uint8_t CAN_PWR_CH2;                    //+29           Командный регистр канал питаня 2 (СОП2)
+    uint8_t CAN_PWR_CH3;                    //+30           Командный регистр канал питаня 3 (БРК1)
+    uint8_t CAN_PWR_CH4;                    //+31           Командный регистр канал питаня 4 (БРК2)
+    uint8_t CAN_PWR_CH5;                    //+32           Командный регистр канал питаня 5 ( - )
+    uint8_t CAN_PWR_CH6;                    //+33           Командный регистр канал питаня 6 ( - )
+    uint8_t CAN_PWR_VBAT1;                  //+34           Командный регистр линии VBAT1 (МС)
+    uint8_t CAN_PWR_VBAT2;                  //+35           Командный регистр линии VBAT2 (МС)
+    uint8_t CAN_Turn_SES_mode;              //+36			Установить режим СЭС
+    uint8_t CAN_Switch_active_CPU;          //+37		    Переключатель основной/резервный
+    uint8_t CAN_Reset_to_default;           //+38           Сброс параметров в состояние "по умолчанию"
+    uint8_t CAN_Perform_disclosure;         //+39           Выполнить раскрытие
 
 }CAN_IVar4_RegCmd;
 
