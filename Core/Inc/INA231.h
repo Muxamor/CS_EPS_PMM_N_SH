@@ -119,5 +119,7 @@ ErrorStatus INA231_meas_bus_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, fl
 ErrorStatus INA231_meas_bus_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *bus_voltage);
 ErrorStatus INA231_meas_shunt_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float *shunt_voltage);
 ErrorStatus INA231_meas_shunt_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *shunt_voltage);
+ErrorStatus INA231_meas_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current, float *bus_voltage, float *power);
+ErrorStatus INA231_meas_I_V_P_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint32_t *current, uint32_t *bus_voltage, uint32_t *power);
 
 #endif /* INC_INA231_H_ */

@@ -1,6 +1,8 @@
 #ifndef _FLASH_LIB_
 #define _FLASH_LIB_
 
+#include "canv.h"
+
 
 #ifdef __cplusplus
 extern "C" {

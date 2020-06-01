@@ -17,7 +17,7 @@
 #include  "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "CAN.h"
-
+#include "canv.h"
 #include  <stdio.h>
 
 //#include "stm32l4xx_ll_dma.h"
@@ -612,7 +612,56 @@ void IWDG_Init(void){
 	* @retval None
  */
 //CAN initialization function is in ../Core/Src/CAND/canv.c
+int8_t CAN_init_eps(CAN_TypeDef *can_ref){
+	int8_t error_status = 0;
+	uint32_t CAN_BTR = (0x00 << 24) | (0x01 << 20) | (12 << 16) | (4 << 0); // SJW = 1; TS2 = 1+1; TS1 = 12+1; Prescaler = 40;
 
+	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	/* GPIO Ports Clock Enable */
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+
+	if(can_ref == CAN1){
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_8 | LL_GPIO_PIN_9;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+		GPIO_InitStruct.Alternate = LL_GPIO_AF_9;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+	else if(can_ref == CAN2){
+		/**/
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+		GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		/**/
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+		GPIO_InitStruct.Alternate = LL_GPIO_AF_3;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+	else{
+		return ERROR_N;
+	}
+
+	error_status = CAN_Init(can_ref, CAN_BTR);
+	if(error_status == ERR_CAN_NORMAL_MODE){
+		CAN->MSR &= ~CAN_MSR_WKUI;
+	}
+	else if(error_status == ERR_CAN_INIT_MODE){
+		return ERR_CAN_INIT_MODE;
+	}
+	return SUCCESS;
+}
 
 /** @brief Init. GPIO CAN.
 	* @param None
