@@ -185,6 +185,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 							printf("Get comm. reg. %d -> Disable constant mode\n", CAN_Constant_mode_offset);
 						#endif
 						//Need vrite config to PMM struct
+						CAN_Var5_fill_telemetry();
 					}
 					break;
 
@@ -226,18 +227,30 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 	NVIC_EnableIRQ(CAN1_RX0_IRQn);
 	NVIC_EnableIRQ(CAN2_RX0_IRQn);
 }
-
+void CAN_Var5_fill_telemetry(void){
+	for(uint16_t i = 0; i < sizeof(CAN_IVar5_telemetry); i++){
+		*((uint8_t *)(&CAN_IVar5_telemetry) + i) = 0;
+	}
+}
 
 void CAN_Var5_fill_telemetry_const(void){
 
 	uint8_t i = 0;
 	uint8_t j = 0;
 
+	/*
+	 * cpu1 main    0x800 0x74, 0x75, 0x7A, 0x7B
+	 * cou1 		0x800 0x14, 0x15, 0x1A, 0x1B
+	 * cpu1 		0x808 0x24, 0x25, 0x2A, 0x2B
+	 * cpu2 main    0x800 0x04, 0x05, 0x0A, 0x0B
+	 * cpu2 		0x800 0x34, 0x35, 0x3A, 0x3B
+	 * cpu2 		0x808 0x44, 0x45, 0x4A, 0x4B
+	 */
     // -------------------  ТМИ 0  ------------------ //
-    CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_pX		    =  0x74;
-    CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_nX		    =  0x75;
-    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[0]				=  0x7A;
-    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[1]				=  0x7B;
+    CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_pX		    =  0x04;
+    CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_nX		    =  0x05;
+    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[0]				=  0x0A;
+    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[1]				=  0x0B;
     CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[2]				=  0xC7;
     CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[3]				=  0x7D;
     CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[4]				=  0x7E;

@@ -28,7 +28,7 @@
 #include "uart_comm.h"
 
 #include  <stdio.h>
-
+#include "fram.h"
 /****************************TODO*************************
 1. Need to think about delay 30 minuts. 
 2. Need change constatn mode EN/Dis after teste with Doroshkin in CAN_cmd.c (delete debug)
@@ -51,7 +51,7 @@ int main(void){
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 
 	CAN_cmd_mask_status = 0;
-	uint32_t CAN_BTR = (0x00 << 24) | (0x01 << 20) | (12 << 16) | (4 << 0); // SJW = 1; TS2 = 1+1; TS1 = 12+1; Prescaler = 40;
+//	uint32_t CAN_BTR = (0x00 << 24) | (0x01 << 20) | (12 << 16) | (4 << 0); // SJW = 1; TS2 = 1+1; TS1 = 12+1; Prescaler = 40;
 
 	/** Initialization Periph STM32L496*/
 	LL_Init();
@@ -68,8 +68,55 @@ int main(void){
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
+//	int8_t status = 0;
+	//		CAN_Init_GPIO(CAN1);
+	//		CAN_Init_GPIO(CAN2);
+	//		status += CAN_Init(CAN1, CAN_BTR);
+	//		status += CAN_Init(CAN2, CAN_BTR);
+
+	PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
+	LL_mDelay(40);
+	CAN_init_eps(CAN1);
+//	CAN_init_eps(CAN2);
+	CAN_RegisterAllVars();
 
 	SetupInterrupt();
+
+
+
+//------------- FRAM test ---------------//
+
+//#define I2C_FRAM1_addr 0x50
+//	uint8_t fram_array[128] = {0};
+//	uint8_t fram_write_array[128];
+//	int8_t error_status = 0;
+//
+//	for(uint8_t i = 0; i < 128; i++){
+//		fram_write_array[i] = 0xFF;
+//	}
+//
+//	for(uint8_t i = 0; i < 128; i++){
+//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
+//	}
+//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
+//	error_status += FRAM_triple_write_data(I2C3, I2C_FRAM1_addr, fram_write_array, 128);
+//
+//	for(uint8_t i = 0; i < 128; i++){
+//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
+//	}
+////	error_status += FRAM_erase(I2C3, I2C_FRAM1_addr, FRAM_SIZE_64KB);
+//	error_status += FRAM_is_empty(I2C3, I2C_FRAM1_addr, I2C_FRAM1_addr, FRAM_SIZE_64KB);
+//
+//	for(uint8_t i = 0; i < 128; i++){
+//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
+//	}
+//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
+
+
+//==========================================//
+
+
+
 	//IWDG_Init();
 
 	//Need test!!!!!!!!!!!!
@@ -98,11 +145,15 @@ int main(void){
 		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
 		LL_mDelay(40);
 
-		CAN_Init_GPIO(CAN1);
-		CAN_Init_GPIO(CAN2);
-		CAN_Init(CAN1, CAN_BTR);
-		CAN_Init(CAN2, CAN_BTR);
-		CAN_RegisterAllVars();
+//		PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
+//		LL_mDelay(40);
+		//PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
+		//LL_mDelay(140);
+
+
+//		LL_mDelay(40);
+//		PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
+//		LL_mDelay(140);
 		//---------------------------------------------------
 
 		//******************************************************************
@@ -137,21 +188,14 @@ int main(void){
 		LL_mDelay(40);
 
 
-		TCA9539_read_input_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1 , TCA9539_IO_P14, &read_val_pin);
+//		TCA9539_read_input_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1 , TCA9539_IO_P14, &read_val_pin);
 
 		while(1){
 
-			if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 || read_val_pin == 1 ){
+			if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 ){
 				PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
-				LL_mDelay(40);
 
 				USART_send_string( UART5, mas_string);
-
-				CAN_Init_GPIO(CAN1);
-				CAN_Init_GPIO(CAN2);
-				CAN_Init(CAN1, CAN_BTR);
-				CAN_Init(CAN2, CAN_BTR);
-				CAN_RegisterAllVars();
 
 				ENABLE_TMUX1209_I2C();
 

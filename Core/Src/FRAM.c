@@ -6,7 +6,7 @@
 
 /** @brief	Erasing all FRAM's cells.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-	@param 	I2C_fram_addr - pointer to struct with configuration data.
+	@param 	I2C_fram_addr - I2C address FRAM
 	@param 	fram_size - size of FRAM in bytes.
 			FRAM_SIZE_64KB : 0x2000
 	@retval 0 - SUCCESS, -1 - ERROR
@@ -19,7 +19,7 @@ ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_s
 	FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
 
 	for(i = 0; i < fram_size; i++){
-		error_status += I2C_Write_byte_St(I2Cx, I2C_fram_addr, I2C_SIZE_REG_ADDR_U16, i, 0xFF);
+		error_status += I2C_Write_byte_St(I2Cx, I2C_fram_addr, I2C_SIZE_REG_ADDR_U16, i, 0x00);
 	}
 
 	FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
@@ -29,6 +29,49 @@ ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_s
 	}
 
 	return SUCCESS;
+}
+
+
+/** @brief	Check if fram is empty
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  I2C_addr_fram_main - I2C address main FRAM
+	@param  I2C_addr_fram_backup - I2C address backup FRAM
+	@param 	fram_size - size of FRAM in bytes.
+			FRAM_SIZE_64KB : 0x2000
+	@retval 0 - FRAM is empty,
+			1 - FRAM is not empty,
+		   -1 - ERROR
+*/
+ErrorStatus FRAM_is_empty(I2C_TypeDef *I2Cx, uint8_t I2C_addr_fram_main, uint8_t I2C_addr_fram_backup, uint32_t fram_size){
+
+	ErrorStatus error_status = 0;
+	uint32_t i = 0;
+	uint8_t read_byte;
+	uint16_t read_sum = 0;
+
+	for( i = 0; i < 128; i++){
+		error_status += FRAM_majority_read_byte(I2Cx, I2C_addr_fram_main, i, &read_byte);
+		read_sum += read_byte;
+		if(error_status != 0){
+			return ERROR_N;
+		}
+	}
+	if(read_sum == 0){
+		return SUCCESS;  // empty
+	}
+	else if(read_sum == (0xFF * 128)){
+		error_status += FRAM_erase(I2Cx, I2C_addr_fram_main, fram_size);
+		error_status += FRAM_erase(I2Cx, I2C_addr_fram_backup, fram_size);
+		if(error_status != 0){
+			return ERROR_N;
+		}
+		else{
+			return SUCCESS;  // empty
+		}
+	}
+	else{
+		return 1;  // not empty
+	}
 }
 
 
@@ -57,7 +100,7 @@ ErrorStatus FRAM_set_write_access(uint8_t access_flag){
 
 /** @brief	Writing data to three segments of FRAMT.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-	@param 	I2C_fram_addr - pointer to struct with configuration data.
+	@param 	I2C_fram_addr - I2C address FRAM
 	@param 	*ptr_data - pointer to data which would be wrote to FRAM.
 	@param 	data_size - data size in bytes.
 	@retval 0 - Writing success, -1 - ERROR
@@ -81,7 +124,7 @@ ErrorStatus FRAM_triple_write_data(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uin
 
 /** @brief	Writing data to three segments of FRAMT  with verification.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-	@param 	I2C_fram_addr - pointer to struct with configuration data.
+	@param 	I2C_fram_addr - I2C address FRAM
 	@param 	*ptr_data - pointer to data which would be wrote into FRAM.
 	@param 	data_size - struct size in bytes.
 	@retval 0 - Writing success, -1 - ERROR
