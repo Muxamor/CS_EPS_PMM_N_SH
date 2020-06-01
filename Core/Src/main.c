@@ -51,7 +51,7 @@ int main(void){
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 
 	CAN_cmd_mask_status = 0;
-//	uint32_t CAN_BTR = (0x00 << 24) | (0x01 << 20) | (12 << 16) | (4 << 0); // SJW = 1; TS2 = 1+1; TS1 = 12+1; Prescaler = 40;
+
 
 	/** Initialization Periph STM32L496*/
 	LL_Init();
@@ -68,16 +68,10 @@ int main(void){
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
-//	int8_t status = 0;
-	//		CAN_Init_GPIO(CAN1);
-	//		CAN_Init_GPIO(CAN2);
-	//		status += CAN_Init(CAN1, CAN_BTR);
-	//		status += CAN_Init(CAN2, CAN_BTR);
 
-	PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
 	LL_mDelay(40);
 	CAN_init_eps(CAN1);
-//	CAN_init_eps(CAN2);
+	CAN_init_eps(CAN2);
 	CAN_RegisterAllVars();
 
 	SetupInterrupt();
@@ -133,6 +127,9 @@ int main(void){
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
 
+	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANmain, ENABLE );
+	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
+
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
 
 	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
@@ -141,8 +138,7 @@ int main(void){
 
 		//PMM_default_init_I2C_GPIOExt1(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1); //Temp function
 
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANmain, ENABLE );
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
+
 		LL_mDelay(40);
 
 //		PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
@@ -150,10 +146,6 @@ int main(void){
 		//PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
 		//LL_mDelay(140);
 
-
-//		LL_mDelay(40);
-//		PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
-//		LL_mDelay(140);
 		//---------------------------------------------------
 
 		//******************************************************************
@@ -180,15 +172,8 @@ int main(void){
 	}else{ // Backup Mode CPU Main_Backup_mode_CPU = 0;
 
 		uint8_t mas_string[] = "Set active CPUbackup\r\n";
-		uint8_t read_val_pin = 0;
 
-		LL_mDelay(200);
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANmain, ENABLE );
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
 		LL_mDelay(40);
-
-
-//		TCA9539_read_input_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1 , TCA9539_IO_P14, &read_val_pin);
 
 		while(1){
 
@@ -200,8 +185,6 @@ int main(void){
 				ENABLE_TMUX1209_I2C();
 
 				UART_CHANGE_ACTIVE_CPU_FLAG = 0;
-				read_val_pin = 0;
-
 			}
 
 
