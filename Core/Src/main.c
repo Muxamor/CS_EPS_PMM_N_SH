@@ -34,6 +34,7 @@
 2. Need change constatn mode EN/Dis after teste with Doroshkin in CAN_cmd.c (delete debug)
 3. In PDM module  необходимо добавить переинициализацую входов каждый раз при обращении.
 4. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ? 
+5. Убрать подтяжку CAN в боевой прошивке. Отключать CAN не на основном CPU
 
 
 **********************************************************/
@@ -130,6 +131,7 @@ int main(void){
 	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANmain, ENABLE );
 	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
 
+
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
 
 	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
@@ -156,6 +158,10 @@ int main(void){
 
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
+
+
+
+
 
 
 		while (1){
