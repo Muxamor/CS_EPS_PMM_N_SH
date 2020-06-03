@@ -1,13 +1,8 @@
-/*
- * INA231.c
- *
- *  Created on: 9 мая 2020 г.
- *      Author: ftor
- */
-#include "INA231.h"
+
+#include "stm32l4xx.h"
 #include "Error_Handler.h"
 #include "i2c_comm.h"
-#include "stm32l4xx.h"
+#include "INA231.h"
 
 
 /** @brief	Read "configuration" register.This register resets all registers and
@@ -19,9 +14,11 @@
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA231_read_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CONFIGURATION_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
 	}
+
 	return SUCCESS;
 }
 
@@ -33,9 +30,11 @@ ErrorStatus INA231_read_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, u
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA231_read_shunt_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_SHUNT_VOLTAGE_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
 	}
+
 	return SUCCESS;
 }
 
@@ -47,9 +46,11 @@ ErrorStatus INA231_read_shunt_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_add
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA231_read_bus_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_BUS_VOLTAGE_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
 	}
+
 	return SUCCESS;
 }
 
@@ -62,9 +63,11 @@ ErrorStatus INA231_read_bus_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr,
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA231_read_power_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_POWER_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
 	}
+
 	return SUCCESS;
 }
 
@@ -77,9 +80,11 @@ ErrorStatus INA231_read_power_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, ui
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA231_read_current_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CURRENT_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
 	}
+
 	return SUCCESS;
 }
 
@@ -92,10 +97,12 @@ ErrorStatus INA231_read_current_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, 
 	@param 	*read_data - pointer to store calibration setting data.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_calibr_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+ErrorStatus INA231_read_calibration_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CALIBRATION_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
 	}
+
 	return SUCCESS;
 }
 
@@ -108,9 +115,11 @@ ErrorStatus INA231_read_calibr_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, u
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA231_read_mask_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
 	}
+
 	return SUCCESS;
 }
 
@@ -122,15 +131,14 @@ ErrorStatus INA231_read_mask_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uin
 	@param 	*read_data - pointer to store alert limit value.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_alert_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+ErrorStatus INA231_read_alert_lim_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_ALERT_LIMIT_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
 	}
+
 	return SUCCESS;
 }
-
-
-
 
 
 /** @brief	Read averaging mode. These bits set the number of samples that are collected and averaged together
@@ -155,6 +163,7 @@ ErrorStatus INA231_read_aver_mode(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, ui
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CONFIGURATION_REG_ADDR, &read_reg) != SUCCESS){
 		return ERROR_N;
 	}
+
 	*read_data = (uint8_t)((read_reg >> 9) & 0x07);
 
 	return SUCCESS;
@@ -176,7 +185,7 @@ ErrorStatus INA231_read_aver_mode(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, ui
 				0x07 - INA231_CONVERSION_TIME_8244us
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_bus_ct(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_bus_conv_time(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -204,7 +213,7 @@ ErrorStatus INA231_read_bus_ct(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8
 				0x07 - INA231_CONVERSION_TIME_8244us
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_shunt_ct(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_shunt_conv_time(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -247,14 +256,14 @@ ErrorStatus INA231_read_mode(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t
 
 
 
-/** @brief	Read "Shunt Voltage Overvoltage" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Read "Shunt Voltage Overvoltage" bit (Mask/Enable Register - SOL). Setting this bit high configures the ALERT pin to
   			be asserted when the shunt voltage conversion exceeds the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_sol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_shunt_overvoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -267,14 +276,14 @@ ErrorStatus INA231_read_sol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 }
 
 
-/** @brief	Read "Shunt Voltage Undervoltage" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Read "Shunt Voltage Undervoltage" bit (Mask/Enable Register - SUL). Setting this bit high configures the ALERT pin to
   	  	  	be asserted when the shunt voltage conversion drops below the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_sul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_shunt_undervoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -287,14 +296,14 @@ ErrorStatus INA231_read_sul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 }
 
 
-/** @brief	Read "Bus Voltage Overvoltage" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Read "Bus Voltage Overvoltage" bit (Mask/Enable Register - BOL). Setting this bit high configures the ALERT pin to
   			be asserted when the bus voltage conversion exceeds the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_bol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_bus_overvoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -307,14 +316,14 @@ ErrorStatus INA231_read_bol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 }
 
 
-/** @brief	Read "Bus Voltage Undervoltage" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Read "Bus Voltage Undervoltage" bit (Mask/Enable Register - BUL). Setting this bit high configures the ALERT pin to
   			be asserted when the bus voltage conversion drops below the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_bul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_bus_undervoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -327,14 +336,14 @@ ErrorStatus INA231_read_bul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 }
 
 
-/** @brief	Read "Power Overlimit" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Read "Power Overlimit" bit (Mask/Enable Register - POL). Setting this bit high configures the ALERT pin to
   			be asserted when the power calculation exceeds the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_power_overlimit(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -347,7 +356,7 @@ ErrorStatus INA231_read_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 }
 
 
-/** @brief	Read "Conversion Ready" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Read "Conversion Ready" bit (Mask/Enable Register - CNVR). Setting this bit high configures the ALERT pin to
   			be asserted when the Conversion Ready Flag bit (CVRF, bit 3) is asserted, indicating
   			that the device is ready for the next conversion
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
@@ -355,7 +364,7 @@ ErrorStatus INA231_read_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_conv_ready_alert(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -368,7 +377,7 @@ ErrorStatus INA231_read_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t
 }
 
 
-/** @brief	Read "Alert Function Flag" bit. Although only one alert function at a time can be monitored
+/** @brief	Read "Alert Function Flag" bit (Mask/Enable Register - AFF). Although only one alert function at a time can be monitored
   			at the ALERT pin, the Conversion Ready bit (CNVR, bit 10) can also be enabled to assert the
   			ALERT pin. Reading the Alert Function Flag bit after an alert can help determine if the alert
   			function was the source of the alert. When the Alert Latch Enable bit is set to Latch mode,
@@ -380,7 +389,7 @@ ErrorStatus INA231_read_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_aff(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_alert_function(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -393,7 +402,7 @@ ErrorStatus INA231_read_aff(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 }
 
 
-/** @brief	Read "Conversion Ready Flag" bit. Although the INA231 can be read at any time, and the data from
+/** @brief	Read "Conversion Ready Flag" bit (Mask/Enable Register - CVRF). Although the INA231 can be read at any time, and the data from
   			the last conversion are available, this bit is provided to help coordinate single-shot or triggered
   			conversions. This bit is set after all conversions, averaging, and	multiplications are complete.
   			This bit clears under the following conditions in single-shot mode:
@@ -404,7 +413,7 @@ ErrorStatus INA231_read_aff(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_cvrf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_conv_ready(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -417,14 +426,14 @@ ErrorStatus INA231_read_cvrf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t
 }
 
 
-/** @brief	Read "Math Overflow Flag" bit. This bit is set to 1 if an arithmetic operation results in
+/** @brief	Read "Math Overflow Flag" bit (Mask/Enable Register - OVF). This bit is set to 1 if an arithmetic operation results in
   			an overflow error; it indicates that current and power data may be invalid.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_ovf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_math_overflow(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -437,7 +446,7 @@ ErrorStatus INA231_read_ovf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 }
 
 
-/** @brief	Read "Alert Polarity" bit. Configures the latching feature of the ALERT pin and the flag bits.
+/** @brief	Read "Alert Polarity" bit (Mask/Enable Register - APOL). Configures the latching feature of the ALERT pin and the flag bits.
 			1 = Inverted (active-high open collector)
 			0 = Normal (active-low open collector) (default)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
@@ -445,7 +454,7 @@ ErrorStatus INA231_read_ovf(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t 
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_alert_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -458,7 +467,7 @@ ErrorStatus INA231_read_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t
 }
 
 
-/** @brief	Read "Alert Latch Enable" bit. Configures the latching feature of the ALERT pin and flag bits.
+/** @brief	Read "Alert Latch Enable" bit (Mask/Enable Register - LEN). Configures the latching feature of the ALERT pin and flag bits.
 			1 = Latch enabled
 			0 = Transparent (default)
 			When the Alert Latch Enable bit is set to Transparent mode, the ALERT pin and flag bits reset to their idle states
@@ -469,7 +478,7 @@ ErrorStatus INA231_read_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t
 	@param 	*read_data - pointer to store actual bit state.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_len(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
+ErrorStatus INA231_read_alert_latch(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t *read_data){
 
 	uint16_t read_reg;
 
@@ -510,7 +519,7 @@ ErrorStatus INA231_write_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, 
 	@param 	write_data - variable that will be write to "Calibration" register.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_write_calibr_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t write_data){
+ErrorStatus INA231_write_calibration_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t write_data){
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CALIBRATION_REG_ADDR, write_data) != SUCCESS){
 		return ERROR_N;
 	}
@@ -540,7 +549,7 @@ ErrorStatus INA231_write_mask_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, ui
 	@param 	write_data - variable that will be write to "Alert Limit" register.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_write_alert_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t write_data){
+ErrorStatus INA231_write_alert_lim_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t write_data){
 	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_ALERT_LIMIT_REG_ADDR, write_data) != SUCCESS){
 		return ERROR_N;
 	}
@@ -680,13 +689,13 @@ ErrorStatus INA231_write_mode(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_
 
 
 
-/** @brief	Set "Shunt Voltage Overvoltage" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Set "Shunt Voltage Overvoltage" bit (Mask/Enable Register - SOL). Setting this bit high configures the ALERT pin to
   			be asserted when the shunt voltage conversion exceeds the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_set_sol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_set_shunt_overvoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -703,12 +712,12 @@ ErrorStatus INA231_set_sol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 }
 
 
-/** @brief	Reset "Shunt Voltage Overvoltage" bit.
+/** @brief	Reset "Shunt Voltage Overvoltage" bit (Mask/Enable Register - SOL).
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_reset_sol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_reset_shunt_overvoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -726,13 +735,13 @@ ErrorStatus INA231_reset_sol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 }
 
 
-/** @brief	Set "Shunt Voltage Undervoltage" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Set "Shunt Voltage Undervoltage" bit (Mask/Enable Register - SUL). Setting this bit high configures the ALERT pin to
   	  	  	be asserted when the shunt voltage conversion drops below the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_set_sul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_set_shunt_undervoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -749,12 +758,12 @@ ErrorStatus INA231_set_sul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	return SUCCESS;
 }
 
-/** @brief	Reset "Shunt Voltage Undervoltage" bit.
+/** @brief	Reset "Shunt Voltage Undervoltage" bit (Mask/Enable Register - SUL).
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_reset_sul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_reset_shunt_undervoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -772,13 +781,13 @@ ErrorStatus INA231_reset_sul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 }
 
 
-/** @brief	Set "Bus Voltage Overvoltage" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Set "Bus Voltage Overvoltage" bit (Mask/Enable Register - BOL). Setting this bit high configures the ALERT pin to
   			be asserted when the bus voltage conversion exceeds the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_set_bol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_set_bus_overvoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -795,12 +804,12 @@ ErrorStatus INA231_set_bol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	return SUCCESS;
 }
 
-/** @brief	Reset "Bus Voltage Overvoltage" bit.
+/** @brief	Reset "Bus Voltage Overvoltage" bit (Mask/Enable Register - BOL).
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_reset_bol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_reset_bus_overvoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -818,13 +827,13 @@ ErrorStatus INA231_reset_bol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 }
 
 
-/** @brief	Set "Bus Voltage Undervoltage" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Set "Bus Voltage Undervoltage" bit (Mask/Enable Register - BUL). Setting this bit high configures the ALERT pin to
   			be asserted when the bus voltage conversion drops below the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_set_bul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_set_bus_undervoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -841,12 +850,12 @@ ErrorStatus INA231_set_bul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	return SUCCESS;
 }
 
-/** @brief	Reset "Bus Voltage Undervoltage" bit.
+/** @brief	Reset "Bus Voltage Undervoltage" bit (Mask/Enable Register - BUL).
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_reset_bul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_reset_bus_undervoltage(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -864,13 +873,13 @@ ErrorStatus INA231_reset_bul(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 }
 
 
-/** @brief	Set "Power Overlimit" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Set "Power Overlimit" bit (Mask/Enable Register - POL). Setting this bit high configures the ALERT pin to
   			be asserted when the power calculation exceeds the value in the Alert Limit register.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_set_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_set_power_overlimit(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -887,12 +896,12 @@ ErrorStatus INA231_set_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	return SUCCESS;
 }
 
-/** @brief	Reset "Power Overlimit" bit.
+/** @brief	Reset "Power Overlimit" bit (Mask/Enable Register - POL).
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_reset_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_reset_power_overlimit(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -910,14 +919,14 @@ ErrorStatus INA231_reset_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 }
 
 
-/** @brief	Set "Conversion Ready" bit. Setting this bit high configures the ALERT pin to
+/** @brief	Set "Conversion Ready" bit (Mask/Enable Register - CNVR). Setting this bit high configures the ALERT pin to
   			be asserted when the Conversion Ready Flag bit (CVRF, bit 3) is asserted, indicating
   			that the device is ready for the next conversion
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_set_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_set_conv_ready_alert(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -934,12 +943,12 @@ ErrorStatus INA231_set_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	return SUCCESS;
 }
 
-/** @brief	Reset "Conversion Ready" bit.
+/** @brief	Reset "Conversion Ready" bit (Mask/Enable Register - CNVR).
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_reset_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_reset_conv_ready_alert(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -957,14 +966,14 @@ ErrorStatus INA231_reset_cnvr(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 }
 
 
-/** @brief	Set "Alert Polarity" bit. Configures the latching feature of the ALERT pin and the flag bits.
+/** @brief	Set "Alert Polarity" bit (Mask/Enable Register - APOL). Configures the latching feature of the ALERT pin and the flag bits.
 			1 = Inverted (active-high open collector)
 			0 = Normal (active-low open collector) (default)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_set_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_set_alert_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -981,14 +990,14 @@ ErrorStatus INA231_set_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	return SUCCESS;
 }
 
-/** @brief	Res "Alert Polarity" bit. Configures the latching feature of the ALERT pin and the flag bits.
+/** @brief	Res "Alert Polarity" bit (Mask/Enable Register - APOL). Configures the latching feature of the ALERT pin and the flag bits.
 			1 = Inverted (active-high open collector)
 			0 = Normal (active-low open collector) (default)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_reset_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_reset_alert_pol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -1006,7 +1015,7 @@ ErrorStatus INA231_reset_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 }
 
 
-/** @brief	Set "Alert Latch Enable" bit. Configures the latching feature of the ALERT pin and flag bits.
+/** @brief	Set "Alert Latch Enable" bit (Mask/Enable Register - LEN). Configures the latching feature of the ALERT pin and flag bits.
 			1 = Latch enabled
 			0 = Transparent (default)
 			When the Alert Latch Enable bit is set to Transparent mode, the ALERT pin and flag bits reset to their idle states
@@ -1016,7 +1025,7 @@ ErrorStatus INA231_reset_apol(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_set_len(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_set_alert_latch(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -1033,7 +1042,7 @@ ErrorStatus INA231_set_len(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	return SUCCESS;
 }
 
-/** @brief	Reset "Alert Latch Enable" bit. Configures the latching feature of the ALERT pin and flag bits.
+/** @brief	Reset "Alert Latch Enable" bit (Mask/Enable Register - LEN). Configures the latching feature of the ALERT pin and flag bits.
 			1 = Latch enabled
 			0 = Transparent (default)
 			When the Alert Latch Enable bit is set to Transparent mode, the ALERT pin and flag bits reset to their idle states
@@ -1043,7 +1052,7 @@ ErrorStatus INA231_set_len(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	@param 	I2C_INA231_addr - 7-bit device address.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_reset_len(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
+ErrorStatus INA231_reset_alert_latch(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
 	uint16_t read_reg;
 	uint16_t write_reg;
@@ -1094,11 +1103,11 @@ ErrorStatus INA231_power_reset(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 	@param 	shunt - value of shunt resistor (Ohm float).
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_init_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float shunt){
+ErrorStatus INA231_Set_calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float shunt){
 
 	uint16_t calibration = (uint16_t)(167.77216 / (max_current * shunt));
 
-	if(INA231_write_calibr_reg(I2Cx, I2C_INA231_addr, calibration) != SUCCESS){
+	if(INA231_write_calibration_reg(I2Cx, I2C_INA231_addr, calibration) != SUCCESS){
 		return ERROR_N;
 	}
 
@@ -1112,11 +1121,11 @@ ErrorStatus INA231_init_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float 
 	@param 	shunt - value of shunt resistor (mOhm uint16_t).
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_init_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t shunt){
+ErrorStatus INA231_Set_calibration_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t shunt){
 
 	uint16_t calibration = (uint16_t)(167772160 / (max_current * shunt));
 
-	if(INA231_write_calibr_reg(I2Cx, I2C_INA231_addr, calibration) != SUCCESS){
+	if(INA231_write_calibration_reg(I2Cx, I2C_INA231_addr, calibration) != SUCCESS){
 		return ERROR_N;
 	}
 
@@ -1131,7 +1140,7 @@ ErrorStatus INA231_init_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t
 	@param 	*current - pointer to store measured current value in Amps.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_current_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current){
+ErrorStatus INA231_Get_Current_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current){
 
 	uint16_t current_reg;
 	float lsb = max_current / 32768;
@@ -1151,7 +1160,7 @@ ErrorStatus INA231_meas_current_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr
 	@param 	*current - pointer to store measured current value in milliAmps.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_current_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t *current){
+ErrorStatus INA231_Get_Current_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t *current){
 
 	uint16_t current_reg;
 	uint16_t lsb = (max_current * 1000) / 32768;
@@ -1171,7 +1180,7 @@ ErrorStatus INA231_meas_current_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, 
 	@param 	*power - pointer to store measured power value in Watts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_power_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *power){
+ErrorStatus INA231_Get_Power_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *power){
 
 	uint16_t power_reg;
 	float lsb = (max_current * 0.025) / 32768;
@@ -1191,7 +1200,7 @@ ErrorStatus INA231_meas_power_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, 
 	@param 	*power - pointer to store measured power value in milliWatts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_power_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t *power){
+ErrorStatus INA231_Get_Power_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t *power){
 
 	uint16_t power_reg;
 	uint16_t lsb = (max_current * 100) / (32768 * 4);
@@ -1210,7 +1219,7 @@ ErrorStatus INA231_meas_power_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, ui
 	@param 	*bus_voltage - pointer to store measured bus voltage value in Volts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_bus_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float *bus_voltage){
+ErrorStatus INA231_Get_bus_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float *bus_voltage){
 
 	uint16_t bus_volt_reg;
 	float lsb = 0.00125;
@@ -1230,7 +1239,7 @@ ErrorStatus INA231_meas_bus_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, fl
 	@param 	*bus_voltage - pointer to store measured bus voltage value in milliVolts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_bus_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *bus_voltage){
+ErrorStatus INA231_Get_bus_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *bus_voltage){
 
 	uint16_t bus_volt_reg;
 
@@ -1250,7 +1259,7 @@ ErrorStatus INA231_meas_bus_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint
 	@param 	*shunt_voltage - pointer to store measured shunt voltage value in Volts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_shunt_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float *shunt_voltage){
+ErrorStatus INA231_Get_shunt_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float *shunt_voltage){
 
 	uint16_t shunt_volt_reg;
 	float lsb = 0.0000025;
@@ -1270,7 +1279,7 @@ ErrorStatus INA231_meas_shunt_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, 
 	@param 	*shunt_voltage - pointer to store measured shunt voltage value in milliVolts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_shunt_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *shunt_voltage){
+ErrorStatus INA231_Get_shunt_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *shunt_voltage){
 
 	uint16_t shunt_volt_reg;
 
@@ -1291,7 +1300,7 @@ ErrorStatus INA231_meas_shunt_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, ui
 	@param 	*power - pointer to store measured power value in Watts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current, float *bus_voltage, float *power){
+ErrorStatus INA231_Get_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current, float *bus_voltage, float *power){
 
 	uint16_t current_reg;
 	uint16_t power_reg;
@@ -1328,7 +1337,7 @@ ErrorStatus INA231_meas_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, 
 	@param 	*power - pointer to store measured power value in milliWatts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_meas_I_V_P_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint32_t *current, uint32_t *bus_voltage, uint32_t *power){
+ErrorStatus INA231_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint32_t *current, uint32_t *bus_voltage, uint32_t *power){
 
 	uint16_t current_reg;
 	uint16_t power_reg;
