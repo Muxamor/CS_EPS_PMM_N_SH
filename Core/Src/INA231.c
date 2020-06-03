@@ -29,7 +29,7 @@ ErrorStatus INA231_read_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, u
 	@param 	*read_data - pointer to store shunt voltage measurement data.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_shunt_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+ErrorStatus INA231_read_shunt_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, int16_t *read_data){
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_SHUNT_VOLTAGE_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
@@ -79,7 +79,7 @@ ErrorStatus INA231_read_power_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, ui
 	@param 	*read_data - pointer to store calculated current data.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_read_current_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data){
+ErrorStatus INA231_read_current_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, int16_t *read_data){
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CURRENT_REG_ADDR, read_data) != SUCCESS){
 		return ERROR_N;
@@ -1142,7 +1142,7 @@ ErrorStatus INA231_Set_calibration_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_add
 */
 ErrorStatus INA231_Get_Current_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current){
 
-	uint16_t current_reg;
+	int16_t current_reg;
 	float lsb = max_current / 32768;
 
 	if(INA231_read_current_reg(I2Cx, I2C_INA231_addr, &current_reg) != SUCCESS){
@@ -1162,7 +1162,7 @@ ErrorStatus INA231_Get_Current_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr,
 */
 ErrorStatus INA231_Get_Current_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, int16_t *current){
 
-	uint16_t current_reg;
+	int16_t current_reg;
 	uint16_t lsb = (max_current * 1000) / 32768;
 
 	if(INA231_read_current_reg(I2Cx, I2C_INA231_addr, &current_reg) != SUCCESS){
@@ -1261,7 +1261,7 @@ ErrorStatus INA231_Get_bus_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, u
 */
 ErrorStatus INA231_Get_shunt_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float *shunt_voltage){
 
-	uint16_t shunt_volt_reg;
+	int16_t shunt_volt_reg;
 	float lsb = 0.0000025;
 
 	if(INA231_read_shunt_volt_reg(I2Cx, I2C_INA231_addr, &shunt_volt_reg) != SUCCESS){
@@ -1281,7 +1281,7 @@ ErrorStatus INA231_Get_shunt_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr,
 */
 ErrorStatus INA231_Get_shunt_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, int32_t *shunt_voltage){
 
-	uint16_t shunt_volt_reg;
+	int16_t shunt_volt_reg;
 
 	if(INA231_read_shunt_volt_reg(I2Cx, I2C_INA231_addr, &shunt_volt_reg) != SUCCESS){
 		return ERROR_N;
@@ -1302,11 +1302,11 @@ ErrorStatus INA231_Get_shunt_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr,
 */
 ErrorStatus INA231_Get_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current, float *bus_voltage, float *power){
 
-	uint16_t current_reg;
+	int16_t current_reg;
 	uint16_t power_reg;
 	uint16_t bus_volt_reg;
 	float lsb_current = max_current / 32768;
-	float lsb_power = (max_current * 0.025) / 32768;
+//	float lsb_power = (max_current * 0.025) / 32768;
 
 	if(INA231_read_current_reg(I2Cx, I2C_INA231_addr, &current_reg) != SUCCESS){
 		return ERROR_N;
@@ -1343,18 +1343,18 @@ ErrorStatus INA231_Get_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, f
 	@param 	*power - pointer to store measured power value in milliWatts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, int16_t *current, uint32_t *bus_voltage, uint32_t *power){
+ErrorStatus INA231_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, int32_t *current, uint32_t *bus_voltage, uint32_t *power){
 
-	uint16_t current_reg;
+	int16_t current_reg;
 	uint16_t power_reg;
 	uint16_t bus_volt_reg;
-	uint16_t lsb_power = (max_current * 100) / (32768 * 4);
+//	uint16_t lsb_power = (max_current * 100) / (32768 * 4);
 	uint16_t lsb_current = (max_current * 1000) / 32768;
 
 	if(INA231_read_current_reg(I2Cx, I2C_INA231_addr, &current_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	*current = (int16_t)(lsb_current * current_reg);
+	*current = (int32_t)(lsb_current * current_reg);
 
 	if(INA231_read_bus_volt_reg(I2Cx, I2C_INA231_addr, &bus_volt_reg) != SUCCESS){
 		return ERROR_N;
