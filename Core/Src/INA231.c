@@ -1239,7 +1239,7 @@ ErrorStatus INA231_Get_bus_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, f
 	@param 	*bus_voltage - pointer to store measured bus voltage value in milliVolts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_Get_bus_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint32_t *bus_voltage){
+ErrorStatus INA231_Get_bus_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *bus_voltage){
 
 	uint16_t bus_volt_reg;
 
@@ -1247,7 +1247,7 @@ ErrorStatus INA231_Get_bus_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, u
 		return ERROR_N;
 	}
 
-	*bus_voltage = (uint32_t)((bus_volt_reg * 10) / 8);
+	*bus_voltage = (uint16_t)((bus_volt_reg * 10) / 8);
 
 	return SUCCESS;
 }
@@ -1279,7 +1279,7 @@ ErrorStatus INA231_Get_shunt_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr,
 	@param 	*shunt_voltage - pointer to store measured shunt voltage value in milliVolts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_Get_shunt_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, int32_t *shunt_voltage){
+ErrorStatus INA231_Get_shunt_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, int16_t *shunt_voltage){
 
 	int16_t shunt_volt_reg;
 
@@ -1287,7 +1287,7 @@ ErrorStatus INA231_Get_shunt_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr,
 		return ERROR_N;
 	}
 
-	*shunt_voltage = (int32_t)(shunt_volt_reg / 400);
+	*shunt_voltage = (int16_t)(shunt_volt_reg / 400);
 
 	return SUCCESS;
 }
@@ -1343,7 +1343,7 @@ ErrorStatus INA231_Get_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, f
 	@param 	*power - pointer to store measured power value in milliWatts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, int32_t *current, uint32_t *bus_voltage, uint32_t *power){
+ErrorStatus INA231_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, int16_t *current, uint16_t *bus_voltage, uint16_t *power){
 
 	int16_t current_reg;
 	uint16_t power_reg;
@@ -1354,13 +1354,13 @@ ErrorStatus INA231_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, u
 	if(INA231_read_current_reg(I2Cx, I2C_INA231_addr, &current_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	*current = (int32_t)(lsb_current * current_reg);
+	*current = (int16_t)(lsb_current * current_reg);
 
 	if(INA231_read_bus_volt_reg(I2Cx, I2C_INA231_addr, &bus_volt_reg) != SUCCESS){
 		return ERROR_N;
 	}
 
-	*bus_voltage = (uint32_t)((bus_volt_reg * 10) / 8);
+	*bus_voltage = (uint16_t)((bus_volt_reg * 10) / 8);
 
 	/////////-------------- Vers 1 ---------------------//////////////
 //	if(INA231_read_power_reg(I2Cx, I2C_INA231_addr, &power_reg) != SUCCESS){
@@ -1373,7 +1373,7 @@ ErrorStatus INA231_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, u
 	if(INA231_read_power_reg(I2Cx, I2C_INA231_addr, &power_reg) != SUCCESS){
 		return ERROR_N;
 	}
-	*power = (uint32_t)(power_reg) / 25;
+	*power = (uint16_t)(power_reg) / 25;
 
 	return SUCCESS;
 }
