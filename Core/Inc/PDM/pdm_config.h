@@ -16,6 +16,9 @@
 #define PDM_I2Cx_GPIOExt2 			I2C4 //I2C GPIO extender TCA9539 in PDM
 #define PDM_I2CADDR_GPIOExt2 		0x75//I2C GPIO extender TCA9539 in PDM
 
+#define PDM_I2Cx_MUX				I2C4 //I2C bus multiplexor TCA9548 in PDM
+#define PDM_I2CADDR_MUX 			0x70//I2C bus multiplexor TCA9548 in PDM
+
 #define PDM_I2Cx_TMP1075_1 			I2C4 //Temp. sensor in PDM 
 #define PDM_I2CADDR_TMP1075_1 		0x48 //Temp. sensor in PDM
 
