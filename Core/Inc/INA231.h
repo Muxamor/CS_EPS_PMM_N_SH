@@ -44,10 +44,10 @@
 
 
 ErrorStatus INA231_read_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data);
-ErrorStatus INA231_read_shunt_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, int16_t *read_data);
+ErrorStatus INA231_read_shunt_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data);
 ErrorStatus INA231_read_bus_volt_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data);
 ErrorStatus INA231_read_power_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data);
-ErrorStatus INA231_read_current_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, int16_t *read_data);
+ErrorStatus INA231_read_current_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data);
 ErrorStatus INA231_read_calibration_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data);
 ErrorStatus INA231_read_mask_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data);
 ErrorStatus INA231_read_alert_lim_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t *read_data);
@@ -79,8 +79,8 @@ ErrorStatus INA231_write_alert_lim_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_add
 
 
 ErrorStatus INA231_write_aver_mode(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t write_data);
-ErrorStatus INA231_write_bus_ct(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t write_data);
-ErrorStatus INA231_write_shunt_ct(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t write_data);
+ErrorStatus INA231_write_bus_conv_time(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t write_data);
+ErrorStatus INA231_write_shunt_conv_time(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t write_data);
 ErrorStatus INA231_write_mode(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint8_t write_data);
 
 
@@ -103,8 +103,8 @@ ErrorStatus INA231_reset_alert_latch(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr)
 
 ErrorStatus INA231_power_reset(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
 
-ErrorStatus INA231_Set_calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float shunt);
-ErrorStatus INA231_Set_calibration_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t shunt);
+ErrorStatus INA231_Set_calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float Rshunt);
+ErrorStatus INA231_Set_calibration_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t Rshunt);
 
 ErrorStatus INA231_Get_Current_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current);
 ErrorStatus INA231_Get_Current_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, int16_t *current);
