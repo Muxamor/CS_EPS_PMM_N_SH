@@ -2,7 +2,6 @@
 #ifndef INC_PCA9534_H_
 #define INC_PCA9534_H_
 
-//#define PCA9534_ADDR						0b00100000
 
 /*
 typedef enum {

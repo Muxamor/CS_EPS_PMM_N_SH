@@ -8,7 +8,6 @@ typedef enum {
   ERROR = !SUCCESS,
 } ErrorStatus; */
 
-//#define TCA9539_I2C_ADDR					0b01110100
 
 #define TCA9539_Input_Port0					0x00
 #define TCA9539_Input_Port1					0x01
