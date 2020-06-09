@@ -25,6 +25,53 @@ ErrorStatus I2C_check_flag(uint32_t (*I2C_check_flag)(I2C_TypeDef *), I2C_TypeDe
 	return SUCCESS;
 }
 
+
+/** @brief	Reading single straight byte without register address  in devices ( St- generate only Read Start )
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	SlaveAddr - 8-bit device address.
+	@param  *data - pointer to variable u8 where would be written data from the remote device.
+	@retval 0 - SUCCESS, -1 - ERROR
+*/
+ErrorStatus I2C_Read_byte_directly_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t *data){
+
+	uint8_t receive_data = 0;
+	uint32_t SlaveAddr1;
+
+	SlaveAddr1 = (uint8_t)(SlaveAddr << 1);
+
+	//Clear flags if the previous attempt to exchange was not successful.
+	LL_I2C_ClearFlag_TXE(I2Cx);
+	LL_I2C_ClearFlag_NACK(I2Cx);
+	LL_I2C_ClearFlag_BERR(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr1, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)1, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ);
+
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+	//LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_NACK);
+	receive_data = LL_I2C_ReceiveData8(I2Cx);
+
+	//LL_I2C_GenerateStopCondition(I2Cx);
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+	*data = receive_data;
+
+	return SUCCESS;
+}
+
+
+
 /** @brief	Reading single byte  ( St_ReSt - generate Start and Restart )
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	SlaveAddr - 8-bit device address.
@@ -37,7 +84,7 @@ ErrorStatus I2C_check_flag(uint32_t (*I2C_check_flag)(I2C_TypeDef *), I2C_TypeDe
 	@param  *data - pointer to variable u8 where would be written data from the remote device.
 	@retval 0 - SUCCESS, -1 - ERROR
 */
-ErrorStatus I2C_Read_byte_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size_reg_addr , uint32_t reg_addr, uint8_t *data){ // FRAM
+ErrorStatus I2C_Read_byte_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size_reg_addr , uint32_t reg_addr, uint8_t *data){
 
 	if( size_reg_addr == 0 || size_reg_addr > 4 ){ 
 		return ERROR_N;
@@ -180,7 +227,47 @@ ErrorStatus I2C_Read_word_u16_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint
 	return SUCCESS;
 }
 
-/**@brief	Writing uint8_t data (byte) by address reg_addr. (St genereate only one start)
+
+/**@brief	Writing uint8_t data (byte) straight without register address  in devices. (St genereate only one start)
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	SlaveAddr - 8-bit device address.
+	@param  data - uint8_t data to be writing
+	@retval 0 - SUCCESS, -1 - ERROR
+*/
+ErrorStatus I2C_Write_byte_directly_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t data){
+
+	SlaveAddr = (uint8_t)(SlaveAddr << 1);
+
+	//Clear flags if the previous attempt to exchange was not successful.
+	LL_I2C_ClearFlag_TXE(I2Cx);
+	LL_I2C_ClearFlag_NACK(I2Cx);
+	LL_I2C_ClearFlag_BERR(I2Cx);
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
+		return ERROR_N;
+	}
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)1, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE); //LL_I2C_MODE_SOFTEND
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	LL_I2C_TransmitData8(I2Cx, data);
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+	return 0;
+}
+
+
+/**@brief	Writing uint8_t data (byte) to address reg_addr. (St genereate only one start)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	SlaveAddr - 8-bit device address.
 	@param  size_reg_addr - size of reg_addr in byte if:
