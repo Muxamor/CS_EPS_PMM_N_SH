@@ -1,9 +1,3 @@
-/*
- * pmm_struct.h
- *
- *  Created on: Apr 23, 2020
- *      Author: Ivan
- */
 
 #ifndef INC_PMM_PMM_STRUCT_H_
 #define INC_PMM_PMM_STRUCT_H_
@@ -18,7 +12,7 @@ typedef struct{
 	uint8_t CAN_constatnt_mode		:1;	//= 1-Constant mode CANreg5 is ON, 0-Constant CANreg5 is OFF.
 	uint8_t	:5;
 
-	uint8_t EPS_Mode;                   // Mode of operation EPS
+	uint8_t EPS_Mode;                   // Mode of operation EPS: 0xFF - Service mode.
 
 	
 	uint16_t PWR_State_CANmain			:1; //0-DISABLE, 1-ENABLE. State power main CAN.
@@ -48,7 +42,9 @@ typedef struct{
 	uint32_t Error_PWR_State_3_3V_Bus		:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_I2C_GPIO_Ext1 			:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
 	uint32_t Error_I2C_GPIO_Ext2 			:1;
-	uint32_t :18;
+	uint32_t Error_FRAM1		 			:1; //=0 -OK, = 1-error FRAM1 no connection
+	uint32_t Error_FRAM2		 			:1; //=0 -OK, = 1-error FRAM2 no connection
+	uint32_t :16;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up).
 	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up).

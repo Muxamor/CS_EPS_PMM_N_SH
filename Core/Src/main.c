@@ -1,4 +1,3 @@
-
 #include "main.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
@@ -12,8 +11,7 @@
 #include "pdm_config.h"
 #include "pdm_struct.h"
 #include "pdm_init.h"
-#include "pdm.h"
-
+#include "pdm_ctrl.h"
 
 #include "pmm_config.h"
 #include "pmm_struct.h"

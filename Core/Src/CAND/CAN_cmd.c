@@ -5,7 +5,7 @@
 
 #include "pdm_struct.h"
 #include "pdm_config.h"
-#include "pdm.h"
+#include "pdm_ctrl.h"
 
 
 #include "pmm_struct.h"

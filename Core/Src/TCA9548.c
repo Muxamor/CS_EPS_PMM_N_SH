@@ -116,7 +116,6 @@ ErrorStatus TCA9548_Disable_I2C_ch( I2C_TypeDef *I2Cx, uint8_t tca9548_I2C_addr,
 					TCA9548_CH5
 					TCA9548_CH6
 					TCA9548_CH7
-
 	@param 	*ch_status - pointer to variable where will be store channel status. 1-ENABLE, 0-DISABLE
 	@retval 0-OK, ERROR_N-Error I2C bus
 */

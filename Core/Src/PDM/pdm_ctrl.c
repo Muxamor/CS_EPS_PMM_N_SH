@@ -1,3 +1,4 @@
+
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
@@ -6,14 +7,16 @@
 #include "pdm_config.h"
 #include "TCA9539.h"
 #include "TMP1075.h"
-#include "pdm.h"
+#include "pdm_ctrl.h"
 
 /*********************** TODO *********************/
 /**
- * 1. В функции PDM_Get_PG_PWR_CH прописать установку напрвления перед тем как читать.(Защита от радиации)
- *
+ * 1. В функции PDM_Get_PG_PWR_CH прописать установку напрвления пинов перед тем как читать.(Защита от радиации)
+ * 2. Добавить в PDM_Get_temp_TMP1075 переключения I2C MUX
+ * 3. Подумать над тем чтобы функцию PDM_Get_temp_all_sensor убрать в функцию PDM_Get_telemetry.
+ * 4. В PDM_Set_state_PWR_CH подумать над тем чтобы выставлять ошибку канал если  получили ошибку связи GPIO expander
  */
-
+/*****************************************/
 
 
 /** @brief  Set state (enable/disable) power channel.
@@ -126,7 +129,8 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 	i=0;
  	error_I2C = ERROR_N;
 
-	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+ 	//Enable/Disable INPUT Efuse power channel.
+	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){
 
 		if( state_channel == ENABLE ){
 			error_I2C = TCA9539_conf_IO_dir_input( pdm_pins.I2Cx, pdm_pins.I2C_tca9539_addr, pdm_pins.pin_EN_in_eFuse ); // Input pin -  because hardware auto-enable
@@ -144,8 +148,8 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 		}
 	}
 
-	if( error_I2C == SUCCESS ){//Enable/Disable OUTPUT Efuse power channel.
-
+	//Enable/Disable OUTPUT Efuse power channel.
+	if( error_I2C == SUCCESS ){
 		LL_mDelay(40); //Delay for startup power supply
 
 		i=0;
@@ -172,6 +176,8 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 	}
 
 	if( error_I2C == SUCCESS ){
+
+// ???????????????? Запускать PDM_Check_state_PWR_CH даже если была ошибка ????????????????
 
 		if( PDM_Check_state_PWR_CH( pdm_ptr, number_pwr_channel ) != SUCCESS ){
 			return ERROR_N;
@@ -362,7 +368,43 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 		}else if( pdm_pins.I2C_tca9539_addr == PDM_I2CADDR_GPIOExt2 ){
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
+//??????????????????? Поудмать над этим обсудить с Саней
+		switch(number_pwr_channel){
 
+			case PDM_PWR_Channel_1:
+				pdm_ptr->Error_PWR_CH1_State_eF_in = 1; //Error
+				pdm_ptr->Error_PWR_CH1_State_eF_out = 1;//Error
+				break;
+
+			case PDM_PWR_Channel_2:
+				pdm_ptr->Error_PWR_CH2_State_eF_in = 1; //Error
+				pdm_ptr->Error_PWR_CH2_State_eF_out = 1;//Error
+				break;
+
+			case PDM_PWR_Channel_3:
+				pdm_ptr->Error_PWR_CH3_State_eF_in = 1; //Error
+				pdm_ptr->Error_PWR_CH3_State_eF_out = 1;//Error
+				break;
+
+			case PDM_PWR_Channel_4:
+				pdm_ptr->Error_PWR_CH4_State_eF_in = 1; //Error
+				pdm_ptr->Error_PWR_CH4_State_eF_out = 1;//Error
+				break;
+
+			case PDM_PWR_Channel_5:
+				pdm_ptr->Error_PWR_CH5_State_eF_in = 1; //Error
+				pdm_ptr->Error_PWR_CH5_State_eF_out = 1;//Error
+				break;
+
+			case PDM_PWR_Channel_6:
+				pdm_ptr->Error_PWR_CH6_State_eF_in = 1; //Error
+				pdm_ptr->Error_PWR_CH6_State_eF_out = 1;//Error
+				break;
+
+			default:
+				break;
+		}
+//????????????????????????????????????????????????????????????????????????
 		return ERROR_N;
 	}
 
@@ -509,7 +551,6 @@ ErrorStatus PDM_Get_PG_ALL_PWR_CH( _PDM *pdm_ptr ){
 }
 
 */
-
 
 
 /** @brief  Get temperature from temp. sensor on PDM . 

@@ -46,5 +46,7 @@
 #define pmm_i2c_delay_att_conn		5 	 //ms Delay between attempts connection through I2C in millisecond
 
 
+#define Service_Mode_EPS			0xFF
+
 
 #endif /* INC_PMM_PMM_CONFIG_H_ */
