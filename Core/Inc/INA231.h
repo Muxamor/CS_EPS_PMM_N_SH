@@ -104,7 +104,7 @@ ErrorStatus INA231_reset_alert_latch(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr)
 ErrorStatus INA231_power_reset(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr);
 
 ErrorStatus INA231_Set_calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float Rshunt);
-ErrorStatus INA231_Set_calibration_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t Rshunt);
+ErrorStatus INA231_Set_calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t Rshunt);
 
 ErrorStatus INA231_Get_Current_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current);
 ErrorStatus INA231_Get_Current_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, int16_t *current);

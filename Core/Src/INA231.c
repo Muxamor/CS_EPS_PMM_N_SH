@@ -1124,7 +1124,7 @@ ErrorStatus INA231_Set_calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_a
 	@param 	Rshunt - value of shunt resistor (mOhm uint16_t).
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA231_Set_calibration_int(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t Rshunt){
+ErrorStatus INA231_Set_calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, uint16_t Rshunt){
 
 	uint16_t calibration = 0;
 
