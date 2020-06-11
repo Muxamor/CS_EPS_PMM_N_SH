@@ -67,33 +67,33 @@ ErrorStatus PDM_init(_PDM *pdm_ptr){
 
 
 	//Initialization Power monitor INA231 power channel 1
-	if(PDM_PCB_Assembled_PWR_CH1 == 0x01 ){
-		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch1, PDM_I2CADDR_PWR_Mon_Ch1, 2.0, 0.015, PDM_I2CADDR_MUX, TCA9548_CH6 );
+	if(PDM_PCB_Assembled_PWR_CH1 != 0x00 ){
+		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch1, PDM_I2CADDR_PWR_Mon_Ch1, 2000, 15, PDM_I2CADDR_MUX, TCA9548_CH6 );
 	}
 
 	//Initialization Power monitor INA231 power channel 2
-	if(PDM_PCB_Assembled_PWR_CH2 == 0x01 ){
-		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch2, PDM_I2CADDR_PWR_Mon_Ch2, 2.0, 0.015, PDM_I2CADDR_MUX, TCA9548_CH4 );
+	if(PDM_PCB_Assembled_PWR_CH2 != 0x00 ){
+		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch2, PDM_I2CADDR_PWR_Mon_Ch2, 2000, 15, PDM_I2CADDR_MUX, TCA9548_CH4 );
 	}
 
 	//Initialization Power monitor INA231 power channel 3
-	if(PDM_PCB_Assembled_PWR_CH3 == 0x01 ){
-		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch3, PDM_I2CADDR_PWR_Mon_Ch3, 2.0, 0.015, PDM_I2CADDR_MUX, TCA9548_CH3 );
+	if(PDM_PCB_Assembled_PWR_CH3 != 0x00 ){
+		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch3, PDM_I2CADDR_PWR_Mon_Ch3, 2000, 15, PDM_I2CADDR_MUX, TCA9548_CH3 );
 	}
 
 	//Initialization Power monitor INA231 power channel 4
-	if(PDM_PCB_Assembled_PWR_CH4 == 0x01 ){
-		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch4, PDM_I2CADDR_PWR_Mon_Ch4, 2.0, 0.015, PDM_I2CADDR_MUX, TCA9548_CH2 );
+	if(PDM_PCB_Assembled_PWR_CH4 != 0x00 ){
+		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch4, PDM_I2CADDR_PWR_Mon_Ch4, 2000, 15, PDM_I2CADDR_MUX, TCA9548_CH2 );
 	}
 
 	//Initialization Power monitor INA231 power channel 5
-	if(PDM_PCB_Assembled_PWR_CH5 == 0x01 ){
-		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch5, PDM_I2CADDR_PWR_Mon_Ch5, 2.0, 0.015, PDM_I2CADDR_MUX, TCA9548_CH1 );
+	if(PDM_PCB_Assembled_PWR_CH5 != 0x00 ){
+		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch5, PDM_I2CADDR_PWR_Mon_Ch5, 2000, 15, PDM_I2CADDR_MUX, TCA9548_CH1 );
 	}
 
 	//Initialization Power monitor INA231 power channel 6
-	if(PDM_PCB_Assembled_PWR_CH6 == 0x01 ){
-		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch6, PDM_I2CADDR_PWR_Mon_Ch6, 2.0, 0.015, PDM_I2CADDR_MUX, TCA9548_CH0 );
+	if(PDM_PCB_Assembled_PWR_CH6 != 0x00 ){
+		error_stutus += PDM_init_INA231( pdm_ptr, PDM_I2Cx_PWR_Mon_Ch6, PDM_I2CADDR_PWR_Mon_Ch6, 2000, 15, PDM_I2CADDR_MUX, TCA9548_CH0 );
 	}
 
 

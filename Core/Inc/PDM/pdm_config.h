@@ -53,12 +53,14 @@
 #define pdm_i2c_delay_att_conn		5 	 //ms Delay between attempts connection through I2C in millisecond
 
 
+//!!!! Later transfer to structure PDM
 #define PDM_PCB_Assembled_PWR_CH1 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH2 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH3 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH4 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH5 		0x00 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH6 		0x00 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
+//!!!!!
 
 #define PDM_PWR_Channel_1 			0x01 
 #define PDM_PWR_Channel_2 			0x02
@@ -77,9 +79,9 @@ typedef struct{
 	uint16_t pin_PG_in_eFuse;
 	uint16_t pin_PG_out_eFuse;
 
-} _PDM_pins;
+} _PDM_table;
 
-_PDM_pins PDM_pin_table(uint8_t number_pwr_channel);
+_PDM_table PDM__Table(uint8_t number_pwr_channel);
 
 
 #endif /* INC_PDM_PDM_CONFIG_H_ */

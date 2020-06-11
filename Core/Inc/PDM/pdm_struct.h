@@ -74,21 +74,22 @@ typedef struct{
 	int8_t Temp_sensor_3;
 	int8_t Temp_sensor_4;
 	int8_t Temp_sensor_median; //PDM median temperature
+
 	uint8_t PDM_addres_module;
 
-	uint16_t Error_PWR_Mon_CH1    :1; // 0 - OK 1 - Error. Indicate error on the PDM board
-	uint16_t Error_PWR_Mon_CH2    :1;
-	uint16_t Error_PWR_Mon_CH3    :1;
-	uint16_t Error_PWR_Mon_CH4    :1;
-	uint16_t Error_PWR_Mon_CH5 	 :1;
-	uint16_t Error_PWR_Mon_CH6	 :1;
-	uint16_t Error_I2C_GPIO_Ext1 :1;
-	uint16_t Error_I2C_GPIO_Ext2 :1;
-	uint16_t Error_I2C_MUX		 :1;
-	uint16_t Error_temp_sensor_1 :1;
-	uint16_t Error_temp_sensor_2 :1;
-	uint16_t Error_temp_sensor_3 :1;
-	uint16_t Error_temp_sensor_4 :1;
+	uint16_t Error_PWR_Mon_CH1		:1; // 0 - OK 1 - Error. Indicate error on the PDM board
+	uint16_t Error_PWR_Mon_CH2		:1;
+	uint16_t Error_PWR_Mon_CH3		:1;
+	uint16_t Error_PWR_Mon_CH4		:1;
+	uint16_t Error_PWR_Mon_CH5 		:1;
+	uint16_t Error_PWR_Mon_CH6	 	:1;
+	uint16_t Error_I2C_GPIO_Ext1 	:1;
+	uint16_t Error_I2C_GPIO_Ext2 	:1;
+	uint16_t Error_I2C_MUX		 	:1;
+	uint16_t Error_temp_sensor_1 	:1;
+	uint16_t Error_temp_sensor_2 	:1;
+	uint16_t Error_temp_sensor_3 	:1;
+	uint16_t Error_temp_sensor_4	:1;
 	uint16_t :3;
 	
 	
