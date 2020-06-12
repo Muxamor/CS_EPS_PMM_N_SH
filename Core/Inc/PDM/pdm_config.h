@@ -16,8 +16,8 @@
 #define PDM_I2Cx_GPIOExt2 			I2C4 //I2C GPIO extender TCA9539 in PDM
 #define PDM_I2CADDR_GPIOExt2 		0x75//I2C GPIO extender TCA9539 in PDM
 
-#define PDM_I2Cx_MUX				I2C4 //I2C bus multiplexor TCA9548 in PDM
-#define PDM_I2CADDR_MUX 			0x70//I2C bus multiplexor TCA9548 in PDM
+#define PDM_I2Cx_I2C_MUX			I2C4 //I2C bus multiplexor TCA9548 in PDM
+#define PDM_I2CADDR_I2C_MUX 		0x70//I2C bus multiplexor TCA9548 in PDM
 
 #define PDM_I2Cx_TMP1075_1 			I2C4 //Temp. sensor in PDM 
 #define PDM_I2CADDR_TMP1075_1 		0x48 //Temp. sensor in PDM
@@ -72,12 +72,27 @@
 
 typedef struct{
 
-	I2C_TypeDef *I2Cx;
-	uint8_t I2C_tca9539_addr;
+	I2C_TypeDef *I2Cx_GPIO_Ext;
+	uint8_t I2C_addr_GPIO_Ext;
 	uint16_t pin_EN_in_eFuse;
 	uint16_t pin_EN_out_eFuse;
 	uint16_t pin_PG_in_eFuse;
 	uint16_t pin_PG_out_eFuse;
+
+	I2C_TypeDef *I2Cx_PWR_Mon;
+	uint8_t I2C_addr_PWR_Mon;
+	uint16_t PWR_Mon_Max_Current_int16;
+	float PWR_Mon_Max_Current_float;
+	uint16_t PWR_Mon_Rshunt_int16;
+	float PWR_Mon_Rshunt_float;
+	uint8_t PWR_Mon_aver_mode;
+	uint8_t PWR_Mon_bus_conv_time;
+	uint8_t PWR_Mon_shunt_conv_time; 
+	uint8_t PWR_Mon_work_mode;
+
+	I2C_TypeDef *I2Cx_I2C_MUX;
+	uint8_t I2C_addr_I2C_MUX;
+	uint8_t I2C_MUX_Ch;
 
 } _PDM_table;
 
