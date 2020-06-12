@@ -62,12 +62,12 @@
 #define PDM_PCB_Assembled_PWR_CH6 		0x00 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 //!!!!!
 
-#define PDM_PWR_Channel_1 			0x01 
-#define PDM_PWR_Channel_2 			0x02
-#define PDM_PWR_Channel_3 			0x03
-#define PDM_PWR_Channel_4 			0x04
-#define PDM_PWR_Channel_5 			0x05
-#define PDM_PWR_Channel_6 			0x06
+#define PDM_PWR_Channel_1 			0x00
+#define PDM_PWR_Channel_2 			0x01
+#define PDM_PWR_Channel_3 			0x02
+#define PDM_PWR_Channel_4 			0x03
+#define PDM_PWR_Channel_5 			0x04
+#define PDM_PWR_Channel_6 			0x05
 
 
 typedef struct{

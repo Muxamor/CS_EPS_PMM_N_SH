@@ -680,80 +680,224 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 //								PDM_PWR_Channel_6
 //
 //
-//ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t number_pwr_channel){
-//
-//	//I2C_TypeDef *I2Cx, uint8_t power_mon_addr, uint16_t max_current, uint8_t i2c_mux_addr, uint8_t i2c_mux_ch
-//	uint8_t i = 0;
-//	int16_t val_current = 0;
-//	uint16_t val_bus_voltage = 0;
-//	uint16_t val_power = 0;
-//	int8_t Error_I2C_MUX = ERROR_N;
-//	int8_t error_I2C = ERROR_N;
-//
-//	// Switch MUX to PDM I2C bus on PMM
-//	SW_TMUX1209_I2C_main_PDM();
-//
-//	//Enable I2C MUX channel
-//	i=0;
-//	error_I2C = ERROR_N;
-//	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
-//
-//		error_I2C = TCA9548_Enable_I2C_ch( I2Cx, i2c_mux_addr, i2c_mux_ch );
-//
-//		if( error_I2C != SUCCESS ){
-//			i++;
-//			LL_mDelay( pdm_i2c_delay_att_conn );
-//		}
-//	}
-//
-//	Error_I2C_MUX = error_I2C;
-//
-//	//Read temperature
-//	if( error_I2C == SUCCESS ){
-//
-//		i=0;
-//		error_I2C = ERROR_N;
-//
-//		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read temperature.
-//
-//			error_I2C = INA231_Get_I_V_P_int16( I2Cx, power_mon_addr, max_current, &val_current, &val_bus_voltage, &val_power );
-//
-//			if( error_I2C != SUCCESS ){
-//				i++;
-//				LL_mDelay( pdm_i2c_delay_att_conn );
-//			}
-//		}
-//	}
-//
-//	//Disable I2C MUX channel.
-//	//Note: Do not check the error since it doesn’t matter anymore.
-//	TCA9548_Disable_I2C_ch( I2Cx, i2c_mux_addr, i2c_mux_ch );
-//
-//	//Parse error
-//	if( Error_I2C_MUX == ERROR_N ){
-//		pdm_ptr->Error_I2C_MUX = ERROR;
-//	}else{
-//		pdm_ptr->Error_I2C_MUX = SUCCESS;
-//	}
+ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t number_pwr_channel){
 
-//	switch( power_mon_addr ){
-//
-//		case PDM_I2CADDR_TMP1075_1:
-//			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
-//				pdm_ptr->Temp_sensor_1 = 0x7F;
-//				pdm_ptr->Error_temp_sensor_1 = ERROR;
-//			}else{
-//				pdm_ptr->Temp_sensor_1 = temp_value;
-//				pdm_ptr->Error_temp_sensor_1 = SUCCESS; //No error
-//			}
-//			break;
-//
-//		default:
-//			break;
-//	}
+	uint8_t i = 0;
+	int16_t val_current = 0;
+	uint16_t val_bus_voltage = 0;
+	uint16_t val_power = 0;
+	_PDM_table pdm_table;
+	int8_t Error_I2C_MUX = ERROR_N;
+	int8_t error_I2C = ERROR_N;
+	
 
-	//return error_I2C;
-//}
+	if( number_pwr_channel > PDM_PWR_Channel_6 ){
+		return ERROR_N;
+	}
 
+	// Switch MUX to PDM I2C bus on PMM 
+	SW_TMUX1209_I2C_main_PDM(); 
+
+	pdm_table = PDM__Table(number_pwr_channel);
+
+	//Enable I2C MUX channel
+	i=0;
+	error_I2C = ERROR_N;
+	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+		error_I2C = TCA9548_Enable_I2C_ch( pdm_table.I2Cx_I2C_MUX, pdm_table.I2C_addr_I2C_MUX, pdm_table.I2C_MUX_Ch );
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pdm_i2c_delay_att_conn );
+		}
+	}
+
+	Error_I2C_MUX = error_I2C;
+
+	//Read temperature
+	if( error_I2C == SUCCESS ){
+
+		i=0;
+		error_I2C = ERROR_N;
+
+		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read temperature.
+
+			error_I2C = INA231_Get_I_V_P_int16( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
+
+			if( error_I2C != SUCCESS ){
+				i++;
+				LL_mDelay( pdm_i2c_delay_att_conn );
+			}
+		}
+	}
+
+	//Disable I2C MUX channel.
+	//Note: Do not check the error since it doesn’t matter anymore.
+	TCA9548_Disable_I2C_ch( pdm_table.I2Cx_I2C_MUX, pdm_table.I2C_addr_I2C_MUX, pdm_table.I2C_MUX_Ch );
+
+	//Parse error
+	if( Error_I2C_MUX == ERROR_N ){
+		pdm_ptr->Error_I2C_MUX = ERROR;
+	}else{
+		pdm_ptr->Error_I2C_MUX = SUCCESS;
+	}
+/*
+	if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+		pdm_ptr->PWR_Voltage[number_pwr_channel] = 0;
+		pdm_ptr->PWR_Current[number_pwr_channel] = 0;
+		pdm_ptr->PWR_Power[number_pwr_channel] = 0;
+	}else{
+		pdm_ptr->PWR_Voltage[number_pwr_channel] = val_bus_voltage;
+		pdm_ptr->PWR_Current[number_pwr_channel] = val_current;
+		pdm_ptr->PWR_Power[number_pwr_channel] = val_power;
+	}
+
+	switch( number_pwr_channel ){
+
+		case PDM_PWR_Channel_1:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->Error_PWR_Mon_CH1 = ERROR;
+			}else{
+				pdm_ptr->Error_PWR_Mon_CH1 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_2:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->Error_PWR_Mon_CH2 = ERROR;
+			}else{
+				pdm_ptr->Error_PWR_Mon_CH2 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_3:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->Error_PWR_Mon_CH3 = ERROR;
+			}else{
+				pdm_ptr->Error_PWR_Mon_CH3 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_4:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->Error_PWR_Mon_CH4 = ERROR;
+			}else{
+				pdm_ptr->Error_PWR_Mon_CH4 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_5:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->Error_PWR_Mon_CH5 = ERROR;
+			}else{
+				pdm_ptr->Error_PWR_Mon_CH5 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_6:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->Error_PWR_Mon_CH6 = ERROR;
+			}else{
+				pdm_ptr->Error_PWR_Mon_CH6 = SUCCESS;
+			}
+			break;
+
+		default:
+			break;
+	}
+*/
+	switch( number_pwr_channel ){
+
+		case PDM_PWR_Channel_1:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->PWR_CH1_Voltage = 0;
+				pdm_ptr->PWR_CH1_Current = 0; 
+				pdm_ptr->PWR_CH1_Power = 0;
+				pdm_ptr->Error_PWR_Mon_CH1 = ERROR;
+			}else{
+				pdm_ptr->PWR_CH1_Voltage = val_bus_voltage;
+				pdm_ptr->PWR_CH1_Current = val_current; //No error
+				pdm_ptr->PWR_CH1_Power = val_power;
+				pdm_ptr->Error_PWR_Mon_CH1 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_2:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->PWR_CH2_Voltage = 0;
+				pdm_ptr->PWR_CH2_Current = 0; 
+				pdm_ptr->PWR_CH2_Power = 0;
+				pdm_ptr->Error_PWR_Mon_CH2 = ERROR;
+			}else{
+				pdm_ptr->PWR_CH2_Voltage = val_bus_voltage;
+				pdm_ptr->PWR_CH2_Current = val_current; //No error
+				pdm_ptr->PWR_CH2_Power = val_power;
+				pdm_ptr->Error_PWR_Mon_CH2 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_3:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->PWR_CH3_Voltage = 0;
+				pdm_ptr->PWR_CH3_Current = 0; 
+				pdm_ptr->PWR_CH3_Power = 0;
+				pdm_ptr->Error_PWR_Mon_CH3 = ERROR;
+			}else{
+				pdm_ptr->PWR_CH3_Voltage = val_bus_voltage;
+				pdm_ptr->PWR_CH3_Current = val_current; //No error
+				pdm_ptr->PWR_CH3_Power = val_power;
+				pdm_ptr->Error_PWR_Mon_CH3 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_4:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->PWR_CH4_Voltage = 0;
+				pdm_ptr->PWR_CH4_Current = 0; 
+				pdm_ptr->PWR_CH4_Power = 0;
+				pdm_ptr->Error_PWR_Mon_CH4 = ERROR;
+			}else{
+				pdm_ptr->PWR_CH4_Voltage = val_bus_voltage;
+				pdm_ptr->PWR_CH4_Current = val_current; //No error
+				pdm_ptr->PWR_CH4_Power = val_power;
+				pdm_ptr->Error_PWR_Mon_CH4 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_5:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->PWR_CH5_Voltage = 0;
+				pdm_ptr->PWR_CH5_Current = 0; 
+				pdm_ptr->PWR_CH5_Power = 0;
+				pdm_ptr->Error_PWR_Mon_CH5 = ERROR;
+			}else{
+				pdm_ptr->PWR_CH5_Voltage = val_bus_voltage;
+				pdm_ptr->PWR_CH5_Current = val_current; //No error
+				pdm_ptr->PWR_CH5_Power = val_power;
+				pdm_ptr->Error_PWR_Mon_CH5 = SUCCESS;
+			}
+			break;
+
+		case PDM_PWR_Channel_6:
+			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+				pdm_ptr->PWR_CH6_Voltage = 0;
+				pdm_ptr->PWR_CH6_Current = 0; 
+				pdm_ptr->PWR_CH6_Power = 0;
+				pdm_ptr->Error_PWR_Mon_CH6 = ERROR;
+			}else{
+				pdm_ptr->PWR_CH6_Voltage = val_bus_voltage;
+				pdm_ptr->PWR_CH6_Current = val_current; //No error
+				pdm_ptr->PWR_CH6_Power = val_power;
+				pdm_ptr->Error_PWR_Mon_CH6 = SUCCESS;
+			}
+			break;
+
+		default:
+			break;
+	}
+
+	return error_I2C;
+}
 
 

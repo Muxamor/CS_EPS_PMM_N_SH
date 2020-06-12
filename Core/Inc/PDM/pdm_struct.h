@@ -4,6 +4,7 @@
 
 typedef struct{
 
+	//uint16_t PWR_Voltage[6];
 	uint16_t PWR_CH1_Voltage;  //Channel voltage value in mV
 	uint16_t PWR_CH2_Voltage;
 	uint16_t PWR_CH3_Voltage;
@@ -73,9 +74,7 @@ typedef struct{
 	int8_t Temp_sensor_2;
 	int8_t Temp_sensor_3;
 	int8_t Temp_sensor_4;
-	int8_t Temp_sensor_median; //PDM median temperature
-
-	uint8_t PDM_addres_module;
+	int8_t Temp_median_value; //PDM median temperature
 
 	uint16_t Error_PWR_Mon_CH1		:1; // 0 - OK 1 - Error. Indicate error on the PDM board
 	uint16_t Error_PWR_Mon_CH2		:1;
@@ -92,7 +91,8 @@ typedef struct{
 	uint16_t Error_temp_sensor_4	:1;
 	uint16_t :3;
 	
-	
+	uint8_t PDM_addres_module;
+
 }_PDM;
 
 

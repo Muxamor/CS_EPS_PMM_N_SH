@@ -119,12 +119,13 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 
 /** @brief  Init INA231 Power Monitor on PDM module.
     @param 	*pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-	@param  INA231_addr - I2C sensor address
-	@param  max_current - maximum current in mA.
-	@param  Rshunt - Resistance measuring resistor in mOhm
-	@param  i2c_mux_addr - I2C MUX address
-	@param  i2c_mux_ch  - Number channel MUX
+	@param  number_pwr_channel - number of channel :
+								PDM_PWR_Channel_1 
+								PDM_PWR_Channel_2
+								PDM_PWR_Channel_3
+								PDM_PWR_Channel_4
+								PDM_PWR_Channel_5
+								PDM_PWR_Channel_6 
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
 ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t number_pwr_channel){
