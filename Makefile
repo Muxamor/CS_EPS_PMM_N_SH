@@ -41,12 +41,17 @@ Core/Src/FRAM.c \
 Core/Src/PCA9534.c \
 Core/Src/TCA9539.c \
 Core/Src/ADS1015.c \
+Core/Src/TCA9548.c \
+Core/Src/INA231.c \
 Core/Src/PDM/pdm_config.c \
 Core/Src/PDM/pdm_init_IC.c \
 Core/Src/PDM/pdm_init.c \
+Core/Src/PDM/pdm_ctrl.c \
 Core/Src/PDM/pdm.c \
 Core/Src/PMM/pmm_init_IC.c \
 Core/Src/PMM/pmm_init.c \
+Core/Src/PMM/pmm_ctrl.c \
+Core/Src/PMM/pmm_deploy.c \
 Core/Src/PMM/pmm_savedata.c \
 Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
@@ -144,6 +149,7 @@ C_INCLUDES =  \
 -ICore/Inc/PDM \
 -ICore/Inc/PAM \
 -ICore/Inc/CAND \
+-ICore/Inc/FLASH \
 -ICore/Inc/BATT \
 -IDrivers/STM32L4xx_HAL_Driver/Inc \
 -IDrivers/CMSIS/Device/ST/STM32L4xx/Include \
@@ -171,8 +177,8 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 LDSCRIPT = STM32L496QGIX_FLASH.ld
 
 # libraries
-LIBS = -lc -lm -lnosys 
-LIBDIR = 
+LIBS = -lc -lm -lnosys -lcanv_lib -lFlash_lib
+LIBDIR = -L./Core/Src/LIB
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
