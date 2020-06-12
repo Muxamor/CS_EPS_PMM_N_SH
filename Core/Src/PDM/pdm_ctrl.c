@@ -22,14 +22,7 @@
 
 /** @brief  Set state (enable/disable) power channel.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  number_pwr_channel - number of channel :
-								PDM_PWR_Channel_1 
-								PDM_PWR_Channel_2
-								PDM_PWR_Channel_3
-								PDM_PWR_Channel_4
-								PDM_PWR_Channel_5
-								PDM_PWR_Channel_6 
-
+	@param  number_pwr_channel - number of channel 
 	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
 								ENABLE 
 								DISABLE
@@ -46,85 +39,20 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 		return ERROR_N;
 	}
 
-	if( number_pwr_channel > PDM_PWR_Channel_6 ){
-		return ERROR_N;
-	}
 
 	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM 
 
 	pdm_table = PDM__Table(number_pwr_channel);
-	
-	switch(number_pwr_channel){
 
-		case PDM_PWR_Channel_1:
-
-			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH1_State_eF_in = ENABLE; 
-				pdm_ptr->PWR_CH1_State_eF_out = ENABLE; 
-			}else{ // DISABLE
-				pdm_ptr->PWR_CH1_State_eF_in = DISABLE; 
-				pdm_ptr->PWR_CH1_State_eF_out = DISABLE; 
-			}
-			break;
-
-		case PDM_PWR_Channel_2:
-
-			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH2_State_eF_in = ENABLE; 
-				pdm_ptr->PWR_CH2_State_eF_out = ENABLE; 
-			}else{ // DISABLE
-				pdm_ptr->PWR_CH2_State_eF_in = DISABLE; 
-				pdm_ptr->PWR_CH2_State_eF_out = DISABLE; 
-			}
-			break;
-
-		case PDM_PWR_Channel_3:
-
-			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH3_State_eF_in = ENABLE; 
-				pdm_ptr->PWR_CH3_State_eF_out = ENABLE; 
-			}else{ // DISABLE
-				pdm_ptr->PWR_CH3_State_eF_in = DISABLE; 
-				pdm_ptr->PWR_CH3_State_eF_out = DISABLE; 
-			}
-			break;
-
-		case PDM_PWR_Channel_4:
-
-			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH4_State_eF_in = ENABLE; 
-				pdm_ptr->PWR_CH4_State_eF_out = ENABLE; 
-			}else{ // DISABLE
-				pdm_ptr->PWR_CH4_State_eF_in = DISABLE; 
-				pdm_ptr->PWR_CH4_State_eF_out = DISABLE; 
-			}
-			break;
-
-		case PDM_PWR_Channel_5:
-
-			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH5_State_eF_in = ENABLE; 
-				pdm_ptr->PWR_CH5_State_eF_out = ENABLE; 
-			}else{ // DISABLE
-				pdm_ptr->PWR_CH5_State_eF_in = DISABLE; 
-				pdm_ptr->PWR_CH5_State_eF_out = DISABLE; 
-			} 
-			break;
-
-		case PDM_PWR_Channel_6:
-
-			if( state_channel == ENABLE){
-				pdm_ptr->PWR_CH6_State_eF_in = ENABLE; 
-				pdm_ptr->PWR_CH6_State_eF_out = ENABLE; 
-			}else{ // DISABLE
-				pdm_ptr->PWR_CH6_State_eF_in = DISABLE; 
-				pdm_ptr->PWR_CH6_State_eF_out = DISABLE; 
-			}
-			break;
-
-		default:
-			break;
+	if( state_channel == ENABLE){
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in = ENABLE; 
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out = ENABLE; 
+			
+	}else{
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in = DISABLE; 
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out = DISABLE; 
 	}
+	
 
 	//Write to I2C GPIO Extender.
 	i=0;
@@ -191,41 +119,8 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
 
-		switch(number_pwr_channel){
-
-			case PDM_PWR_Channel_1:
-				pdm_ptr->Error_PWR_CH1_State_eF_in = 1; //Error
-				pdm_ptr->Error_PWR_CH1_State_eF_out = 1;//Error
-				break;
-
-			case PDM_PWR_Channel_2:
-				pdm_ptr->Error_PWR_CH2_State_eF_in = 1; //Error
-				pdm_ptr->Error_PWR_CH2_State_eF_out = 1;//Error
-				break;
-
-			case PDM_PWR_Channel_3:
-				pdm_ptr->Error_PWR_CH3_State_eF_in = 1; //Error
-				pdm_ptr->Error_PWR_CH3_State_eF_out = 1;//Error
-				break;
-
-			case PDM_PWR_Channel_4:
-				pdm_ptr->Error_PWR_CH4_State_eF_in = 1; //Error
-				pdm_ptr->Error_PWR_CH4_State_eF_out = 1;//Error
-				break;
-
-			case PDM_PWR_Channel_5:
-				pdm_ptr->Error_PWR_CH5_State_eF_in = 1; //Error
-				pdm_ptr->Error_PWR_CH5_State_eF_out = 1;//Error
-				break;
-
-			case PDM_PWR_Channel_6:
-				pdm_ptr->Error_PWR_CH6_State_eF_in = 1; //Error
-				pdm_ptr->Error_PWR_CH6_State_eF_out = 1;//Error
-				break;
-
-			default:
-				break;
-			}
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = ERROR; 
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = ERROR;
 
 		return ERROR_N;
 	}
@@ -292,101 +187,18 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 			pdm_ptr->Error_I2C_GPIO_Ext2 = SUCCESS;
 		}
 
-		switch(number_pwr_channel){
-
-			case PDM_PWR_Channel_1:
-
-				if( pdm_ptr->PWR_CH1_State_eF_in != read_val_pin_EN_in_eF ){
-					pdm_ptr->Error_PWR_CH1_State_eF_in = ERROR; //Error
-				}else{
-					pdm_ptr->Error_PWR_CH1_State_eF_in = SUCCESS;
-				}
-
-				if( pdm_ptr->PWR_CH1_State_eF_out != read_val_pin_EN_out_eF ){
-					pdm_ptr->Error_PWR_CH1_State_eF_out = ERROR;
-				}else{
-					pdm_ptr->Error_PWR_CH1_State_eF_out = SUCCESS;
-				}
-				break;
-
-			case PDM_PWR_Channel_2:
-
-				if( pdm_ptr->PWR_CH2_State_eF_in != read_val_pin_EN_in_eF ){
-					pdm_ptr->Error_PWR_CH2_State_eF_in = ERROR;
-				}else{
-					pdm_ptr->Error_PWR_CH2_State_eF_in = SUCCESS;
-				}
-
-				if( pdm_ptr->PWR_CH2_State_eF_out != read_val_pin_EN_out_eF ){
-					pdm_ptr->Error_PWR_CH2_State_eF_out = ERROR;
-				}else{
-					pdm_ptr->Error_PWR_CH2_State_eF_out = SUCCESS;
-				}
-				break;
-
-			case PDM_PWR_Channel_3:
-
-				if( pdm_ptr->PWR_CH3_State_eF_in != read_val_pin_EN_in_eF ){
-					pdm_ptr->Error_PWR_CH3_State_eF_in = ERROR;
-				}else{
-					pdm_ptr->Error_PWR_CH3_State_eF_in = SUCCESS;
-				}
-
-				if( pdm_ptr->PWR_CH3_State_eF_out != read_val_pin_EN_out_eF ){
-					pdm_ptr->Error_PWR_CH3_State_eF_out = ERROR;
-				}else{
-					pdm_ptr->Error_PWR_CH3_State_eF_out = SUCCESS;
-				}
-				break;
-
-			case PDM_PWR_Channel_4:
-
-				if( pdm_ptr->PWR_CH4_State_eF_in != read_val_pin_EN_in_eF ){
-					pdm_ptr->Error_PWR_CH4_State_eF_in = ERROR;
-				}else{
-					pdm_ptr->Error_PWR_CH4_State_eF_in = SUCCESS;
-				}
-
-				if( pdm_ptr->PWR_CH4_State_eF_out != read_val_pin_EN_out_eF ){
-					pdm_ptr->Error_PWR_CH4_State_eF_out = ERROR;
-				}else{
-					pdm_ptr->Error_PWR_CH4_State_eF_out = SUCCESS;
-				}
-				break;
-
-			case PDM_PWR_Channel_5:
-
-				if( pdm_ptr->PWR_CH5_State_eF_in != read_val_pin_EN_in_eF ){
-					pdm_ptr->Error_PWR_CH5_State_eF_in = 1;
-				}else{
-					pdm_ptr->Error_PWR_CH5_State_eF_in = SUCCESS;
-				}
-
-				if( pdm_ptr->PWR_CH5_State_eF_out != read_val_pin_EN_out_eF ){
-					pdm_ptr->Error_PWR_CH5_State_eF_out = 1;
-				}else{
-					pdm_ptr->Error_PWR_CH5_State_eF_out = SUCCESS;
-				}
-				break;
-
-			case PDM_PWR_Channel_6:
-
-				if( pdm_ptr->PWR_CH6_State_eF_in != read_val_pin_EN_in_eF ){
-					pdm_ptr->Error_PWR_CH6_State_eF_in = 1;
-				}else{
-					pdm_ptr->Error_PWR_CH6_State_eF_in = SUCCESS;
-				}
-
-				if( pdm_ptr->PWR_CH6_State_eF_out != read_val_pin_EN_out_eF ){
-					pdm_ptr->Error_PWR_CH6_State_eF_out = 1;
-				}else{
-					pdm_ptr->Error_PWR_CH6_State_eF_out = SUCCESS;
-				}
-				break;
-
-			default:
-				break;
+		if( pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in  != read_val_pin_EN_in_eF ){
+			pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = ERROR; 
+		}else{
+			pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = SUCCESS;
 		}
+
+		if( pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out  != read_val_pin_EN_out_eF ){
+			pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = ERROR; 
+		}else{
+			pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = SUCCESS;
+		}
+
 
 	}else{
 
@@ -397,59 +209,19 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
 
-		switch(number_pwr_channel){
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = ERROR; 
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = ERROR;
 
-			case PDM_PWR_Channel_1:
-				pdm_ptr->Error_PWR_CH1_State_eF_in = ERROR; //Error
-				pdm_ptr->Error_PWR_CH1_State_eF_out = ERROR;//Error
-				break;
-
-			case PDM_PWR_Channel_2:
-				pdm_ptr->Error_PWR_CH2_State_eF_in = ERROR; //Error
-				pdm_ptr->Error_PWR_CH2_State_eF_out = ERROR;//Error
-				break;
-
-			case PDM_PWR_Channel_3:
-				pdm_ptr->Error_PWR_CH3_State_eF_in = ERROR; //Error
-				pdm_ptr->Error_PWR_CH3_State_eF_out = ERROR;//Error
-				break;
-
-			case PDM_PWR_Channel_4:
-				pdm_ptr->Error_PWR_CH4_State_eF_in = ERROR; //Error
-				pdm_ptr->Error_PWR_CH4_State_eF_out = ERROR;//Error
-				break;
-
-			case PDM_PWR_Channel_5:
-				pdm_ptr->Error_PWR_CH5_State_eF_in = ERROR; //Error
-				pdm_ptr->Error_PWR_CH5_State_eF_out = ERROR;//Error
-				break;
-
-			case PDM_PWR_Channel_6:
-				pdm_ptr->Error_PWR_CH6_State_eF_in = ERROR; //Error
-				pdm_ptr->Error_PWR_CH6_State_eF_out = ERROR;//Error
-				break;
-
-			default:
-				break;
-		}
-
-		return ERROR_N;
 	}
 
-	return SUCCESS;
+	return error_I2C;
 }
 
 
 
 /** @brief  Get Power Good power channel status 
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  number_pwr_channel - number channel on/off:
-								PDM_PWR_Channel_1 
-								PDM_PWR_Channel_2
-								PDM_PWR_Channel_3
-								PDM_PWR_Channel_4
-								PDM_PWR_Channel_5
-								PDM_PWR_Channel_6 
+	@param  number_pwr_channel - number power channel
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
@@ -482,71 +254,31 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 		}
 	}
 
-	switch( number_pwr_channel ){
+	if( error_I2C == SUCCESS  ){
 
-		case  PDM_PWR_Channel_1:
-			if( (pdm_ptr->PWR_CH1_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH1_State_eF_out == ENABLE) ){
-				 pdm_ptr->PWR_CH1_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
-				 pdm_ptr->PWR_CH1_PG_eF_out = read_val_pin_PG_out_eF;
-			}else{
-				pdm_ptr->PWR_CH1_PG_eF_in = SUCCESS;  // OK because power channel is not Enable
-				pdm_ptr->PWR_CH1_PG_eF_out = SUCCESS;
-			}
-			break;
+		if( (pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in  == ENABLE ) && (pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out == ENABLE) ){
 
-		case  PDM_PWR_Channel_2:
-			if( (pdm_ptr->PWR_CH2_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH2_State_eF_out == ENABLE) ){
-				 pdm_ptr->PWR_CH2_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
-				 pdm_ptr->PWR_CH2_PG_eF_out = read_val_pin_PG_out_eF;
-			}else{
-				pdm_ptr->PWR_CH2_PG_eF_in = SUCCESS;
-				pdm_ptr->PWR_CH2_PG_eF_out = SUCCESS;
-			}
-			break;
+			pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+			pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_PG_eF_out = read_val_pin_PG_out_eF;
 
-		case  PDM_PWR_Channel_3:
-			if( (pdm_ptr->PWR_CH3_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH3_State_eF_out == ENABLE) ){
-				 pdm_ptr->PWR_CH3_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
-				 pdm_ptr->PWR_CH3_PG_eF_out = read_val_pin_PG_out_eF;
-			}else{
-				pdm_ptr->PWR_CH3_PG_eF_in = SUCCESS;
-				pdm_ptr->PWR_CH3_PG_eF_out = SUCCESS;
-			}
-			break;
+		}else{
 
-		case  PDM_PWR_Channel_4:
-			if( (pdm_ptr->PWR_CH4_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH4_State_eF_out == ENABLE) ){
-				 pdm_ptr->PWR_CH4_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
-				 pdm_ptr->PWR_CH4_PG_eF_out = read_val_pin_PG_out_eF;
-			}else{
-				pdm_ptr->PWR_CH4_PG_eF_in = SUCCESS;
-				pdm_ptr->PWR_CH4_PG_eF_out = SUCCESS;
-			}
-			break;
+			pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_PG_eF_in = SUCCESS;  // OK because power channel is DISABLE
+			pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_PG_eF_out = SUCCESS;
 
-		case  PDM_PWR_Channel_5:
-			if( (pdm_ptr->PWR_CH5_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH5_State_eF_out == ENABLE) ){
-				 pdm_ptr->PWR_CH5_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
-				 pdm_ptr->PWR_CH5_PG_eF_out = read_val_pin_PG_out_eF;
-			}else{
-				pdm_ptr->PWR_CH5_PG_eF_in = SUCCESS;
-				pdm_ptr->PWR_CH5_PG_eF_out = SUCCESS;
-			}
-			break;
+		}
+	}else{
+	//	??????????????????????????????????????????? НУжно ли это подумать. 
+		if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt1 ){
+			pdm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
 
-		case  PDM_PWR_Channel_6:
-			if( (pdm_ptr->PWR_CH6_State_eF_in == ENABLE ) && (pdm_ptr->PWR_CH6_State_eF_out == ENABLE) ){
-				 pdm_ptr->PWR_CH6_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
-				 pdm_ptr->PWR_CH6_PG_eF_out = read_val_pin_PG_out_eF;
-			}else{
-				pdm_ptr->PWR_CH6_PG_eF_in = SUCCESS;
-				pdm_ptr->PWR_CH6_PG_eF_out = SUCCESS;
-			}
-			break;
+		}else if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt2 ){
+			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
+		}
 
-		default:
-			error_I2C = ERROR_N;
-			break;
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = ERROR; 
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = ERROR;
+
 	}
 
 	return error_I2C;
@@ -672,14 +404,6 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 	@param  i2c_mux_ch  - Number channel MUX
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-//                              PDM_PWR_Channel_1
-//								PDM_PWR_Channel_2
-//								PDM_PWR_Channel_3
-//								PDM_PWR_Channel_4
-//								PDM_PWR_Channel_5
-//								PDM_PWR_Channel_6
-//
-//
 ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t number_pwr_channel){
 
 	uint8_t i = 0;
@@ -742,107 +466,17 @@ ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t number_pwr_channel){
 	}else{
 		pdm_ptr->Error_I2C_MUX = SUCCESS;
 	}
-/*
+
 	if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
 		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Voltage = 0;
 		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Current = 0;
 		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Power = 0;
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_Mon_CH1 = ERROR;
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_PWR_Mon = ERROR;
 	}else{
 		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Voltage = val_bus_voltage;
 		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Current = val_current;
 		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Power = val_power;
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_Mon_CH1 = SUCCESS;
-	}
-*/
-	switch( number_pwr_channel ){
-
-		case PDM_PWR_Channel_1:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
-				pdm_ptr->PWR_CH1_Voltage = 0;
-				pdm_ptr->PWR_CH1_Current = 0; 
-				pdm_ptr->PWR_CH1_Power = 0;
-				pdm_ptr->Error_PWR_Mon_CH1 = ERROR;
-			}else{
-				pdm_ptr->PWR_CH1_Voltage = val_bus_voltage;
-				pdm_ptr->PWR_CH1_Current = val_current; //No error
-				pdm_ptr->PWR_CH1_Power = val_power;
-				pdm_ptr->Error_PWR_Mon_CH1 = SUCCESS;
-			}
-			break;
-
-		case PDM_PWR_Channel_2:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
-				pdm_ptr->PWR_CH2_Voltage = 0;
-				pdm_ptr->PWR_CH2_Current = 0; 
-				pdm_ptr->PWR_CH2_Power = 0;
-				pdm_ptr->Error_PWR_Mon_CH2 = ERROR;
-			}else{
-				pdm_ptr->PWR_CH2_Voltage = val_bus_voltage;
-				pdm_ptr->PWR_CH2_Current = val_current; //No error
-				pdm_ptr->PWR_CH2_Power = val_power;
-				pdm_ptr->Error_PWR_Mon_CH2 = SUCCESS;
-			}
-			break;
-
-		case PDM_PWR_Channel_3:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
-				pdm_ptr->PWR_CH3_Voltage = 0;
-				pdm_ptr->PWR_CH3_Current = 0; 
-				pdm_ptr->PWR_CH3_Power = 0;
-				pdm_ptr->Error_PWR_Mon_CH3 = ERROR;
-			}else{
-				pdm_ptr->PWR_CH3_Voltage = val_bus_voltage;
-				pdm_ptr->PWR_CH3_Current = val_current; //No error
-				pdm_ptr->PWR_CH3_Power = val_power;
-				pdm_ptr->Error_PWR_Mon_CH3 = SUCCESS;
-			}
-			break;
-
-		case PDM_PWR_Channel_4:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
-				pdm_ptr->PWR_CH4_Voltage = 0;
-				pdm_ptr->PWR_CH4_Current = 0; 
-				pdm_ptr->PWR_CH4_Power = 0;
-				pdm_ptr->Error_PWR_Mon_CH4 = ERROR;
-			}else{
-				pdm_ptr->PWR_CH4_Voltage = val_bus_voltage;
-				pdm_ptr->PWR_CH4_Current = val_current; //No error
-				pdm_ptr->PWR_CH4_Power = val_power;
-				pdm_ptr->Error_PWR_Mon_CH4 = SUCCESS;
-			}
-			break;
-
-		case PDM_PWR_Channel_5:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
-				pdm_ptr->PWR_CH5_Voltage = 0;
-				pdm_ptr->PWR_CH5_Current = 0; 
-				pdm_ptr->PWR_CH5_Power = 0;
-				pdm_ptr->Error_PWR_Mon_CH5 = ERROR;
-			}else{
-				pdm_ptr->PWR_CH5_Voltage = val_bus_voltage;
-				pdm_ptr->PWR_CH5_Current = val_current; //No error
-				pdm_ptr->PWR_CH5_Power = val_power;
-				pdm_ptr->Error_PWR_Mon_CH5 = SUCCESS;
-			}
-			break;
-
-		case PDM_PWR_Channel_6:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
-				pdm_ptr->PWR_CH6_Voltage = 0;
-				pdm_ptr->PWR_CH6_Current = 0; 
-				pdm_ptr->PWR_CH6_Power = 0;
-				pdm_ptr->Error_PWR_Mon_CH6 = ERROR;
-			}else{
-				pdm_ptr->PWR_CH6_Voltage = val_bus_voltage;
-				pdm_ptr->PWR_CH6_Current = val_current; //No error
-				pdm_ptr->PWR_CH6_Power = val_power;
-				pdm_ptr->Error_PWR_Mon_CH6 = SUCCESS;
-			}
-			break;
-
-		default:
-			break;
+		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_PWR_Mon = SUCCESS;
 	}
 
 	return error_I2C;

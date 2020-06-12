@@ -2,27 +2,51 @@
 #ifndef INC_PDM_PDM_STRUCT_H_
 #define INC_PDM_PDM_STRUCT_H_
 
-/*
+
 typedef struct{
 	
 	uint16_t PWR_CH_Voltage;
 	int16_t PWR_CH_Current;
 	uint16_t PWR_CH_Power;
 
-	uint8_t PWR_CH1_State_eF_in  :1; //0-DISABLE, 1-ENABLE. State power channel input Efuse
-	uint8_t PWR_CH1_State_eF_out :1; //0-DISABLE, 1-ENABLE. State power channel output Efuse
-	uint8_t PWR_CH1_PG_eF_in  :1; //0-OK, 1-ERROR. Power good channel status input eFuse  
-	uint8_t PWR_CH1_PG_eF_out :1; //0-OK, 1-ERROR. Power good channel status output eFuse
+	uint8_t PWR_CH_State_eF_in  :1; //0-DISABLE, 1-ENABLE. State power channel input Efuse
+	uint8_t PWR_CH_State_eF_out :1; //0-DISABLE, 1-ENABLE. State power channel output Efuse
+	uint8_t PWR_CH_PG_eF_in  	:1; //0-OK, 1-ERROR. Power good channel status input eFuse  
+	uint8_t PWR_CH_PG_eF_out 	:1; //0-OK, 1-ERROR. Power good channel status output eFuse
 	uint8_t :4;
 
-	uint8_t Error_PWR_CH1_State_eF_in  :1; //0-OK, 1-ERROR.
-	uint8_t Error_PWR_CH1_State_eF_out :1; 
-	uint8_t Error_PWR_Mon_CH1 :1
+	uint8_t Error_PWR_CH_State_eF_in  	:1; //0-OK, 1-ERROR.
+	uint8_t Error_PWR_CH_State_eF_out 	:1; 
+	uint8_t Error_PWR_CH_PWR_Mon 		:1;
 	uint8_t :5;
 
-}_PDM_PWR_CH
-*/
+}_PDM_PWR_CH;
 
+typedef struct{
+
+
+	_PDM_PWR_CH PWR_Ch_Data[6];
+
+	//int8_t Temp_sensor[4]; //PDM temperature
+	int8_t Temp_sensor_1; //PDM temperature
+	int8_t Temp_sensor_2;
+	int8_t Temp_sensor_3;
+	int8_t Temp_sensor_4;
+	int8_t Temp_median_value; //PDM median temperature
+
+	uint8_t Error_I2C_GPIO_Ext1 	:1;
+	uint8_t Error_I2C_GPIO_Ext2 	:1;
+	uint8_t Error_I2C_MUX		 	:1;
+	uint8_t Error_temp_sensor_1 	:1;
+	uint8_t Error_temp_sensor_2 	:1;
+	uint8_t Error_temp_sensor_3 	:1;
+	uint8_t Error_temp_sensor_4		:1;
+	uint8_t :1;
+	
+	uint8_t PDM_addres_module;
+
+}_PDM;
+/*
 typedef struct{
 
 
@@ -91,7 +115,7 @@ typedef struct{
 	uint16_t PWR_CH5_PG_eF_out :1;
 	uint16_t PWR_CH6_PG_eF_in  :1;    
 	uint16_t PWR_CH6_PG_eF_out :1; 
-	
+
 	uint16_t :4;
 
 	//int8_t Temp_sensor[]; //PDM temperature
@@ -120,6 +144,6 @@ typedef struct{
 	uint8_t PDM_addres_module;
 
 }_PDM;
-
+*/
 
 #endif /* INC_PDM_PDM_STRUCT_H_ */
