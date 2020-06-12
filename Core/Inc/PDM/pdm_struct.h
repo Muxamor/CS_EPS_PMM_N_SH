@@ -2,9 +2,32 @@
 #ifndef INC_PDM_PDM_STRUCT_H_
 #define INC_PDM_PDM_STRUCT_H_
 
+/*
+typedef struct{
+	
+	uint16_t PWR_CH_Voltage;
+	int16_t PWR_CH_Current;
+	uint16_t PWR_CH_Power;
+
+	uint8_t PWR_CH1_State_eF_in  :1; //0-DISABLE, 1-ENABLE. State power channel input Efuse
+	uint8_t PWR_CH1_State_eF_out :1; //0-DISABLE, 1-ENABLE. State power channel output Efuse
+	uint8_t PWR_CH1_PG_eF_in  :1; //0-OK, 1-ERROR. Power good channel status input eFuse  
+	uint8_t PWR_CH1_PG_eF_out :1; //0-OK, 1-ERROR. Power good channel status output eFuse
+	uint8_t :4;
+
+	uint8_t Error_PWR_CH1_State_eF_in  :1; //0-OK, 1-ERROR.
+	uint8_t Error_PWR_CH1_State_eF_out :1; 
+	uint8_t Error_PWR_Mon_CH1 :1
+	uint8_t :5;
+
+}_PDM_PWR_CH
+*/
+
 typedef struct{
 
-	//uint16_t PWR_Voltage[6];
+
+	//_PDM_PWR_CH PWR_Ch_Data[6];
+
 	uint16_t PWR_CH1_Voltage;  //Channel voltage value in mV
 	uint16_t PWR_CH2_Voltage;
 	uint16_t PWR_CH3_Voltage;
@@ -69,6 +92,8 @@ typedef struct{
 	uint16_t PWR_CH6_PG_eF_in  :1;    
 	uint16_t PWR_CH6_PG_eF_out :1;
 	uint16_t :4;
+
+	//int8_t Temp_sensor[]; //PDM temperature
 
 	int8_t Temp_sensor_1; //PDM temperature
 	int8_t Temp_sensor_2;
