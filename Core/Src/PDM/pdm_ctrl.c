@@ -22,13 +22,13 @@
 
 /** @brief  Set state (enable/disable) power channel.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  number_pwr_channel - number of channel 
+	@param  num_pwr_ch - number of channel 
 	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
 								ENABLE 
 								DISABLE
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uint8_t state_channel ){
+ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t state_channel ){
 
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 	uint8_t i=0;
@@ -39,18 +39,21 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 		return ERROR_N;
 	}
 
+	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
+		return ERROR_N;
+	}
 
 	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM 
 
-	pdm_table = PDM__Table(number_pwr_channel);
+	pdm_table = PDM__Table(num_pwr_ch);
 
 	if( state_channel == ENABLE){
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in = ENABLE; 
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out = ENABLE; 
+		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in = ENABLE; 
+		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = ENABLE; 
 			
 	}else{
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in = DISABLE; 
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out = DISABLE; 
+		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in = DISABLE; 
+		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = DISABLE; 
 	}
 	
 
@@ -106,7 +109,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 
 	if( error_I2C == SUCCESS ){
 
-		if( PDM_Check_state_PWR_CH( pdm_ptr, number_pwr_channel ) != SUCCESS ){
+		if( PDM_Check_state_PWR_CH( pdm_ptr, num_pwr_ch ) != SUCCESS ){
 			return ERROR_N;
 		}
 
@@ -119,8 +122,8 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
 
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = ERROR; 
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = ERROR;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = ERROR; 
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = ERROR;
 
 		return ERROR_N;
 	}
@@ -134,7 +137,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 			the set value and the actual set.
 			actual value set - Get by reading the real value I2C GPIO Expander.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  number_pwr_channel - number channel on/off:
+	@param  num_pwr_ch - number channel on/off:
 								PDM_PWR_Channel_1 
 								PDM_PWR_Channel_2
 								PDM_PWR_Channel_3
@@ -143,7 +146,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel, uin
 								PDM_PWR_Channel_6 
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
+ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 
 	uint8_t read_val_pin_EN_in_eF = 0;
 	uint8_t read_val_pin_EN_out_eF = 0;
@@ -151,14 +154,14 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 	uint8_t i = 0;
 	_PDM_table pdm_table;
 
-	if( number_pwr_channel > PDM_PWR_Channel_6 ){
+	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
 		return ERROR_N;
 	}
 
 	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM 
 
 	//Get real state value pins TCA9539. 	
-	pdm_table = PDM__Table(number_pwr_channel);
+	pdm_table = PDM__Table(num_pwr_ch);
 
 	i=0;
  	error_I2C = ERROR_N;
@@ -187,16 +190,16 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 			pdm_ptr->Error_I2C_GPIO_Ext2 = SUCCESS;
 		}
 
-		if( pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in  != read_val_pin_EN_in_eF ){
-			pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = ERROR; 
+		if( pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in  != read_val_pin_EN_in_eF ){
+			pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = ERROR; 
 		}else{
-			pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = SUCCESS;
+			pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = SUCCESS;
 		}
 
-		if( pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out  != read_val_pin_EN_out_eF ){
-			pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = ERROR; 
+		if( pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out  != read_val_pin_EN_out_eF ){
+			pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = ERROR; 
 		}else{
-			pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = SUCCESS;
+			pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = SUCCESS;
 		}
 
 
@@ -209,8 +212,8 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
 
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = ERROR; 
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = ERROR;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = ERROR; 
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = ERROR;
 
 	}
 
@@ -221,10 +224,10 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 
 /** @brief  Get Power Good power channel status 
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  number_pwr_channel - number power channel
+	@param  num_pwr_ch - number power channel
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
+ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 
 	uint8_t i = 0;
 	uint8_t read_val_pin_PG_in_eF = 1;
@@ -232,11 +235,14 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 	int8_t error_I2C = ERROR_N; 
 	_PDM_table pdm_table;
 
+	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
+		return ERROR_N;
+	}
 
 	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM 
 
 	//Get real state value pins TCA9539. 	
-	pdm_table = PDM__Table(number_pwr_channel);
+	pdm_table = PDM__Table(num_pwr_ch);
 
 	i=0;
  	error_I2C = ERROR_N;
@@ -256,15 +262,15 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 
 	if( error_I2C == SUCCESS  ){
 
-		if( (pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in  == ENABLE ) && (pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out == ENABLE) ){
+		if( (pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in  == ENABLE ) && (pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out == ENABLE) ){
 
-			pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
-			pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_PG_eF_out = read_val_pin_PG_out_eF;
+			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out = read_val_pin_PG_out_eF;
 
 		}else{
 
-			pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_PG_eF_in = SUCCESS;  // OK because power channel is DISABLE
-			pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_PG_eF_out = SUCCESS;
+			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in = SUCCESS;  // OK because power channel is DISABLE
+			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out = SUCCESS;
 
 		}
 	}else{
@@ -276,8 +282,8 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t number_pwr_channel ){
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
 
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_in = ERROR; 
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_State_eF_out = ERROR;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = ERROR; 
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = ERROR;
 
 	}
 
@@ -404,7 +410,7 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 	@param  i2c_mux_ch  - Number channel MUX
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t number_pwr_channel){
+ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 	uint8_t i = 0;
 	int16_t val_current = 0;
@@ -415,14 +421,14 @@ ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t number_pwr_channel){
 	int8_t error_I2C = ERROR_N;
 	
 
-	if( number_pwr_channel > PDM_PWR_Channel_6 ){
+	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
 		return ERROR_N;
 	}
 
 	// Switch MUX to PDM I2C bus on PMM 
 	SW_TMUX1209_I2C_main_PDM(); 
 
-	pdm_table = PDM__Table(number_pwr_channel);
+	pdm_table = PDM__Table(num_pwr_ch);
 
 	//Enable I2C MUX channel
 	i=0;
@@ -468,15 +474,15 @@ ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t number_pwr_channel){
 	}
 
 	if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Voltage = 0;
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Current = 0;
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Power = 0;
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_PWR_Mon = ERROR;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = 0;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = 0;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = 0;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = ERROR;
 	}else{
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Voltage = val_bus_voltage;
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Current = val_current;
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_Power = val_power;
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_PWR_Mon = SUCCESS;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = val_bus_voltage;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = val_current;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = val_power;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = SUCCESS;
 	}
 
 	return error_I2C;

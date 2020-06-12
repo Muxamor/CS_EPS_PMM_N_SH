@@ -119,7 +119,7 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 
 /** @brief  Init INA231 Power Monitor on PDM module.
     @param 	*pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  number_pwr_channel - number of channel :
+	@param  num_pwr_ch - number of channel :
 								PDM_PWR_Channel_1 
 								PDM_PWR_Channel_2
 								PDM_PWR_Channel_3
@@ -128,7 +128,7 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 								PDM_PWR_Channel_6 
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t number_pwr_channel){
+ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 
 	uint8_t i = 0;
@@ -136,14 +136,14 @@ ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t number_pwr_channel){
 	int8_t Error_I2C_MUX = ERROR_N;
 	_PDM_table pdm_table;
 
-	if( number_pwr_channel > PDM_PWR_Channel_6 ){
+	if( num_pwr_ch > PDM_PWR_Channel_6 ){
 		return ERROR_N;
 	}
 
 	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM
 
 	//Fill pdm_table depends in number power channel.
-	pdm_table = PDM__Table(number_pwr_channel); 
+	pdm_table = PDM__Table(num_pwr_ch); 
 
 	//Enable I2C MUX channel
 	i=0;
@@ -201,9 +201,9 @@ ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t number_pwr_channel){
 	}
 
 	if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_PWR_Mon = ERROR;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = ERROR;
 	}else{
-		pdm_ptr->PWR_Ch_Data[number_pwr_channel].Error_PWR_CH_PWR_Mon = SUCCESS;
+		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = SUCCESS;
 	}
 
 	return error_I2C;

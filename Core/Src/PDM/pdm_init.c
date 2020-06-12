@@ -16,15 +16,15 @@
 ErrorStatus PDM_init(_PDM *pdm_ptr){
 
 	int8_t error_stutus = SUCCESS; 
-	uint8_t number_pwr_channel = 0;
+	uint8_t num_pwr_ch = 0;
 	
 	//Restoring power channels.
-	for(number_pwr_channel = 0; number_pwr_channel < PDM_PWR_Ch_quantity; number_pwr_channel++){
+	for(num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++){
 
-		if( (pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_in == ENABLE) && (pdm_ptr->PWR_Ch_Data[number_pwr_channel].PWR_CH_State_eF_out == ENABLE) ){
-			error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, number_pwr_channel, ENABLE );
+		if( (pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in == ENABLE) && (pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out == ENABLE) ){
+			error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, num_pwr_ch, ENABLE );
 		}else{
-			error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, number_pwr_channel, DISABLE );
+			error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, num_pwr_ch, DISABLE );
 		}
 	}
 
@@ -41,8 +41,8 @@ ErrorStatus PDM_init(_PDM *pdm_ptr){
 	error_stutus += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 
 	//Initialization Power monitor INA231 power channel
-	for(number_pwr_channel = 0; number_pwr_channel < PDM_PWR_Ch_quantity; number_pwr_channel++){
-		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, number_pwr_channel);
+	for(num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++){
+		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, num_pwr_ch);
 	}
 
 
