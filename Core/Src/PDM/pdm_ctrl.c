@@ -14,8 +14,7 @@
 /*********************** TODO *********************/
 /**
  * 1. В функции PDM_Get_PG_PWR_CH прописать установку напрвления пинов перед тем как читать.(Защита от радиации)
- * 3. Подумать над тем чтобы функцию PDM_Get_temp_all_sensor убрать в функцию PDM_Get_telemetry.
- * 4. В PDM_Set_state_PWR_CH подумать над тем чтобы выставлять ошибку канал если  получили ошибку связи GPIO expander
+
  */
 /*****************************************/
 
@@ -137,13 +136,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 			the set value and the actual set.
 			actual value set - Get by reading the real value I2C GPIO Expander.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  num_pwr_ch - number channel on/off:
-								PDM_PWR_Channel_1 
-								PDM_PWR_Channel_2
-								PDM_PWR_Channel_3
-								PDM_PWR_Channel_4
-								PDM_PWR_Channel_5
-								PDM_PWR_Channel_6 
+	@param  num_pwr_ch - number channel on/off
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
@@ -404,10 +397,7 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 
 /** @brief  Get value current, voltage and power of Power channel
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@param  *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-	@param  tmp1075_addr - I2C sensor address
-	@param  i2c_mux_addr - I2C MUX address
-	@param  i2c_mux_ch  - Number channel MUX
+	@param  num_pwr_ch - number power channel.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
