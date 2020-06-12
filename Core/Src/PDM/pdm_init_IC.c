@@ -127,20 +127,29 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 	@param  i2c_mux_ch  - Number channel MUX
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_addr, uint16_t max_current, uint16_t Rshunt, uint8_t i2c_mux_addr, uint8_t i2c_mux_ch ){
+ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t number_pwr_channel){
+
 
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 	int8_t Error_I2C_MUX = ERROR_N;
+	_PDM_table pdm_table;
+
+	if( number_pwr_channel > PDM_PWR_Channel_6 ){
+		return ERROR_N;
+	}
 
 	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM
+
+	//Fill pdm_table depends in number power channel.
+	pdm_table = PDM__Table(number_pwr_channel); 
 
 	//Enable I2C MUX channel
 	i=0;
 	error_I2C = ERROR_N;
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-		error_I2C = TCA9548_Enable_I2C_ch( I2Cx, i2c_mux_addr, i2c_mux_ch );
+		error_I2C = TCA9548_Enable_I2C_ch( pdm_table.I2Cx_I2C_MUX, pdm_table.I2C_addr_I2C_MUX, pdm_table.I2C_MUX_Ch );
 
 		if( error_I2C != SUCCESS ){
 			i++;
@@ -158,13 +167,13 @@ ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_ad
 
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-			if ( INA231_power_reset( I2Cx, INA231_addr) == SUCCESS ){
-				if ( INA231_Set_calibration_int16( I2Cx, INA231_addr, max_current, Rshunt) == SUCCESS ){
-					if ( INA231_write_aver_mode( I2Cx, INA231_addr, INA231_AVERAGING_NUM_64) == SUCCESS ){
-						if ( INA231_write_bus_conv_time( I2Cx, INA231_addr, INA231_CONVERSION_TIME_1100us ) == SUCCESS ){
-							if ( INA231_write_shunt_conv_time( I2Cx, INA231_addr, INA231_CONVERSION_TIME_1100us ) == SUCCESS ){
+			if ( INA231_power_reset( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon) == SUCCESS ){
+				if ( INA231_Set_calibration_int16( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, pdm_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
+					if ( INA231_write_aver_mode( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_aver_mode) == SUCCESS ){
+						if ( INA231_write_bus_conv_time( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_bus_conv_time ) == SUCCESS ){
+							if ( INA231_write_shunt_conv_time( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_shunt_conv_time ) == SUCCESS ){
 
-								error_I2C = INA231_write_mode( I2Cx, INA231_addr, INA231_SHUNT_AND_BUS_CONTINUOUS );
+								error_I2C = INA231_write_mode( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_work_mode );
 							}
 						}
 					}
@@ -180,7 +189,7 @@ ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_ad
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch( I2Cx, i2c_mux_addr, i2c_mux_ch );
+	TCA9548_Disable_I2C_ch( pdm_table.I2Cx_I2C_MUX, pdm_table.I2C_addr_I2C_MUX, pdm_table.I2C_MUX_Ch );
 
 
 	//Parse error
@@ -190,8 +199,8 @@ ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_ad
 		pdm_ptr->Error_I2C_MUX = SUCCESS;
 	}
 
-	switch(INA231_addr){
-		case PDM_I2CADDR_PWR_Mon_Ch1:
+	switch(number_pwr_channel){
+		case PDM_PWR_Channel_1:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
 				pdm_ptr->Error_PWR_Mon_CH1 = ERROR;
 			}else{
@@ -199,7 +208,7 @@ ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_ad
 			}
 			break;
 
-		case PDM_I2CADDR_PWR_Mon_Ch2:
+		case PDM_PWR_Channel_2:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
 				pdm_ptr->Error_PWR_Mon_CH2 = ERROR;
 			}else{
@@ -207,7 +216,7 @@ ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_ad
 			}
 			break;
 
-		case PDM_I2CADDR_PWR_Mon_Ch3:
+		case PDM_PWR_Channel_3:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
 				pdm_ptr->Error_PWR_Mon_CH3 = ERROR;
 			}else{
@@ -215,7 +224,7 @@ ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_ad
 			}
 			break;
 
-		case PDM_I2CADDR_PWR_Mon_Ch4:
+		case PDM_PWR_Channel_4:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
 				pdm_ptr->Error_PWR_Mon_CH4 = ERROR;
 			}else{
@@ -223,7 +232,7 @@ ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_ad
 			}
 			break;
 
-		case PDM_I2CADDR_PWR_Mon_Ch5:
+		case PDM_PWR_Channel_5:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
 				pdm_ptr->Error_PWR_Mon_CH5 = ERROR;
 			}else{
@@ -231,7 +240,7 @@ ErrorStatus PDM_init_INA231( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t INA231_ad
 			}
 			break;
 
-		case PDM_I2CADDR_PWR_Mon_Ch6:
+		case PDM_PWR_Channel_6:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
 				pdm_ptr->Error_PWR_Mon_CH6 = ERROR;
 			}else{
