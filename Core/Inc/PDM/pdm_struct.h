@@ -90,7 +90,8 @@ typedef struct{
 	uint16_t PWR_CH5_PG_eF_in  :1;    
 	uint16_t PWR_CH5_PG_eF_out :1;
 	uint16_t PWR_CH6_PG_eF_in  :1;    
-	uint16_t PWR_CH6_PG_eF_out :1;
+	uint16_t PWR_CH6_PG_eF_out :1; 
+	
 	uint16_t :4;
 
 	//int8_t Temp_sensor[]; //PDM temperature
