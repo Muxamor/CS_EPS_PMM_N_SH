@@ -151,7 +151,8 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 		return ERROR_N;
 	}
 
-	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM 
+	// Switch MUX to PDM I2C bus on PMM 
+	SW_TMUX1209_I2C_main_PDM(); 
 
 	//Get real state value pins TCA9539. 	
 	pdm_table = PDM__Table(num_pwr_ch);
@@ -241,7 +242,7 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
  	error_I2C = ERROR_N;
 
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read real value input pin PG.  
-
+//Add set direction!!!!
 		if( TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_in_eFuse, &read_val_pin_PG_in_eF) == SUCCESS ){
 
 			error_I2C = TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_out_eFuse, &read_val_pin_PG_out_eF);
@@ -267,16 +268,13 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 
 		}
 	}else{
-	//	??????????????????????????????????????????? НУжно ли это подумать. 
+		
 		if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt1 ){
 			pdm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
 
 		}else if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt2 ){
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
-
-		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = ERROR; 
-		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = ERROR;
 
 	}
 
