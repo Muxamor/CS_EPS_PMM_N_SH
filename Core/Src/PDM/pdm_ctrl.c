@@ -108,6 +108,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 
 	if( error_I2C == SUCCESS ){
 
+		LL_mDelay(20); //Delay for startup power supply
 		if( PDM_Check_state_PWR_CH( pdm_ptr, num_pwr_ch ) != SUCCESS ){
 			return ERROR_N;
 		}
@@ -162,9 +163,8 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read real value output pin.  
 
-		error_I2C =  TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse, &read_val_pin_EN_in_eF);
+		if( TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse, &read_val_pin_EN_in_eF) == SUCCESS ){
 
-		if( error_I2C == SUCCESS ){
 			 error_I2C = TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse, &read_val_pin_EN_out_eF);
 		}
  
@@ -242,10 +242,16 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
  	error_I2C = ERROR_N;
 
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read real value input pin PG.  
-//Add set direction!!!!
-		if( TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_in_eFuse, &read_val_pin_PG_in_eF) == SUCCESS ){
 
-			error_I2C = TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_out_eFuse, &read_val_pin_PG_out_eF);
+		if( TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse ) == SUCCESS) {
+
+			if( TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_in_eFuse, &read_val_pin_PG_in_eF ) == SUCCESS ){
+
+				if( TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse ) == SUCCESS){
+
+					error_I2C = TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_out_eFuse, &read_val_pin_PG_out_eF );
+				}
+			}
 		}
  
 		if( error_I2C != SUCCESS ){
