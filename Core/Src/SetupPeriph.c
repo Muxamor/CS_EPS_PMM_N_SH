@@ -411,11 +411,11 @@ void SetupInterrupt(void){
 	/**********************************************/
 
 	/* CAN1 interrupt Init */
-	//CAN interrupt initialization is in ../Core/Src/CAND/canv.c
+	//CAN interrupt initialization is in CAN_init_eps in this file.
 	/**********************************************/
 
 	/* CAN2 interrupt Init */
-	//CAN interrupt initialization is in ../Core/Src/CAND/canv.c
+	//CAN interrupt initialization is in CAN_init_eps in this file.
 	/**********************************************/
 
 }
@@ -608,10 +608,9 @@ void IWDG_Init(void){
 }
 
 /** @brief Init CAN
-	* @param None
+	* @param *can_ref - pointre to CAN number port.
 	* @retval None
  */
-
 int8_t CAN_init_eps(CAN_TypeDef *can_ref){
 	int8_t error_status = 0;
 	uint32_t CAN_BTR = (0x00 << 24) | (0x01 << 20) | (12 << 16) | (4 << 0); // SJW = 1; TS2 = 1+1; TS1 = 12+1; Prescaler = 40;
@@ -629,9 +628,8 @@ int8_t CAN_init_eps(CAN_TypeDef *can_ref){
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 		GPIO_InitStruct.Alternate = LL_GPIO_AF_9;
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-	}
-	else if(can_ref == CAN2){
-		/**/
+
+	}else if(can_ref == CAN2){
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
@@ -640,7 +638,6 @@ int8_t CAN_init_eps(CAN_TypeDef *can_ref){
 		GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-		/**/
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
@@ -648,19 +645,87 @@ int8_t CAN_init_eps(CAN_TypeDef *can_ref){
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 		GPIO_InitStruct.Alternate = LL_GPIO_AF_3;
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-	}
-	else{
-		return ERROR_N;
+
+	}else{
+
+		return -1;
 	}
 
 	error_status = CAN_Init(can_ref, CAN_BTR);
+
 	if(error_status == ERR_CAN_NORMAL_MODE){
 		CAN->MSR &= ~CAN_MSR_WKUI;
-	}
-	else if(error_status == ERR_CAN_INIT_MODE){
+	}else if(error_status == ERR_CAN_INIT_MODE){
 		return ERR_CAN_INIT_MODE;
 	}
+
+	if(can_ref == CAN1){
+		/* CAN1 interrupt Init */
+		NVIC_DisableIRQ(CAN1_RX0_IRQn);
+		NVIC_SetPriority(CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
+		NVIC_EnableIRQ(CAN1_RX0_IRQn);
+	}else if(can_ref == CAN2){
+		/* CAN2 interrupt Init */
+		NVIC_DisableIRQ(CAN2_RX0_IRQn);
+		NVIC_SetPriority(CAN2_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №14 from 0..15
+		NVIC_EnableIRQ(CAN2_RX0_IRQn);
+	}
+
 	return SUCCESS;
 }
 
+/** @brief DeInit CAN
+	* @param *can_ref - pointre to CAN number port.
+	* @retval None
+ */
+int8_t CAN_DeInit(CAN_TypeDef *can_ref){
 
+	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	if(can_ref == CAN1) {
+		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN1RST;
+		RCC->APB1ENR1 &= ~RCC_APB1ENR1_CAN1EN;
+
+	}else if(can_ref == CAN2) {
+		RCC->APB1RSTR1 |= RCC_APB1RSTR1_CAN2RST;
+		RCC->APB1ENR1 &= ~RCC_APB1ENR1_CAN2EN;
+
+	}else{
+		return ERROR_N;
+	}
+
+	can_ref->BTR = 0;
+	can_ref->FMR = 0xE01;
+	can_ref->FS1R = 0;
+	can_ref->FFA1R = 0;
+	can_ref->MCR = (1 << 16) | (1 << 1);
+
+	if(can_ref == CAN1){
+		NVIC_DisableIRQ(CAN1_RX0_IRQn);
+	}else{
+		NVIC_DisableIRQ(CAN2_RX0_IRQn);
+	}
+
+	if(can_ref == CAN1){
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_8 | LL_GPIO_PIN_9;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	}else if(can_ref == CAN2){
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	}else{
+		return ERROR_N;
+	}
+
+	return SUCCESS;
+}
