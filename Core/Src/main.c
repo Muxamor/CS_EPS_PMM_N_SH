@@ -12,6 +12,7 @@
 #include "pdm_struct.h"
 #include "pdm_init.h"
 #include "pdm_ctrl.h"
+#include "pdm.h"
 
 #include "pmm_config.h"
 #include "pmm_struct.h"
@@ -66,14 +67,15 @@ int main(void){
 	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-
-
 	LL_mDelay(40);
+
+	SetupInterrupt();
+
 	CAN_init_eps(CAN1);
 	CAN_init_eps(CAN2);
 	CAN_RegisterAllVars();
 
-	SetupInterrupt();
+
 	//IWDG_Init();
 
 	//Need test!!!!!!!!!!!!
@@ -98,7 +100,7 @@ int main(void){
 
 		//pmm_ptr->Detect_Active_CPU = 0;
 
-		//PMM_default_init_I2C_GPIOExt1(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1); //Temp function
+		//PMM_default_init_I2C_GPIOExt1(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1); //TMP function
 
 
 		LL_mDelay(40);
@@ -113,27 +115,20 @@ int main(void){
 		//******************************************************************
 		ENABLE_TMUX1209_I2C();
 		PDM_init( pdm_ptr );
+		LL_mDelay(50); //Delay for startup power supply
 
-
-		LL_mDelay(10); //Delay for startup power supply
-	
 
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
 
-
-
-
-
-
 		while (1){
+
+			PDM_Get_Telemetry( pdm_ptr );
 
 			if(CAN_cmd_mask_status != 0){
 
 				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
 			}
-
-
 		}
 
 
