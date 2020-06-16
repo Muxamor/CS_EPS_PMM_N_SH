@@ -74,42 +74,6 @@ int main(void){
 	CAN_RegisterAllVars();
 
 	SetupInterrupt();
-
-
-
-//------------- FRAM test ---------------//
-
-//#define I2C_FRAM1_addr 0x50
-//	uint8_t fram_array[128] = {0};
-//	uint8_t fram_write_array[128];
-//	int8_t error_status = 0;
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		fram_write_array[i] = 0xFF;
-//	}
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
-//	error_status += FRAM_triple_write_data(I2C3, I2C_FRAM1_addr, fram_write_array, 128);
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-////	error_status += FRAM_erase(I2C3, I2C_FRAM1_addr, FRAM_SIZE_64KB);
-//	error_status += FRAM_is_empty(I2C3, I2C_FRAM1_addr, I2C_FRAM1_addr, FRAM_SIZE_64KB);
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
-
-
-//==========================================//
-
-
-
 	//IWDG_Init();
 
 	//Need test!!!!!!!!!!!!
@@ -118,8 +82,6 @@ int main(void){
 	//!!!!!!!
 
 
-
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight unit befor 08.06.2020
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
@@ -151,7 +113,9 @@ int main(void){
 		//******************************************************************
 		ENABLE_TMUX1209_I2C();
 		PDM_init( pdm_ptr );
-		LL_mDelay(100); //Delay for startup power supply
+
+
+		LL_mDelay(10); //Delay for startup power supply
 	
 
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
@@ -206,6 +170,41 @@ int main(void){
 
 
 }
+
+
+
+
+//------------- FRAM test ---------------//
+
+//#define I2C_FRAM1_addr 0x50
+//	uint8_t fram_array[128] = {0};
+//	uint8_t fram_write_array[128];
+//	int8_t error_status = 0;
+//
+//	for(uint8_t i = 0; i < 128; i++){
+//		fram_write_array[i] = 0xFF;
+//	}
+//
+//	for(uint8_t i = 0; i < 128; i++){
+//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
+//	}
+//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
+//	error_status += FRAM_triple_write_data(I2C3, I2C_FRAM1_addr, fram_write_array, 128);
+//
+//	for(uint8_t i = 0; i < 128; i++){
+//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
+//	}
+////	error_status += FRAM_erase(I2C3, I2C_FRAM1_addr, FRAM_SIZE_64KB);
+//	error_status += FRAM_is_empty(I2C3, I2C_FRAM1_addr, I2C_FRAM1_addr, FRAM_SIZE_64KB);
+//
+//	for(uint8_t i = 0; i < 128; i++){
+//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
+//	}
+//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
+
+
+//==========================================//
+
 
 
 /*
