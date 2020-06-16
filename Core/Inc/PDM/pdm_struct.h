@@ -28,11 +28,11 @@ typedef struct{
 
 	_PDM_PWR_CH PWR_Channel[PDM_PWR_Ch_quantity];
 
-	//int8_t Temp_sensor[4]; //PDM temperature
-	int8_t Temp_sensor_1; //PDM temperature
-	int8_t Temp_sensor_2;
-	int8_t Temp_sensor_3;
-	int8_t Temp_sensor_4;
+	int8_t Temp_sensor[4]; //PDM temperature
+	//int8_t Temp_sensor_1; //PDM temperature
+	//int8_t Temp_sensor_2;
+	//int8_t Temp_sensor_3;
+	//int8_t Temp_sensor_4;
 	int8_t Temp_median_value; //PDM median temperature
 
 	uint8_t Error_I2C_GPIO_Ext1 	:1;

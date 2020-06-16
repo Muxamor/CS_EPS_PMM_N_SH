@@ -353,40 +353,40 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 
 		case PDM_I2CADDR_TMP1075_1:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
-				pdm_ptr->Temp_sensor_1 = 0x7F;
+				pdm_ptr->Temp_sensor[0] = 0x7F;
 				pdm_ptr->Error_temp_sensor_1 = ERROR;
 			}else{
-				pdm_ptr->Temp_sensor_1 = temp_value;
+				pdm_ptr->Temp_sensor[0] = temp_value;
 				pdm_ptr->Error_temp_sensor_1 = SUCCESS; //No error
 			}
 			break;
 
 		case PDM_I2CADDR_TMP1075_2:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
-				pdm_ptr->Temp_sensor_2 = 0x7F;
+				pdm_ptr->Temp_sensor[1] = 0x7F;
 				pdm_ptr->Error_temp_sensor_2 = ERROR;
 			}else{
-				pdm_ptr->Temp_sensor_2 = temp_value;
+				pdm_ptr->Temp_sensor[1] = temp_value;
 				pdm_ptr->Error_temp_sensor_2 = SUCCESS; //No error
 			}
 			break;
 
 		case PDM_I2CADDR_TMP1075_3:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
-				pdm_ptr->Temp_sensor_3 = 0x7F;
+				pdm_ptr->Temp_sensor[2] = 0x7F;
 				pdm_ptr->Error_temp_sensor_3 = ERROR;
 			}else{
-				pdm_ptr->Temp_sensor_3 = temp_value;
+				pdm_ptr->Temp_sensor[2] = temp_value;
 				pdm_ptr->Error_temp_sensor_3 = SUCCESS; //No error
 			}
 			break;
 
 		case PDM_I2CADDR_TMP1075_4:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
-				pdm_ptr->Temp_sensor_4 = 0x7F;
+				pdm_ptr->Temp_sensor[3] = 0x7F;
 				pdm_ptr->Error_temp_sensor_4 = ERROR;
 			}else{
-				pdm_ptr->Temp_sensor_3 = temp_value;
+				pdm_ptr->Temp_sensor[3] = temp_value;
 				pdm_ptr->Error_temp_sensor_4 = SUCCESS; //No error
 			}
 			break;
@@ -404,7 +404,7 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 	@param  num_pwr_ch - number power channel.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PDM_Get_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
+ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 	uint8_t i = 0;
 	int16_t val_current = 0;
