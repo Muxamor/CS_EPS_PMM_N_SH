@@ -16,43 +16,18 @@
 ErrorStatus PDM_init(_PDM *pdm_ptr){
 
 	int8_t error_stutus = SUCCESS; 
+	uint8_t num_pwr_ch = 0;
+	
+	//Restoring power channels.
+	for(num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++){
 
-	//Restoring power supply channels.
-	if( (pdm_ptr->PWR_CH1_State_eF_in == ENABLE) && (pdm_ptr->PWR_CH1_State_eF_out == ENABLE) ){
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
-	}else{
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+		if( (pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in == ENABLE) && (pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out == ENABLE) ){
+			error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, num_pwr_ch, ENABLE );
+		}else{
+			error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, num_pwr_ch, DISABLE );
+		}
 	}
 
-	if( (pdm_ptr->PWR_CH2_State_eF_in == ENABLE) && (pdm_ptr->PWR_CH2_State_eF_out == ENABLE) ){
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
-	}else{
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
-	}
-
-	if( (pdm_ptr->PWR_CH3_State_eF_in == ENABLE) && (pdm_ptr->PWR_CH3_State_eF_out == ENABLE) ){
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
-	}else{
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
-	}
-
-	if( (pdm_ptr->PWR_CH4_State_eF_in == ENABLE) && (pdm_ptr->PWR_CH4_State_eF_out == ENABLE) ){
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
-	}else{
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
-	}
-
-	if( (pdm_ptr->PWR_CH5_State_eF_in == ENABLE) && (pdm_ptr->PWR_CH5_State_eF_out == ENABLE) ){
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
-	}else{
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
-	}
-
-	if( (pdm_ptr->PWR_CH6_State_eF_in == ENABLE) && (pdm_ptr->PWR_CH6_State_eF_out == ENABLE) ){
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
-	}else{
-		error_stutus += PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
-	}
 
 
 	//Disable all channels TCA9548 I2C MUX on PDM module.
@@ -65,35 +40,9 @@ ErrorStatus PDM_init(_PDM *pdm_ptr){
 	error_stutus += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 	error_stutus += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 
-
-	//Initialization Power monitor INA231 power channel 1
-	if(PDM_PCB_Assembled_PWR_CH1 != 0x00 ){
-		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, PDM_PWR_Channel_1);
-	}
-
-	//Initialization Power monitor INA231 power channel 2
-	if(PDM_PCB_Assembled_PWR_CH2 != 0x00 ){
-		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, PDM_PWR_Channel_2);
-	}
-
-	//Initialization Power monitor INA231 power channel 3
-	if(PDM_PCB_Assembled_PWR_CH3 != 0x00 ){
-		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, PDM_PWR_Channel_3);
-	}
-
-	//Initialization Power monitor INA231 power channel 4
-	if(PDM_PCB_Assembled_PWR_CH4 != 0x00 ){
-		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, PDM_PWR_Channel_4);
-	}
-
-	//Initialization Power monitor INA231 power channel 5
-	if(PDM_PCB_Assembled_PWR_CH5 != 0x00 ){
-		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, PDM_PWR_Channel_5);
-	}
-
-	//Initialization Power monitor INA231 power channel 6
-	if(PDM_PCB_Assembled_PWR_CH6 != 0x00 ){
-		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, PDM_PWR_Channel_6);
+	//Initialization Power monitor INA231 power channel
+	for(num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++){
+		error_stutus += PDM_init_PWR_Mon_INA231( pdm_ptr, num_pwr_ch);
 	}
 
 
