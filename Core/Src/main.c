@@ -34,6 +34,7 @@
 3. In PDM module  необходимо добавить переинициализацую входов каждый раз при обращении.
 4. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ? 
 5. Убрать подтяжку CAN в боевой прошивке. Отключать CAN не на основном CPU
+6. В CAN_IVar5_telemetry.CAN_Subsystem_power_line_status и CAN_Spacecraft_total_power добавить два последних бита VBAT1 и VBAT2 когда будет готово.
 
 
 **********************************************************/
@@ -52,7 +53,6 @@ int main(void){
 
 	CAN_cmd_mask_status = 0;
 
-
 	/** Initialization Periph STM32L496*/
 	LL_Init();
 	SystemClock_Config();
@@ -70,13 +70,13 @@ int main(void){
 	LL_mDelay(40);
 
 	SetupInterrupt();
+	//IWDG_Init();
 
 	CAN_init_eps(CAN1);
 	CAN_init_eps(CAN2);
 	CAN_RegisterAllVars();
 
 
-	//IWDG_Init();
 
 	//Need test!!!!!!!!!!!!
 	//uint8_t pwr_reboot= 6;
@@ -96,7 +96,7 @@ int main(void){
 
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
 
-	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+	if( pmm_ptr->Main_Backup_mode_CPU == 0){
 
 		//pmm_ptr->Detect_Active_CPU = 0;
 
@@ -124,6 +124,7 @@ int main(void){
 		while (1){
 
 			PDM_Get_Telemetry( pdm_ptr );
+			CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr );
 
 			if(CAN_cmd_mask_status != 0){
 
