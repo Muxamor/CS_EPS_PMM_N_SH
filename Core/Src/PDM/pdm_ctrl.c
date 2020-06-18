@@ -11,13 +11,6 @@
 #include "INA231.h"
 #include "pdm_ctrl.h"
 
-/*********************** TODO *********************/
-/**
- * 1. В функции PDM_Get_PG_PWR_CH прописать установку напрвления пинов перед тем как читать.(Защита от радиации)
-
- */
-/*****************************************/
-
 
 /** @brief  Set state (enable/disable) power channel.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
@@ -201,12 +194,18 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 		}
 
 		if( pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in  != read_val_pin_EN_in_eF ){
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = ERROR; 
 		}else{
 			pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = SUCCESS;
 		}
 
 		if( pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out  != read_val_pin_EN_out_eF ){
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = ERROR; 
 		}else{
 			pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = SUCCESS;
@@ -216,9 +215,15 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 	}else{
 
 		if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt1 ){
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			pdm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
 
 		}else if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt2 ){
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
 
@@ -285,11 +290,9 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 
 			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
 			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out = read_val_pin_PG_out_eF;
-
 		}else{
 			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in = SUCCESS;  // OK because power channel is DISABLE
 			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out = SUCCESS;
-
 		}
 
 	}else{
