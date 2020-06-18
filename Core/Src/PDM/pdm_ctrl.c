@@ -55,6 +55,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = DISABLE; 
 	}
 	
+	pdm_ptr->PDM_save_conf_flag = 1; //Need save configure in FRAM.
 
 	//Write to I2C GPIO Extender.
 	i=0;
@@ -494,5 +495,4 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 	return error_I2C;
 }
-
 
