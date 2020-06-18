@@ -1,7 +1,7 @@
-
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
+#include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "pdm_struct.h"
 #include "pdm_config.h"
@@ -35,10 +35,16 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 
 
 	if( (state_channel != ENABLE) && (state_channel != DISABLE) ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERROR_N;
 	}
 
 	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERROR_N;
 	}
 
@@ -92,7 +98,6 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 			if( state_channel == ENABLE ){
 				error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse ); // Input pin -  because hardware auto-enable
 				
-
 			}else if( state_channel == DISABLE ){
 				if ( TCA9539_Reset_output_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse ) == SUCCESS ){
 
@@ -116,10 +121,17 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 
 	}else{ //Error I2C GPIO Expander
 
+
 		if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt1 ){
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			pdm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
 
 		}else if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt2 ){
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
 
@@ -150,6 +162,9 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 	_PDM_table pdm_table;
 
 	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
+	#ifdef DEBUGprintf
+		Error_Handler();
+	#endif
 		return ERROR_N;
 	}
 
@@ -231,6 +246,9 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 	_PDM_table pdm_table;
 
 	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERROR_N;
 	}
 
@@ -269,17 +287,23 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out = read_val_pin_PG_out_eF;
 
 		}else{
-
 			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in = SUCCESS;  // OK because power channel is DISABLE
 			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out = SUCCESS;
 
 		}
+
 	}else{
 		
 		if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt1 ){
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			pdm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
 
 		}else if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt2 ){
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			pdm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
 		}
 
@@ -310,6 +334,7 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 	//Enable I2C MUX channel
 	i=0;
 	error_I2C = ERROR_N;
+
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
 		error_I2C = TCA9548_Enable_I2C_ch( I2Cx, i2c_mux_addr, i2c_mux_ch );
@@ -345,6 +370,9 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		pdm_ptr->Error_I2C_MUX = ERROR;
 	}else{
 		pdm_ptr->Error_I2C_MUX = SUCCESS;
@@ -354,6 +382,9 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 
 		case PDM_I2CADDR_TMP1075_1:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+				#ifdef DEBUGprintf
+					Error_Handler();
+				#endif
 				pdm_ptr->Temp_sensor[0] = 0x7F;
 				pdm_ptr->Error_temp_sensor_1 = ERROR;
 			}else{
@@ -364,6 +395,9 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 
 		case PDM_I2CADDR_TMP1075_2:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+				#ifdef DEBUGprintf
+					Error_Handler();
+				#endif
 				pdm_ptr->Temp_sensor[1] = 0x7F;
 				pdm_ptr->Error_temp_sensor_2 = ERROR;
 			}else{
@@ -374,6 +408,9 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 
 		case PDM_I2CADDR_TMP1075_3:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+				#ifdef DEBUGprintf
+					Error_Handler();
+				#endif
 				pdm_ptr->Temp_sensor[2] = 0x7F;
 				pdm_ptr->Error_temp_sensor_3 = ERROR;
 			}else{
@@ -384,6 +421,9 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 
 		case PDM_I2CADDR_TMP1075_4:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+				#ifdef DEBUGprintf
+					Error_Handler();
+				#endif
 				pdm_ptr->Temp_sensor[3] = 0x7F;
 				pdm_ptr->Error_temp_sensor_4 = ERROR;
 			}else{
@@ -417,6 +457,9 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 	
 
 	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERROR_N;
 	}
 
@@ -463,19 +506,24 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		pdm_ptr->Error_I2C_MUX = ERROR;
 	}else{
 		pdm_ptr->Error_I2C_MUX = SUCCESS;
 	}
 
 	if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = 0;
 		pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = 0;
 		pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = 0;
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = ERROR;
 
 	}else{
-
 		if(val_bus_voltage < 5 ){ //If power less than 5mV equate to zero.
 			pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = 0;
 		}else{

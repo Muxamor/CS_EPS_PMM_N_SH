@@ -2,6 +2,7 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
+#include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "TMP1075.h"
 #include "TCA9539.h"
@@ -71,6 +72,9 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		pdm_ptr->Error_I2C_MUX = 1;
 	}else{
 		pdm_ptr->Error_I2C_MUX = 0;
@@ -79,6 +83,9 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 	switch(tmp1075_addr){
 		case  PDM_I2CADDR_TMP1075_1:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
+				#ifdef DEBUGprintf
+					Error_Handler();
+				#endif
 				pdm_ptr->Error_temp_sensor_1  = ERROR;
 			}else{
 				pdm_ptr->Error_temp_sensor_1  = SUCCESS;
@@ -87,6 +94,9 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 
 		case PDM_I2CADDR_TMP1075_2:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
+				#ifdef DEBUGprintf
+					Error_Handler();
+				#endif
 				pdm_ptr->Error_temp_sensor_2 = ERROR;
 			}else{
 				pdm_ptr->Error_temp_sensor_2 = SUCCESS;
@@ -95,6 +105,9 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 
 		case PDM_I2CADDR_TMP1075_3:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
+				#ifdef DEBUGprintf
+					Error_Handler();
+				#endif
 				pdm_ptr->Error_temp_sensor_3 = ERROR;
 			}else{
 				pdm_ptr->Error_temp_sensor_3 = SUCCESS;
@@ -103,6 +116,9 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 
 		case PDM_I2CADDR_TMP1075_4:
 			if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
+				#ifdef DEBUGprintf
+					Error_Handler();
+				#endif
 				pdm_ptr->Error_temp_sensor_4 = ERROR;
 			}else{
 				pdm_ptr->Error_temp_sensor_4 = SUCCESS;
@@ -136,7 +152,10 @@ ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 	int8_t Error_I2C_MUX = ERROR_N;
 	_PDM_table pdm_table;
 
-	if( num_pwr_ch > PDM_PWR_Channel_6 ){
+	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERROR_N;
 	}
 
@@ -195,12 +214,18 @@ ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		pdm_ptr->Error_I2C_MUX = ERROR;
 	}else{
 		pdm_ptr->Error_I2C_MUX = SUCCESS;
 	}
 
 	if( (error_I2C == ERROR_N) || (Error_I2C_MUX == ERROR_N) ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = ERROR;
 	}else{
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = SUCCESS;

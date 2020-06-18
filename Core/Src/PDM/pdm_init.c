@@ -1,4 +1,5 @@
 #include "stm32l4xx.h"
+#include "Error_Handler.h"
 #include "pdm_config.h"
 #include "pdm_struct.h"
 #include "pdm_init_IC.h"
@@ -48,6 +49,9 @@ ErrorStatus PDM_init(_PDM *pdm_ptr){
 
 
 	if(error_stutus != SUCCESS){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERROR_N;
 	}
 
