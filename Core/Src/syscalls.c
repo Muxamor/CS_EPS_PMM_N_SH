@@ -38,14 +38,14 @@
 extern int errno;
 extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
-
+/*
 register char * stack_ptr asm("sp");
 
 char *__env[1] = { 0 };
 char **environ = __env;
 
 
-/* Functions */
+//Functions
 void initialise_monitor_handles()
 {
 }
@@ -64,7 +64,7 @@ int _kill(int pid, int sig)
 void _exit (int status)
 {
 	_kill(status, -1);
-	while (1) {}		/* Make sure we hang here */
+	while (1) {}		// Make sure we hang here
 }
 
 __attribute__((weak)) int _read(int file, char *ptr, int len)
@@ -78,6 +78,7 @@ __attribute__((weak)) int _read(int file, char *ptr, int len)
 
 return len;
 }
+*/
 
 __attribute__((weak)) int _write(int file, char *ptr, int len)
 {
@@ -90,7 +91,7 @@ __attribute__((weak)) int _write(int file, char *ptr, int len)
 	}
 	return len;
 }
-
+/*
 int _close(int file)
 {
 	return -1;
@@ -115,7 +116,7 @@ int _lseek(int file, int ptr, int dir)
 
 int _open(char *path, int flags, ...)
 {
-	/* Pretend like we always fail */
+	//Pretend like we always fail
 	return -1;
 }
 
@@ -159,3 +160,4 @@ int _execve(char *name, char **argv, char **env)
 	errno = ENOMEM;
 	return -1;
 }
+*/
