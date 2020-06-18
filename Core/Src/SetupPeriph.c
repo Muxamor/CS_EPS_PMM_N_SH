@@ -148,6 +148,7 @@ void SystemClock_Config(void){
 	*/
 void I2C3_Init(void){
 
+	LL_I2C_DeInit(I2C3);
 
 	LL_I2C_InitTypeDef I2C_InitStruct = {0};
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -203,6 +204,8 @@ void I2C3_Init(void){
 	* @param None
 	* @retval None */
 void I2C4_Init(void){
+
+	LL_I2C_DeInit(I2C4);
 
 	LL_I2C_InitTypeDef I2C_InitStruct = {0};
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
