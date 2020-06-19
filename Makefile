@@ -51,6 +51,7 @@ Core/Src/PDM/pdm_init_IC.c \
 Core/Src/PDM/pdm_init.c \
 Core/Src/PDM/pdm_ctrl.c \
 Core/Src/PDM/pdm.c \
+Core/Src/PMM/pmm_config.c \
 Core/Src/PMM/pmm_init_IC.c \
 Core/Src/PMM/pmm_init.c \
 Core/Src/PMM/pmm_ctrl.c \

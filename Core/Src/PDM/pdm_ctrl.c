@@ -466,7 +466,7 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 		return ERROR_N;
 	}
 
-	// Switch MUX to PDM I2C bus on PMM 
+	// Switch MUX to PDM I2C bus on PDM 
 	SW_TMUX1209_I2C_main_PDM(); 
 
 	pdm_table = PDM__Table(num_pwr_ch);

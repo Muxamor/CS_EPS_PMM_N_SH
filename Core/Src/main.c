@@ -91,8 +91,8 @@ int main(void){
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
 
-	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANmain, ENABLE );
-	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_CANbackup, ENABLE );
+	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
+	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
 
 
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();

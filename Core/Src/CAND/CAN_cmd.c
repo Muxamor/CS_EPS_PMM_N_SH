@@ -142,15 +142,15 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power VBAT1\n", CAN_PWR_VBAT1_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_1, ENABLE );
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_2, ENABLE ); 
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT1_eF1, ENABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, ENABLE ); 
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power VBAT1\n", CAN_PWR_VBAT1_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_1, DISABLE );
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_1_eF_2, DISABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT1_eF1, DISABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, DISABLE );
                     }
                     break;
 
@@ -160,15 +160,15 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power VBAT2\n", CAN_PWR_VBAT2_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_1, ENABLE );
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_2, ENABLE ); 
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT2_eF1, ENABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, ENABLE ); 
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power VBAT2\n", CAN_PWR_VBAT2_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_1, DISABLE );
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_VBAT_2_eF_2, DISABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT2_eF1, DISABLE );
+                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, DISABLE );
                     }
                     break;
                 

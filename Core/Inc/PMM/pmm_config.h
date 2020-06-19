@@ -49,4 +49,31 @@
 #define Service_Mode_EPS			0xFF
 
 
+#define CPUmain 					0x00
+#define CPUbackup					0x01
+
+#define PMM_PWR_Ch_CANmain 			0x00
+#define PMM_PWR_Ch_CANbackup		0x01
+#define PMM_PWR_Ch_VBAT1_eF1		0x02
+#define PMM_PWR_Ch_VBAT1_eF2		0x03
+#define PMM_PWR_Ch_VBAT2_eF1		0x04
+#define PMM_PWR_Ch_VBAT2_eF2		0x05
+#define PMM_PWR_Ch_PBMs_Logic		0x06
+#define PMM_PWR_Ch_Deploy_Logic		0x07
+#define PMM_PWR_Ch_Deploy_Power		0x08
+#define PMM_PWR_Ch_5V_Bus			0x09
+#define PMM_PWR_Ch_3_3V_Bus			0x10
+
+
+typedef struct{
+
+	I2C_TypeDef *I2Cx_GPIO_Ext;
+	uint8_t I2C_addr_GPIO_Ext;
+	uint16_t pin_GPIO_Ext;
+
+}_PMM_table;
+
+
+_PMM_table PMM__Table(uint8_t number_pwr_channel);
+
 #endif /* INC_PMM_PMM_CONFIG_H_ */
