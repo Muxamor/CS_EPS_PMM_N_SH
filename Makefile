@@ -5,8 +5,8 @@
 TARGET = CS_EPS_PMM_N_SH
 
 
-# Set the FLAG OS_SYSTEM - LINUX or MAC_OS it depends which sistem are you use to build.
-BUILD_OS_SYSTEM = MAC_OS
+# Set the FLAG OS_SYSTEM - LINUX or MAC_OS or WINDOWS it depends which sistem are you use to build.
+BUILD_OS_SYSTEM = WINDOWS
 
 
 ######################################
@@ -35,6 +35,8 @@ Core/Src/SetupPeriph.c \
 Core/Src/i2c_comm.c \
 Core/Src/uart_comm.c \
 Core/Src/uart_terminal.c \
+Core/Src/median_filter.c \
+Core/Src/Fn_CRC16.c \
 Core/Src/tim_pwm.c \
 Core/Src/TMP1075.c \
 Core/Src/FRAM.c \
@@ -42,6 +44,7 @@ Core/Src/PCA9534.c \
 Core/Src/TCA9539.c \
 Core/Src/ADS1015.c \
 Core/Src/TCA9548.c \
+Core/Src/TCA6424A.c \
 Core/Src/INA231.c \
 Core/Src/PDM/pdm_config.c \
 Core/Src/PDM/pdm_init_IC.c \
@@ -82,6 +85,8 @@ ifeq ($(BUILD_OS_SYSTEM),LINUX)
 GCC_PATH = /opt/gcc-arm-none-eabi-7-2017-q4-major/bin
 else ifeq ($(BUILD_OS_SYSTEM),MAC_OS)
 GCC_PATH = /Users/Ivan/Development/opt/gcc-arm-none-eabi-7-2018-q2-update/bin
+else ifeq ($(BUILD_OS_SYSTEM),WINDOWS)
+GCC_PATH_WIN = C:\ST\STM32CubeIDE_1.3.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610\tools\bin
 endif
 
 PREFIX = arm-none-eabi-
@@ -92,11 +97,16 @@ CC = $(GCC_PATH)/$(PREFIX)gcc
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
 CP = $(GCC_PATH)/$(PREFIX)objcopy
 SZ = $(GCC_PATH)/$(PREFIX)size
+else ifdef GCC_PATH_WIN
+CC = $(GCC_PATH_WIN)/$(PREFIX)gcc.exe
+AS = $(GCC_PATH_WIN)/$(PREFIX)gcc.exe -x assembler-with-cpp
+CP = $(GCC_PATH_WIN)/$(PREFIX)objcopy.exe
+SZ = $(GCC_PATH_WIN)/$(PREFIX)size.exe
 else
-CC = $(PREFIX)gcc
-AS = $(PREFIX)gcc -x assembler-with-cpp
-CP = $(PREFIX)objcopy
-SZ = $(PREFIX)size
+CC = $(GCC_PATH)/$(PREFIX)gcc
+AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
+CP = $(GCC_PATH)/$(PREFIX)objcopy
+SZ = $(GCC_PATH)/$(PREFIX)size
 endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
