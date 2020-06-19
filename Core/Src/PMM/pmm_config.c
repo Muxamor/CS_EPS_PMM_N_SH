@@ -9,6 +9,18 @@ _PMM_table PMM__Table(uint8_t number_pwr_channel){
 
 	_PMM_table pmm_table = {0};
 
+	//Config Power monitor INA231, same for all power channels
+	pmm_table.PWR_Mon_Max_Current_int16 = 2000; 		//Max current in mA 
+	pmm_table.PWR_Mon_Max_Current_float = 2.0; 			//Max current in A 
+	pmm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm 
+	pmm_table.PWR_Mon_Rshunt_float = 0.015;				//Rshunt value in Ohm 
+
+	pmm_table.PWR_Mon_aver_mode = INA231_AVERAGING_NUM_64; 		 // Average 64
+	pmm_table.PWR_Mon_bus_conv_time = INA231_CONVERSION_TIME_1100us; // Conversion time 1.1ms
+	pmm_table.PWR_Mon_shunt_conv_time = INA231_CONVERSION_TIME_1100us; // Conversion time 1.1ms
+	pmm_table.PWR_Mon_work_mode = INA231_SHUNT_AND_BUS_CONTINUOUS; // Conversion time 1.1ms
+
+
 	pmm_table.I2Cx_GPIO_Ext = PMM_I2Cx_GPIOExt1;
 	pmm_table.I2C_addr_GPIO_Ext = PMM_I2CADDR_GPIOExt1;
 
@@ -24,18 +36,26 @@ _PMM_table PMM__Table(uint8_t number_pwr_channel){
 
 		case PMM_PWR_Ch_VBAT1_eF1:
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P00;
+			pmm_table.I2Cx_PWR_Mon = PMM_I2Cx_VBAT1_eF1_INA231;
+			pmm_table.I2C_addr_PWR_Mon = PMM_I2CADDR_VBAT1_eF1_INA231;
 			break;
 
 		case PMM_PWR_Ch_VBAT1_eF2:
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P01;
+			pmm_table.I2Cx_PWR_Mon = PMM_I2Cx_VBAT1_eF2_INA231;
+			pmm_table.I2C_addr_PWR_Mon = PMM_I2CADDR_VBAT1_eF2_INA231;
 			break;
 
 		case PMM_PWR_Ch_VBAT2_eF1:
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P02;
+			pmm_table.I2Cx_PWR_Mon = PMM_I2Cx_VBAT2_eF1_INA231;
+			pmm_table.I2C_addr_PWR_Mon = PMM_I2CADDR_VBAT2_eF1_INA231;
 			break;
 
 		case PMM_PWR_Ch_VBAT2_eF2:
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P03;
+			pmm_table.I2Cx_PWR_Mon = PMM_I2Cx_VBAT2_eF2_INA231;
+			pmm_table.I2C_addr_PWR_Mon = PMM_I2CADDR_VBAT2_eF2_INA231;
 			break;
 
 		case PMM_PWR_Ch_PBMs_Logic:

@@ -6,6 +6,7 @@
 #include "SetupPeriph.h"
 #include "TMP1075.h"
 #include "TCA9539.h"
+#include "INA231.h"
 #include "pmm_struct.h"
 #include "pmm_config.h"
 
@@ -345,70 +346,115 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 
 
 
-/** @brief  Get value current, voltage and power of Power channel
+/** @brief  Get value current, voltage and power of VBAT Power channel
 	@param  *pdm_ptr - pointer to struct which contain all information about PMM.
 	@param  num_pwr_ch - number power channel.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PMM_Get_PWR_CH_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
+ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 	uint8_t i = 0;
+	int8_t error_I2C = ERROR_N;
 	int16_t val_current = 0;
 	uint16_t val_bus_voltage = 0;
 	uint16_t val_power = 0;
 	_PMM_table pmm_table;
-	int8_t Error_I2C_MUX = ERROR_N;
-	int8_t error_I2C = ERROR_N;
 	
-
+	
 	// Switch MUX to PDM I2C bus on PMM 
 	SW_TMUX1209_I2C_main_PMM(); 
 
 	pmm_table = PMM__Table(num_pwr_ch);
 
-	//Read temperature
-	if( error_I2C == SUCCESS ){
+	//Read INA231
+	i=0;
+	error_I2C = ERROR_N;
 
-		i=0;
-		error_I2C = ERROR_N;
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){///Read temperature.
 
-		while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){///Read temperature.
+		error_I2C = INA231_Get_I_V_P_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
 
-			error_I2C = INA231_Get_I_V_P_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
-
-			if( error_I2C != SUCCESS ){
-				i++;
-				LL_mDelay( pmm_i2c_delay_att_conn );
-			}
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pmm_i2c_delay_att_conn );
 		}
+	}
+
+	if(val_bus_voltage < 5 ){ //If power less than 5mV equate to zero.
+		val_bus_voltage = 0;
+	}
+
+	if(val_power < 5 ){ //If power less than 5mW equate to zero.
+		val_power = 0;
 	}
 
 
 	if( error_I2C == ERROR_N ){//Error I2C INA231 
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
-		pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = 0;
-		pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = 0;
-		pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = 0;
-		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = ERROR;
+		val_current = 0;
+		val_bus_voltage = 0;
+		val_power = 0;
+	}
 
-	}else{
-		if(val_bus_voltage < 5 ){ //If power less than 5mV equate to zero.
-			pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = 0;
+	if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF1 ){
+		pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val = val_bus_voltage;
+		pmm_ptr->PWR_Ch_Vbat1_eF1_Current_val = val_current; 
+		pmm_ptr->PWR_Ch_Vbat1_eF1_Power_val = val_power; 
+
+		if( error_I2C == SUCCESS ){
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = SUCCESS; 
+
 		}else{
-			pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = val_bus_voltage;
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = ERROR; 
+		}
+		
+	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
+		pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val = val_bus_voltage;
+		pmm_ptr->PWR_Ch_Vbat1_eF2_Current_val = val_current; 
+		pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val = val_power; 
+
+		if( error_I2C == SUCCESS ){
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS; 
+
+		}else{
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR; 
+		}
+	
+	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF1 ){
+		pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val = val_bus_voltage;
+		pmm_ptr->PWR_Ch_Vbat2_eF1_Current_val = val_current; 
+		pmm_ptr->PWR_Ch_Vbat2_eF1_Power_val = val_power; 
+
+		if( error_I2C == SUCCESS ){
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = SUCCESS; 
+
+		}else{
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = ERROR; 
 		}
 
-		pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = val_current;
+	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
+		pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val = val_bus_voltage;
+		pmm_ptr->PWR_Ch_Vbat2_eF2_Current_val = val_current; 
+		pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val = val_power; 
 
-		if(val_power < 5 ){ //If power less than 5mW equate to zero.
-			pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = 0;
+		if( error_I2C == SUCCESS ){
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS; 
+
 		}else{
-			pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = val_power;
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR; 
 		}
 
-		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = SUCCESS;
 	}
 
 	return error_I2C;

@@ -46,8 +46,8 @@ typedef struct{
 	uint16_t PWR_Ch_State_3_3V_Bus 		:1; //0-DISABLE, 1-ENABLE. State power 3.3V bus 
 	uint16_t :5;
 
-	uint32_t Error_TMP1075_sensor			:1;	//=0 -OK, = 1-error temp. sensor TMP1075
-	uint32_t Error_PWR_Ch_State_CANmain		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_TMP1075_sensor				:1;	//=0 -OK, = 1-error temp. sensor TMP1075
+	uint32_t Error_PWR_Ch_State_CANmain			:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_CANbackup		:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_Vbat1_eF1		:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_Vbat1_eF2		:1; //=0 -OK, = 1-error at output GPIO Ext1
@@ -58,11 +58,15 @@ typedef struct{
 	uint32_t Error_PWR_Ch_State_Deploy_Power	:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_5V_Bus			:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_3_3V_Bus		:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_I2C_GPIO_Ext1 			:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
-	uint32_t Error_I2C_GPIO_Ext2 			:1;
-	uint32_t Error_FRAM1		 			:1; //=0 -OK, = 1-error FRAM1 no connection
-	uint32_t Error_FRAM2		 			:1; //=0 -OK, = 1-error FRAM2 no connection
-	uint32_t :16;
+	uint32_t Error_PWR_Mon_Vbat1_eF1			:1; //=0 -OK, = 1-error I2C INA231
+	uint32_t Error_PWR_Mon_Vbat1_eF2			:1; //=0 -OK, = 1-error I2C INA231
+	uint32_t Error_PWR_Mon_Vbat2_eF1			:1; //=0 -OK, = 1-error I2C INA231
+	uint32_t Error_PWR_Mon_Vbat2_eF2			:1; //=0 -OK, = 1-error I2C INA231
+	uint32_t Error_I2C_GPIO_Ext1 				:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
+	uint32_t Error_I2C_GPIO_Ext2 				:1;
+	uint32_t Error_FRAM1		 				:1; //=0 -OK, = 1-error FRAM1 no connection
+	uint32_t Error_FRAM2		 				:1; //=0 -OK, = 1-error FRAM2 no connection
+	uint32_t :12;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up).
 	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up).

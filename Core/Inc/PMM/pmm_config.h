@@ -27,17 +27,17 @@
 #define PMM_I2Cx_PowerADC			I2C4 //I2C ADC ADS1015 in PMM Power supply block
 #define PMM_I2CADDR_PowerADC 		0x49 //I2C ADC ADS1015 in PMM Power supply block
 
-#define PMM_I2Cx_VBAT1_M_INA231		I2C4 //I2C INA231 line VBAT1 Main Efuse
-#define PMM_I2CADDR_VBAT1_M_INA231 	0x40 //I2C INA231 line VBAT1 Main Efuse
+#define PMM_I2Cx_VBAT1_eF1_INA231		I2C4 //I2C INA231 line VBAT1 Main Efuse
+#define PMM_I2CADDR_VBAT1_eF1_INA231 	0x40 //I2C INA231 line VBAT1 Main Efuse
 
-#define PMM_I2Cx_VBAT1_B_INA231		I2C4 //I2C INA231 line VBAT1 Backup Efuse
-#define PMM_I2CADDR_VBAT1_B_INA231 	0x44 //I2C INA231 line VBAT1 Backup Efuse
+#define PMM_I2Cx_VBAT1_eF2_INA231		I2C4 //I2C INA231 line VBAT1 Backup Efuse
+#define PMM_I2CADDR_VBAT1_eF2_INA231 	0x44 //I2C INA231 line VBAT1 Backup Efuse
 
-#define PMM_I2Cx_VBAT2_M_INA231		I2C4 //I2C INA231 line VBAT2 Main Efuse
-#define PMM_I2CADDR_VBAT2_M_INA231 	0x41 //I2C INA231 line VBAT2 Main Efuse
+#define PMM_I2Cx_VBAT2_eF1_INA231		I2C4 //I2C INA231 line VBAT2 Main Efuse
+#define PMM_I2CADDR_VBAT2_eF1_INA231 	0x41 //I2C INA231 line VBAT2 Main Efuse
 
-#define PMM_I2Cx_VBAT2_B_INA231		I2C4 //I2C INA231 line VBAT2 Backup Efuse
-#define PMM_I2CADDR_VBAT2_B_INA231 	0x45 //I2C INA231 line VBAT2 Backup Efuse
+#define PMM_I2Cx_VBAT2_eF2_INA231		I2C4 //I2C INA231 line VBAT2 Backup Efuse
+#define PMM_I2CADDR_VBAT2_eF2_INA231 	0x45 //I2C INA231 line VBAT2 Backup Efuse
 
 #define FRAM_SIZE_64KB				0x2000
 
@@ -70,6 +70,17 @@ typedef struct{
 	I2C_TypeDef *I2Cx_GPIO_Ext;
 	uint8_t I2C_addr_GPIO_Ext;
 	uint16_t pin_GPIO_Ext;
+
+	I2C_TypeDef *I2Cx_PWR_Mon;
+	uint8_t I2C_addr_PWR_Mon;
+	uint16_t PWR_Mon_Max_Current_int16;
+	float PWR_Mon_Max_Current_float;
+	uint16_t PWR_Mon_Rshunt_int16;
+	float PWR_Mon_Rshunt_float;
+	uint8_t PWR_Mon_aver_mode;
+	uint8_t PWR_Mon_bus_conv_time;
+	uint8_t PWR_Mon_shunt_conv_time; 
+	uint8_t PWR_Mon_work_mode;
 
 }_PMM_table;
 

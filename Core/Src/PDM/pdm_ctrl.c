@@ -451,14 +451,14 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 	uint8_t i = 0;
+	int8_t Error_I2C_MUX = ERROR_N;
+	int8_t error_I2C = ERROR_N;
 	int16_t val_current = 0;
 	uint16_t val_bus_voltage = 0;
 	uint16_t val_power = 0;
 	_PDM_table pdm_table;
-	int8_t Error_I2C_MUX = ERROR_N;
-	int8_t error_I2C = ERROR_N;
 	
-
+	
 	if( num_pwr_ch > PDM_PWR_Ch_quantity ){
 		#ifdef DEBUGprintf
 			Error_Handler();
@@ -486,7 +486,7 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 	Error_I2C_MUX = error_I2C;
 
-	//Read temperature
+	//Read INA231
 	if( error_I2C == SUCCESS ){
 
 		i=0;
@@ -521,28 +521,27 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = 0;
-		pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = 0;
-		pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = 0;
+		val_bus_voltage = 0;
+		val_current = 0;
+		val_power = 0;
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = ERROR;
 
 	}else{
 		if(val_bus_voltage < 5 ){ //If power less than 5mV equate to zero.
-			pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = 0;
-		}else{
-			pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = val_bus_voltage;
+			val_bus_voltage = 0;
 		}
 
-		pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = val_current;
-
 		if(val_power < 5 ){ //If power less than 5mW equate to zero.
-			pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = 0;
-		}else{
-			pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = val_power;
+			val_power = 0;
 		}
 
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = SUCCESS;
 	}
+
+	pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = val_bus_voltage;
+	pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = val_current;
+	pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = val_power;
+		
 
 	return error_I2C;
 }
