@@ -159,7 +159,7 @@ ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 		return ERROR_N;
 	}
 
-	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PMM
+	SW_TMUX1209_I2C_main_PDM(); // Switch MUX to PDM I2C bus on PDM
 
 	//Fill pdm_table depends in number power channel.
 	pdm_table = PDM__Table(num_pwr_ch); 

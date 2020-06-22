@@ -163,6 +163,12 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 
 	LL_mDelay(20); //Delay for startup power supply
 	error_I2C = PMM_Check_state_PWR_CH( pmm_ptr, num_pwr_channel );
+	
+	#ifdef DEBUGprintf
+		if (error_I2C == ERROR){
+			Error_Handler();
+		}
+	#endif
 
 	return error_I2C;
 }
