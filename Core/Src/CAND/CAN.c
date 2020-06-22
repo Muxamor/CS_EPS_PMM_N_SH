@@ -16,21 +16,39 @@ const CAN_typeRegistrationRec RegistrationRec[] = {
 
 
 void CAN_ProcCallbackCmds(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state) {
-  if(state == 0)
+	
+	if(state == 0){
+		return;  //первый вызов тут не нужен
+	
+	}else if(state == 1){
+	
+		if(can_ref == CAN1){
+			CAN1_exchange_timeout_flag = 1;
+		}else if(can_ref == CAN2){
+			CAN2_exchange_timeout_flag = 1;
+		}
+	}
 
-    return;  //первый вызов тут не нужен
-
-  if(state == 1)
-	  if(id.std.RTR == 0)
-//		  CAN_cmd_mask_status |= (1 << id.uf.Offset);
-		  for(uint16_t i = 0; i < leng; i++){
-			  CAN_cmd_mask_status = CAN_cmd_mask_status | ( ( (uint64_t)1 ) << (id.uf.Offset + i) );
-		  }
+	if(id.std.RTR == 0)
+		for(uint16_t i = 0; i < leng; i++){
+			CAN_cmd_mask_status = CAN_cmd_mask_status | ( ( (uint64_t)1 ) << (id.uf.Offset + i) );
+		}
 }
 
 
 void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t leng, int state) {
-	return;
+
+	if(state == 0){
+	    return;
+
+	}else{
+	
+		if(can_ref == CAN1){
+			CAN1_exchange_timeout_flag = 1;
+		}else if(can_ref == CAN2){
+			CAN2_exchange_timeout_flag = 1;
+		}
+	}
 }
 
 

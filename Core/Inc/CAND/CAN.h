@@ -32,8 +32,10 @@
 #define CAN_PWR_VBAT1_offset		34
 #define CAN_PWR_VBAT2_offset		35
 #define CAN_Switch_active_CPU_offset 37
-uint64_t CAN_cmd_mask_status;
 
+uint64_t CAN_cmd_mask_status;
+uint8_t CAN1_exchange_timeout_flag;
+uint8_t CAN2_exchange_timeout_flag;
 
 typedef union {
   struct {
