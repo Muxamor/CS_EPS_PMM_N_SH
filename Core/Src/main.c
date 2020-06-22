@@ -41,6 +41,8 @@
 **********************************************************/
 
 extern uint64_t CAN_cmd_mask_status;
+extern uint8_t CAN1_exchange_timeout_flag;
+extern uint8_t CAN2_exchange_timeout_flag;
 
 uint8_t UART_CHANGE_ACTIVE_CPU_FLAG=0;
 
@@ -78,7 +80,6 @@ int main(void){
 	CAN_RegisterAllVars();
 
 
-
 	//Need test!!!!!!!!!!!!
 	//uint8_t pwr_reboot= 6;
 	//PMM_Detect_PowerRebootCPU(&pwr_reboot);
@@ -90,11 +91,6 @@ int main(void){
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
-
-	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
-	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
-
-
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
 
 	if( pmm_ptr->Main_Backup_mode_CPU == 0){
@@ -103,21 +99,14 @@ int main(void){
 
 		//PMM_default_init_I2C_GPIOExt1(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1); //TMP function
 
-
-		LL_mDelay(40);
-
-//		PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
-//		LL_mDelay(40);
-		//PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
-		//LL_mDelay(140);
-
-		//---------------------------------------------------
-
-		//******************************************************************
 		ENABLE_TMUX1209_I2C();
 		PDM_init( pdm_ptr );
+		PMM_init( pmm_ptr );
+
 		LL_mDelay(50); //Delay for startup power supply
 
+		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
+		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
 
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
@@ -132,6 +121,8 @@ int main(void){
 				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
 			}
 		}
+
+
 
 
 	}else{ // Backup Mode CPU Main_Backup_mode_CPU = 0;

@@ -6,7 +6,7 @@ TARGET = CS_EPS_PMM_N_SH
 
 
 # Set the FLAG OS_SYSTEM - LINUX or MAC_OS or WINDOWS it depends which sistem are you use to build.
-BUILD_OS_SYSTEM = MAC_OS
+BUILD_OS_SYSTEM = WINDOWS
 
 
 ######################################
@@ -55,7 +55,6 @@ Core/Src/PMM/pmm_config.c \
 Core/Src/PMM/pmm_init_IC.c \
 Core/Src/PMM/pmm_init.c \
 Core/Src/PMM/pmm_ctrl.c \
-Core/Src/PMM/pmm_deploy.c \
 Core/Src/PMM/pmm_savedata.c \
 Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
