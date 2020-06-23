@@ -19,6 +19,7 @@
 #include "pmm_init_IC.h"
 #include "pmm_init.h"
 #include "pmm_ctrl.h"
+#include "pmm.h"
 
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
@@ -114,6 +115,7 @@ int main(void){
 		while (1){
 
 			PDM_Get_Telemetry( pdm_ptr );
+			PMM_Get_Telemetry( pmm_ptr );
 			CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr );
 
 			if(CAN_cmd_mask_status != 0){
