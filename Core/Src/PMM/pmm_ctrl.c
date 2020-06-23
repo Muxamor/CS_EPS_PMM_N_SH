@@ -351,10 +351,52 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 
 
 
+/** @brief  Get temperature from TMP1075 sensor.
+	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
+	@param  *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param  tmp1075_addr - I2C sensor address
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PMM_Get_Temperature( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr ){
+
+	int8_t temp_value;
+	uint8_t i = 0;
+	int8_t error_I2C = ERROR_N;
+
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){///Read temperature.
+
+		error_I2C = TMP1075_read_int8_temperature( I2Cx,tmp1075_addr, &temp_value);
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pmm_i2c_delay_att_conn );
+		}
+	}
+
+
+	if( error_I2C == ERROR ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pmm_ptr->Temp_sensor = 0x7F;
+		pmm_ptr->Error_TMP1075_sensor = ERROR;
+	}else{
+		pmm_ptr->Error_TMP1075_sensor = SUCCESS;
+		pmm_ptr->Temp_sensor = temp_value;
+	}
+
+	return error_I2C;
+}
+
+
 
 /** @brief  Get value current, voltage and power of VBAT Power channel
 	@param  *pdm_ptr - pointer to struct which contain all information about PMM.
 	@param  num_pwr_ch - number power channel.
+							PMM_PWR_Ch_VBAT1_eF1
+							PMM_PWR_Ch_VBAT1_eF2
+							PMM_PWR_Ch_VBAT2_eF1
+							PMM_PWR_Ch_VBAT2_eF2
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
