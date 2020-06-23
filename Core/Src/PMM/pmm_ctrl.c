@@ -350,6 +350,17 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 }
 
 
+/** @brief  Get Power Good all power channel status om PMM.
+	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PDM_Get_PG_all_PWR_CH( _PMM *pmm_ptr ){
+
+
+
+	//return error_I2C;
+}
+
 
 /** @brief  Get temperature from TMP1075 sensor.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
