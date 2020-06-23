@@ -43,9 +43,11 @@ ErrorStatus PMM_init_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_a
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pmm_ptr->Error_TMP1075_sensor = 1;
+		pmm_ptr->Temp_sensor = 0x7F;
+		pmm_ptr->Error_TMP1075_sensor = ERROR;
 	}else{
-		pmm_ptr->Error_TMP1075_sensor = 0;
+		pmm_ptr->Temp_sensor = 0x00;
+		pmm_ptr->Error_TMP1075_sensor = SUCCESS;
 	}
 
 	return error_I2C;

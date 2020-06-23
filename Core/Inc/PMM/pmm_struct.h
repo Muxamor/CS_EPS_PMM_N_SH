@@ -17,6 +17,8 @@ typedef struct{
 	uint8_t PMM_save_conf_flag  	:1;// 0-Note need save, 1-Need save configure PDM to FRAM.
 	uint8_t :7;
 
+	int8_t Temp_sensor; //PMM temperature
+
 	uint16_t PWR_Ch_Vbat1_eF1_Voltage_val;
 	uint16_t PWR_Ch_Vbat1_eF2_Voltage_val;
 	int16_t  PWR_Ch_Vbat1_eF1_Current_val;
