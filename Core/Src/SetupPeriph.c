@@ -509,7 +509,28 @@ void GPIO_Init(void){
   	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
   	/****************************************************************************************/
 
-		
+  	/*-------------------------------------------------------------------------------------*/
+	/* Pins for get Power Good */
+	/** PE2 - Power good for PWR_Supply_Main_PG 
+		PE3 - Power good for PWR_Supply_Backup_PG
+		PE4 - Power good for PWR_Ch_PG_PBMs_Logic	
+		PE5 - Power good for PWR_Ch_PG_Deploy_LP	
+		PE7 - Power good for PWR_Ch_PG_Vbat2_eF2
+		PE8 - Power good for PWR_Ch_PG_Vbat2_eF1 
+		PE9 - Power good for PWR_Ch_PG_Vbat1_eF2
+		PE10 - Power good for PWR_Ch_PG_Vbat1_eF1 
+		PE11 - Power good for PWR_Ch_PG_CANmain
+		PE12 - Power good for PWR_Ch_PG_CANbackup
+		PE13 - Power good for PWR_Ch_PG_I2C_Bus
+		PE14 - Power good for PWR_Ch_PG_3_3V_Bus 
+		PE15 - Power good for PWR_Ch_PG_5V_Bus 
+		*/
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_7|LL_GPIO_PIN_8|LL_GPIO_PIN_9|LL_GPIO_PIN_10\
+							|LL_GPIO_PIN_11|LL_GPIO_PIN_12|LL_GPIO_PIN_13|LL_GPIO_PIN_14|LL_GPIO_PIN_15;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+  	/****************************************************************************************/
 
 }
 

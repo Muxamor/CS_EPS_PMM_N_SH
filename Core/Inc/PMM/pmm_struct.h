@@ -59,7 +59,7 @@ typedef struct{
 	uint32_t PWR_Ch_PG_Vbat2_eF1 				:1; //0-OK, 1-ERROR. Power good VBAT2 eF1 channel status.
 	uint32_t PWR_Ch_PG_Vbat2_eF2 				:1; //0-OK, 1-ERROR. Power good VBAT2 eF2 channel status.
 	uint32_t PWR_Ch_PG_PBMs_Logic 				:1; //0-OK, 1-ERROR. Power good PBM logic power.
-	uint32_t PWR_Ch_PG_PBMs_Deploy_LP			:1; //0-OK, 1-ERROR. Power good Deploy power. (Norbi burning eFuse)
+	uint32_t PWR_Ch_PG_Deploy_LP				:1; //0-OK, 1-ERROR. Power good Deploy power. (Norbi burning eFuse)
 	uint32_t PWR_Ch_PG_5V_Bus 					:1; //0-OK, 1-ERROR. Power good 5V power. (Norbi not use)
 	uint32_t PWR_Ch_PG_3_3V_Bus 				:1; //0-OK, 1-ERROR. Power good 3.3V power. (Norbi not use)
 	uint32_t PWR_Ch_PG_I2C_Bus 					:1; //0-OK, 1-ERROR. Power good I2C power. (Norbi not use)
@@ -78,6 +78,7 @@ typedef struct{
 	uint32_t Error_PWR_Ch_State_Deploy_Power	:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_5V_Bus			:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_3_3V_Bus		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_Ch_State_I2C_Bus			:1;	//=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Mon_Vbat1_eF1			:1; //=0 -OK, = 1-error I2C INA231
 	uint32_t Error_PWR_Mon_Vbat1_eF2			:1; //=0 -OK, = 1-error I2C INA231
 	uint32_t Error_PWR_Mon_Vbat2_eF1			:1; //=0 -OK, = 1-error I2C INA231
@@ -86,7 +87,7 @@ typedef struct{
 	uint32_t Error_I2C_GPIO_Ext2 				:1;
 	uint32_t Error_FRAM1		 				:1; //=0 -OK, = 1-error FRAM1 no connection
 	uint32_t Error_FRAM2		 				:1; //=0 -OK, = 1-error FRAM2 no connection
-	uint32_t :12;
+	uint32_t :11;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up).
 	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up).

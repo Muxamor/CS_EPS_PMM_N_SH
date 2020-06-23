@@ -33,7 +33,8 @@
 								PMM_PWR_Ch_Deploy_Logic
 								PMM_PWR_Ch_Deploy_Power
 								PMM_PWR_Ch_5V_Bus				
-								PMM_PWR_Ch_3_3V_Bus			
+								PMM_PWR_Ch_3_3V_Bus		
+								PMM_PWR_Ch_I2C_Bus	
 	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
 								ENABLE
 								DISABLE
@@ -132,6 +133,13 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 			pmm_ptr->PWR_Ch_State_3_3V_Bus = DISABLE;
 		}
 
+	}else if( num_pwr_channel == PMM_PWR_Ch_I2C_Bus ){
+		if( state_channel == ENABLE ){
+			pmm_ptr->PWR_Ch_State_I2C_Bus = ENABLE;
+		}else{
+			pmm_ptr->PWR_Ch_State_I2C_Bus = DISABLE;
+		}
+
 	}else{
 		return ERROR_N;
 	}
@@ -189,6 +197,7 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 								PMM_PWR_Ch_Deploy_Power
 								PMM_PWR_Ch_5V_Bus				
 								PMM_PWR_Ch_3_3V_Bus	
+								PMM_PWR_Ch_I2C_Bus	
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
@@ -306,6 +315,13 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 				pmm_ptr->Error_PWR_Ch_State_3_3V_Bus = ERROR; ///0-ERROR
 			}
 
+		}else if( num_pwr_channel == PMM_PWR_Ch_I2C_Bus ){
+
+			if( pmm_ptr->PWR_Ch_State_I2C_Bus == read_val_pin_EN ){
+				pmm_ptr->Error_PWR_Ch_State_I2C_Bus = SUCCESS; ///0-OK
+			}else{
+				pmm_ptr->Error_PWR_Ch_State_I2C_Bus = ERROR; ///0-ERROR
+			}
 		}
 
 	}else{
@@ -324,25 +340,28 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 			pmm_ptr->Error_PWR_Ch_State_Vbat1_eF2 = ERROR; ///0-ERROR
 	
 		}else if( num_pwr_channel == PMM_PWR_Ch_VBAT2_eF1 ){
-				pmm_ptr->Error_PWR_Ch_State_Vbat2_eF1 = ERROR; ///0-ERROR
+			pmm_ptr->Error_PWR_Ch_State_Vbat2_eF1 = ERROR; ///0-ERROR
 
 		}else if( num_pwr_channel == PMM_PWR_Ch_VBAT2_eF2 ){
-				pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 = ERROR; ///0-ERROR
+			pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 = ERROR; ///0-ERROR
 
 		}else if( num_pwr_channel == PMM_PWR_Ch_PBMs_Logic ){
-				pmm_ptr->Error_PWR_Ch_State_PBMs_Logic = ERROR; ///0-ERROR
+			pmm_ptr->Error_PWR_Ch_State_PBMs_Logic = ERROR; ///0-ERROR
 
 		}else if( num_pwr_channel == PMM_PWR_Ch_Deploy_Logic ){
-				pmm_ptr->Error_PWR_Ch_State_Deploy_Logic = ERROR; ///0-ERROR
+			pmm_ptr->Error_PWR_Ch_State_Deploy_Logic = ERROR; ///0-ERROR
 
 		}else if( num_pwr_channel == PMM_PWR_Ch_Deploy_Power ){
-				pmm_ptr->Error_PWR_Ch_State_Deploy_Power = ERROR; ///0-ERROR
+			pmm_ptr->Error_PWR_Ch_State_Deploy_Power = ERROR; ///0-ERROR
 		
 		}else if( num_pwr_channel == PMM_PWR_Ch_5V_Bus ){
-				pmm_ptr->Error_PWR_Ch_State_5V_Bus = ERROR; ///0-ERROR
+			pmm_ptr->Error_PWR_Ch_State_5V_Bus = ERROR; ///0-ERROR
 
 		}else if( num_pwr_channel == PMM_PWR_Ch_3_3V_Bus ){
-				pmm_ptr->Error_PWR_Ch_State_3_3V_Bus = ERROR; ///0-ERROR
+			pmm_ptr->Error_PWR_Ch_State_3_3V_Bus = ERROR; ///0-ERROR
+
+		}else if( num_pwr_channel == PMM_PWR_Ch_I2C_Bus ){
+			pmm_ptr->Error_PWR_Ch_State_I2C_Bus = ERROR; ///0-ERROR
 		}
 	}
 	
@@ -356,9 +375,36 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 */
 ErrorStatus PDM_Get_PG_all_PWR_CH( _PMM *pmm_ptr ){
 
+	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 
 
-	//return error_I2C;
+	pmm_ptr->PWR_Supply_Main_PG = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_2));
+	pmm_ptr->PWR_Supply_Backup_PG = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_3));
+
+	if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_PBMs_Logic = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_4));
+	}else{
+		pmm_ptr->PWR_Ch_PG_PBMs_Logic = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	
+/*
+
+PE2 - Power good for PWR_Supply_Main_PG 
+PE3 - Power good for PWR_Supply_Backup_PG
+PE4 - Power good for PWR_Ch_PG_PBMs_Logic	
+		PE5 - Power good for PWR_Ch_PG_Deploy_LP	
+		PE7 - Power good for PWR_Ch_PG_Vbat2_eF2
+		PE8 - Power good for PWR_Ch_PG_Vbat2_eF1 
+		PE9 - Power good for PWR_Ch_PG_Vbat1_eF2
+		PE10 - Power good for PWR_Ch_PG_Vbat1_eF1 
+		PE11 - Power good for PWR_Ch_PG_CANmain
+		PE12 - Power good for PWR_Ch_PG_CANbackup
+		PE13 - Power good for PWR_Ch_PG_I2C_Bus
+		PE14 - Power good for PWR_Ch_PG_3_3V_Bus 
+		PE15 - Power good for PWR_Ch_PG_5V_Bus 
+	*/	
+	return error_I2C;
 }
 
 
