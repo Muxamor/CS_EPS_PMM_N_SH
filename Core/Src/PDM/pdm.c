@@ -34,7 +34,7 @@ ErrorStatus PDM_Get_Telemetry( _PDM *pdm_ptr ){
 		error_stutus += PDM_Get_PWR_CH_I_V_P( pdm_ptr, num_pwr_ch);
 	}
 
-	//Initialization temperature sensors.
+	//Get temperature value.
 	error_stutus += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_1, PDM_I2CADDR_TMP1075_1, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 	error_stutus += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_2, PDM_I2CADDR_TMP1075_2, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 	error_stutus += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );

@@ -86,8 +86,10 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 				#ifdef DEBUGprintf
 					Error_Handler();
 				#endif
+				pdm_ptr->Temp_sensor[0] = 0x7F;
 				pdm_ptr->Error_temp_sensor_1  = ERROR;
 			}else{
+				pdm_ptr->Temp_sensor[0] = 0x00;
 				pdm_ptr->Error_temp_sensor_1  = SUCCESS;
 			}
 			break;
@@ -97,8 +99,10 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 				#ifdef DEBUGprintf
 					Error_Handler();
 				#endif
+				pdm_ptr->Temp_sensor[1] = 0x7F;
 				pdm_ptr->Error_temp_sensor_2 = ERROR;
 			}else{
+				pdm_ptr->Temp_sensor[1] = 0x00;
 				pdm_ptr->Error_temp_sensor_2 = SUCCESS;
 			}
 			break;
@@ -108,8 +112,10 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 				#ifdef DEBUGprintf
 					Error_Handler();
 				#endif
+				pdm_ptr->Temp_sensor[2] = 0x7F;
 				pdm_ptr->Error_temp_sensor_3 = ERROR;
 			}else{
+				pdm_ptr->Temp_sensor[2] = 0x00;
 				pdm_ptr->Error_temp_sensor_3 = SUCCESS;
 			}
 			break;
@@ -119,8 +125,10 @@ ErrorStatus PDM_init_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 				#ifdef DEBUGprintf
 					Error_Handler();
 				#endif
+				pdm_ptr->Temp_sensor[3] = 0x7F;
 				pdm_ptr->Error_temp_sensor_4 = ERROR;
 			}else{
+				pdm_ptr->Temp_sensor[2] = 0x00;
 				pdm_ptr->Error_temp_sensor_4 = SUCCESS;
 			}
 			break;
