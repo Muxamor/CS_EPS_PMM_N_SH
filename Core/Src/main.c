@@ -98,9 +98,8 @@ int main(void){
 
 		//pmm_ptr->Detect_Active_CPU = 0;
 
-		//PMM_default_init_I2C_GPIOExt1(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1); //TMP function
-
 		ENABLE_TMUX1209_I2C();
+
 		PDM_init( pdm_ptr );
 		PMM_init( pmm_ptr );
 

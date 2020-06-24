@@ -37,6 +37,8 @@ ErrorStatus PMM_Get_Telemetry( _PMM *pmm_ptr ){
 	//Get temperature value.
 	error_stutus += PMM_Get_Temperature( pmm_ptr, PMM_I2Cx_TMP1075, PMM_I2CADDR_TMP1075 );
 
+	//Add get currect power supply 3.3V
+
 
 	if(error_stutus != SUCCESS){
 		return ERROR_N;

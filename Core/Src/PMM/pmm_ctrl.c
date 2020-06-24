@@ -369,42 +369,86 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 }
 
 
-/** @brief  Get Power Good all power channel status om PMM.
+/** @brief  Get Power Good all power channel status on PMM.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PDM_Get_PG_all_PWR_CH( _PMM *pmm_ptr ){
 
-	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+	//int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 
-
+	//Power supply Main and Backup working all the time and have no on/off pin.
 	pmm_ptr->PWR_Supply_Main_PG = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_2));
 	pmm_ptr->PWR_Supply_Backup_PG = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_3));
 
+	//Read PG PMM power chanels
 	if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
 		pmm_ptr->PWR_Ch_PG_PBMs_Logic = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_4));
 	}else{
 		pmm_ptr->PWR_Ch_PG_PBMs_Logic = SUCCESS;  // OK because power channel is DISABLE
 	}
 
-	
-/*
+	if( pmm_ptr->PWR_Ch_State_Deploy_Power == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_Deploy_LP = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_5));
+	}else{
+		pmm_ptr->PWR_Ch_PG_Deploy_LP = SUCCESS;  // OK because power channel is DISABLE
+	}
 
-PE2 - Power good for PWR_Supply_Main_PG 
-PE3 - Power good for PWR_Supply_Backup_PG
-PE4 - Power good for PWR_Ch_PG_PBMs_Logic	
-		PE5 - Power good for PWR_Ch_PG_Deploy_LP	
-		PE7 - Power good for PWR_Ch_PG_Vbat2_eF2
-		PE8 - Power good for PWR_Ch_PG_Vbat2_eF1 
-		PE9 - Power good for PWR_Ch_PG_Vbat1_eF2
-		PE10 - Power good for PWR_Ch_PG_Vbat1_eF1 
-		PE11 - Power good for PWR_Ch_PG_CANmain
-		PE12 - Power good for PWR_Ch_PG_CANbackup
-		PE13 - Power good for PWR_Ch_PG_I2C_Bus
-		PE14 - Power good for PWR_Ch_PG_3_3V_Bus 
-		PE15 - Power good for PWR_Ch_PG_5V_Bus 
-	*/	
-	return error_I2C;
+	if( pmm_ptr->PWR_Ch_State_Vbat2_eF2 == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_Vbat2_eF2 = LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_7);
+	}else{
+		pmm_ptr->PWR_Ch_PG_Vbat2_eF2 = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	if( pmm_ptr->PWR_Ch_State_Vbat2_eF1 == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_Vbat2_eF1 = LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_8);
+	}else{
+		pmm_ptr->PWR_Ch_PG_Vbat2_eF1 = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	if( pmm_ptr->PWR_Ch_State_Vbat1_eF2 == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_Vbat1_eF2 = LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_9);
+	}else{
+		pmm_ptr->PWR_Ch_PG_Vbat1_eF2 = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	if( pmm_ptr->PWR_Ch_State_Vbat1_eF1 == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_Vbat1_eF1 = LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_10);
+	}else{
+		pmm_ptr->PWR_Ch_PG_Vbat1_eF1 = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_CANmain = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_11));
+	}else{
+		pmm_ptr->PWR_Ch_PG_CANmain = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	if( pmm_ptr->PWR_Ch_State_CANbackup == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_CANbackup = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_12));
+	}else{
+		pmm_ptr->PWR_Ch_PG_CANbackup = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	if( pmm_ptr->PWR_Ch_State_I2C_Bus == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_I2C_Bus = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_13));
+	}else{
+		pmm_ptr->PWR_Ch_PG_I2C_Bus = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	if( pmm_ptr->PWR_Ch_State_3_3V_Bus == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_3_3V_Bus = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_14));
+	}else{
+		pmm_ptr->PWR_Ch_PG_3_3V_Bus = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	if( pmm_ptr->PWR_Ch_State_5V_Bus == ENABLE ){
+		pmm_ptr->PWR_Ch_PG_5V_Bus = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_15));
+	}else{
+		pmm_ptr->PWR_Ch_PG_5V_Bus = SUCCESS;  // OK because power channel is DISABLE
+	}
+
+	return SUCCESS;
 }
 
 
@@ -564,6 +608,8 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 	return error_I2C;
 }
+
+
 
 
 //********************change FN PMM_Set_MUX_CAN_CPUm_CPUb after 08.06 *********************//

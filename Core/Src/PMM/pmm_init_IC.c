@@ -152,47 +152,11 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 	return error_I2C;
 }
 
+//??????????????????????????????????????????????????
+//void PMM_Reset_Pull_Down_I2C_GPIOExt1(void)
+//void PMM_OFF_I2C_GPIOExt1(void)
+//void PMM_Reset_I2C_GPIOExt1(void)
+//void PMM_DeInit_I2C_GPIOExt1(void)
 
 
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TEMP   FN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-/** @brief  Default Init I2C GPIO extenders ( Ext1 (U3) ) on PMM module.
-	@param  *I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
-	@param  tca9539_addr - I2C address GPIO Exneder
-	@retval 0 - SUCCESS, -1 - ERROR_N.
-*/
-ErrorStatus PMM_default_init_I2C_GPIOExt1 (I2C_TypeDef *I2Cx, uint8_t tca9539_addr){ 
-
-	uint8_t i = 0;
-
-	SW_TMUX1209_I2C_main_PMM();// Switch MUX to pmm I2C bus on PMM
-
-	for( i = 0; i < pmm_i2c_attempt_conn; i++){
-		
-		if( TCA9539_Reset_output_pin(I2Cx, tca9539_addr, TCA9539_IO_ALL ) == SUCCESS ){
-			break;
-		}
-
-		LL_mDelay(pmm_i2c_delay_att_conn);
-
-		if( i == (pmm_i2c_attempt_conn - 1) ) {
-			return ERROR_N;
-		}
-	}
-
-
-	for( i = 0; i < pmm_i2c_attempt_conn; i++){
-		
-		if( TCA9539_conf_IO_dir_output(I2Cx, tca9539_addr, TCA9539_IO_ALL ) == SUCCESS ){
-			break;
-		}
-
-		LL_mDelay(pmm_i2c_delay_att_conn);
-
-		if( i == (pmm_i2c_attempt_conn - 1) ) {
-			return ERROR_N;
-		}
-	}
-
-	return SUCCESS;
-}

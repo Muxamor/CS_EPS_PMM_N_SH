@@ -134,6 +134,7 @@ uint8_t PMM_Detect_MasterBackupCPU(void){
 
 }
 
+///!!!!!!!!!!!!!!!!!! Seems need delate. 
 /** @rief  Detect power reboot CPU block.
 	@param rebot_pwr - pointre to return detect value: 1 - was power reboot, 0- was NO power reboot
 	@retval 0 - SUCCESS, 0 - ERROR_N.
