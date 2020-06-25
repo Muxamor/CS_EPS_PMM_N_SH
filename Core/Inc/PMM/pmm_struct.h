@@ -34,7 +34,7 @@ typedef struct{
 	uint16_t PWR_Ch_Vbat2_eF2_Power_val; 
 
 	int16_t  PWR_Supply_Main_eF_in_Current_val;
-	int16_t  PWR_Supply_Maim_eF_out_Current_val;
+	int16_t  PWR_Supply_Main_eF_out_Current_val;
 	int16_t  PWR_Supply_Backup_eF_in_Current_val;
 	int16_t  PWR_Supply_Backup_eF_out_Current_val;
 	
@@ -85,6 +85,7 @@ typedef struct{
 	uint32_t Error_PWR_Mon_Vbat2_eF2			:1; //=0 -OK, = 1-error I2C INA231
 	uint32_t Error_I2C_GPIO_Ext1 				:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
 	uint32_t Error_I2C_GPIO_Ext2 				:1;
+	uint32_t Error_PWR_Supply_m_b_Curr_Mon		:1; //=0 -OK, = 1-error I2C Current meas. ADC (U65).
 	uint32_t Error_FRAM1		 				:1; //=0 -OK, = 1-error FRAM1 no connection
 	uint32_t Error_FRAM2		 				:1; //=0 -OK, = 1-error FRAM2 no connection
 	uint32_t :11;

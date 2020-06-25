@@ -52,6 +52,8 @@ uint8_t UART_CHANGE_ACTIVE_CPU_FLAG=0;
 
 int main(void){
 
+
+
 	_PDM pdm = {0}, *pdm_ptr = &pdm;
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 
@@ -105,6 +107,9 @@ int main(void){
 
 		LL_mDelay(50); //Delay for startup power supply
 
+		while(1){
+			PMM_Get_PWR_Supply_m_b_I( pmm_ptr, PMM_I2Cx_PowerADC, PMM_I2CADDR_PowerADC);
+		}
 		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
 		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
 

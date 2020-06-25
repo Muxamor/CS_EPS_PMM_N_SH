@@ -102,6 +102,7 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 	error_stutus += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1);
 	error_stutus += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2);
 
+	error_stutus += ADS1015_init( pmm_ptr, PMM_I2Cx_PowerADC, PMM_I2CADDR_PowerADC);
 
 	if(error_stutus != SUCCESS){
 		#ifdef DEBUGprintf

@@ -7,6 +7,7 @@
 #include "TMP1075.h"
 #include "TCA9539.h"
 #include "INA231.h"
+#include "ADS1015.h"
 #include "pmm_config.h"
 #include "pmm_struct.h"
 
@@ -147,6 +148,54 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR; 
 		}
 
+	}
+
+	return error_I2C;
+}
+
+/** @brief  Init ADS1015 on PMM module.
+    @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
+    @param  *I2Cx - Number I2C bus.
+	@param  I2C_ADS1015_addr - I2C addres  
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
+ErrorStatus ADS1015_init( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr){
+
+	uint8_t i = 0;
+	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+
+	SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
+
+	//Setup ADS1015
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+		if ( ADS1015_setup_gain_FSR(I2Cx, I2C_ADS1015_addr, ADS1015_FSR_4096mV) == SUCCESS ){
+			if ( ADS1015_setup_mux(I2Cx, I2C_ADS1015_addr, ADS1015_AINp0_AINnGND) == SUCCESS ){
+				if (ADS1015_setup_conv_mode(I2Cx, I2C_ADS1015_addr, ADS1015_SINGLE_SHOT_MODE) == SUCCESS ){
+					if ( ADS1015_setup_conv_data_rate(I2Cx, I2C_ADS1015_addr, ADS1015_1600_SPS) == SUCCESS ){
+						if ( ADS1015_setup_comp_mode(I2Cx, I2C_ADS1015_addr, ADS1015_TRADITIONAL_COMP) == SUCCESS ){
+							if ( ADS1015_setup_comp_pol(I2Cx, I2C_ADS1015_addr, ADS1015_ACTIVE_LOW_POL) == SUCCESS ){
+								if ( ADS1015_setup_latching_comp(I2Cx, I2C_ADS1015_addr, ADS1015_NONLATCHING_COMP) == SUCCESS ){
+									error_I2C = ADS1015_setup_comp_queue(I2Cx, I2C_ADS1015_addr, ADS1015_DISABLE_COMPARATOR);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pmm_i2c_delay_att_conn );
+		}
+	}
+
+
+	if( error_I2C == ERROR ){
+		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = ERROR;
+	}else{
+		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = SUCCESS;
 	}
 
 	return error_I2C;

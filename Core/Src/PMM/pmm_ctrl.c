@@ -7,6 +7,7 @@
 #include "TMP1075.h"
 #include "TCA9539.h"
 #include "INA231.h"
+#include "ADS1015.h"
 #include "pmm_struct.h"
 #include "pmm_config.h"
 
@@ -608,6 +609,155 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 	return error_I2C;
 }
+
+
+
+/** @brief  Average 16 measuring for ADS1015.
+	@param  *I2Cx - Number I2C bus.
+	@param  I2C_ADS1015_addr - I2C addres
+	@param  num_pwr_ch - number power channel.
+							PMM_PWR_Ch_VBAT1_eF1
+							PMM_PWR_Ch_VBAT1_eF2
+							PMM_PWR_Ch_VBAT2_eF1
+							PMM_PWR_Ch_VBAT2_eF2
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+
+
+ErrorStatus ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t num_ch_mux, uint8_t average_num, float *average_data){
+
+	uint8_t i = 0;
+	uint8_t j = 0;
+	int8_t error_I2C = ERROR_N;
+	uint8_t conv_status = 0;
+	uint8_t timeout = 0;
+	float data = 0.0;
+	float total_data = 0.0;
+
+	i=0;
+	error_I2C = ERROR_N;
+
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){///Read temperature.
+
+		error_I2C = ADS1015_setup_mux(I2Cx, I2C_ADS1015_addr, num_ch_mux );
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pmm_i2c_delay_att_conn );
+		}
+	}
+
+	if(error_I2C != SUCCESS ){
+		return ERROR_N;
+	}
+
+	for(j = 0; j < average_num; j++ ){
+
+		//Read INA231
+		i=0;
+		error_I2C = ERROR_N;
+
+		while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){///Read temperature.
+
+			error_I2C = ADS1015_start_single_conv(I2Cx, I2C_ADS1015_addr);
+
+			if( error_I2C != SUCCESS ){
+				i++;
+				LL_mDelay( pmm_i2c_delay_att_conn );
+			}
+		}
+
+
+		if( error_I2C == SUCCESS ){
+
+			timeout = 0;
+			error_I2C = ERROR_N;
+
+			while(!conv_status){
+				error_I2C = ADS1015_read_conv_status(I2Cx, I2C_ADS1015_addr, &conv_status);
+
+				timeout++;
+
+				if(timeout == 255){
+					return ERROR_N;
+				}
+			}
+			
+			ADS1015_read_Volts_float(I2Cx, I2C_ADS1015_addr, &data);
+			total_data = total_data + data;
+		}else{
+
+			return ERROR_N;
+		}	
+	}
+
+	*average_data = total_data / average_num;
+
+	return SUCCESS;
+}
+
+
+ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr){
+
+	//uint8_t i = 0;
+	int8_t error_I2C = ERROR_N;
+	float ch0_meas = 0.0;
+	float ch1_meas = 0.0;
+	float ch2_meas = 0.0;
+	float ch3_meas = 0.0;
+	int16_t Backup_eF_in_Current_val = 0;
+	int16_t Backup_eF_out_Current_val = 0;
+	int16_t Main_eF_in_Current_val = 0;
+	int16_t Main_eF_out_Current_val = 0;
+
+	SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
+
+	if( ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp0_AINnGND, 16, &ch0_meas ) == SUCCESS ){
+		if( ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp1_AINnGND, 16, &ch1_meas ) == SUCCESS ){
+			if( ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp2_AINnGND, 16, &ch2_meas ) == SUCCESS ){
+				 error_I2C = ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp3_AINnGND, 16, &ch3_meas );
+			}
+		}
+	}
+
+	if( error_I2C == SUCCESS) {
+
+		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = SUCCESS;
+
+		Main_eF_in_Current_val = (int16_t)(( ch1_meas * 495.0 ) - 13.0 ); //Current in mA. (-13) - correction coefficient
+		Main_eF_out_Current_val = (int16_t)(( ch3_meas * 2778.0 ) - 13.0 ); //Current in mA. (-13) - correction coefficient
+
+
+		Backup_eF_in_Current_val = (int16_t)(( ch0_meas * 495.0 ) - 13.0 ); //Current in mA. (-13) - correction coefficient
+		Backup_eF_out_Current_val = (int16_t)(( ch2_meas * 2778.0 ) - 13.0 ); //Current in mA. (-13) - correction coefficient
+
+		if( (Main_eF_out_Current_val - Main_eF_in_Current_val) < 5 ){ // Small currents are poorly measured. This is incorrect measurement protection
+			pmm_ptr->PWR_Supply_Main_eF_in_Current_val = 0;
+			pmm_ptr->PWR_Supply_Main_eF_out_Current_val = 0;
+		}else{
+			pmm_ptr->PWR_Supply_Main_eF_in_Current_val = Main_eF_in_Current_val;
+			pmm_ptr->PWR_Supply_Main_eF_out_Current_val = Main_eF_out_Current_val;
+		}
+
+		if( (Backup_eF_out_Current_val - Backup_eF_in_Current_val) < 5 ){// Small currents are poorly measured. This is incorrect measurement protection
+			pmm_ptr->PWR_Supply_Backup_eF_in_Current_val = 0;
+			pmm_ptr->PWR_Supply_Backup_eF_out_Current_val = 0;
+		}else{
+			pmm_ptr->PWR_Supply_Backup_eF_in_Current_val = Backup_eF_in_Current_val;
+			pmm_ptr->PWR_Supply_Backup_eF_out_Current_val = Backup_eF_out_Current_val;
+		}
+
+	}else{
+		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = ERROR;
+		pmm_ptr->PWR_Supply_Main_eF_in_Current_val = 0;
+		pmm_ptr->PWR_Supply_Main_eF_out_Current_val = 0;
+		pmm_ptr->PWR_Supply_Backup_eF_in_Current_val = 0;
+		pmm_ptr->PWR_Supply_Backup_eF_out_Current_val = 0;
+	}
+
+	return error_I2C;
+}
+
 
 
 
