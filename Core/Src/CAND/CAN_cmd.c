@@ -351,8 +351,8 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr){
         CAN_IVar5_telemetry.CAN_Subsystem_power_line_status = ( CAN_IVar5_telemetry.CAN_Subsystem_power_line_status | (1 << 7) );
     }
 
-//	    CAN_IVar5_telemetry.CAN_SES_current_consumption                     =  0xB1B2;
-//	    CAN_IVar5_telemetry.CAN_SES_power_supply                            =  0xB3B4;
+    CAN_IVar5_telemetry.CAN_SES_current_consumption                     = (uint16_t)(pmm_ptr->PWR_Supply_Backup_eF_out_Current_val + pmm_ptr->PWR_Supply_Main_eF_out_Current_val);
+    CAN_IVar5_telemetry.CAN_SES_Voltage_power_supply                    = 3300; // Позже придумать как мерить. 
 //	    CAN_IVar5_telemetry.CAN_Full_charge_discharge_power                 =  0xB5B6;
 //	    CAN_IVar5_telemetry.CAN_Total_power_SB                              =  0xB7B8;
 
@@ -719,7 +719,7 @@ void CAN_Var5_fill_telemetry_const(void){
 
     CAN_IVar5_telemetry.CAN_Subsystem_power_line_status                 =  0xB0;
     CAN_IVar5_telemetry.CAN_SES_current_consumption                     =  0xB1B2;
-    CAN_IVar5_telemetry.CAN_SES_power_supply                            =  0xB3B4;
+    CAN_IVar5_telemetry.CAN_SES_Voltage_power_supply                    =  0xB3B4;
     CAN_IVar5_telemetry.CAN_Full_charge_discharge_power                 =  0xB5B6;
     CAN_IVar5_telemetry.CAN_Total_power_SB                              =  0xB7B8;
     CAN_IVar5_telemetry.CAN_Spacecraft_total_power                      =  0xB9BA;
