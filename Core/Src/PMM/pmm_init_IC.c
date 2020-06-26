@@ -193,6 +193,9 @@ ErrorStatus ADS1015_init( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_
 
 
 	if( error_I2C == ERROR ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = ERROR;
 	}else{
 		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = SUCCESS;
@@ -201,11 +204,119 @@ ErrorStatus ADS1015_init( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_
 	return error_I2C;
 }
 
-//??????????????????????????????????????????????????
-//void PMM_Reset_Pull_Down_I2C_GPIOExt1(void)
-//void PMM_OFF_I2C_GPIOExt1(void)
-//void PMM_Reset_I2C_GPIOExt1(void)
-//void PMM_DeInit_I2C_GPIOExt1(void)
+/** @brief  DeInit I2C GPIO Expander TCA9539. Through I2C write the default value of registers
+    @param 	*pmm_ptr - pointer to structure which contain all information about PMM.
+    @param  *I2Cx - Number I2C bus.
+	@param  tca9539_addr - I2C address TCA9539.
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
+ErrorStatus PMM_DeInit_I2C_GPIOExt (_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tca9539_addr){
+	
+	uint8_t i = 0;
+	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+
+	//Setup INA231
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+		if ( TCA9539_conf_IO_dir_input( I2Cx, tca9539_addr, TCA9539_IO_ALL ) == SUCCESS ){
+				error_I2C = TCA9539_Set_output_pin( I2Cx, tca9539_addr, TCA9539_IO_ALL );
+		}
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pmm_i2c_delay_att_conn );
+		}
+	}
+
+	if( error_I2C == ERROR ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pmm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
+	}else{
+		pmm_ptr->Error_I2C_GPIO_Ext1 = SUCCESS;
+	}
+
+	return error_I2C;
+}
+
+
+/** @brief  Hard reset TCA9539 GPIOExt, reset pin TCA9539  pull down than no pull is free.
+    @param 	tca9539_addr - I2C address GPIO Expander.
+	@retval None
+*/
+void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
+
+	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
+
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_2);
+		LL_mDelay(2);
+		LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_2);
+
+		GPIO_InitStruct.Pin =  LL_GPIO_PIN_2;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+		//need write
+	}
+
+}
+
+/** @brief  Reset pin TCA9539 GPIOExt pull down.
+    @param 	tca9539_addr - I2C address GPIO Expander.
+	@retval None
+*/
+void PMM_Reset_pin_Pull_Down_I2C_GPIOExt( uint8_t tca9539_addr ){
+
+	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
+
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_2);
+
+	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+		//need write
+	}
+}
+
+/** @brief  Reset pin TCA9539 GPIOExt no pull is free.
+    @param 	tca9539_addr - I2C address GPIO Expander.
+	@retval None
+*/
+void PMM_Reset_pin_Free_I2C_GPIOExt( uint8_t tca9539_addr ){
+
+	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
+
+		GPIO_InitStruct.Pin =  LL_GPIO_PIN_2;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+		//need write
+	}
+}
+
 
 
 
