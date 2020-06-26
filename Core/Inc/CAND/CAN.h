@@ -199,7 +199,7 @@ struct CAN_IVar5{
     //Массив командных регистров линий питания                            |                               |
     uint8_t  CAN_Subsystem_power_line_status;                       //+113    |  const = 0xB0                 |   Статус линии пит. подсистем, битовая маска
     uint16_t CAN_SES_current_consumption;                           //+114    |  const = 0xB1B2               |   Ток потребления модуля СЭС
-    uint16_t CAN_SES_power_supply;                                  //+116    |  const = 0xB3B4               |   Напряжение питания модуля СЭС
+    uint16_t CAN_SES_Voltage_power_supply;                          //+116    |  const = 0xB3B4               |   Напряжение питания модуля СЭС
     uint16_t CAN_Full_charge_discharge_power;                       //+118    |  const = 0xB5B6               |   Полная мощность зарядки/разрядки АБ
     uint16_t CAN_Total_power_SB;                                    //+120    |  const = 0xB7B8               |   Полная вырабатываемая мощность СБ
     uint16_t CAN_Spacecraft_total_power;                            //+122    |  const = 0xB9BA               |   Полная мощность потребления КА

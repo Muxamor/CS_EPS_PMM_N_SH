@@ -15,6 +15,8 @@
 
 #define PMM_BURN_TIME1			1000  // millisec
 #define PMM_BURN_TIME2			2000  // millisec
+#define PMM_BURN_TIME3			3000
+#define PMM_BURN_CONST_TIME		5000
 
 #define PMM_EN_SW_DP_Ch1		0x01
 #define PMM_EN_SW_DP_Ch2		0x02
@@ -26,6 +28,8 @@
 
 #define PMM_30MIN_DELAY			1800000  // millisec
 #define PMM_1MIN_DELAY			60000  // millisec
+#define PMM_1SEC_DELAY			1000  // millisec
+
 
 #define Check_error_status		if(status != SUCCESS){\
 									Error_Handler();\
@@ -152,6 +156,33 @@ ErrorStatus PMM_check_switch(uint8_t switch_num, uint8_t *state){
 	return SUCCESS;
 }
 
+ErrorStatus PMM_check_wire(uint32_t burn_time, uint8_t wire_num){
+	int8_t status = 0;
+	float meas_voltage = 0;
+	uint8_t burn_status = 0;
+
+	TIM_init(TIM2, burn_time);
+	while(TIM2_finished != 1){
+		status += ADS1015_average_meas(I2C4, I2C_ADS1015_ADDR, &meas_voltage);  // read the voltage on the limit switches of "deploy control"
+		if(status != SUCCESS){
+			PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);  //  In case of an error, we return to the initial state
+			PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);
+			return ERROR_N;
+		}
+
+		if((meas_voltage*1000 > (PMM_BOTH_SWITCH_OFF - 100)) && (meas_voltage*1000 < (PMM_BOTH_SWITCH_OFF + 100))){ // Если пережгли обе перемычки, то выходим
+			burn_status = 0;
+			PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);  //  In case of an error, we return to the initial state
+			PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);
+			break;
+		}
+		else{
+			burn_status = 1; // Otherwise, we will burn again.
+		}
+	}
+	return burn_status;
+}
+
 /** @brief	Burning a wire for antennas and power deployment.
     @param  burn_time1 - time during which current will be supplied to the wire.
     @param  burn_time2 - if the first time is not enough, then the current will be supplied additionally for a given time.
@@ -162,10 +193,9 @@ ErrorStatus PMM_check_switch(uint8_t switch_num, uint8_t *state){
     		0x08 : PMM_EN_SW_DP_Ch4 (Y+ side deploy power)
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus PMM_burn_the_wire(uint32_t burn_time1, uint32_t burn_time2, uint8_t wire_num){
+ErrorStatus PMM_burn_the_wire(uint32_t burn_const_time, uint32_t burn_time1, uint32_t burn_time2, uint32_t burn_time3, uint8_t wire_num){
 
 	int8_t status = 0;
-	int16_t meas_voltage = 0;
 	uint8_t burn_status = 0;
 
 	/*
@@ -182,62 +212,40 @@ ErrorStatus PMM_burn_the_wire(uint32_t burn_time1, uint32_t burn_time2, uint8_t 
 		return ERROR_N;
 	}
 
-	TIM2_init(burn_time1);
+	TIM_init(TIM2, burn_const_time);
+	while(TIM2_finished != 1){
+		//waiting first time without reading ADC
+	}
 
-	while(TIM_finished != 1){
-		status += ADS1015_read_mVolts_int16(I2C4, I2C_ADS1015_ADDR, &meas_voltage);  // read the voltage on the limit switches of "deploy control"
-		if(status != SUCCESS){
-			PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);  //  In case of an error, we return to the initial state
-			PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);
-			return ERROR_N;
-		}
-
-		if((meas_voltage > (PMM_BOTH_SWITCH_OFF - 100)) && (meas_voltage < (PMM_BOTH_SWITCH_OFF + 100))){ // Если пережгли обе перемычки, то выходим
-			burn_status = 0;
-			break;
-		}
-		else{
-			burn_status = 1; // Otherwise, we will burn again.
-		}
+	burn_status = PMM_check_wire(burn_time1, wire_num);
+	if(burn_status == ERROR_N){
+		PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);
+		PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);
+		return ERROR_N;
 	}
 	/*
 		5.2) If during the set time we still have not reached the desired ADC value. Then step 5.1 is repeated with a different set time.
 	 */
 	if(burn_status == 1){
-
-		TIM2_init(burn_time2);
-
-		while(TIM_finished != 1){
-			status += ADS1015_read_mVolts_int16(I2C4, I2C_ADS1015_ADDR, &meas_voltage); // read the voltage on the limit switches of "deploy control"
-			if(status != SUCCESS){
-				PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);  // In case of an error, we return to the initial state
+		burn_status = PMM_check_wire(burn_time2, wire_num);
+		if(burn_status == ERROR_N){
+			PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);
+			PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);
+			return ERROR_N;
+		}
+		if(burn_status == 1){
+			burn_status = PMM_check_wire(burn_time3, wire_num);
+			if(burn_status == ERROR_N){
+				PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);
 				PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);
 				return ERROR_N;
 			}
+			if(burn_status == 1){
+				PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);
+				PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);  // Stop cutting the jumper.
 
-			// If both jumpers are burned, then exit
-			if((meas_voltage > (PMM_BOTH_SWITCH_OFF - 100)) && (meas_voltage < (PMM_BOTH_SWITCH_OFF + 100))){
-				burn_status = 0;
-				break;
+				return ERROR_N;
 			}
-			else{
-				burn_status = 2;
-			}
-		}
-		if(burn_status == 2){
-			// (here we can add an option with the return of a partial disclosure error when the voltage is within PMM_ONE_SWITCH_ON)
-			Error_Handler();
-
-			PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);  // Stop cutting the jumper.
-
-			return ERROR_N;
-		}
-		else{ //  Otherwise, return an error.
-			Error_Handler();
-
-			PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);  // Stop cutting the jumper.
-
-			return ERROR_N;
 		}
 	}
 
@@ -251,7 +259,10 @@ ErrorStatus PMM_burn_the_wire(uint32_t burn_time1, uint32_t burn_time2, uint8_t 
 ErrorStatus PMM_Deploy(){
 
 	int8_t status = 0;
+	uint8_t i;
+	uint8_t positive_cases = 0;
 	uint8_t inside_status = 1;
+	uint8_t switch_trouble = 0;
 	uint8_t OUT1_pin_status = 0xFF;
 	uint8_t OUT2_pin_status = 0xFF;
 	uint8_t PMM_EN_SW_DP_Ch1_status, PMM_EN_SW_DP_Ch2_status, PMM_EN_SW_DP_Ch3_status, PMM_EN_SW_DP_Ch4_status = 0; // временно заменяют поля структуры
@@ -269,27 +280,61 @@ ErrorStatus PMM_Deploy(){
 		status += PMM_check_switch(PMM_OUT2, &OUT2_pin_status);
 		Check_error_status;
 
-		if((OUT1_pin_status == 1) || (OUT2_pin_status == 1)){ // Outside the container?
-			inside_status = 0;
+		if((OUT1_pin_status == 0) || (OUT2_pin_status == 0)){ // Outside the container?
+			for(i = 0; i < 10; i++){
+				status += PMM_check_switch(PMM_OUT1, &OUT1_pin_status);
+				status += PMM_check_switch(PMM_OUT2, &OUT2_pin_status);
+				Check_error_status;
+				if((OUT1_pin_status == 0) && (OUT2_pin_status == 0)){ // Outside the container?
+					switch_trouble = 0;
+					positive_cases++;
+				}
+				else if(((OUT1_pin_status == 0) && (OUT2_pin_status != 0)) || ((OUT1_pin_status != 0) && (OUT2_pin_status == 0))){
+					switch_trouble = 1;
+				}
+				else{
+					switch_trouble = 2;
+				}
+				TIM_init(TIM2, PMM_1SEC_DELAY);
+				while(TIM2_finished != 1){
+					//WAITING 1 SEC
+				}
+				if(switch_trouble == 2){
+					break;
+				}
+
+			}
+			if(switch_trouble == 0 && positive_cases == 10){
+				inside_status = 0;
+			}
+			else if(switch_trouble == 1 || positive_cases < 10){
+				//CHECK SOLAR PANEL POWER
+				/* if(ADC_READ_POWER() == 2W){
+				      inside_status = 0;
+				   }
+				*/
+				inside_status = 0;
+			}
+
 		}
 		else{
-			TIM2_init(PMM_1MIN_DELAY);	// Read once a minute.
+			TIM_init(TIM2, PMM_1MIN_DELAY);
 			status += PMM_Disable_eF_Deploy_L();  // While waiting, turn off the power to the logic.
 			Check_error_status;
-			while(TIM_finished != 1){
-				//WAITING 1 MINUTE
+			while(TIM2_finished != 1){
+				//WAITING 1 SEC
 			}
 			status += PMM_Enable_eF_Deploy_L();  // Return logic power
 			Check_error_status;
 		}
+
 	}
 
 	//	As soon as we read the state that we have left the container, we begin the countdown of 30 minutes.
-	TIM2_init(PMM_30MIN_DELAY);
-//	TIM2_init(1000);
+	TIM_init(TIM2, 10000);
 	status += PMM_Disable_eF_Deploy_L(); // While waiting, turn off the power of the logic
 	Check_error_status;
-	while(TIM_finished != 1){
+	while(TIM2_finished != 1){
 		// WAITING 30 MINUTES
 	}
 	status += PMM_Enable_eF_Deploy_L();  // Return logic power
@@ -299,10 +344,11 @@ ErrorStatus PMM_Deploy(){
 	Check_error_status;
 
 	//4) Now that the entire deployment unit has been powered up, we can begin the process of deployment antennas and solar panels.
-	PMM_EN_SW_DP_Ch1_status = PMM_burn_the_wire(PMM_BURN_TIME1, PMM_BURN_TIME2, PMM_EN_SW_DP_Ch1);
-	PMM_EN_SW_DP_Ch2_status = PMM_burn_the_wire(PMM_BURN_TIME1, PMM_BURN_TIME2, PMM_EN_SW_DP_Ch2);
-	PMM_EN_SW_DP_Ch3_status = PMM_burn_the_wire(PMM_BURN_TIME1, PMM_BURN_TIME2, PMM_EN_SW_DP_Ch3);
-	PMM_EN_SW_DP_Ch4_status = PMM_burn_the_wire(PMM_BURN_TIME1, PMM_BURN_TIME2, PMM_EN_SW_DP_Ch4);
+
+	PMM_EN_SW_DP_Ch1_status = PMM_burn_the_wire(PMM_BURN_CONST_TIME, PMM_BURN_TIME1, PMM_BURN_TIME2, PMM_BURN_TIME3, PMM_EN_SW_DP_Ch1);
+	PMM_EN_SW_DP_Ch2_status = PMM_burn_the_wire(PMM_BURN_CONST_TIME, PMM_BURN_TIME1, PMM_BURN_TIME2, PMM_BURN_TIME3, PMM_EN_SW_DP_Ch2);
+	PMM_EN_SW_DP_Ch3_status = PMM_burn_the_wire(PMM_BURN_CONST_TIME, PMM_BURN_TIME1, PMM_BURN_TIME2, PMM_BURN_TIME3, PMM_EN_SW_DP_Ch3);
+	PMM_EN_SW_DP_Ch4_status = PMM_burn_the_wire(PMM_BURN_CONST_TIME, PMM_BURN_TIME1, PMM_BURN_TIME2, PMM_BURN_TIME3, PMM_EN_SW_DP_Ch4);
 
 	/*
 	 * Here you can fill in the structure of the state of the system, entering the state of the channels there.
