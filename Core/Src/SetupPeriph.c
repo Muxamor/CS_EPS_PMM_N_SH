@@ -472,6 +472,57 @@ void GPIO_Init(void){
 	/*SW_TMUX1209_I2C_main_PMM();	- Switch I2C line for comm. with the PMM module			*/
 	/****************************************************************************************/
 
+	/*-------------------------------------------------------------------------------------*/
+	//Setup TCA9539 GPIOExt1 controls pin RESET and INT. at PMM modules.
+	//Control power channel at PMM module.
+	GPIO_InitStruct.Pin =  LL_GPIO_PIN_8;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  	//Set Reset pin like input because if setup as output pin pull down and will twitch at the time of reboot CPU
+  	GPIO_InitStruct.Pin =  LL_GPIO_PIN_2;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+//  GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+//	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+//	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+//	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+//	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	/****************************************************************************************/
+
+	/*-------------------------------------------------------------------------------------*/
+	//Setup TCA9539 GPIOExt2 controls pin RESET and INT. at PMM modules.
+	GPIO_InitStruct.Pin =  LL_GPIO_PIN_7;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1);  // Reset pin down -> GPIOExt2 off, because not yet used in Norbi
+
+	/****************************************************************************************/
+
+
+	/*-------------------------------------------------------------------------------------*/
+	//Setup pins CPUx_RF_WG1, CPUx_RF_WG2, CPUx_RF_OP1, CPUx_RF_OP1.
+	GPIO_InitStruct.Pin =  LL_GPIO_PIN_1|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	/****************************************************************************************/
+
+
 
 	/*-------------------------------------------------------------------------------------*/
 	/* Configure GPIO pin to control write protaction on FRAM1 and FRAM2  FM24Cl64 */
@@ -499,7 +550,7 @@ void GPIO_Init(void){
 	/****************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/
-	/* Pins for detect Main/Backup mode for CPU  */
+	/* Configure pins for detect Main/Backup mode for CPU  */
 	/** PD9 | PD10 | PD11  = 1 -> Main CPU mode
 		PD9 | PD10 | PD11  = 0 -> Backup CPU mode
 		*/
@@ -532,7 +583,98 @@ void GPIO_Init(void){
   	LL_GPIO_Init(GPIOE, &GPIO_InitStruct);
   	/****************************************************************************************/
 
+
+
+	/*-------------------------------------------------------------------------------------*/
+	/* Set analog mode for free pins. */
+	/** Free pins*/
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_6|LL_GPIO_PIN_8|LL_GPIO_PIN_9|LL_GPIO_PIN_10|LL_GPIO_PIN_11|LL_GPIO_PIN_12;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_1|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_2|LL_GPIO_PIN_12|LL_GPIO_PIN_15;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_11;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_3|LL_GPIO_PIN_4;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_7|LL_GPIO_PIN_8|LL_GPIO_PIN_9|LL_GPIO_PIN_10|LL_GPIO_PIN_11;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	
+	/** Not use pins in Norbi.*/
+	//UART1 PAM
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_9|LL_GPIO_PIN_10;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+  	//UART2 PDM. Not use in Norbi
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_15;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+	
+	//UART2 and UART1 buffer EN. Not use in Norbi
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  	//I2C sys bus. Not use in Norbi
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_14;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+  	//I2C2 PAM PDM reserved. Not use in Norbi
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_13|LL_GPIO_PIN_14;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  	
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  	//CPUx_OE_Buffer_1, CPUx_OE_Buffer_2, CPUx_OE_Buffer_RF. Not use in Norbi
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_11|LL_GPIO_PIN_12|LL_GPIO_PIN_13;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  	
+
+
 }
+
 
 
 /** @rief  This function setup interrupts for all ports and inside event .
