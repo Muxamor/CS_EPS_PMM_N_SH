@@ -615,16 +615,12 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 /** @brief  Average 16 measuring for ADS1015.
 	@param  *I2Cx - Number I2C bus.
 	@param  I2C_ADS1015_addr - I2C addres
-	@param  num_pwr_ch - number power channel.
-							PMM_PWR_Ch_VBAT1_eF1
-							PMM_PWR_Ch_VBAT1_eF2
-							PMM_PWR_Ch_VBAT2_eF1
-							PMM_PWR_Ch_VBAT2_eF2
+	@param  num_ch_mux - number channel mux ADC.
+	@param  average_num - average number.
+	@param  *average_data - pointer to get average data. 
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-
-
-ErrorStatus ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t num_ch_mux, uint8_t average_num, float *average_data){
+ErrorStatus PMM_ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t num_ch_mux, uint8_t average_num, float *average_data){
 
 	uint8_t i = 0;
 	uint8_t j = 0;
@@ -648,6 +644,9 @@ ErrorStatus ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, ui
 	}
 
 	if(error_I2C != SUCCESS ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERROR_N;
 	}
 
@@ -679,6 +678,9 @@ ErrorStatus ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, ui
 				timeout++;
 
 				if(timeout == 255){
+					#ifdef DEBUGprintf
+						Error_Handler();
+					#endif
 					return ERROR_N;
 				}
 			}
@@ -686,7 +688,9 @@ ErrorStatus ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, ui
 			ADS1015_read_Volts_float(I2Cx, I2C_ADS1015_addr, &data);
 			total_data = total_data + data;
 		}else{
-
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
 			return ERROR_N;
 		}	
 	}
@@ -697,6 +701,12 @@ ErrorStatus ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, ui
 }
 
 
+/** @brief  Get current input and output eFuse of power supply main and backup.
+	@param  *pdm_ptr - pointer to struct which contain all information about PMM.
+	@param  *I2Cx - number I2C channel.
+	@param  I2C_ADS1015_addr - I2C address ADS1015.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
 ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr){
 
 	//uint8_t i = 0;
@@ -712,10 +722,10 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 
 	SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
 
-	if( ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp0_AINnGND, 16, &ch0_meas ) == SUCCESS ){
-		if( ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp1_AINnGND, 16, &ch1_meas ) == SUCCESS ){
-			if( ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp2_AINnGND, 16, &ch2_meas ) == SUCCESS ){
-				 error_I2C = ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp3_AINnGND, 16, &ch3_meas );
+	if( PMM_ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp0_AINnGND, 16, &ch0_meas ) == SUCCESS ){
+		if( PMM_ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp1_AINnGND, 16, &ch1_meas ) == SUCCESS ){
+			if( PMM_ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp2_AINnGND, 16, &ch2_meas ) == SUCCESS ){
+				 error_I2C = PMM_ADS1015_average_meas(I2Cx, I2C_ADS1015_addr, ADS1015_AINp3_AINnGND, 16, &ch3_meas );
 			}
 		}
 	}
@@ -748,6 +758,9 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 		}
 
 	}else{
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = ERROR;
 		pmm_ptr->PWR_Supply_Main_eF_in_Current_val = 0;
 		pmm_ptr->PWR_Supply_Main_eF_out_Current_val = 0;

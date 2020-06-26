@@ -1,4 +1,5 @@
 #include "stm32l4xx.h"
+#include "Error_Handler.h"
 #include "pmm_config.h"
 #include "pmm_struct.h"
 #include "pmm_ctrl.h"
@@ -41,6 +42,9 @@ ErrorStatus PMM_Get_Telemetry( _PMM *pmm_ptr ){
 	error_stutus += PMM_Get_PWR_Supply_m_b_I( pmm_ptr, PMM_I2Cx_PowerADC, PMM_I2CADDR_PowerADC);
 
 	if(error_stutus != SUCCESS){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 		return ERROR_N;
 	}
 
