@@ -80,10 +80,10 @@ ErrorStatus USART_send_string(USART_TypeDef* USARTx, uint8_t *Data){
 
 /** @brief  This function send a string to the USART.
 	* @param  LPUARTx - pointer to the UART port number.
-	* @param  Data - send_arrey to the send .
+	* @param  Data - send_array to the send .
 	* @retval  0 -SUCCESS, -1 -ERROR
 	*/
-ErrorStatus USART_send_arrey(USART_TypeDef* USARTx, uint8_t send_array[], uint32_t size_array){
+ErrorStatus USART_send_array(USART_TypeDef* USARTx, uint8_t send_array[], uint32_t size_array){
 
 	uint32_t i = 0;
 
@@ -167,10 +167,10 @@ ErrorStatus LPUART_send_string(USART_TypeDef* LPUARTx, uint8_t *Data){
 
 /** @brief  This function send a string to the LPUART (low power).
 	* @param  LPUARTx - pointer to the UART port number.
-	* @param  Data - send_arrey to the send .
+	* @param  Data - send_array to the send .
 	* @retval  0 -SUCCESS, -1 -ERROR
 	*/
-ErrorStatus LPUART_send_arrey(USART_TypeDef* LPUARTx, uint8_t send_array[], uint32_t size_array){
+ErrorStatus LPUART_send_array(USART_TypeDef* LPUARTx, uint8_t send_array[], uint32_t size_array){
 
 	uint32_t i = 0;
 

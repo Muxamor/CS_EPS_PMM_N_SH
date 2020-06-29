@@ -314,21 +314,26 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr){
 	CAN_IVar5_telemetry.CAN_Channel5_current                            =  0x0000;
 	CAN_IVar5_telemetry.CAN_Channel6_current                            =  0x0000;
 
+	//***
     if( pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){  
         CAN_IVar5_telemetry.CAN_VBAT1_voltage                           =  pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val;  
     }else{
         CAN_IVar5_telemetry.CAN_VBAT1_voltage                           =  pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;  
     }
+    //---
 
+    //***
     if( pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val < 4000 ){  
         CAN_IVar5_telemetry.CAN_VBAT2_voltage                           =  pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val;  
     }else{
         CAN_IVar5_telemetry.CAN_VBAT2_voltage                           =  pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;  
     }
+    //---
 
     CAN_IVar5_telemetry.CAN_VBAT1_current                               = (uint16_t)( pmm_ptr->PWR_Ch_Vbat1_eF1_Current_val + pmm_ptr->PWR_Ch_Vbat1_eF2_Current_val );
     CAN_IVar5_telemetry.CAN_VBAT2_current                               = (uint16_t)( pmm_ptr->PWR_Ch_Vbat2_eF1_Current_val + pmm_ptr->PWR_Ch_Vbat2_eF2_Current_val );
 
+    //***
 	CAN_IVar5_telemetry.CAN_Subsystem_power_line_status                 =  0x00;
 	for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 
@@ -350,21 +355,23 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr){
 
         CAN_IVar5_telemetry.CAN_Subsystem_power_line_status = ( CAN_IVar5_telemetry.CAN_Subsystem_power_line_status | (1 << 7) );
     }
+    //---
 
     CAN_IVar5_telemetry.CAN_SES_current_consumption                     = (uint16_t)(pmm_ptr->PWR_Supply_Backup_eF_out_Current_val + pmm_ptr->PWR_Supply_Main_eF_out_Current_val);
     CAN_IVar5_telemetry.CAN_SES_Voltage_power_supply                    = 3300; // Позже придумать как мерить. 
 //	    CAN_IVar5_telemetry.CAN_Full_charge_discharge_power                 =  0xB5B6;
 //	    CAN_IVar5_telemetry.CAN_Total_power_SB                              =  0xB7B8;
 
+    //***
+	CAN_IVar5_telemetry.CAN_Spacecraft_total_power                      =  0x0000;
+	for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 
-		CAN_IVar5_telemetry.CAN_Spacecraft_total_power                      =  0x0000;
-		for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
+		CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + pdm_ptr->PWR_Channel[num_pwr_ch].Power_val;
+	}
 
-			CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + pdm_ptr->PWR_Channel[num_pwr_ch].Power_val;
-		}
-
-        CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + pmm_ptr->PWR_Ch_Vbat1_eF1_Power_val + pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val \
+    CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + pmm_ptr->PWR_Ch_Vbat1_eF1_Power_val + pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val \
                                                             + pmm_ptr->PWR_Ch_Vbat2_eF1_Power_val + pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val;
+    //---
 
 
 //
@@ -542,12 +549,13 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr){
     CAN_IVar5_telemetry.CAN_Line_VBAT1                                  =   CAN_IVar4_RegCmd.CAN_PWR_VBAT1;
     CAN_IVar5_telemetry.CAN_Line_VBAT2                                  =   CAN_IVar4_RegCmd.CAN_PWR_VBAT2;
 
-
+    //***
     if( pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){  
-        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val;  
+        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
     }else{
-        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;  
+        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;
     }
+    //---
 
 
     CAN_IVar5_telemetry.CAN_PMM_sensor1                                 =	(uint8_t)pmm_ptr->Temp_sensor;
@@ -577,8 +585,8 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr){
 	CAN_IVar5_telemetry.CAN_Beacon_subsystem_power_line_status		    =  CAN_IVar5_telemetry.CAN_Subsystem_power_line_status;
 	  //	    CAN_IVar5_telemetry.CAN_Beacon_full_charge_discharge_power		    =  0xB5B6;
 	  //	    CAN_IVar5_telemetry.CAN_Beacon_total_power_SB                       =  0xB7B8;
-	CAN_IVar5_telemetry.CAN_Beacon_spacecraft_total_power               = CAN_IVar5_telemetry.CAN_Spacecraft_total_power;
-	CAN_IVar5_telemetry.CAN_Beacon_median_PMM_temp					    = CAN_IVar5_telemetry.CAN_Median_PMM_temp;
+	CAN_IVar5_telemetry.CAN_Beacon_spacecraft_total_power               =  CAN_IVar5_telemetry.CAN_Spacecraft_total_power;
+	CAN_IVar5_telemetry.CAN_Beacon_median_PMM_temp					    =  CAN_IVar5_telemetry.CAN_Median_PMM_temp;
 	  //	    CAN_IVar5_telemetry.CAN_Beacon_median_PAM_temp					    =  0xBC;
 	CAN_IVar5_telemetry.CAN_Beacon_median_PDM_temp					    =  CAN_IVar5_telemetry.CAN_Median_PDM_temp;
 	  //	    CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[0] =  0xBE;
