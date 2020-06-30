@@ -55,8 +55,8 @@
 #define CPUmain 					0x00
 #define CPUbackup					0x01
 
-#define UART_CPUm_Addr 0x00
-#define UART_CPUb_Addr 0x01
+#define UART_CPUm_Addr 				0x00
+#define UART_CPUb_Addr 				0x01
 
 #define PMM_PWR_Ch_CANmain 			0x00
 #define PMM_PWR_Ch_CANbackup		0x01

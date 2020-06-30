@@ -3,7 +3,9 @@
 #include "stm32l4xx_ll_system.h"
 #include "stm32l4xx_it.h"
 #include "CAND/CAN.h"
+
 #include "uart_comm.h"
+#include "uart_eps_comm.h"
 
 /******************************************************************************/
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */ 
@@ -73,27 +75,112 @@ void SysTick_Handler(void){
 /******************************************************************************/
 
 
-extern uint8_t UART_CHANGE_ACTIVE_CPU_FLAG;
+extern _UART_EPS_COMM UART_M_eps_comm;
+
+
+typedef struct{
+
+	uint16_t expected_size_recv_pack;
+	uint16_t size_recv_pack;
+
+	uint8_t recv_pack_buf[UART_EPS_PACK_SIZE_BUFF];
+
+	uint8_t uart_unit_addr; 
+
+	uint8_t permit_recv_pack_flag     :1;
+	uint8_t stop_recv_pack_flag 	  :1;
+	uint8_t recv_pack_timeout_flag 	  :1;//?????
+	uint8_t waiting_answer_flag 	  :1;
+	uint8_t :4;
+
+}_UART_EPS_COMM;
+
+
+/**********EPS UART Protocol***********/
+// 0. (1 byte) 0xAA preamble.
+// 1. (1 byte) 0xYY destination address 254- broadcast package.
+// 2. (1 byte) 0xYY source address.
+// 3. (1 byte) 0xYY Package Tag 0x00-Command, 0x01-Answer, 0x02-Notification.
+// 4. (2 byte) 0xYYXX - Data size in package 0..65529.
+// 5. (2 byte) 0xYYXX - CRC-16-CCITT all package.
+/****************************************/
 
 /** @brief This function handles LPUARTq global interrupt */
 void LPUART1_IRQHandler(void){
-
-
 
 	uint8_t input_byte = 0;
 	if(LL_LPUART_IsActiveFlag_RXNE(LPUART1)){
 
 		input_byte = LL_LPUART_ReceiveData8(LPUART1);
 
-		if(input_byte == 0xAA || input_byte == 0xBB ){
+		// Geting preamble.
+		if(input_byte == 0xAA && UART_M_eps_comm.permit_recv_pack_flag  == 0){ 
+			UART_M_eps_comm.size_recv_pack = 0;
+			UART_M_eps_comm.recv_pack_buf[UART_M_eps_comm.size_recv_pack] = input_byte;
 
-			UART_CHANGE_ACTIVE_CPU_FLAG = 1;
+			UART_M_eps_comm.stop_recv_pack_flag = 0;
+			UART_M_eps_comm.permit_recv_pack_flag = 1;
+			UART_M_eps_comm.expected_size_recv_pack = 8; // 1(preabmle)+1(destination address)+1(source address)+1(package tag)+2(data size)+2(crc)
+			UART_M_eps_comm.size_recv_pack = 1;
+
+		// Geting and check address.
+		}else if( UART_M_eps_comm.permit_recv_pack_flag == 1 && UART_M_eps_comm.size_recv_pack == 1 ){
+
+				UART_M_eps_comm.recv_pack_buf[UART_M_eps_comm.size_recv_pack] = input_byte;
+			
+			if(	UART_M_eps_comm.recv_pack_buf[UART_M_eps_comm.size_recv_pack] == UART_M_eps_comm.uart_unit_addr || UART_M_eps_comm.recv_pack_buf[UART_M_eps_comm.size_recv_pack] == 254 ){ // Chaeck addres in parsel. 254- broadcast package.
+				
+				UART_M_eps_comm.size_recv_pack++;
+
+			}else{ // if the address did not match finish get parsel.
+				UART_M_eps_comm.permit_recv_pack_flag = 0;
+				UART_M_eps_comm.size_recv_pack = 0;
+			}
+		
+		// Geting the rest of the package.
+		}else if( UART_M_eps_comm.permit_recv_pack_flag == 1 && UART_M_eps_comm.size_recv_pack > 1 ){ 
+
+			UART_M_eps_comm.recv_pack_buf[UART_M_eps_comm.size_recv_pack] = input_byte;
+
+			//Get the package size we need to get
+			if(UART_M_eps_comm.size_recv_pack == 4 ){ 
+				
+				UART_M_eps_comm.expected_size_recv_pack = UART_M_eps_comm.expected_size_recv_pack + UART_M_eps_comm.recv_pack_buf[4]; 
+				
+				//If the packet size is larger than the receive buffer, we stop receiving the packet
+				if( UART_M_eps_comm.expected_size_recv_pack > UART_EPS_PACK_SIZE_BUFF ){ 
+					UART_M_eps_comm.permit_recv_pack_flag = 0;
+					UART_M_eps_comm.size_recv_pack = 0;
+				}
+			}
+
+			UART_M_eps_comm.size_recv_pack++;
+
+			//We received the package
+			if( UART_M_eps_comm.size_recv_pack >= UART_M_eps_comm.expected_size_recv_pack ){
+				UART_M_eps_comm.stop_recv_pack_flag = 1;
+			}
+
+		// Some byte 
+		}else{
+			UART_M_eps_comm.permit_recv_pack_flag = 0;
 		}
+
 	}
 
-
-
 }
+
+
+/** @brief This function handles USART3 global interrupt */
+void USART3_IRQHandler(void){
+
+	//uint8_t input_byte = 0;
+	if(LL_USART_IsActiveFlag_RXNE(USART3)){
+		//input_byte = LL_USART_ReceiveData8(USART3);
+	}
+}
+
+
 
 /** @brief This function handles UART5 global interrupt */
 void UART5_IRQHandler(void){
@@ -105,21 +192,13 @@ void UART5_IRQHandler(void){
 		input_byte = LL_USART_ReceiveData8(UART5);
 
 		if(input_byte == 0xAA || input_byte == 0xBB ){
-			UART_CHANGE_ACTIVE_CPU_FLAG = 1;
+			//UART_CHANGE_ACTIVE_CPU_FLAG = 1;
 		}
 	}
 }
 
 
 
-/** @brief This function handles USART3 global interrupt */
-void USART3_IRQHandler(void){
-
-	//uint8_t input_byte = 0;
-	if(LL_USART_IsActiveFlag_RXNE(USART3)){
-		//input_byte = LL_USART_ReceiveData8(USART3);
-	}
-}
 
 
 

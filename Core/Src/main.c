@@ -26,6 +26,7 @@
 #include "CAND/canv.h"
 
 #include "uart_comm.h"
+#include "uart_eps_comm.h"
 
 #include  <stdio.h>
 #include "fram.h"
@@ -45,7 +46,9 @@ extern uint64_t CAN_cmd_mask_status;
 extern uint8_t CAN1_exchange_timeout_flag;
 extern uint8_t CAN2_exchange_timeout_flag;
 
-uint8_t UART_CHANGE_ACTIVE_CPU_FLAG=0;
+_UART_EPS_COMM UART_M_eps_comm = {0};  // Main EPS UART is LPUART1
+_UART_EPS_COMM UART_B_eps_comm = {0};  // Backup EPS UART is USART3
+
 
 //LL_mDelay(1);
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release
@@ -142,15 +145,15 @@ int main(void){
 
 		while(1){
 
-			if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 ){
+		//	if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 ){
 				PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
 
 				USART_send_string( UART5, mas_string);
 
 				ENABLE_TMUX1209_I2C();
 
-				UART_CHANGE_ACTIVE_CPU_FLAG = 0;
-			}
+		//		UART_CHANGE_ACTIVE_CPU_FLAG = 0;
+		//	}
 
 
 			if(CAN_cmd_mask_status != 0){

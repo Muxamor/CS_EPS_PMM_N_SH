@@ -34,7 +34,8 @@ Core/Src/Error_Handler.c \
 Core/Src/SetupPeriph.c \
 Core/Src/i2c_comm.c \
 Core/Src/uart_comm.c \
-Core/Src/uart_terminal.c \
+Core/Src/uart_eps_terminal.c \
+Core/Src/uart_eps_comm.c \
 Core/Src/median_filter.c \
 Core/Src/Fn_CRC16.c \
 Core/Src/tim_pwm.c \
