@@ -39,9 +39,9 @@
 									<listOptionValue builtIn="false" value="../Core/Inc/PAM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/PMM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/PDM"/>
-									<listOptionValue builtIn="false" value="../Core/Inc/BATT"/>
+									<listOptionValue builtIn="false" value="../Core/Inc/PBM"/>
 									<listOptionValue builtIn="false" value="../Core/Inc/CAND"/>
-									<listOptionValue builtIn="false" value="/CS_EPS_PMM_N_SH/Core/Inc/FLASH"/>
+									<listOptionValue builtIn="false" value="../Core/Inc/FLASH"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1059973731" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>

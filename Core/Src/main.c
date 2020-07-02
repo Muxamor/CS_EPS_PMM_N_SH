@@ -29,6 +29,17 @@
 
 #include  <stdio.h>
 #include "fram.h"
+
+#include "DS2777.h"
+
+#include "PBM_config.h"
+#include "PBM_init_IC.h"
+#include "PBM_init.h"
+#include "PBM_struct.h"
+#include "PBM_control.h"
+#include "PBM.h"
+
+
 /****************************TODO*************************
 1. Need to think about delay 30 minuts. 
 2. Need change constatn mode EN/Dis after teste with Doroshkin in CAN_cmd.c (delete debug)

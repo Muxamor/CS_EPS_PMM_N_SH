@@ -21,6 +21,9 @@ typedef enum {
 #define TMP1075_CR_MEDIUM    	2  // 110 ms
 #define TMP1075_CR_SLOW    		3  // 220 ms
 
+#define TMP1075_COMPARATOR_MODE 0
+#define TMP1075_INTERRUPT_MODE	1
+
 #define TMP1075_ACTIVE_LOW 		0
 #define TMP1075_ACTIVE_HIGH 	1
 
