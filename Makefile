@@ -34,8 +34,6 @@ Core/Src/Error_Handler.c \
 Core/Src/SetupPeriph.c \
 Core/Src/i2c_comm.c \
 Core/Src/uart_comm.c \
-Core/Src/uart_eps_terminal.c \
-Core/Src/uart_eps_comm.c \
 Core/Src/median_filter.c \
 Core/Src/Fn_CRC16.c \
 Core/Src/tim_pwm.c \
@@ -62,6 +60,8 @@ Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
 Core/Src/stm32l4xx_it.c \
 Core/Src/syscalls.c \
+Core/Src/uart_eps_terminal.c \
+Core/Src/uart_eps_comm.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_dma.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_exti.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_gpio.c \
