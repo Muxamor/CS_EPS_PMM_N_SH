@@ -18,7 +18,7 @@
 #define UART_EPS_ID_CMD_SAVE_PBM1_struct 	0x04
 #define UART_EPS_ID_CMD_SAVE_PBM2_struct 	0x05
 #define UART_EPS_ID_CMD_SAVE_PBM3_struct 	0x06
-#define UART_EPS_ID_CMD_Get_Reboot_coun 	0x07
+#define UART_EPS_ID_CMD_Get_Reboot_count 	0x07
 #define UART_EPS_ID_CMD_Reboot 				0x08
 #define UART_EPS_ID_CMD_Take_CTRL			0x09
 
@@ -28,7 +28,7 @@
 #define UART_EPS_ID_ACK_SAVE_PBM1_struct 	0x04
 #define UART_EPS_ID_ACK_SAVE_PBM2_struct 	0x05
 #define UART_EPS_ID_ACK_SAVE_PBM3_struct 	0x06
-#define UART_EPS_ID_ACK_Get_Reboot_coun		0x07
+#define UART_EPS_ID_ACK_Get_Reboot_count	0x07
 #define UART_EPS_ID_ACK_Reboot 				0x08
 #define UART_EPS_ID_ACK_Take_CTRL 			0x09
 

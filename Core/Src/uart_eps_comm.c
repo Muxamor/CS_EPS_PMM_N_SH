@@ -42,8 +42,8 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 
 	if(get_crc != crc_calc ){
 
-		uint8_t error_ask = 0;
-		UART_EPS_Send_Package( UART_eps_comm->USARTx, UART_eps_comm->recv_pack_buf[2], UART_eps_comm->recv_pack_buf[1], UART_EPS_ACK, &error_ask, 1 );
+		//uint8_t error_ask = 0;
+		//UART_EPS_Send_Package( UART_eps_comm->USARTx, UART_eps_comm->recv_pack_buf[2], UART_eps_comm->recv_pack_buf[1], UART_EPS_ACK, &error_ask, 1 );
 
 		if( UART_eps_comm->USARTx == LPUART1 ){
 			pmm_ptr->Error_UART_M = ERROR;
@@ -96,7 +96,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, 
 	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
-
+		//TO DO Сохранить мастер слей настрйоку.
 		*pmm_ptr = *(_PMM *)( &(UART_eps_comm->recv_pack_buf[7]) );
 		pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
 
@@ -125,7 +125,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, 
 
 		ACK_Attribute = 1;
 
-	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_coun ){
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 
 		uint32_t reboot_counter = 0;
 		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
@@ -178,51 +178,44 @@ ErrorStatus UART_EPS_Pars_Get_CMD(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, 
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-// ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr){
+ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr){
 
-// 	uint8_t cmd_id = 0;
-// 	//uint8_t data_size = 0;
+	uint8_t cmd_id = 0;
+	//uint8_t data_size = 0;
 
-// 	//data_size = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[5]) ) << 8 ) | (( (uint16_t)(UART_eps_comm->recv_pack_buf[4]) ) - 1);
-// 	cmd_id = UART_eps_comm->recv_pack_buf[6];
+	//data_size = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[5]) ) << 8 ) | (( (uint16_t)(UART_eps_comm->recv_pack_buf[4]) ) - 1);
+	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
-// 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
 
-// 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
+	// UART_EPS_ID_CMD_SAVE_PMM_struct
+	// UART_EPS_ID_CMD_SAVE_PDM_struct
+	// UART_EPS_ID_CMD_SAVE_PBM1_struct
+	// UART_EPS_ID_CMD_SAVE_PBM2_struct
+	// UART_EPS_ID_CMD_SAVE_PBM3_struct
+	// UART_EPS_ID_CMD_Reboot
+	// UART_EPS_ID_CMD_Take_CTRL
 
-// 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
+	if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 
-// 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM1_struct ){
-
-// 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM2_struct ){
-
-// 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM3_struct ){
-
-// 	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_coun ){
-
-// 		uint32_t reboot_counter = 0;
-// 		reboot_counter = (((uint32_t)UART_eps_comm->recv_pack_buf[7]) << 24) | (((uint32_t)UART_eps_comm->recv_pack_buf[8]) << 16) | \
-// 							(((uint32_t)UART_eps_comm->recv_pack_buf[9]) << 8) | ((uint32_t)UART_eps_comm->recv_pack_buf[10]);
+		uint32_t reboot_counter = 0;
+		reboot_counter = (((uint32_t)UART_eps_comm->recv_pack_buf[7]) << 24) | (((uint32_t)UART_eps_comm->recv_pack_buf[8]) << 16) | \
+							(((uint32_t)UART_eps_comm->recv_pack_buf[9]) << 8) | ((uint32_t)UART_eps_comm->recv_pack_buf[10]);
 		
-// 		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-// 			pmm_ptr->reboot_counter_CPUm = reboot_counter; 
-// 		}else{
-// 			pmm_ptr->reboot_counter_CPUb = reboot_counter; 
-// 		}
+		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			pmm_ptr->reboot_counter_CPUm = reboot_counter; 
+		}else{
+			pmm_ptr->reboot_counter_CPUb = reboot_counter; 
+		}
 
-// 	}else if( cmd_id == UART_EPS_ID_CMD_Reboot ){
+	}else{
+		//???????????!!!!!!!!!!!!
+	}
 
-// 	}else if( cmd_id == UART_EPS_ID_CMD_Take_CTRL ){
+	UART_eps_comm->waiting_answer_flag = 0; 
+	//TO DO Stop counter whait answer;
 
-// 	}else{
-// 		//???????????!!!!!!!!!!!!
-// 	}
-
-// 	UART_eps_comm->waiting_answer_flag = 0; 
-// 	//TO DO Stop counter whait answer;
-
-// 	return SUCCESS;
-// }
+	return SUCCESS;
+}
 
 
 /** @brief  Preparing and sending a packet on the UART in accordance with the protocol.
