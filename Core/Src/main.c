@@ -26,6 +26,7 @@
 #include "CAND/canv.h"
 
 #include "uart_comm.h"
+#include "uart_eps_comm.h"
 
 #include  <stdio.h>
 #include "fram.h"
@@ -56,15 +57,21 @@ extern uint64_t CAN_cmd_mask_status;
 extern uint8_t CAN1_exchange_timeout_flag;
 extern uint8_t CAN2_exchange_timeout_flag;
 
-uint8_t UART_CHANGE_ACTIVE_CPU_FLAG=0;
+_UART_EPS_COMM uart_m_eps_communication = {0}, *UART_M_eps_comm = &uart_m_eps_communication;  // Main EPS UART is LPUART1
+_UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_communication;  // Backup EPS UART is USART3
+
 
 //LL_mDelay(1);
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release
 
 int main(void){
 
+	UART_M_eps_comm->USARTx = LPUART1;
+	UART_B_eps_comm->USARTx = USART3;
+
 	_PDM pdm = {0}, *pdm_ptr = &pdm;
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
+	//_PAM pam = {0}, *pam_ptr = &pam;
 
 	CAN_cmd_mask_status = 0;
 
@@ -91,12 +98,17 @@ int main(void){
 	CAN_init_eps(CAN2);
 	CAN_RegisterAllVars();
 
-
 	//Need test!!!!!!!!!!!!
 	//uint8_t pwr_reboot= 6;
 	//PMM_Detect_PowerRebootCPU(&pwr_reboot);
 	//!!!!!!!
 
+	//Not Forget !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+		pmm_ptr->reboot_counter_CPUm++;
+	}else{
+		pmm_ptr->reboot_counter_CPUb++;
+	}
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight unit befor 08.06.2020
@@ -153,15 +165,15 @@ int main(void){
 
 		while(1){
 
-			if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 ){
+		//	if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 ){
 				PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
 
 				USART_send_string( UART5, mas_string);
 
 				ENABLE_TMUX1209_I2C();
 
-				UART_CHANGE_ACTIVE_CPU_FLAG = 0;
-			}
+		//		UART_CHANGE_ACTIVE_CPU_FLAG = 0;
+		//	}
 
 
 			if(CAN_cmd_mask_status != 0){

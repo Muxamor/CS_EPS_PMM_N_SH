@@ -163,7 +163,7 @@ ErrorStatus PMM_check_wire(uint32_t burn_time, uint8_t wire_num){
 
 	TIM_init(TIM2, burn_time);
 	while(TIM2_finished != 1){
-		status += ADS1015_average_meas(I2C4, I2C_ADS1015_ADDR, &meas_voltage);  // read the voltage on the limit switches of "deploy control"
+		status += PMM_ADS1015_average_meas(I2C4, I2C_ADS1015_ADDR, wire_num+3, 16, &meas_voltage);  // read the voltage on the limit switches of "deploy control"
 		if(status != SUCCESS){
 			PCA9534_conf_IO_dir_input(I2C4, PCA9534_ADDR, wire_num);  //  In case of an error, we return to the initial state
 			PCA9534_Reset_output_pin(I2C4, PCA9534_ADDR, wire_num);

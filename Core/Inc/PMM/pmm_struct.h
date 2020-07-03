@@ -6,38 +6,6 @@
 
 typedef struct{
 
-	uint8_t Main_Backup_mode_CPU 	:1; //= 1-Main, =0-Backup mode CPU. 
-	uint8_t Detect_Active_CPU 		:1;	//= 0-Main CPU is active, Backup CPU is passive.
-										//= 1-Main CPU is passive, Backup CPU is active.
-	uint8_t CAN_constatnt_mode		:1;	//= 1-Constant mode CANreg5 is ON, 0-Constant CANreg5 is OFF.
-	uint8_t	:5;
-
-	uint8_t EPS_Mode;                   // Mode of operation EPS: 0xFF - Service mode.
-
-	uint8_t PMM_save_conf_flag  	:1;// 0-Note need save, 1-Need save configure PDM to FRAM.
-	uint8_t :7;
-
-	int8_t Temp_sensor; //PMM temperature
-
-	uint16_t PWR_Ch_Vbat1_eF1_Voltage_val;
-	uint16_t PWR_Ch_Vbat1_eF2_Voltage_val;
-	int16_t  PWR_Ch_Vbat1_eF1_Current_val;
-	int16_t  PWR_Ch_Vbat1_eF2_Current_val;
-	uint16_t PWR_Ch_Vbat1_eF1_Power_val;
-	uint16_t PWR_Ch_Vbat1_eF2_Power_val;
-
-	uint16_t PWR_Ch_Vbat2_eF1_Voltage_val;
-	uint16_t PWR_Ch_Vbat2_eF2_Voltage_val;
-	int16_t  PWR_Ch_Vbat2_eF1_Current_val;
-	int16_t  PWR_Ch_Vbat2_eF2_Current_val;
-	uint16_t PWR_Ch_Vbat2_eF1_Power_val;
-	uint16_t PWR_Ch_Vbat2_eF2_Power_val; 
-
-	int16_t  PWR_Supply_Main_eF_in_Current_val;
-	int16_t  PWR_Supply_Main_eF_out_Current_val;
-	int16_t  PWR_Supply_Backup_eF_in_Current_val;
-	int16_t  PWR_Supply_Backup_eF_out_Current_val;
-	
 	uint32_t PWR_Ch_State_CANmain				:1; //0-DISABLE, 1-ENABLE. State power main CAN.
 	uint32_t PWR_Ch_State_CANbackup				:1; //0-DISABLE, 1-ENABLE. State power backup CAN.
 	uint32_t PWR_Ch_State_Vbat1_eF1   			:1; //0-DISABLE, 1-ENABLE. State power battery bus output 1 eFuse 1 
@@ -88,10 +56,44 @@ typedef struct{
 	uint32_t Error_PWR_Supply_m_b_Curr_Mon		:1; //=0 -OK, = 1-error I2C Current meas. ADC (U65).
 	uint32_t Error_FRAM1		 				:1; //=0 -OK, = 1-error FRAM1 no connection
 	uint32_t Error_FRAM2		 				:1; //=0 -OK, = 1-error FRAM2 no connection
-	uint32_t :11;
+	uint32_t Error_UART_M						:1; //=0 -OK, = 1-error UART main (LPUART1) port
+	uint32_t Error_UART_B						:1; //=0 -OK, = 1-error UART backup (USART3) port
+	uint32_t :9;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up).
 	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up).
+
+	uint16_t PWR_Ch_Vbat1_eF1_Voltage_val;
+	uint16_t PWR_Ch_Vbat1_eF2_Voltage_val;
+	int16_t  PWR_Ch_Vbat1_eF1_Current_val;
+	int16_t  PWR_Ch_Vbat1_eF2_Current_val;
+	uint16_t PWR_Ch_Vbat1_eF1_Power_val;
+	uint16_t PWR_Ch_Vbat1_eF2_Power_val;
+
+	uint16_t PWR_Ch_Vbat2_eF1_Voltage_val;
+	uint16_t PWR_Ch_Vbat2_eF2_Voltage_val;
+	int16_t  PWR_Ch_Vbat2_eF1_Current_val;
+	int16_t  PWR_Ch_Vbat2_eF2_Current_val;
+	uint16_t PWR_Ch_Vbat2_eF1_Power_val;
+	uint16_t PWR_Ch_Vbat2_eF2_Power_val; 
+
+	int16_t  PWR_Supply_Main_eF_in_Current_val;
+	int16_t  PWR_Supply_Main_eF_out_Current_val;
+	int16_t  PWR_Supply_Backup_eF_in_Current_val;
+	int16_t  PWR_Supply_Backup_eF_out_Current_val;
+
+	uint8_t Main_Backup_mode_CPU 	:1; //= 1-Main, =0-Backup mode CPU. 
+	uint8_t Active_CPU		 		:1;	//= 0-Main CPU is active, Backup CPU is passive.
+										//= 1-Main CPU is passive, Backup CPU is active.
+	uint8_t CAN_constatnt_mode		:1;	//= 1-Constant mode CANreg5 is ON, 0-Constant CANreg5 is OFF.
+	uint8_t	:5;
+
+	uint8_t EPS_Mode;                   // Mode of operation EPS: 0xFF - Service mode.
+
+	uint8_t PMM_save_conf_flag  	:1;// 0-Note need save, 1-Need save configure PDM to FRAM and sent to neighboring CPU
+	uint8_t :7;
+
+	int8_t Temp_sensor; //PMM temperature
 
 
 }_PMM;
