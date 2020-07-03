@@ -40,10 +40,12 @@
 #define PBM_TMP1075_TEMP_HI                	5.0 	//Hi limit for comparison TMP1075 Battery Module in °C.
 #define PBM_TMP1075_TEMP_LO                	2.0 	//Lo limit for comparison TMP1075 Battery Module in °C.
 
-#define PBM_1                				0x01 	//Designation for choose PBM ¹1.
-#define PBM_2                				0x02 	//Designation for choose PBM ¹2.
-#define PBM_3                				0x03	//Designation for choose PBM ¹3.
-#define PBM_ALL                				0x00 	//Designation for choose all PBM.
+#define PBM_1                				0x00 	//Designation for choose PBM ¹1.
+#define PBM_2                				0x01 	//Designation for choose PBM ¹2.
+#define PBM_3                				0x02	//Designation for choose PBM ¹3.
+
+#define PBM_quantity 						0x03 // Total quantity power channels on the PDM
+//#define PBM_ALL                				0x00 	//Designation for choose all PBM.
 
 #define PBM_BRANCH_1                		0x01 	//Designation for choose branch ¹1 PBM.
 #define PBM_BRANCH_2                		0x02 	//Designation for choose branch ¹2 PBM.
