@@ -72,7 +72,7 @@ typedef struct  // Structure for PBM data
 	uint8_t Error_Discharge_1 :1; 			// Register error discharge branch �1.
 	uint8_t Error_Discharge_2 :1; 			// Register error discharge branch �2.
 
-} PBM_Data_Module;
+} _PBM;
 
 typedef struct  // Structure for all PBM data
 {

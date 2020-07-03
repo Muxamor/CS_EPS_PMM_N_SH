@@ -72,6 +72,7 @@ int main(void){
 	_PDM pdm = {0}, *pdm_ptr = &pdm;
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 	//_PAM pam = {0}, *pam_ptr = &pam;
+	_PBM pbm[PBM_quantity] = {0};
 
 	CAN_cmd_mask_status = 0;
 

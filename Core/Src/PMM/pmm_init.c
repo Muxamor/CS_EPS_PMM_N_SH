@@ -129,7 +129,7 @@ uint8_t PMM_Detect_MasterBackupCPU(void){
 	
 	if( mode >= 2 ){
 		return 0;  //Main mode CPU
-	} else{
+	}else{
 		return 1;  //Backup mode CPU
 	}
 

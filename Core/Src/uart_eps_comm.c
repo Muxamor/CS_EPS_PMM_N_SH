@@ -96,17 +96,17 @@ ErrorStatus UART_EPS_Pars_Get_CMD(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, 
 	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
-		//TO DO Сохранить мастер слей настрйоку.
-		*pmm_ptr = *(_PMM *)( &(UART_eps_comm->recv_pack_buf[7]) );
-		pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
 
+		*pmm_ptr = *(_PMM *)( &(UART_eps_comm->recv_pack_buf[7]) );
+
+		pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+		pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
 
 		*pdm_ptr = *(_PDM *)( &(UART_eps_comm->recv_pack_buf[7]) );
 		pdm_ptr->PDM_save_conf_flag = 1; //Save received settings in FRAM 
-
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){

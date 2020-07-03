@@ -15,7 +15,7 @@
  @retval 	none
  */
 void PBM_ReadGPIO(I2C_TypeDef *I2Cx, PBM_Data_All *Data, uint8_t PBM) {
-
+!!!!!!!!!!!!!!!Задать дерекшин ЗАчем функция
 	uint8_t data8 = 0;
 	uint8_t count = 0;
 	int8_t Error = -1;
