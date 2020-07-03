@@ -49,13 +49,21 @@ typedef struct{
 	uint8_t waiting_answer_flag 	  :1;
 	uint8_t :4;
 
+	uint8_t error_port_counter		  :4;
+
 	USART_TypeDef* USARTx;
 
 }_UART_EPS_COMM;
 
 
-ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr);
-ErrorStatus UART_EPS_Pars_Get_CMD(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr);
+ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr );
+
+ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr );
+
+ErrorStatus UART_EPS_Pars_Get_ACK( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr );
+ErrorStatus UART_EPS_Send_ACK( _UART_EPS_COMM *UART_eps_comm , uint8_t send_data[], uint16_t size_data );
+
+
 ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t sourse_addr,uint8_t package_tag, uint8_t send_data[], uint16_t size_data );
 
 #endif /* INC_UART_EPS_COMM_H_ */

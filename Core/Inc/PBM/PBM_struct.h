@@ -76,9 +76,9 @@ typedef struct  // Structure for PBM data
 
 typedef struct  // Structure for all PBM data
 {
-	PBM_Data_Module PBM_Data_1;					// Structure for PBM �1
-	PBM_Data_Module PBM_Data_2;					// Structure for PBM �2
-	PBM_Data_Module PBM_Data_3;					// Structure for PBM �3
+	_PBM PBM_Data_1;					// Structure for PBM �1
+	_PBM PBM_Data_2;					// Structure for PBM �2
+	_PBM PBM_Data_3;					// Structure for PBM �3
 
 } PBM_Data_All;
 

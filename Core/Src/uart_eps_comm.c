@@ -5,6 +5,7 @@
 #include "pdm_struct.h"
 #include "uart_comm.h"
 #include "pmm_config.h"
+#include "pmm_init.h"
 #include "uart_eps_comm.h"
 
 
@@ -41,16 +42,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 	get_crc = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[UART_eps_comm->size_recv_pack - 2]) ) << 8 ) | ( (uint16_t)(UART_eps_comm->recv_pack_buf[UART_eps_comm->size_recv_pack - 1]) );
 
 	if(get_crc != crc_calc ){
-
-		//uint8_t error_ask = 0;
-		//UART_EPS_Send_Package( UART_eps_comm->USARTx, UART_eps_comm->recv_pack_buf[2], UART_eps_comm->recv_pack_buf[1], UART_EPS_ACK, &error_ask, 1 );
-
-		if( UART_eps_comm->USARTx == LPUART1 ){
-			pmm_ptr->Error_UART_M = ERROR;
-		}else if( UART_eps_comm->USARTx == USART3 ){
-			pmm_ptr->Error_UART_B = ERROR;
-		}
-
+		UART_eps_comm->error_port_counter++;
 		error_stutus = ERROR_N;
 	}
 
@@ -69,8 +61,33 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 		}else if( package_tag == UART_EPS_NFC && UART_eps_comm->waiting_answer_flag == 0 ){
 
 		}else{
-			//Need send error Answer?
+			uint8_t error_ask = 0;
+			UART_EPS_Send_Package( UART_eps_comm->USARTx, UART_eps_comm->recv_pack_buf[2], UART_eps_comm->recv_pack_buf[1], UART_EPS_ACK, &error_ask, 1 );
 			error_stutus = ERROR_N;
+		}
+	}
+
+	//Set error flag to PMM struct
+	if(error_stutus == SUCCESS ){
+
+		UART_eps_comm->error_port_counter = 0;
+
+		if( UART_eps_comm->USARTx == LPUART1 ){
+			pmm_ptr->Error_UART_port_M = SUCCESS;
+		}else if( UART_eps_comm->USARTx == USART3 ){
+			pmm_ptr->Error_UART_port_B = SUCCESS;
+		}
+		 
+	}else{
+		UART_eps_comm->error_port_counter++;
+
+		if(UART_eps_comm->error_port_counter == 5){ // If there are five errors in a row, then set the UART port error
+
+			if( UART_eps_comm->USARTx == LPUART1 ){
+				pmm_ptr->Error_UART_port_M = ERROR;
+			}else if( UART_eps_comm->USARTx == USART3 ){
+				pmm_ptr->Error_UART_port_B = ERROR;
+			}
 		}
 	}
 
@@ -84,7 +101,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Pars_Get_CMD(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr){
+ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr ){
 
 	uint8_t cmd_id = 0;
 	//uint8_t data_size = 0;
@@ -96,7 +113,6 @@ ErrorStatus UART_EPS_Pars_Get_CMD(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, 
 	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
-
 		*pmm_ptr = *(_PMM *)( &(UART_eps_comm->recv_pack_buf[7]) );
 
 		pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
@@ -167,25 +183,44 @@ ErrorStatus UART_EPS_Pars_Get_CMD(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, 
 	}else if( ACK_Attribute == 2 ){ //Sends an DATA in response
 		//Empty
 	}
+
+	return UART_EPS_Send_ACK ( UART_eps_comm,  pack_ACK_buf, size_pack_ACK );
 	
-	return UART_EPS_Send_Package( UART_eps_comm->USARTx, UART_eps_comm->recv_pack_buf[2], UART_eps_comm->recv_pack_buf[1], UART_EPS_ACK, pack_ACK_buf, size_pack_ACK );
+	//return UART_EPS_Send_Package( UART_eps_comm->USARTx, UART_eps_comm->recv_pack_buf[2], UART_eps_comm->recv_pack_buf[1], UART_EPS_ACK, pack_ACK_buf, size_pack_ACK );
 }
+
+
+/** @brief Send CMD.
+	@param  *UART_eps_comm - pointer to UART port struct with get data.
+	@param  send_data[] - send data massive.
+	@param 	size_data -  size sending data.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+// ErrorStatus UART_EPS_Send_CMD ( uint8_t destination_addr, uint8_t cmd_id ){
+
+// 	uint8_t send_buf[UART_EPS_PACK_SIZE_BUFF];
+// 	uint16_t i = 0;
+
+// 	if( UART_EPS_PACK_SIZE_BUFF < (size_data + 8) ){
+// 		return ERROR_N;
+// 	}
+
+
 
 
 /** @brief  Parsing received ACK from UART port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
-	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr){
+ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 
 	uint8_t cmd_id = 0;
 	//uint8_t data_size = 0;
+	int8_t error_stutus = SUCCESS;
 
 	//data_size = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[5]) ) << 8 ) | (( (uint16_t)(UART_eps_comm->recv_pack_buf[4]) ) - 1);
 	cmd_id = UART_eps_comm->recv_pack_buf[6];
-
 
 	// UART_EPS_ID_CMD_SAVE_PMM_struct
 	// UART_EPS_ID_CMD_SAVE_PDM_struct
@@ -207,14 +242,30 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, 
 			pmm_ptr->reboot_counter_CPUb = reboot_counter; 
 		}
 
-	}else{
-		//???????????!!!!!!!!!!!!
+	}else{ 
+		
+		if (UART_eps_comm->recv_pack_buf[7] == 0x00 ) { // In answer Error
+			//TO DO Need repeat send command.
+			error_stutus = ERROR_N;
+		}
 	}
 
 	UART_eps_comm->waiting_answer_flag = 0; 
 	//TO DO Stop counter whait answer;
 
-	return SUCCESS;
+	return error_stutus;
+}
+
+
+/** @brief Send acknowledgment.
+	@param  *UART_eps_comm - pointer to UART port struct with get data.
+	@param  send_data[] - send data massive.
+	@param 	size_data -  size sending data.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+
+ErrorStatus UART_EPS_Send_ACK ( _UART_EPS_COMM *UART_eps_comm , uint8_t send_data[], uint16_t size_data ){
+	return UART_EPS_Send_Package( UART_eps_comm->USARTx, UART_eps_comm->recv_pack_buf[2], UART_eps_comm->recv_pack_buf[1], UART_EPS_ACK, send_data, size_data );
 }
 
 
@@ -232,13 +283,12 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
 
 	uint8_t send_pack_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint16_t size_package = 0;
- 	uint8_t i = 0;
+ 	uint16_t i = 0;
  	uint16_t crc = 0;
 
  	if( size_data > UART_EPS_PACK_SIZE_BUFF ){
  		return ERROR_N;
  	}
-
 
 	//0. 0xAA preamble.
  	send_pack_buf[0] = 0xAA;
@@ -272,10 +322,14 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
 	size_package = size_package + 1;
 	send_pack_buf[size_package] = (uint8_t)(crc);
 
-	if( USARTx == LPUART1){
-		return LPUART_send_array( USARTx, send_pack_buf, size_package);
-	}else{
-		return USART_send_array( USARTx, send_pack_buf, size_package);
-	}
+	// if( USARTx == LPUART1){
+	// 	return LPUART_send_array( USARTx, send_pack_buf, size_package);
+	// }else{
+	// 	return USART_send_array( USARTx, send_pack_buf, size_package);
+	// }
+//TO DO Setflag waiting answer. 
+	// if( ){
+	// 	waiting_answer_flag 
+	// }
 
 }

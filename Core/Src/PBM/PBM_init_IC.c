@@ -18,7 +18,7 @@ ErrorStatus TMP1075_InitState(I2C_TypeDef *I2Cx, uint8_t AddrTMP1075) {
 	SW_TMUX1209_I2C_main_PBM();
 
 	while ((Error != 0) && (count < 3)) {
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Можно сделать по другому и нужен таминг для задержки
+		
 		Error = TMP1075_set_mode(I2Cx, AddrTMP1075, TMP1075_CONTINUOS_CONV);
 		if (Error != 0) {
 			break;

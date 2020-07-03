@@ -181,9 +181,9 @@ void PBM_TempSensorInit(PBM_Data_All *Data, uint8_t PBM) {
  @retval 	none
  */
 void PBM_Init(PBM_Data_All *Data, uint8_t PBM){
-	!!!!!!!!!!!!Вписать сразу для трех
+	//!!!!!!!!!!!!Вписать сразу для трех
 	//PBM_GPIOInit(Data, PBM);
-	PBM_SetStateHeatBranch(I2C4, Data, PBM_ALL, PBM_BRANCH_ALL, PBM_ON_HEAT);
+	PBM_SetStateHeatBranch(I2C4, Data, PBM_1, PBM_BRANCH_ALL, PBM_ON_HEAT);
 	PBM_TempSensorInit(Data, PBM);
 }
 

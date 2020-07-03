@@ -45,7 +45,7 @@
 #define PBM_3                				0x02	//Designation for choose PBM ¹3.
 
 #define PBM_quantity 						0x03 // Total quantity power channels on the PDM
-//#define PBM_ALL                				0x00 	//Designation for choose all PBM.
+#define PBM_ALL                				0x00 	//Designation for choose all PBM.
 
 #define PBM_BRANCH_1                		0x01 	//Designation for choose branch ¹1 PBM.
 #define PBM_BRANCH_2                		0x02 	//Designation for choose branch ¹2 PBM.
