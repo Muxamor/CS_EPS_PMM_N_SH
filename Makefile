@@ -56,6 +56,10 @@ Core/Src/PMM/pmm_init.c \
 Core/Src/PMM/pmm_ctrl.c \
 Core/Src/PMM/pmm_savedata.c \
 Core/Src/PMM/pmm.c \
+Core/Src/PBM/PBM_init_IC.c \
+Core/Src/PBM/PBM_init.c \
+Core/Src/PBM/PBM_control.c \
+Core/Src/PBM/PBM.c \
 Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
 Core/Src/stm32l4xx_it.c \
@@ -160,9 +164,9 @@ C_INCLUDES =  \
 -ICore/Inc/PMM \
 -ICore/Inc/PDM \
 -ICore/Inc/PAM \
+-ICore/Inc/PBM \
 -ICore/Inc/CAND \
 -ICore/Inc/FLASH \
--ICore/Inc/BATT \
 -IDrivers/STM32L4xx_HAL_Driver/Inc \
 -IDrivers/CMSIS/Device/ST/STM32L4xx/Include \
 -IDrivers/CMSIS/Include
