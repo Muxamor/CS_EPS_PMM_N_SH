@@ -56,9 +56,11 @@ typedef struct{
 	uint32_t Error_PWR_Supply_m_b_Curr_Mon		:1; //=0 -OK, = 1-error I2C Current meas. ADC (U65).
 	uint32_t Error_FRAM1		 				:1; //=0 -OK, = 1-error FRAM1 no connection
 	uint32_t Error_FRAM2		 				:1; //=0 -OK, = 1-error FRAM2 no connection
-	uint32_t Error_UART_M						:1; //=0 -OK, = 1-error UART main (LPUART1) port
-	uint32_t Error_UART_B						:1; //=0 -OK, = 1-error UART backup (USART3) port
-	uint32_t :9;
+	uint32_t Error_UART_port_M					:1; //=0 -OK, = 1-error UART main (LPUART1) port
+	uint32_t Error_UART_port_B					:1; //=0 -OK, = 1-error UART backup (USART3) port
+	uint32_t Error_CAN_port_M					:1; //=0 -OK, = 1-error UART main (CAN1) port
+	uint32_t Error_CAN_port_B					:1; //=0 -OK, = 1-error UART backup (CAN2) port
+	uint32_t :7;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up).
 	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up).
