@@ -2,7 +2,7 @@
 #ifndef INC_I2C_COMM_H_
 #define INC_I2C_COMM_H_
 
-#define I2C_TIMEOUT 1000
+#define I2C_TIMEOUT 750
 
 #define I2C_SIZE_REG_ADDR_U8  	1 
 #define I2C_SIZE_REG_ADDR_U16  	2 
