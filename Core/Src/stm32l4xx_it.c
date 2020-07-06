@@ -1,5 +1,3 @@
-
-#include "main.h"
 #include "stm32l4xx_ll_system.h"
 #include "stm32l4xx_it.h"
 #include "CAND/CAN.h"
