@@ -128,6 +128,7 @@ void LPUART1_IRQHandler(void){
 
 			//We received the package
 			if( UART_M_eps_comm->size_recv_pack >= UART_M_eps_comm->expected_size_recv_pack ){
+				NVIC_DisableIRQ(LPUART1_IRQn);
 				UART_M_eps_comm->stop_recv_pack_flag = 1;
 			}
 
@@ -139,6 +140,7 @@ void LPUART1_IRQHandler(void){
 	}
 
 }
+
 
 extern _UART_EPS_COMM *UART_B_eps_comm;
 

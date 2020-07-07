@@ -98,6 +98,8 @@ int main(void){
 	CAN_init_eps(CAN1);
 	CAN_init_eps(CAN2);
 	CAN_RegisterAllVars();
+	//CAN_DeInit(CAN1);
+	//CAN_DeInit(CAN2);
 
 	//Need test!!!!!!!!!!!!
 	//uint8_t pwr_reboot= 6;
