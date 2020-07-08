@@ -113,9 +113,9 @@ void LPUART1_IRQHandler(void){
 			UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] = input_byte;
 
 			//Get the package size we need to get
-			if(UART_M_eps_comm->size_recv_pack == 4 ){ 
+			if(UART_M_eps_comm->size_recv_pack == 5 ){
 				
-				UART_M_eps_comm->expected_size_recv_pack = UART_M_eps_comm->expected_size_recv_pack + UART_M_eps_comm->recv_pack_buf[4]; 
+				UART_M_eps_comm->expected_size_recv_pack = UART_M_eps_comm->expected_size_recv_pack + ( ( ( (uint16_t)(UART_M_eps_comm->recv_pack_buf[4]) ) << 8 ) | ( (uint16_t)(UART_M_eps_comm->recv_pack_buf[5]) ) );
 				
 				//If the packet size is larger than the receive buffer, we stop receiving the packet
 				if( UART_M_eps_comm->expected_size_recv_pack > UART_EPS_PACK_SIZE_BUFF ){ 
@@ -182,9 +182,9 @@ void USART3_IRQHandler(void){
 			UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] = input_byte;
 
 			//Get the package size we need to get
-			if(UART_B_eps_comm->size_recv_pack == 4 ){
+			if(UART_B_eps_comm->size_recv_pack == 5 ){
 
-				UART_B_eps_comm->expected_size_recv_pack = UART_B_eps_comm->expected_size_recv_pack + UART_B_eps_comm->recv_pack_buf[4];
+				UART_B_eps_comm->expected_size_recv_pack = UART_B_eps_comm->expected_size_recv_pack + ( ( ( (uint16_t)(UART_B_eps_comm->recv_pack_buf[4]) ) << 8 ) | ( (uint16_t)(UART_B_eps_comm->recv_pack_buf[5]) ) );
 
 				//If the packet size is larger than the receive buffer, we stop receiving the packet
 				if( UART_B_eps_comm->expected_size_recv_pack > UART_EPS_PACK_SIZE_BUFF ){
