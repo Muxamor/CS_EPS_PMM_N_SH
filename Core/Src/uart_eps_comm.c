@@ -67,11 +67,11 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
 	//6. Calculate CRC-16-CCITT.
 	crc = Crc16_1021( send_pack_buf, size_package );
 
-	size_package = size_package + 1;
 	send_pack_buf[size_package] = (uint8_t)(crc>>8);
-
 	size_package = size_package + 1;
+
 	send_pack_buf[size_package] = (uint8_t)(crc);
+	size_package = size_package + 1;
 
 	if( USARTx == LPUART1){
 		return LPUART_send_array( USARTx, send_pack_buf, size_package);
