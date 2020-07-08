@@ -84,7 +84,7 @@ void LPUART1_IRQHandler(void){
 		input_byte = LL_LPUART_ReceiveData8(LPUART1);
 
 		// Geting preamble.
-		if(input_byte == 0xAA && UART_M_eps_comm->permit_recv_pack_flag  == 0){ 
+		if(input_byte == 0xAA && UART_M_eps_comm->permit_recv_pack_flag == 0 && UART_M_eps_comm->stop_recv_pack_flag == 0 ){ 
 			UART_M_eps_comm->size_recv_pack = 0;
 			UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] = input_byte;
 
@@ -94,7 +94,7 @@ void LPUART1_IRQHandler(void){
 			UART_M_eps_comm->size_recv_pack++;
 
 		// Geting and check address.
-		}else if( UART_M_eps_comm->permit_recv_pack_flag == 1 && UART_M_eps_comm->size_recv_pack == 1 ){
+		}else if( UART_M_eps_comm->permit_recv_pack_flag == 1 && UART_M_eps_comm->size_recv_pack == 1 && UART_M_eps_comm->stop_recv_pack_flag == 0  ){
 
 				UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] = input_byte;
 			
@@ -108,7 +108,7 @@ void LPUART1_IRQHandler(void){
 			}
 		
 		// Geting the rest of the package.
-		}else if( UART_M_eps_comm->permit_recv_pack_flag == 1 && UART_M_eps_comm->size_recv_pack > 1 ){ 
+		}else if( UART_M_eps_comm->permit_recv_pack_flag == 1 && UART_M_eps_comm->size_recv_pack > 1 && UART_M_eps_comm->stop_recv_pack_flag == 0 ){ 
 
 			UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] = input_byte;
 
@@ -128,13 +128,13 @@ void LPUART1_IRQHandler(void){
 
 			//We received the package
 			if( UART_M_eps_comm->size_recv_pack >= UART_M_eps_comm->expected_size_recv_pack ){
-				NVIC_DisableIRQ(LPUART1_IRQn);
+				//NVIC_DisableIRQ(LPUART1_IRQn);
 				UART_M_eps_comm->stop_recv_pack_flag = 1;
 			}
 
 		// Some byte 
 		}else{
-			UART_M_eps_comm->permit_recv_pack_flag = 0;
+			//UART_M_eps_comm->permit_recv_pack_flag = 0;
 		}
 
 	}
@@ -153,7 +153,7 @@ void USART3_IRQHandler(void){
 		input_byte = LL_USART_ReceiveData8(USART3);
 
 		// Geting preamble.
-		if(input_byte == 0xAA && UART_B_eps_comm->permit_recv_pack_flag  == 0){
+		if(input_byte == 0xAA && UART_B_eps_comm->permit_recv_pack_flag  == 0 && UART_B_eps_comm->stop_recv_pack_flag == 0 ){
 			UART_B_eps_comm->size_recv_pack = 0;
 			UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] = input_byte;
 
@@ -163,7 +163,7 @@ void USART3_IRQHandler(void){
 			UART_B_eps_comm->size_recv_pack++;
 
 		// Geting and check address.
-		}else if( UART_B_eps_comm->permit_recv_pack_flag == 1 && UART_B_eps_comm->size_recv_pack == 1 ){
+		}else if( UART_B_eps_comm->permit_recv_pack_flag == 1 && UART_B_eps_comm->size_recv_pack == 1 && UART_B_eps_comm->stop_recv_pack_flag == 0){
 
 			UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] = input_byte;
 
@@ -177,7 +177,7 @@ void USART3_IRQHandler(void){
 			}
 
 		// Geting the rest of the package.
-		}else if( UART_B_eps_comm->permit_recv_pack_flag == 1 && UART_B_eps_comm->size_recv_pack > 1 ){
+		}else if( UART_B_eps_comm->permit_recv_pack_flag == 1 && UART_B_eps_comm->size_recv_pack > 1 && UART_B_eps_comm->stop_recv_pack_flag == 0 ){
 
 			UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] = input_byte;
 
@@ -197,12 +197,13 @@ void USART3_IRQHandler(void){
 
 			//We received the package
 			if( UART_B_eps_comm->size_recv_pack >= UART_B_eps_comm->expected_size_recv_pack ){
+				//NVIC_DisableIRQ( USART3_IRQn );
 				UART_B_eps_comm->stop_recv_pack_flag = 1;
 			}
 
 		// Some byte
 		}else{
-			UART_B_eps_comm->permit_recv_pack_flag = 0;
+			//UART_B_eps_comm->permit_recv_pack_flag = 0;
 		}
 	}
 }

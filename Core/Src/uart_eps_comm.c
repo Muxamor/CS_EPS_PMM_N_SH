@@ -53,7 +53,7 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
 	//3. Package Tag 0x00-Command, 0x01-Answer, 0x02-Notification.
  	send_pack_buf[3] = package_tag;
 
- 	//4. Package Tag 0x00-Command, 0x01-Answer, 0x02-Notification.
+ 	//4. Size send data in package
  	send_pack_buf[4] = (uint8_t)( size_data >> 8 );
  	send_pack_buf[5] = (uint8_t)( size_data );
 
@@ -159,7 +159,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
-		*pmm_ptr = *(_PMM *)( &(UART_eps_comm->recv_pack_buf[7]) );
+		*pmm_ptr = *( (_PMM *)( &(UART_eps_comm->recv_pack_buf[7]) ) );
 
 		pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
 		pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
@@ -167,7 +167,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
 
-		*pdm_ptr = *(_PDM *)( &(UART_eps_comm->recv_pack_buf[7]) );
+		*pdm_ptr = *( (_PDM *)( &(UART_eps_comm->recv_pack_buf[7]) ) );
 		pdm_ptr->PDM_save_conf_flag = 1; //Save received settings in FRAM 
 		ACK_Attribute = 1;
 
@@ -409,6 +409,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 		for( i = 0; i < size_struct; i++ ){
 			send_buf[i+1] = *(struct_ptr + i);
 		}
+
 		size_send_data = size_struct + 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
@@ -421,6 +422,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 		for( i = 0; i < size_struct; i++ ){
 			send_buf[i+1] = *(struct_ptr + i);
 		}
+
 		size_send_data = size_struct + 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
@@ -460,11 +462,11 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 
 	//Set source and destination address.
 	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-		sourse_addr = CPUmain; 
-		destination_addr = CPUbackup;
+		sourse_addr = UART_X_eps_comm->uart_unit_addr;
+		destination_addr = UART_EPS_CPUb_Addr;
 	}else{
-		sourse_addr = CPUbackup;
-		destination_addr = CPUmain; 
+		sourse_addr = UART_X_eps_comm->uart_unit_addr; ;
+		destination_addr = UART_EPS_CPUm_Addr;
 	}
 
 	error_status = ERROR_N;
