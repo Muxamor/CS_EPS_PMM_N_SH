@@ -150,16 +150,27 @@ void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr ){
 
 	uint8_t cmd_id = 0;
-	//uint8_t data_size = 0;
+	uint8_t data_size = 0;
 	uint16_t size_pack_ACK = 0;
 	uint8_t pack_ACK_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint8_t ACK_Attribute = 0; // 0 - Send Ask ERROR, 1 - Send Ask OK, 2 - Send data; 
 
-	//data_size = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[4]) ) << 8 ) | (( (uint16_t)(UART_eps_comm->recv_pack_buf[5]) ) - 1);
+	data_size = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[4]) ) << 8 ) | (( (uint16_t)(UART_eps_comm->recv_pack_buf[5]) ) - 1);
 	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
-		*pmm_ptr = *( (_PMM *)( &(UART_eps_comm->recv_pack_buf[7]) ) );
+		_PMM tmp_pmm_srtuct = {0};
+		uint32_t i=0;
+		uint8_t *tmp_pmm_srtuct_ptr;
+
+		tmp_pmm_srtuct_ptr = (uint8_t *)(&tmp_pmm_srtuct);
+
+		for( i=0; i<data_size; i++ ){
+			*(tmp_pmm_srtuct_ptr+i) = UART_eps_comm->recv_pack_buf[7+i];
+		}
+		*pmm_ptr = tmp_pmm_srtuct;
+
+		//	*pmm_ptr = *( (_PMM *)( &(UART_eps_comm->recv_pack_buf[7]) ) );
 
 		pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
 		pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
