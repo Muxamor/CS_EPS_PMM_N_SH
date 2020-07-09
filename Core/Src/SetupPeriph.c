@@ -279,7 +279,7 @@ void LPUART1_Init(void){
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
 	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
-	LPUART_InitStruct.BaudRate = 115200;
+	LPUART_InitStruct.BaudRate = 1536000;//115200;
 	LPUART_InitStruct.DataWidth = LL_LPUART_DATAWIDTH_8B;
 	LPUART_InitStruct.StopBits = LL_LPUART_STOPBITS_1;
 	LPUART_InitStruct.Parity = LL_LPUART_PARITY_NONE;
@@ -321,7 +321,7 @@ void USART3_Init(void){
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
 	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	USART_InitStruct.BaudRate = 115200;
+	USART_InitStruct.BaudRate = 1536000; //115200;
 	USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
 	USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
 	USART_InitStruct.Parity = LL_USART_PARITY_NONE;
