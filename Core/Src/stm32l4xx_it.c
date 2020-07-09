@@ -78,8 +78,21 @@ extern _UART_EPS_COMM *UART_M_eps_comm;
 /** @brief This function handles LPUARTq global interrupt */
 void LPUART1_IRQHandler(void){
 
-	uint8_t input_byte = 0;
-	if(LL_LPUART_IsActiveFlag_RXNE(LPUART1)){
+	
+	if( LL_LPUART_IsActiveFlag_ORE(LPUART1) || LL_LPUART_IsActiveFlag_NE(LPUART1) || LL_LPUART_IsActiveFlag_FE(LPUART1) || LL_LPUART_IsActiveFlag_PE(LPUART1) ){
+
+		LL_LPUART_ClearFlag_ORE(LPUART1);
+		LL_LPUART_ClearFlag_NE(LPUART1);
+		LL_LPUART_ClearFlag_FE(LPUART1);
+		LL_LPUART_ClearFlag_PE(LPUART1);
+		//(void) LPUART1->ISR;
+		//(void) LPUART1->RDR;
+		UART_M_eps_comm->stop_recv_pack_flag = 0;
+		UART_M_eps_comm->permit_recv_pack_flag = 0;
+		LL_LPUART_ReceiveData8(LPUART1);
+
+	}else if(LL_LPUART_IsActiveFlag_RXNE(LPUART1)){
+		uint8_t input_byte = 0;
 
 		input_byte = LL_LPUART_ReceiveData8(LPUART1);
 
@@ -134,6 +147,7 @@ void LPUART1_IRQHandler(void){
 
 		// Some byte 
 		}else{
+			LL_LPUART_ReceiveData8(LPUART1);
 			//UART_M_eps_comm->permit_recv_pack_flag = 0;
 		}
 
@@ -147,9 +161,20 @@ extern _UART_EPS_COMM *UART_B_eps_comm;
 /** @brief This function handles USART3 global interrupt */
 void USART3_IRQHandler(void){
 
-	uint8_t input_byte = 0;
-	if(LL_USART_IsActiveFlag_RXNE(USART3)){
-		
+	if( LL_USART_IsActiveFlag_ORE(USART3) || LL_USART_IsActiveFlag_NE(USART3) || LL_USART_IsActiveFlag_FE(USART3) || LL_USART_IsActiveFlag_PE(USART3) ){
+		LL_USART_ClearFlag_ORE(USART3);
+		LL_USART_ClearFlag_NE(USART3);
+		LL_USART_ClearFlag_FE(USART3);
+		LL_USART_ClearFlag_PE(USART3);
+		//(void) USART3->ISR;
+		//(void) USART3->RDR;
+		UART_B_eps_comm->stop_recv_pack_flag = 0;
+		UART_B_eps_comm->permit_recv_pack_flag = 0;
+		LL_USART_ReceiveData8(USART3);
+
+	}else if(LL_USART_IsActiveFlag_RXNE(USART3)){
+
+		uint8_t input_byte = 0;
 		input_byte = LL_USART_ReceiveData8(USART3);
 
 		// Geting preamble.
@@ -203,6 +228,7 @@ void USART3_IRQHandler(void){
 
 		// Some byte
 		}else{
+			LL_USART_ReceiveData8(USART3);
 			//UART_B_eps_comm->permit_recv_pack_flag = 0;
 		}
 	}

@@ -393,6 +393,7 @@ void SetupInterrupt(void){
 	NVIC_SetPriority(LPUART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0)); //Set priority №2 from 0..15
 	LL_LPUART_EnableIT_RXNE(LPUART1); //Enable Interrupt RX buff no empty 
 	//LL_LPUART_DisableIT_RXNE(LPUART1);
+	//LL_LPUART_DisableIT_ERROR(LPUART1);
 	NVIC_EnableIRQ(LPUART1_IRQn);
 	//NVIC_DisableIRQ(LPUART1_IRQn);
 	/**********************************************/
@@ -401,6 +402,7 @@ void SetupInterrupt(void){
 	NVIC_SetPriority(USART3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0)); //Set priority №14 from 0..15
 	LL_USART_EnableIT_RXNE(USART3); //Enable Interrupt RX buff no empty 
 	//LL_USART_DisableIT_RXNE(USART3);
+	//LL_USART_DisableIT_ERROR(USART3);
 	NVIC_EnableIRQ(USART3_IRQn);
 	//NVIC_DisableIRQ(UART3_IRQn);
 	/**********************************************/
@@ -409,6 +411,7 @@ void SetupInterrupt(void){
 	NVIC_SetPriority(UART5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),14, 0)); //Set priority №14 from 0..15
 	LL_USART_EnableIT_RXNE(UART5); //Enable Interrupt RX buff no empty 
 	//LL_USART_DisableIT_RXNE(UART5);
+	//LL_USART_DisableIT_ERROR(USART5);
 	NVIC_EnableIRQ(UART5_IRQn);
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
