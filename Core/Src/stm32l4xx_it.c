@@ -147,10 +147,11 @@ void LPUART1_IRQHandler(void){
 
 		// Some byte 
 		}else{
-			LL_LPUART_ReceiveData8(LPUART1);
-			//UART_M_eps_comm->permit_recv_pack_flag = 0;
+		 /*empty*/
 		}
 
+	}else{
+		LL_LPUART_ReceiveData8(LPUART1);
 	}
 
 }
@@ -228,9 +229,11 @@ void USART3_IRQHandler(void){
 
 		// Some byte
 		}else{
-			LL_USART_ReceiveData8(USART3);
-			//UART_B_eps_comm->permit_recv_pack_flag = 0;
+			/*empty*/
 		}
+
+	}else{
+		LL_USART_ReceiveData8(USART3);
 	}
 }
 
