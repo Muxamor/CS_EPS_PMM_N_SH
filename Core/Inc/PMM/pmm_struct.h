@@ -4,6 +4,8 @@
 
 #include "stm32l4xx.h"
 
+//#pragma pack(push, 1)
+
 typedef struct{
 
 	uint32_t PWR_Ch_State_CANmain				:1; //0-DISABLE, 1-ENABLE. State power main CAN.
@@ -60,7 +62,7 @@ typedef struct{
 	uint32_t Error_UART_port_B					:1; //=0 -OK, = 1-error UART backup (USART3) port
 	uint32_t Error_CAN_port_M					:1; //=0 -OK, = 1-error UART main (CAN1) port
 	uint32_t Error_CAN_port_B					:1; //=0 -OK, = 1-error UART backup (CAN2) port
-	uint32_t :7;
+	uint32_t :6;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up).
 	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up).
@@ -97,7 +99,8 @@ typedef struct{
 
 	int8_t Temp_sensor; //PMM temperature
 
-
 }_PMM;
+
+//#pragma pack(pop)
 
 #endif /* INC_PMM_PMM_STRUCT_H_ */
