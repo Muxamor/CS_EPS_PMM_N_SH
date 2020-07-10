@@ -4,6 +4,8 @@
 
 #include "pdm_config.h"
 
+//#pragma pack(push, 1)
+
 typedef struct{
 	
 	uint16_t Voltage_val;
@@ -42,7 +44,10 @@ typedef struct{
 	uint8_t :7;
 
 	uint8_t PDM_address_module;
+	uint8_t Alignment_structure1; //Alignment
 
 }_PDM;
+
+//#pragma pack(pop)
 
 #endif /* INC_PDM_PDM_STRUCT_H_ */

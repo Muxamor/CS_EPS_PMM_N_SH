@@ -279,7 +279,7 @@ void LPUART1_Init(void){
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
 	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
-	LPUART_InitStruct.BaudRate = 115200;
+	LPUART_InitStruct.BaudRate = 1536000;//115200;
 	LPUART_InitStruct.DataWidth = LL_LPUART_DATAWIDTH_8B;
 	LPUART_InitStruct.StopBits = LL_LPUART_STOPBITS_1;
 	LPUART_InitStruct.Parity = LL_LPUART_PARITY_NONE;
@@ -321,7 +321,7 @@ void USART3_Init(void){
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
 	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	USART_InitStruct.BaudRate = 115200;
+	USART_InitStruct.BaudRate = 1536000; //115200;
 	USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
 	USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
 	USART_InitStruct.Parity = LL_USART_PARITY_NONE;
@@ -393,6 +393,7 @@ void SetupInterrupt(void){
 	NVIC_SetPriority(LPUART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0)); //Set priority №2 from 0..15
 	LL_LPUART_EnableIT_RXNE(LPUART1); //Enable Interrupt RX buff no empty 
 	//LL_LPUART_DisableIT_RXNE(LPUART1);
+	//LL_LPUART_DisableIT_ERROR(LPUART1);
 	NVIC_EnableIRQ(LPUART1_IRQn);
 	//NVIC_DisableIRQ(LPUART1_IRQn);
 	/**********************************************/
@@ -401,6 +402,7 @@ void SetupInterrupt(void){
 	NVIC_SetPriority(USART3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0)); //Set priority №14 from 0..15
 	LL_USART_EnableIT_RXNE(USART3); //Enable Interrupt RX buff no empty 
 	//LL_USART_DisableIT_RXNE(USART3);
+	//LL_USART_DisableIT_ERROR(USART3);
 	NVIC_EnableIRQ(USART3_IRQn);
 	//NVIC_DisableIRQ(UART3_IRQn);
 	/**********************************************/
@@ -409,6 +411,7 @@ void SetupInterrupt(void){
 	NVIC_SetPriority(UART5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),14, 0)); //Set priority №14 from 0..15
 	LL_USART_EnableIT_RXNE(UART5); //Enable Interrupt RX buff no empty 
 	//LL_USART_DisableIT_RXNE(UART5);
+	//LL_USART_DisableIT_ERROR(USART5);
 	NVIC_EnableIRQ(UART5_IRQn);
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
