@@ -11,11 +11,14 @@
 #include "PBM_struct.h"
 
 
-void PBM_Init(PBM_Data_All *Data, uint8_t PBM);
+void PBM_Init(_PBM *pbm);
 
-void PBM_GPIOInit(PBM_Data_All *Data, uint8_t PBM);
+void PBM_TempSensorInit(_PBM *pbm, uint8_t PBM);
 
-void PBM_TempSensorInit(PBM_Data_All *Data, uint8_t PBM);
+void PBM_GPIO_Table(uint8_t PBM, uint8_t *Addr);
 
+void PBM_Temp_Table(uint8_t PBM, uint8_t number, uint8_t *Addr);
+
+void PBM_DS2777_Table(uint8_t PBM, uint8_t branch, uint8_t *Addr);
 
 #endif /* INC_PBM_INIT_H_ */
