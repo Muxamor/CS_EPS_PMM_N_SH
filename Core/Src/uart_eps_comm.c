@@ -34,7 +34,6 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
 
 	uint8_t send_pack_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint16_t size_package = 0;
- 	uint16_t i = 0;
  	uint16_t crc = 0;
 
  	if( size_data > UART_EPS_PACK_SIZE_BUFF ){
@@ -58,9 +57,7 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
  	send_pack_buf[5] = (uint8_t)( size_data );
 
  	//5. Put send data.
-	for(i = 0 ; i < size_data; i++ ){
-		send_pack_buf[i + 6] = send_data[i];
-	}
+	memcpy( &(send_pack_buf[6]), &(send_data[0]), size_data );
 
 	size_package = 6 + size_data;
 
@@ -107,14 +104,12 @@ ErrorStatus UART_EPS_Chaeck_CRC_Packag( _UART_EPS_COMM *UART_eps_comm ){
 }
 
 
-
 /** @brief Check error EPS UART ports.
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.	
 	@retval None.
 */
 void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
-
 
 	if( UART_eps_comm->error_port_counter == 0 ){ // Errors in UARTs
 
@@ -229,7 +224,6 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 		//Empty
 	}
 
-	UART_eps_comm->waiting_answer_flag = 0; 
 	UART_eps_comm->permit_recv_pack_flag = 0;
 	UART_eps_comm->stop_recv_pack_flag = 0;
 
@@ -309,7 +303,6 @@ ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm ){
 		
 	}
 
-	UART_eps_comm->waiting_answer_flag = 0; 
 	UART_eps_comm->permit_recv_pack_flag = 0;
 	UART_eps_comm->stop_recv_pack_flag = 0;
 
@@ -329,7 +322,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 	
 	int8_t error_status = ERROR_N;
 
-	//Not get data, nothing to parsing.
+	//Not get data, nothing to parsing. Protection
 	if( UART_eps_comm->stop_recv_pack_flag != 1){
 		return SUCCESS;
 	}
@@ -344,18 +337,17 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 		package_tag = UART_eps_comm->recv_pack_buf[3];
 
 		// Parsing CMD, ACK or NFC. 
-		if( package_tag == UART_EPS_CMD && UART_eps_comm->waiting_answer_flag == 0){
+		if( package_tag == UART_EPS_CMD ){
 			error_status = UART_EPS_Pars_Get_CMD( UART_eps_comm, pmm_ptr, pdm_ptr );
 
-		}else if( package_tag == UART_EPS_ACK && UART_eps_comm->waiting_answer_flag == 1 ){
+		}else if( package_tag == UART_EPS_ACK /* && UART_eps_comm->waiting_answer_flag == 1 */){
 			error_status = UART_EPS_Pars_Get_ACK( UART_eps_comm, pmm_ptr );
 
-		}else if( package_tag == UART_EPS_NFC && UART_eps_comm->waiting_answer_flag == 0 ){
+		}else if( package_tag == UART_EPS_NFC ){
 			error_status = UART_EPS_Pars_Get_NFC( UART_eps_comm );
 
 		}else{
 			//Not recognize package TAG.
-			UART_eps_comm->waiting_answer_flag = 0; 
 			UART_eps_comm->permit_recv_pack_flag = 0;
 			UART_eps_comm->stop_recv_pack_flag = 0;
 		}
@@ -368,11 +360,10 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 		UART_eps_comm->error_port_counter++;
 	}
 
-	UART_EPS_Set_Error_ports( UART_eps_comm, pmm_ptr ); //Think about delate from  here.
+	//UART_EPS_Set_Error_ports( UART_eps_comm, pmm_ptr ); 
 
 	return error_status;
 }
-
 
 
 /** @brief Send CMD.
@@ -458,43 +449,33 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 
 	error_status = ERROR_N;
 
-	UART_X_eps_comm->permit_recv_pack_flag = 0;
-	UART_X_eps_comm->stop_recv_pack_flag = 0;
-	UART_X_eps_comm->waiting_answer_flag = 0;
+	//Cleaar input EPS UART Buffer.
+	UART_EPS_Pars_Get_Package( UART_X_eps_comm, pmm_ptr, pdm_ptr);
 	
+	//Send a command and wait for an answer.
 	if( UART_EPS_Send_Package( UART_X_eps_comm->USARTx, destination_addr,  sourse_addr, UART_EPS_CMD, send_buf, size_send_data) == SUCCESS ){
 
 		UART_X_eps_comm->waiting_answer_flag = 1;
-		
 		timeout_counter = 0;
 
-		while( UART_X_eps_comm->waiting_answer_flag != 0 ){
-
-			if( UART_X_eps_comm->stop_recv_pack_flag == 1){
-
-				if (UART_EPS_Chaeck_CRC_Packag( UART_X_eps_comm ) == SUCCESS ){
-					error_status = UART_EPS_Pars_Get_ACK(  UART_X_eps_comm, pmm_ptr );
-				}
-				break;
-			}	
+		while( UART_X_eps_comm->waiting_answer_flag != 0 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
 
 			timeout_counter++;
 
 			if ( timeout_counter == UART_EPS_ACK_TIMEOUT ){
 				UART_X_eps_comm->waiting_answer_flag = 0;
+				UART_X_eps_comm->error_port_counter++;
 				error_status = ERROR_N;
 				break;
 			}
-		}
 
-		UART_X_eps_comm->waiting_answer_flag = 0; 
-		UART_X_eps_comm->permit_recv_pack_flag = 0;
-		UART_X_eps_comm->permit_recv_pack_flag = 0;
+			if( UART_X_eps_comm->stop_recv_pack_flag == 1){ //Response processing
+				error_status = UART_EPS_Pars_Get_Package( UART_X_eps_comm, pmm_ptr, pdm_ptr);
+			}
+		}
 	}
 
-	if( error_status == ERROR_N ){
-		UART_X_eps_comm->error_port_counter++;
-	}else{
+	if( error_status == SUCCESS ){
 		UART_X_eps_comm->error_port_counter = 0;
 	}
 

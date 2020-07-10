@@ -91,6 +91,8 @@ void LPUART1_IRQHandler(void){
 		UART_M_eps_comm->permit_recv_pack_flag = 0;
 		LL_LPUART_ReceiveData8(LPUART1);
 
+		UART_M_eps_comm->error_port_counter++;
+
 	}else if(LL_LPUART_IsActiveFlag_RXNE(LPUART1)){
 		uint8_t input_byte = 0;
 
@@ -172,6 +174,7 @@ void USART3_IRQHandler(void){
 		UART_B_eps_comm->stop_recv_pack_flag = 0;
 		UART_B_eps_comm->permit_recv_pack_flag = 0;
 		LL_USART_ReceiveData8(USART3);
+		UART_B_eps_comm->error_port_counter++;
 
 	}else if(LL_USART_IsActiveFlag_RXNE(USART3)){
 
