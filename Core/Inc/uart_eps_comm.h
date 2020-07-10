@@ -10,7 +10,7 @@
 #define UART_EPS_NFC 0x03
 
 #define UART_EPS_PACK_SIZE_BUFF  512
-
+#define UART_EPS_ERROR_Threshold 6
 #define UART_EPS_ACK_TIMEOUT 5000
 
 //Protocol UART EPS
@@ -39,6 +39,7 @@
 
 typedef struct{
 
+	USART_TypeDef* USARTx;
 	uint16_t expected_size_recv_pack;
 	uint16_t size_recv_pack;
 
@@ -52,9 +53,8 @@ typedef struct{
 	uint8_t waiting_answer_flag 	  :1; 
 	uint8_t :5;
 
-	uint8_t error_port_counter		  :4;
-
-	USART_TypeDef* USARTx;
+	uint8_t error_port_counter;
+	uint8_t Alignment_structure1; //Alignment
 
 }_UART_EPS_COMM;
 

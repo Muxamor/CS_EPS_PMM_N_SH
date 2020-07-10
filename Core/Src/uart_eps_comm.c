@@ -104,7 +104,7 @@ ErrorStatus UART_EPS_Chaeck_CRC_Packag( _UART_EPS_COMM *UART_eps_comm ){
 }
 
 
-/** @brief Check error EPS UART ports.
+/** @brief Set error EPS UART ports to pmm_ptr structure.
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.	
 	@retval None.
@@ -122,7 +122,7 @@ void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 		 
 	}else{
 		
-		if(UART_eps_comm->error_port_counter >= 6){ // If there are five errors in a row, then set the UART port error
+		if(UART_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold ){ // If there are five errors in a row, then set the UART port error
 
 			if( UART_eps_comm->USARTx == LPUART1 ){
 				pmm_ptr->Error_UART_port_M = ERROR;
@@ -157,54 +157,48 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 		memcpy(pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *pmm_ptr) );
 		pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
 		pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
+	
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
-
 		memcpy(pdm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *pdm_ptr) );
 		pdm_ptr->PDM_save_conf_flag = 1; //Save received settings in FRAM 
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
-
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM1_struct ){
-
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM2_struct ){
-
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM3_struct ){
-
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
-
 		uint32_t reboot_counter = 0;
+
 		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
 			reboot_counter = pmm_ptr->reboot_counter_CPUm; 
 		}else{
 			reboot_counter = pmm_ptr->reboot_counter_CPUb; 
 		}
 
-		pack_ACK_buf[0] = (uint8_t)(reboot_counter>>24);
-		pack_ACK_buf[1] = (uint8_t)(reboot_counter>>16);
-		pack_ACK_buf[2] = (uint8_t)(reboot_counter>>8);
-		pack_ACK_buf[3] = (uint8_t)(reboot_counter); 
+		pack_ACK_buf[0] = UART_EPS_ID_CMD_Get_Reboot_count;
+		pack_ACK_buf[1] = (uint8_t)(reboot_counter>>24);
+		pack_ACK_buf[2] = (uint8_t)(reboot_counter>>16);
+		pack_ACK_buf[3] = (uint8_t)(reboot_counter>>8);
+		pack_ACK_buf[4] = (uint8_t)(reboot_counter);
 
-		size_pack_ACK = 4; 
-
+		size_pack_ACK = 5;
 		ACK_Attribute = 2;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Reboot ){
-
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Take_CTRL ){
-
 		ACK_Attribute = 1;
 
 	}else{
@@ -213,12 +207,14 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 
 
 	if( ACK_Attribute == 0 ){ // Sends an ERROR in response
-		pack_ACK_buf[0] = 0x00; 
-		size_pack_ACK = 1; 
+		pack_ACK_buf[0] = cmd_id;
+		pack_ACK_buf[1] = 0x00; 
+		size_pack_ACK = 2; 
 
 	}else if( ACK_Attribute == 1 ){ //Sends an OK in response
-		pack_ACK_buf[0] = 0x01; 
-		size_pack_ACK = 1; 
+		pack_ACK_buf[0] = cmd_id;
+		pack_ACK_buf[1] = 0x01; 
+		size_pack_ACK = 2;
 
 	}else if( ACK_Attribute == 2 ){ //Sends an DATA in response
 		//Empty
@@ -269,7 +265,6 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr )
 	}else{ 
 		
 		if (UART_eps_comm->recv_pack_buf[7] == 0x00 ) { // In answer Error
-			//TO DO Need repeat send command.
 			error_status = ERROR_N;
 		}
 	}

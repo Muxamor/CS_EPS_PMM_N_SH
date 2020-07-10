@@ -175,10 +175,17 @@ int main(void){
 				PDM_Get_Telemetry( pdm_ptr );
 				PMM_Get_Telemetry( pmm_ptr );
 
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+
 			}
 
 
