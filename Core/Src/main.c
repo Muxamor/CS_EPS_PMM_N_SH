@@ -80,43 +80,66 @@ int main(void){
 	LL_Init();
 	SystemClock_Config();
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
-	I2C3_Init();
-	I2C4_Init();
-	LPUART1_Init();
-	USART3_Init();
-	UART5_Init();
+
 	GPIO_Init();
+	I2C3_Init();
+	UART5_Init();
+	
 
 	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
 	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 	LL_mDelay(40);
 
-	SetupInterrupt();
-	//IWDG_Init();
-
-	CAN_init_eps(CAN1);
-	CAN_init_eps(CAN2);
-	CAN_RegisterAllVars();
-
 	//Need test!!!!!!!!!!!!
 	//uint8_t pwr_reboot= 6;
 	//PMM_Detect_PowerRebootCPU(&pwr_reboot);
 	//!!!!!!!
 
+
+
+	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
+
 	//Not Forget !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-		pmm_ptr->reboot_counter_CPUm++;
+		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
+		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
 	}else{
-		pmm_ptr->reboot_counter_CPUb++;
+		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
+		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
 	}
+
+	LPUART1_Init();
+	USART3_Init();
+
+	I2C4_Init();
+
+	SetupInterrupt();
+
+	//IWDG_Init();
+
+
+	CAN_init_eps(CAN1);
+	CAN_init_eps(CAN2);
+	CAN_RegisterAllVars();
+	//CAN_DeInit(CAN1);
+	//CAN_DeInit(CAN2);
+
+
+
+	//Not Forget !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			pmm_ptr->reboot_counter_CPUm++;
+		}else{
+			pmm_ptr->reboot_counter_CPUb++;
+		}
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight unit befor 08.06.2020
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
-	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
+
 
 	if( pmm_ptr->Main_Backup_mode_CPU == 0){
 
@@ -143,10 +166,29 @@ int main(void){
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
 		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
 
-		while (1){
+		
+		while(1){
 
-			PDM_Get_Telemetry( pdm_ptr );
-			PMM_Get_Telemetry( pmm_ptr );
+
+
+			while(1){
+				PDM_Get_Telemetry( pdm_ptr );
+				PMM_Get_Telemetry( pmm_ptr );
+
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+				UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+
+			}
+
+
 			CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr );
 
 			if(CAN_cmd_mask_status != 0){
@@ -160,29 +202,33 @@ int main(void){
 
 	}else{ // Backup Mode CPU Main_Backup_mode_CPU = 0;
 
-		uint8_t mas_string[] = "Set active CPUbackup\r\n";
+		 UART_EPS_Pars_Get_Package(UART_M_eps_comm, pmm_ptr, pdm_ptr);
 
-		LL_mDelay(40);
+		 UART_EPS_Pars_Get_Package(UART_B_eps_comm, pmm_ptr, pdm_ptr);
 
-		while(1){
-
-		//	if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 ){
-				PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
-
-				USART_send_string( UART5, mas_string);
-
-				ENABLE_TMUX1209_I2C();
-
-		//		UART_CHANGE_ACTIVE_CPU_FLAG = 0;
-		//	}
-
-
-			if(CAN_cmd_mask_status != 0){
-				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
-			}
-
-
-		}
+//		uint8_t mas_string[] = "Set active CPUbackup\r\n";
+//
+//		LL_mDelay(40);
+//
+//		while(1){
+//
+//		//	if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 ){
+//				PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
+//
+//				USART_send_string( UART5, mas_string);
+//
+//				ENABLE_TMUX1209_I2C();
+//
+//		//		UART_CHANGE_ACTIVE_CPU_FLAG = 0;
+//		//	}
+//
+//
+//			if(CAN_cmd_mask_status != 0){
+//				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
+//			}
+//
+//
+//		}
 
 	}
 
