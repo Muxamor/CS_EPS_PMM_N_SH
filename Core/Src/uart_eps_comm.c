@@ -145,8 +145,8 @@ void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr ){
 
 	uint8_t cmd_id = 0;
-	uint16_t size_pack_ACK = 0;
-	uint8_t pack_ACK_buf[UART_EPS_PACK_SIZE_BUFF];
+	uint16_t size_ACK = 0;
+	uint8_t ACK_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint8_t ACK_Attribute = 0; // 0 - Send Ask ERROR, 1 - Send Ask OK, 2 - Send data; 
 
 	//uint8_t data_size = 0;
@@ -194,6 +194,14 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM3_struct ){
 		ACK_Attribute = 1;
 
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PMM_struct ){
+		uint16_t size_data = 0;
+		size_data = sizeof( *pmm_ptr);
+		ACK_buf[0] = UART_EPS_ID_ACK_Get_PMM_struct;
+		memcpy( &(ACK_buf[1]), pmm_ptr, size_data );
+		size_ACK = size_data + 1;
+		ACK_Attribute = 2;
+
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 		uint32_t reboot_counter = 0;
 
@@ -203,13 +211,13 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 			reboot_counter = pmm_ptr->reboot_counter_CPUb; 
 		}
 
-		pack_ACK_buf[0] = UART_EPS_ID_CMD_Get_Reboot_count;
-		pack_ACK_buf[1] = (uint8_t)(reboot_counter);
-		pack_ACK_buf[2] = (uint8_t)(reboot_counter>>8);
-		pack_ACK_buf[3] = (uint8_t)(reboot_counter>>16);
-		pack_ACK_buf[4] = (uint8_t)(reboot_counter>>24);
+		ACK_buf[0] = UART_EPS_ID_ACK_Get_Reboot_count;
+		ACK_buf[1] = (uint8_t)(reboot_counter);
+		ACK_buf[2] = (uint8_t)(reboot_counter>>8);
+		ACK_buf[3] = (uint8_t)(reboot_counter>>16);
+		ACK_buf[4] = (uint8_t)(reboot_counter>>24);
 
-		size_pack_ACK = 5;
+		size_ACK = 5;
 		ACK_Attribute = 2;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Reboot ){
@@ -224,14 +232,14 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 
 
 	if( ACK_Attribute == 0 ){ // Sends an ERROR in response
-		pack_ACK_buf[0] = cmd_id;
-		pack_ACK_buf[1] = 0x00; 
-		size_pack_ACK = 2; 
+		ACK_buf[0] = cmd_id;
+		ACK_buf[1] = 0x00;
+		size_ACK = 2;
 
 	}else if( ACK_Attribute == 1 ){ //Sends an OK in response
-		pack_ACK_buf[0] = cmd_id;
-		pack_ACK_buf[1] = 0x01; 
-		size_pack_ACK = 2;
+		ACK_buf[0] = cmd_id;
+		ACK_buf[1] = 0x01;
+		size_ACK = 2;
 
 	}else if( ACK_Attribute == 2 ){ //Sends an DATA in response
 		//Empty
@@ -240,7 +248,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 	UART_eps_comm->permit_recv_pack_flag = 0;
 	UART_eps_comm->stop_recv_pack_flag = 0;
 
-	return UART_EPS_Send_ACK ( UART_eps_comm,  pack_ACK_buf, size_pack_ACK );
+	return UART_EPS_Send_ACK ( UART_eps_comm,  ACK_buf, size_ACK );
 }
 
 
@@ -259,15 +267,6 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr )
 
 	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
-	// UART_EPS_ID_CMD_SAVE_PMM_struct
-	// UART_EPS_ID_CMD_SAVE_PDM_struct
-	// UART_EPS_ID_CMD_SAVE_PBM1_struct
-	// UART_EPS_ID_CMD_SAVE_PBM2_struct
-	// UART_EPS_ID_CMD_SAVE_PBM3_struct
-	// UART_EPS_ID_CMD_Reboot
-	// UART_EPS_ID_CMD_Take_CTRL
-	// UART_EPS_ID_CMD_Ping
-
 	if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 
 		uint32_t reboot_counter = 0;
@@ -279,6 +278,9 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr )
 		}else{
 			pmm_ptr->reboot_counter_CPUm = reboot_counter;
 		}
+
+	}else if( cmd_id == UART_EPS_ID_ACK_Get_PMM_struct	 ){
+		memcpy(pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *pmm_ptr) );
 
 	}else{ 
 		
@@ -417,12 +419,16 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM1_struct ){
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM2_struct ){
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM3_struct ){
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PMM_struct ){
+		 send_buf[0] = UART_EPS_ID_CMD_Get_PMM_struct;
+		 size_send_data = 1;
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 
 		send_buf[0] = UART_EPS_ID_CMD_Get_Reboot_count;
 		size_send_data = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Reboot ){
+
 	}else if( cmd_id == UART_EPS_ID_CMD_Take_CTRL ){
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Ping ){
