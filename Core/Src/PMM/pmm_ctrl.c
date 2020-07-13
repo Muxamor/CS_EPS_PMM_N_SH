@@ -772,17 +772,13 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 }
 
 
-
-
-
-//********************change FN PMM_Set_MUX_CAN_CPUm_CPUb after 08.06 *********************//
 /** @brief  Setup multiplexor. CAN bus switching between CPUm and CPUb.
 	@param  num_CAN_pwr_channel - number of channel :
 								CPUmain
 								CPUbackup
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( uint8_t active_CPU ){
+ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr ){
 
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 	uint8_t i = 0;
@@ -790,17 +786,19 @@ ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( uint8_t active_CPU ){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-		if( active_CPU == CPUmain ){
-			error_I2C = TCA9539_conf_IO_dir_input( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+		if( pmm_ptr->Active_CPU == 0){ //Active CPU
 
-		}else if(  active_CPU == CPUbackup ){
-			error_I2C = TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			if( pmm_ptr->Main_Backup_mode_CPU == 0 ){ //Setting mane CPU
+				error_I2C = TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			}else{//Setting backup CPU
+				error_I2C = TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			}
+
 			error_I2C = TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
 
-		}else{
-			error_I2C = ERROR_N;
+		}else{ //Passive CPU
+			error_I2C = TCA9539_conf_IO_dir_input( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
 		}
-
 
 		if( error_I2C != SUCCESS ){
 			i++;

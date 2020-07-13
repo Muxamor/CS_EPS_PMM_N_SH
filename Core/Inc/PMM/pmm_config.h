@@ -48,12 +48,16 @@
 #define pmm_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
 #define pmm_i2c_delay_att_conn		5 	 //ms Delay between attempts connection through I2C in millisecond
 
+#define pmm_uart_attempt_conn		3 	 // Quantity attempt to connection through UART
+#define pmm_uart_delay_att_conn		10 	 //ms Delay between attempts connection through UART in millisecond
+
 
 #define Service_Mode_EPS			0xFF
 
 
 #define CPUmain 					0x00
 #define CPUbackup					0x01
+
 
 #define UART_EPS_CPUm_Addr 			0x01
 #define UART_EPS_CPUb_Addr 			0x02

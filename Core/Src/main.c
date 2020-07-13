@@ -80,27 +80,18 @@ int main(void){
 	LL_Init();
 	SystemClock_Config();
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
-
 	GPIO_Init();
 	I2C3_Init();
 	UART5_Init();
 	
+//Think abot power off CPU
+//	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
+//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
-	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
-	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-	LL_mDelay(40);
-
-	//Need test!!!!!!!!!!!!
-	//uint8_t pwr_reboot= 6;
-	//PMM_Detect_PowerRebootCPU(&pwr_reboot);
-	//!!!!!!!
-
-
-
+//TODO read settings from FRAM.
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
 
-	//Not Forget !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
 		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
 		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
@@ -109,137 +100,96 @@ int main(void){
 		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
 	}
 
+	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+		pmm_ptr->reboot_counter_CPUm++;
+	}else{
+		pmm_ptr->reboot_counter_CPUb++;
+	}
+
+	pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
+
 	LPUART1_Init();
 	USART3_Init();
-
 	I2C4_Init();
 
 	SetupInterrupt();
 
 	//IWDG_Init();
 
+	PMM_Check_Active_CPU(pmm_ptr,  UART_M_eps_comm, UART_B_eps_comm); ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Возможно это убрать. Обработка отказа когда не ясен активный CPU
 
-	CAN_init_eps(CAN1);
-	CAN_init_eps(CAN2);
-	CAN_RegisterAllVars();
-	//CAN_DeInit(CAN1);
-	//CAN_DeInit(CAN2);
+	if( pmm_ptr->Active_CPU == 0 ){ //Initialization Active CPU
+		PMM_Set_MUX_CAN_CPUm_CPUb( pmm_ptr );
 
+	//PMM_Init_ActiveCPU{
+		ENABLE_TMUX1209_I2C();
 
-
-	//Not Forget !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-			pmm_ptr->reboot_counter_CPUm++;
-		}else{
-			pmm_ptr->reboot_counter_CPUb++;
+		if( pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
+			pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+		    pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
 		}
+
+		CAN_init_eps(CAN1);
+		CAN_init_eps(CAN2);
+		CAN_RegisterAllVars();
+
+		PDM_init( pdm_ptr );
+		PMM_init( pmm_ptr );
+		LL_mDelay(50); //Delay for startup power supply
+	//}
+
+	}else{//Initialization not active CPU
+	//PMM_Init_PassiveCPU{
+		PMM_HARD_Reset_I2C_GPIOExt( PMM_I2CADDR_GPIOExt1);
+		DISABLE_TMUX1209_I2C();
+		CAN_DeInit(CAN1);
+		CAN_DeInit(CAN2);
+	//}
+	}
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight unit befor 08.06.2020
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
+	while(1){
 
-
-	if( pmm_ptr->Main_Backup_mode_CPU == 0){
-
-		//pmm_ptr->Detect_Active_CPU = 0;
-
-		ENABLE_TMUX1209_I2C();
-
-		PDM_init( pdm_ptr );
-		PMM_init( pmm_ptr );
-
-		LL_mDelay(50); //Delay for startup power supply
-
-//		while(1){
-//			PMM_Get_PWR_Supply_m_b_I( pmm_ptr, PMM_I2Cx_PowerADC, PMM_I2CADDR_PowerADC);
-//		}
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
-
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, ENABLE );
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, ENABLE );
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, ENABLE );
-		PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, ENABLE );
-
-		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
-		PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
-
+		if( pmm_ptr->Active_CPU == 0 ){ //Initialization Active CPU
+			PDM_Get_Telemetry( pdm_ptr );
+			PMM_Get_Telemetry( pmm_ptr );
 		
-		while(1){
-
-
-
-			while(1){
-				PDM_Get_Telemetry( pdm_ptr );
-				PMM_Get_Telemetry( pmm_ptr );
-
-				UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
-				UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
-				UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
-
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-				UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-
-			}
+	//
+	//		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
+	//		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
+	//		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
+	//
+	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+	//
+	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 2, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+	//
+	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 
 
 			CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr );
 
 			if(CAN_cmd_mask_status != 0){
-
 				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
 			}
+
+		}else{//Initialization not active CPU
+
+			UART_EPS_Pars_Get_Package(UART_M_eps_comm, pmm_ptr, pdm_ptr);
+
+			UART_EPS_Pars_Get_Package(UART_B_eps_comm, pmm_ptr, pdm_ptr);
+
 		}
-
-
-
-
-	}else{ // Backup Mode CPU Main_Backup_mode_CPU = 0;
-
-		while(1){
-		 UART_EPS_Pars_Get_Package(UART_M_eps_comm, pmm_ptr, pdm_ptr);
-
-		 UART_EPS_Pars_Get_Package(UART_B_eps_comm, pmm_ptr, pdm_ptr);
-		}
-
-//		uint8_t mas_string[] = "Set active CPUbackup\r\n";
-//
-//		LL_mDelay(40);
-//
-//		while(1){
-//
-//		//	if( UART_CHANGE_ACTIVE_CPU_FLAG == 1 ){
-//				PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
-//
-//				USART_send_string( UART5, mas_string);
-//
-//				ENABLE_TMUX1209_I2C();
-//
-//		//		UART_CHANGE_ACTIVE_CPU_FLAG = 0;
-//		//	}
-//
-//
-//			if(CAN_cmd_mask_status != 0){
-//				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
-//			}
-//
-//
-//		}
 
 	}
-
-
-
 
 
 }
@@ -280,7 +230,6 @@ int main(void){
 
 
 
-/*
 
 //	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
 //	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
@@ -288,46 +237,6 @@ int main(void){
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
-		printf("test  \n");
-#ifdef DEBUGprintf
+	//	printf("test  \n");
 
-		//	Error_Handler();
-
-#endif
-*/
-
-/*
- *
- *
-//#define TCA9539_I2C_ADDR					0b01110100
-#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
-#define BYTE_TO_BINARY(byte)  \
-  (byte & 0x80 ? '1' : '0'), \
-  (byte & 0x40 ? '1' : '0'), \
-  (byte & 0x20 ? '1' : '0'), \
-  (byte & 0x10 ? '1' : '0'), \
-  (byte & 0x08 ? '1' : '0'), \
-  (byte & 0x04 ? '1' : '0'), \
-  (byte & 0x02 ? '1' : '0'), \
-  (byte & 0x01 ? '1' : '0')
-
-
- *
- *
- *
- *
- * 		#ifdef DEBUGprintf
-		uint32_t last_cmd_mask_status = 0;
-		#endif
- *
- *
-
-			#ifdef DEBUGprintf
-				if(last_cmd_mask_status != CAN_cmd_mask_status){
-				last_cmd_mask_status = CAN_cmd_mask_status;
-				printf("cmd_reg status: " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN"\n",
-				BYTE_TO_BINARY(CAN_cmd_mask_status >> 24), BYTE_TO_BINARY(CAN_cmd_mask_status >> 16),
-				BYTE_TO_BINARY(CAN_cmd_mask_status >> 8), BYTE_TO_BINARY(CAN_cmd_mask_status));
-			}
-		#endif*/
 
