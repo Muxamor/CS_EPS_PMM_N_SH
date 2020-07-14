@@ -8,6 +8,13 @@
 #include "TMP1075.h"
 #include "FRAM.h"
 
+#include "PBM_config.h"
+#include "PBM_struct.h"
+#include "PBM_init_IC.h"
+#include "PBM_init.h"
+#include "PBM_control.h"
+#include "PBM.h"
+
 #include "pdm_config.h"
 #include "pdm_struct.h"
 #include "pdm_init.h"
@@ -21,6 +28,8 @@
 #include "pmm_ctrl.h"
 #include "pmm.h"
 
+#include "eps_struct.h"
+
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/canv.h"
@@ -32,14 +41,6 @@
 #include "fram.h"
 
 #include "DS2777.h"
-
-#include "PBM_config.h"
-#include "PBM_init_IC.h"
-#include "PBM_init.h"
-#include "PBM_struct.h"
-#include "PBM_control.h"
-#include "PBM.h"
-
 
 /****************************TODO*************************
 1. Need to think about delay 30 minuts. 
@@ -74,15 +75,13 @@ int main(void){
 	//_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
 
+	_EPS_Param eps_param = {0};
+
+	eps_param.eps_pmm_ptr = pmm_ptr;
+	eps_param.eps_pdm_ptr = pdm_ptr;
+	eps_param.eps_pbm_ptr = pbm_mas;
+
 	CAN_cmd_mask_status = 0;
-
-// typedef struct{
-// 	_PDM *pdm_ptr_param;
-// 	_PMM *pdm_ptr_param;
-// 	_PAM *pbm_ptr_param;
-// 	_PBM *pbm_ptr_param;
-
-// }EPS_parametrs
 
 	/** Initialization Periph STM32L496*/
 	LL_Init();
