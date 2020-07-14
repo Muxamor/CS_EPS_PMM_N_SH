@@ -520,6 +520,7 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 		send_buf[0] = UART_EPS_ID_NFS_Prep_Take_CTRL;
 		size_send_data = 1;
 
+		PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
 	}else{
 		return ERROR_N;
 	}

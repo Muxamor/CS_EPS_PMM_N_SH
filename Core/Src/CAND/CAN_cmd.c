@@ -190,28 +190,22 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 					}
 					break;
 
-				case CAN_Switch_active_CPU_offset: // Switch active CPU (CPUmain active or CPUbackup )
- // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Temporary implementation delet after 08.06.2020
-					if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x00 ){
+				case CAN_Switch_active_CPU_offset: // Switch active CPU (CPUmain active or CPUbackup
+
+					if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x00 ){
 
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUmain\n", CAN_Switch_active_CPU_offset);
 						#endif
 
-						PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
-
-					}else if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x01 ){
+					}else if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x01 ){
 
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUbackup\n", CAN_Switch_active_CPU_offset);
 						#endif
-
-                        DISABLE_TMUX1209_I2C(); 
-
-						LPUART_send_byte( LPUART1, 0xAA );
-
-						//PMM_Set_MUX_CAN_CPUm_CPUb( CPUbackup );
+         
 					}
+                    PMM_Switch_Active_CPU( CAN_IVar4_RegCmd.CAN_Set_active_CPU, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
 					break;
 
 				default:
