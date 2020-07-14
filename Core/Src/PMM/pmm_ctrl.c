@@ -8,9 +8,10 @@
 #include "TCA9539.h"
 #include "INA231.h"
 #include "ADS1015.h"
+#include "uart_eps_comm.h"
 #include "pmm_struct.h"
 #include "pmm_config.h"
-
+#include "pmm_init_IC.h"
 #include "pmm_ctrl.h"
 
 /**********************TO DO ***********************************/
@@ -786,17 +787,13 @@ ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr ){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-		if( pmm_ptr->Active_CPU == 0){ //Active CPU
-
-			if( pmm_ptr->Main_Backup_mode_CPU == 0 ){ //Setting mane CPU
-				error_I2C = TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
-			}else{//Setting backup CPU
-				error_I2C = TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
-			}
-
-			error_I2C = TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
-
-		}else{ //Passive CPU
+		if( pmm_ptr->Active_CPU == 0 && pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			error_I2C = TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+		}else if(  pmm_ptr->Active_CPU == 1 && pmm_ptr->Main_Backup_mode_CPU == 1){
+			error_I2C = TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+		}else{
 			error_I2C = TCA9539_conf_IO_dir_input( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
 		}
 
@@ -805,10 +802,10 @@ ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr ){
 			LL_mDelay( pmm_i2c_delay_att_conn );
 		}
 	}
+	
 
 	return error_I2C;
 }
-
 
 
 /** @brief Checking active CPU flag  (pmm_ptr->Active_CPU) between main and backup CPU.
@@ -816,37 +813,75 @@ ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr ){
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-void PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr,){
+ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr,_PDM *pdm_ptr, _PBM pbm_mas[]){
 
-
+	int8_t error_status = ERROR_N;
+	uint32_t i = 0;
 
 	if( pmm_ptr->Main_Backup_mode_CPU == 0 && pmm_ptr->Active_CPU == 0x00 && set_active_CPU == 0x00 ){
-							pmm_ptr->Active_CPU = 0;
-						}else{
+		pmm_ptr->Active_CPU = 0;
+		error_status = SUCCESS;
+	}else if( pmm_ptr->Main_Backup_mode_CPU == 1 && pmm_ptr->Active_CPU == 0x01 && set_active_CPU == 0x01 ){
+		pmm_ptr->Active_CPU = 1;
+		error_status = SUCCESS;
+	}else{
 
-							UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
-							LL_mDelay(10);
+		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_Main_eps_comm, UART_Backup_eps_comm, pmm_ptr );
+		LL_mDelay(10);
 
-							UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-							UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+		i = 0;
+		error_status = ERROR_N;
+		while( ( error_status != SUCCESS ) && ( i < pmm_uart_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-							UART_EPS_Send_CMD( UART_EPS_ID_CMD_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-						}
+			if( UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, pmm_ptr, pdm_ptr, pbm_mas ) == SUCCESS ){
+				if( UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, pmm_ptr, pdm_ptr, pbm_mas ) == SUCCESS ){
+					error_status = UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PBM1_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, pmm_ptr, pdm_ptr, pbm_mas );
+					//!!!!!!!!!!!!!!!!!!!//TO DO add PAM 
+				}
 
-						               if( pmm_ptr->Main_Backup_mode_CPU == 1 && pmm_ptr->Active_CPU == 0x01 ){
-                            pmm_ptr->Active_CPU = 0;
-                        }else{
+			}
 
-                            UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
-                            LL_mDelay(10);
+			if( error_status != SUCCESS ){
+				i++;
+				LL_mDelay( pmm_uart_delay_att_conn );
+			}
+		}
 
-                            UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-                            UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+		
+		if( error_status == SUCCESS ){
 
-                            UART_EPS_Send_CMD( UART_EPS_ID_CMD_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-                        }
+			pmm_ptr->Active_CPU = set_active_CPU;
+			PMM_Set_MUX_CAN_CPUm_CPUb( pmm_ptr );
+		
+			i = 0;
+			error_status = ERROR_N;
+			while( ( error_status != SUCCESS ) && ( i < pmm_uart_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-//                        DISABLE_TMUX1209_I2C(); 
+					error_status = UART_EPS_Send_CMD( UART_EPS_ID_CMD_Take_CTRL, 0, UART_Main_eps_comm, UART_Backup_eps_comm, pmm_ptr, pdm_ptr, pbm_mas );
+			
+				if( error_status != SUCCESS ){
+					i++;
+					LL_mDelay( pmm_uart_delay_att_conn );
+				}
+			}
 
+			if( error_status == SUCCESS ){
+				LL_mDelay(10);
+				pmm_ptr->Active_CPU = set_active_CPU;
+				PMM_HARD_Reset_I2C_GPIOExt( PMM_I2CADDR_GPIOExt1);
+				DISABLE_TMUX1209_I2C();
+				CAN_DeInit(CAN1);
+				CAN_DeInit(CAN2);
+				//TODO save PMM to fram
+			}
 
+		}
+
+		if( error_status == ERROR_N ){
+			pmm_ptr->Active_CPU = !set_active_CPU;
+		}
+
+	}
+
+	return error_status;
 }

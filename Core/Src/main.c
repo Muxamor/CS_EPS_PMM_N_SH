@@ -76,6 +76,14 @@ int main(void){
 
 	CAN_cmd_mask_status = 0;
 
+// typedef struct{
+// 	_PDM *pdm_ptr_param;
+// 	_PMM *pdm_ptr_param;
+// 	_PAM *pbm_ptr_param;
+// 	_PBM *pbm_ptr_param;
+
+// }EPS_parametrs
+
 	/** Initialization Periph STM32L496*/
 	LL_Init();
 	SystemClock_Config();
@@ -118,10 +126,12 @@ int main(void){
 
 	PMM_Check_Active_CPU(pmm_ptr,  UART_M_eps_comm, UART_B_eps_comm); ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Возможно это убрать. Обработка отказа когда не ясен активный CPU
 
-	if( pmm_ptr->Active_CPU == 0 ){ //Initialization Active CPU
+	if( (pmm_ptr->Active_CPU == 0 && pmm_ptr->Main_Backup_mode_CPU == 0) || (pmm_ptr->Active_CPU == 1 && pmm_ptr->Main_Backup_mode_CPU == 1) ){ //Initialization Active CPU
+		
+		//PMM_Init_ActiveCPU{
+
 		PMM_Set_MUX_CAN_CPUm_CPUb( pmm_ptr );
 
-	//PMM_Init_ActiveCPU{
 		ENABLE_TMUX1209_I2C();
 
 		if( pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){

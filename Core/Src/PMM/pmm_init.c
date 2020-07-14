@@ -149,7 +149,9 @@ uint8_t PMM_Detect_MasterBackupCPU(void){
 void PMM_Check_Active_CPU(_PMM *pmm_ptr,  _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm){
 
 	_PMM backup_CPU_pmm = {0};
-	_PDM backup_CPU_pdm = {0};
+	_PDM null_pdm = {0};
+	_PBM null_pbm[1] = {0};
+
 	int8_t error_status = ERROR_N;
 	uint32_t i = 0;
 	uint32_t timeout_counter = 0;
@@ -158,7 +160,7 @@ void PMM_Check_Active_CPU(_PMM *pmm_ptr,  _UART_EPS_COMM *UART_Main_eps_comm, _U
 
 		while( ( error_status != SUCCESS ) && ( i < pmm_uart_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-			error_status = UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, &backup_CPU_pmm, &backup_CPU_pdm );
+			error_status = UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, &backup_CPU_pmm, &null_pdm, null_pbm  );
 
 			if( error_status != SUCCESS ){
 				i++;
@@ -187,10 +189,10 @@ void PMM_Check_Active_CPU(_PMM *pmm_ptr,  _UART_EPS_COMM *UART_Main_eps_comm, _U
 			timeout_counter++;
 
 			if( UART_Main_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-				UART_EPS_Pars_Get_Package(UART_Main_eps_comm, pmm_ptr, &backup_CPU_pdm);
+				UART_EPS_Pars_Get_Package(UART_Main_eps_comm, pmm_ptr, &null_pdm);
 			}
 			if( UART_Backup_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-				UART_EPS_Pars_Get_Package( UART_Backup_eps_comm, pmm_ptr, &backup_CPU_pdm);
+				UART_EPS_Pars_Get_Package( UART_Backup_eps_comm, pmm_ptr, &null_pdm);
 			}
 		}
 	}
