@@ -12,15 +12,22 @@
  @param 	*Data - structure data for all PBM modules.
  @retval 	none
  */
-void PBM_GetTelemetry(I2C_TypeDef *I2Cx, _PBM *pbm) {
+ErrorStatus PBM_GetTelemetry(_PBM pbm[]) {
 
 	uint8_t i = 0;
+	int8_t Error = 0;
 
 	for (i = 0; i < PBM_QUANTITY; i++) {
-		PBM_ReadBatteryData(I2Cx, pbm, i);
-		PBM_ReadTempSensor(I2Cx, pbm, i);
-		PBM_ReadGPIO(I2Cx, pbm, i);
+		Error = PBM_ReadBatteryData(PBM_I2C_PORT, pbm, i);
+		Error = Error + PBM_ReadTempSensors(PBM_I2C_PORT, pbm, i);
+		Error = Error + PBM_ReadGPIO(PBM_I2C_PORT, pbm, i);
 	}
-	PBM_CalcTotalCapacityPBM(pbm);
-	PBM_CheckCapacityPBM(I2Cx, pbm);
+	Error = Error + PBM_CalcTotalCapacityPBM(pbm);
+	Error = Error + PBM_CheckCapacityPBM(PBM_I2C_PORT, pbm);
+
+	if (Error == SUCCESS) {
+		return SUCCESS;
+	}else {
+		return ERROR_N;
+	}
 }
