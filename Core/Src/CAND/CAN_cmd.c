@@ -4,10 +4,13 @@
 #include "SetupPeriph.h"
 #include "median_filter.h"
 
+#include "pbm_struct.h"
+#include "pbm_config.h"
+#include "pbm_control.h"
+
 #include "pdm_struct.h"
 #include "pdm_config.h"
 #include "pdm_ctrl.h"
-
 
 #include "pmm_struct.h"
 #include "pmm_config.h"
@@ -24,7 +27,7 @@ extern struct CAN_IVar4 CAN_IVar4_RegCmd;
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 
 
-void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
+void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[] ){
 
 	uint8_t number_cmd_reg = 0;
 	uint64_t cmd_bit_flag = 0;
@@ -186,26 +189,23 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 							printf("Get comm. reg. %d -> Disable constant mode\n", CAN_Constant_mode_offset);
 						#endif
 						//Need vrite config to PMM struct
-						CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr);
+						CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr, pbm_mas);
 					}
 					break;
 
 				case CAN_Switch_active_CPU_offset: // Switch active CPU (CPUmain active or CPUbackup
 
 					if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x00 ){
-
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUmain\n", CAN_Switch_active_CPU_offset);
 						#endif
-
 					}else if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x01 ){
-
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUbackup\n", CAN_Switch_active_CPU_offset);
 						#endif
-         
-					}
-                    PMM_Switch_Active_CPU( CAN_IVar4_RegCmd.CAN_Set_active_CPU, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
+         			}
+
+                    //PMM_Switch_Active_CPU( CAN_IVar4_RegCmd.CAN_Set_active_CPU, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
 					break;
 
 				default:
@@ -224,7 +224,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr ){
 }
 
 
-void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr){
+void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[]){
 
 	uint8_t num_pwr_ch = 0;
 	/*for(uint16_t i = 0; i < sizeof(CAN_IVar5_telemetry); i++){
