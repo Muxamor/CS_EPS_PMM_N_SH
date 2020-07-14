@@ -4,6 +4,7 @@
 
 #include "pmm_struct.h"
 #include "pdm_struct.h"
+#include "pbm_struct.h"
 
 #define UART_EPS_CMD 0x01
 #define UART_EPS_ACK 0x02
@@ -73,7 +74,7 @@ ErrorStatus UART_EPS_Pars_Get_ACK( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr 
 ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm );
 ErrorStatus UART_EPS_Pars_Get_Package( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr);
 
-ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr,  _PDM *pdm_ptr );
+ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr,  _PDM *pdm_ptr,  _PBM pbm_mas[] );
 ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr );
 ErrorStatus UART_EPS_Send_ACK ( _UART_EPS_COMM *UART_eps_comm , uint8_t send_data[], uint16_t size_data );
 

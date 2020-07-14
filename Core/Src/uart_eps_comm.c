@@ -3,6 +3,7 @@
 #include "Fn_CRC16.h"
 #include "pmm_struct.h"
 #include "pdm_struct.h"
+#include "pbm_struct.h"
 #include "uart_comm.h"
 #include "pmm_config.h"
 #include "pmm_init.h"
@@ -388,7 +389,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr,  _PDM *pdm_ptr ){
+ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr,  _PDM *pdm_ptr,  _PBM pbm_mas[] ){
 
 	uint8_t send_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint16_t size_send_data = 0;
