@@ -79,7 +79,7 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
 }
 
 
-/** @brief  Check  Crc uart eps  pockage
+/** @brief  Check CRC UART EPS package
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
@@ -136,7 +136,7 @@ void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 }
 
 
-/** @brief  Parsing received CMD from UART port. (Internal exchange between main and backup CPU).
+/** @brief  Parsing received CMD from UART EPS port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
@@ -145,19 +145,36 @@ void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr ){
 
 	uint8_t cmd_id = 0;
-	//uint8_t data_size = 0;
-	uint16_t size_pack_ACK = 0;
-	uint8_t pack_ACK_buf[UART_EPS_PACK_SIZE_BUFF];
+	uint16_t size_ACK = 0;
+	uint8_t ACK_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint8_t ACK_Attribute = 0; // 0 - Send Ask ERROR, 1 - Send Ask OK, 2 - Send data; 
 
+	//uint8_t data_size = 0;
 	//data_size = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[4]) ) << 8 ) | (( (uint16_t)(UART_eps_comm->recv_pack_buf[5]) ) - 1);
+
 	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
+		
+		//Save reboot counter value.
+		uint32_t reboot_counter = 0;
+		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			reboot_counter = pmm_ptr->reboot_counter_CPUm;
+		}else{
+			reboot_counter = pmm_ptr->reboot_counter_CPUb;
+		}
+
 		memcpy(pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *pmm_ptr) );
 		pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
 		pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
-	
+
+		//Save restore counter value.
+		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			pmm_ptr->reboot_counter_CPUm = reboot_counter;
+		}else{
+			pmm_ptr->reboot_counter_CPUb = reboot_counter;
+		}
+
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
@@ -177,6 +194,14 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM3_struct ){
 		ACK_Attribute = 1;
 
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PMM_struct ){
+		uint16_t size_data = 0;
+		size_data = sizeof( *pmm_ptr);
+		ACK_buf[0] = UART_EPS_ID_ACK_Get_PMM_struct;
+		memcpy( &(ACK_buf[1]), pmm_ptr, size_data );
+		size_ACK = size_data + 1;
+		ACK_Attribute = 2;
+
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 		uint32_t reboot_counter = 0;
 
@@ -186,13 +211,13 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 			reboot_counter = pmm_ptr->reboot_counter_CPUb; 
 		}
 
-		pack_ACK_buf[0] = UART_EPS_ID_CMD_Get_Reboot_count;
-		pack_ACK_buf[1] = (uint8_t)(reboot_counter>>24);
-		pack_ACK_buf[2] = (uint8_t)(reboot_counter>>16);
-		pack_ACK_buf[3] = (uint8_t)(reboot_counter>>8);
-		pack_ACK_buf[4] = (uint8_t)(reboot_counter);
+		ACK_buf[0] = UART_EPS_ID_ACK_Get_Reboot_count;
+		ACK_buf[1] = (uint8_t)(reboot_counter);
+		ACK_buf[2] = (uint8_t)(reboot_counter>>8);
+		ACK_buf[3] = (uint8_t)(reboot_counter>>16);
+		ACK_buf[4] = (uint8_t)(reboot_counter>>24);
 
-		size_pack_ACK = 5;
+		size_ACK = 5;
 		ACK_Attribute = 2;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Reboot ){
@@ -207,14 +232,14 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 
 
 	if( ACK_Attribute == 0 ){ // Sends an ERROR in response
-		pack_ACK_buf[0] = cmd_id;
-		pack_ACK_buf[1] = 0x00; 
-		size_pack_ACK = 2; 
+		ACK_buf[0] = cmd_id;
+		ACK_buf[1] = 0x00;
+		size_ACK = 2;
 
 	}else if( ACK_Attribute == 1 ){ //Sends an OK in response
-		pack_ACK_buf[0] = cmd_id;
-		pack_ACK_buf[1] = 0x01; 
-		size_pack_ACK = 2;
+		ACK_buf[0] = cmd_id;
+		ACK_buf[1] = 0x01;
+		size_ACK = 2;
 
 	}else if( ACK_Attribute == 2 ){ //Sends an DATA in response
 		//Empty
@@ -223,7 +248,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 	UART_eps_comm->permit_recv_pack_flag = 0;
 	UART_eps_comm->stop_recv_pack_flag = 0;
 
-	return UART_EPS_Send_ACK ( UART_eps_comm,  pack_ACK_buf, size_pack_ACK );
+	return UART_EPS_Send_ACK ( UART_eps_comm,  ACK_buf, size_ACK );
 }
 
 
@@ -235,32 +260,27 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 
 	uint8_t cmd_id = 0;
-	//uint8_t data_size = 0;
 	int8_t error_status = SUCCESS;
 
+	//uint8_t data_size = 0;
 	//data_size = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[4]) ) << 8 ) | (( (uint16_t)(UART_eps_comm->recv_pack_buf[5]) ) - 1);
-	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
-	// UART_EPS_ID_CMD_SAVE_PMM_struct
-	// UART_EPS_ID_CMD_SAVE_PDM_struct
-	// UART_EPS_ID_CMD_SAVE_PBM1_struct
-	// UART_EPS_ID_CMD_SAVE_PBM2_struct
-	// UART_EPS_ID_CMD_SAVE_PBM3_struct
-	// UART_EPS_ID_CMD_Reboot
-	// UART_EPS_ID_CMD_Take_CTRL
-	// UART_EPS_ID_CMD_Ping
+	cmd_id = UART_eps_comm->recv_pack_buf[6];
 
 	if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 
 		uint32_t reboot_counter = 0;
-		reboot_counter = *(uint32_t * )(&UART_eps_comm->recv_pack_buf[7]);
-		// (((uint32_t)UART_eps_comm->recv_pack_buf[7]) << 24) | (((uint32_t)UART_eps_comm->recv_pack_buf[8]) << 16) | (((uint32_t)UART_eps_comm->recv_pack_buf[9]) << 8) | ((uint32_t)UART_eps_comm->recv_pack_buf[10]);
+		reboot_counter = *(uint32_t*)(&(UART_eps_comm->recv_pack_buf[7]));
+			//	(((uint32_t)UART_eps_comm->recv_pack_buf[7]) << 24) | (((uint32_t)UART_eps_comm->recv_pack_buf[8]) << 16)  (((uint32_t)UART_eps_comm->recv_pack_buf[9]) << 8) | ((uint32_t)UART_eps_comm->recv_pack_buf[10]);
 		
 		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-			pmm_ptr->reboot_counter_CPUm = reboot_counter; 
+			pmm_ptr->reboot_counter_CPUb = reboot_counter;
 		}else{
-			pmm_ptr->reboot_counter_CPUb = reboot_counter; 
+			pmm_ptr->reboot_counter_CPUm = reboot_counter;
 		}
+
+	}else if( cmd_id == UART_EPS_ID_ACK_Get_PMM_struct	 ){
+		memcpy(pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *pmm_ptr) );
 
 	}else{ 
 		
@@ -277,22 +297,20 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr )
 }
 
 
-
 /** @brief  Parsing received notification NFC from UART port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm ){
 
 	uint8_t nfc_id = 0;
-	//uint8_t data_size = 0;
-	int8_t error_status = SUCCESS;
+	int8_t error_status = SUCCESS; //TO DO
 
+	//uint8_t data_size = 0;
 	//data_size = ( ( (uint16_t)(UART_eps_comm->recv_pack_buf[5]) ) << 8 ) | (( (uint16_t)(UART_eps_comm->recv_pack_buf[4]) ) - 1);
 	nfc_id = UART_eps_comm->recv_pack_buf[6];
 
-	if( nfc_id ==  UART_EPS_ID_NFS_Prep_Take_CTRL ){
+	if( nfc_id == UART_EPS_ID_NFS_Prep_Take_CTRL ){
 		//TO DO write  processing
 	}else{ 
 		
@@ -342,7 +360,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 			error_status = UART_EPS_Pars_Get_NFC( UART_eps_comm );
 
 		}else{
-			//Not recognize package TAG.
+			//Not recognize package tag.
 			UART_eps_comm->permit_recv_pack_flag = 0;
 			UART_eps_comm->stop_recv_pack_flag = 0;
 		}
@@ -361,12 +379,13 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 }
 
 
-/** @brief Send CMD.
-	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  cmd_id - Command ID.
-	@param  tuart_port - Set the port through which to send the command. 0 - Auto fault port detection, 1 - Main UART port, 2 - Backup UART port.
-	@param  send_data[] - send data massive.
-	@param 	size_data -  size sending data.
+/** @brief  Send CMD command.
+	@param  cmd_id - Command ID
+	@param  choice_uart_por - Set the port through which to send the command. 0 - Auto fault port detection, 1 - Main UART port, 2 - Backup UART port.
+	@param  *UART_Main_eps_comm - pointer to main UART port struct with get data.
+	@param  *UART_Backup_eps_comm - pointer to backup UART port struct with get data.
+	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
+	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr,  _PDM *pdm_ptr ){
@@ -385,7 +404,6 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
 		
 		send_buf[0] = UART_EPS_ID_CMD_SAVE_PMM_struct;
-
 		size_struct = sizeof( *pmm_ptr);
 		memcpy( (&(send_buf[1])), pmm_ptr, size_struct );
 		size_send_data = size_struct + 1;
@@ -393,7 +411,6 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
 
 		send_buf[0] = UART_EPS_ID_CMD_SAVE_PDM_struct;
-
 		size_struct = sizeof( *pdm_ptr);
 		memcpy( (&(send_buf[1])), pdm_ptr, size_struct );
 		size_send_data = size_struct + 1;
@@ -402,12 +419,16 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM1_struct ){
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM2_struct ){
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM3_struct ){
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PMM_struct ){
+		 send_buf[0] = UART_EPS_ID_CMD_Get_PMM_struct;
+		 size_send_data = 1;
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 
 		send_buf[0] = UART_EPS_ID_CMD_Get_Reboot_count;
 		size_send_data = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Reboot ){
+
 	}else if( cmd_id == UART_EPS_ID_CMD_Take_CTRL ){
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Ping ){
@@ -444,7 +465,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 
 	error_status = ERROR_N;
 
-	//Cleaar input EPS UART Buffer.
+	//Cleaar input EPS UART buffer.
 	UART_EPS_Pars_Get_Package( UART_X_eps_comm, pmm_ptr, pdm_ptr);
 	
 	//Send a command and wait for an answer.
@@ -460,7 +481,6 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 			if ( timeout_counter == UART_EPS_ACK_TIMEOUT ){
 				UART_X_eps_comm->waiting_answer_flag = 0;
 				UART_X_eps_comm->error_port_counter++;
-				error_status = ERROR_N;
 				break;
 			}
 
@@ -478,12 +498,12 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 }
 
 
-/** @brief Send NFC.
-	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  cmd_id - Command ID.
-	@param  tuart_port - Set the port through which to send the command. 0 - Auto fault port detection, 1 - Main UART port, 2 - Backup UART port.
-	@param  send_data[] - send data massive.
-	@param 	size_data -  size sending data.
+/** @brief Send NFC (notification).
+	@param  cmd_id - Command ID
+	@param  choice_uart_por - Set the port through which to send the command. 0 - Auto fault port detection, 1 - Main UART port, 2 - Backup UART port.
+	@param  *UART_Main_eps_comm - pointer to main UART port struct with get data.
+	@param  *UART_Backup_eps_comm - pointer to backup UART port struct with get data.
+	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr ){
@@ -500,6 +520,7 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 		send_buf[0] = UART_EPS_ID_NFS_Prep_Take_CTRL;
 		size_send_data = 1;
 
+		PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
 	}else{
 		return ERROR_N;
 	}
@@ -521,12 +542,12 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 
 	//Set source and destination address.
 	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-		sourse_addr = CPUmain; 
-		destination_addr = CPUbackup;
+		sourse_addr = UART_X_eps_comm->uart_unit_addr;
+		destination_addr = UART_EPS_CPUb_Addr;
 	}else{
-		sourse_addr = CPUbackup;
-		destination_addr = CPUmain; 
-	}
+		sourse_addr = UART_X_eps_comm->uart_unit_addr; ;
+		destination_addr = UART_EPS_CPUm_Addr;
+	}		
 
 	error_status = ERROR_N;
 
@@ -542,7 +563,7 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 }
 
 
-/** @brief Send acknowledgment.
+/** @brief Send ACK acknowledgment (answer).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
 	@param  send_data[] - send data massive.
 	@param 	size_data -  size sending data.

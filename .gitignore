@@ -42,6 +42,8 @@
 *.pdb
 *.lst
 
+
 /Debug/
 /Build_gcc_eabi/
 /Release/
+/.settings/
