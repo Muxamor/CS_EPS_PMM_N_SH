@@ -72,7 +72,7 @@ int main(void){
 	_PDM pdm = {0}, *pdm_ptr = &pdm;
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 	//_PAM pam = {0}, *pam_ptr = &pam;
-	//_PBM pbm[PBM_quantity] = {0};
+	_PBM pbm_mas[PBM_QUANTITY] = {0};
 
 	CAN_cmd_mask_status = 0;
 
@@ -175,10 +175,10 @@ int main(void){
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 
 
-			CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr );
+			CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr, pbm_mas );
 
 			if(CAN_cmd_mask_status != 0){
-				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr);
+				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr, pbm_mas );
 			}
 
 		}else{//Initialization not active CPU
