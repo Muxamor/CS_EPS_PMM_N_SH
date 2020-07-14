@@ -201,7 +201,7 @@ ErrorStatus PBM_ReadBatteryData(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_numbe
 								if (DS2777_ReadVoltageLo(I2Cx, pbm_table.BRANCH_1_Addr, &pbm[PBM_number].Branch_1_VoltageLo) == SUCCESS) {
 									if (DS2777_ReadCycleCounter(I2Cx, pbm_table.BRANCH_1_Addr, &pbm[PBM_number].Branch_1_CycleCounter) == SUCCESS) {
 										Error = DS2777_ReadTemperature(I2Cx, pbm_table.BRANCH_1_Addr, &Temp);
-										pbm[PBM_number].Branch_1_Temperature = (int8_t) Temp;
+										pbm[PBM_number].Branch_1_Temperature = (int8_t) Temp;// Need add 7F
 									}
 								}
 							}
