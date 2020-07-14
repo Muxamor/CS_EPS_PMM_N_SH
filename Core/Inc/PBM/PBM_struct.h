@@ -44,16 +44,16 @@ typedef struct  // Structure for PBM data
 	int16_t Branch_2_AverageCurrent;		// Register average current level over the preceding 28.16s in mA.
 	int16_t Branch_2_VoltageHi;				// Register voltage of high battery (on 8.4V) in mV.
 	int16_t Branch_2_VoltageLo;				// Register voltage of lower battery (on GND) in mV.
-	uint8_t TotalRelativeCapacity;				// Register total active relative capacity PBM in %.
-	int16_t TotalAbcoluteCapacity;				// Register total accumulate charge of battery's in mAh.
+	uint8_t TotalRelativeCapacity;			// Register total active relative capacity PBM in %.
+	int16_t TotalAbcoluteCapacity;			// Register total accumulate charge of battery's in mAh.
 	int8_t TMP1075_temp_1;					// Temperature TMP1075 �1 in �C.
 	int8_t TMP1075_temp_2;					// Temperature TMP1075 �2 in �C.
 	int8_t TMP1075_temp_3;					// Temperature TMP1075 �3 in �C.
 	int8_t TMP1075_temp_4;					// Temperature TMP1075 �4 in �C.
 	uint8_t PCA9534_ON_Heat_1 :1; 			// PCA9534 port �1. Enable heat branch №1.
 	uint8_t PCA9534_ON_Heat_2 :1; 			// PCA9534 port �6. Enable heat branch №2.
-	uint8_t PCA9534_AlarmState_1 :1; 		// PCA9534 port �7. Show state alarm TMP1075 branch №1.
-	uint8_t PCA9534_AlarmState_2 :1; 		// PCA9534 port �4. Show state alarm TMP1075 branch №2.
+	uint8_t PCA9534_TempSens_State_1 :1; 	// PCA9534 port �7. Show state alarm TMP1075 branch №1.
+	uint8_t PCA9534_TempSens_State_2 :1; 	// PCA9534 port �4. Show state alarm TMP1075 branch №2.
 	uint8_t PCA9534_PIO_1 :1; 				// PCA9534 port �5. Show state PIO DS2777 branch №1.
 	uint8_t PCA9534_PIO_2 :1; 				// PCA9534 port �8. Show state PIO DS2777 branch №2.
 	uint8_t PCA9534_P1 :1; 					// PCA9534 port �2.
@@ -73,13 +73,5 @@ typedef struct  // Structure for PBM data
 	uint8_t Error_Discharge_2 :1; 			// Register error discharge branch �2.
 
 } _PBM;
-
-/*typedef struct  // Structure for all PBM data
-{
-	_PBM PBM_Data_1;					// Structure for PBM �1
-	_PBM PBM_Data_2;					// Structure for PBM �2
-	_PBM PBM_Data_3;					// Structure for PBM �3
-
-} PBM_Data_All;*/
 
 #endif /* INC_PBM_STRUCT_H_ */

@@ -11,6 +11,11 @@
 
 /*********************** Configuration for PBM module ***********************/
 
+#define PBM_I2C_PORT                		I2C4 	//Number of I2C port for PBM.
+#define PBM_I2C_ATTEMPT_CONN                3 	    //Quantity attempt to connection through I2C.
+#define PBM_i2c_delay_att_conn				5 	 	//ms Delay between attempts connection through I2C in millisecond
+#define PBM_QUANTITY 						0x03 // Total quantity power channels on the PDM
+
 #define PBM_1_DS2777_ADDR_1                 0x60 	//Address DS2777 mux �1 Battery Module �1.
 #define PBM_1_DS2777_ADDR_2                 0x61 	//Address DS2777 mux �2 Battery Module �1.
 #define PBM_2_DS2777_ADDR_1                 0x62 	//Address DS2777 mux �1 Battery Module �2.
@@ -44,8 +49,6 @@
 #define PBM_2                				0x01 	//Designation for choose PBM �2.
 #define PBM_3                				0x02	//Designation for choose PBM �3.
 
-#define PBM_QUANTITY 						0x03 // Total quantity power channels on the PDM
-
 #define PBM_BRANCH_1                		0x01 	//Designation for choose branch �1 PBM.
 #define PBM_BRANCH_2                		0x02 	//Designation for choose branch �2 PBM.
 #define PBM_BRANCH_ALL                		0x00 	//Designation for choose all branch PBM.
@@ -59,7 +62,21 @@
 #define PBM_ON_DISCHARGE                	0x01 	//Enable discharge branch.
 #define PBM_OFF_DISCHARGE                	0x00 	//Disable discharge branch.
 
-#define PBM_i2c_delay_att_conn				5 	 	//ms Delay between attempts connection through I2C in millisecond
+typedef struct{
+
+	uint8_t  BRANCH_1_Addr;
+	uint8_t  BRANCH_2_Addr;
+	uint8_t  GPIO_Addr;
+	uint8_t  TEMP_SENSOR_1_Addr;
+	uint8_t  TEMP_SENSOR_2_Addr;
+	uint8_t  TEMP_SENSOR_3_Addr;
+	uint8_t  TEMP_SENSOR_4_Addr;
+
+	uint8_t  GPIO_INPUT_PIN;
+
+} _PBM_table;
+
+_PBM_table PBM_Table(uint8_t PBM_number);
 
 
 #endif /* INC_PBM_CONFIG_H_ */
