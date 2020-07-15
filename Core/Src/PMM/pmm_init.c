@@ -3,14 +3,11 @@
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
 #include "Error_Handler.h"
-#include "uart_eps_comm.h"
 #include "TCA9539.h"
 #include "pmm_struct.h"
-#include "pdm_struct.h"
 #include "pmm_config.h"
 #include "pmm_init_IC.h"
 #include "pmm_ctrl.h"
-
 #include "pmm_init.h"
 
 
@@ -141,62 +138,6 @@ uint8_t PMM_Detect_MasterBackupCPU(void){
 }
 
 
-/** @brief Checking active CPU flag  (pmm_ptr->Active_CPU) between main and backup CPU.
- * 			In case when (pmm_ptr->Active_CPU) the same value in the Main and Backup CPU
-	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
-	@retval 0 - SUCCESS, -1 - ERROR_N
-*/
-void PMM_Check_Active_CPU(_PMM *pmm_ptr,  _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm){
-
-	_PMM backup_CPU_pmm = {0};
-	_PDM null_pdm = {0};
-	_PBM null_pbm[1] = {0};
-
-	int8_t error_status = ERROR_N;
-	uint32_t i = 0;
-	uint32_t timeout_counter = 0;
-
-	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){ //Only for Main CPU
-
-		while( ( error_status != SUCCESS ) && ( i < pmm_uart_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
-
-			error_status = UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, &backup_CPU_pmm, &null_pdm, null_pbm  );
-
-			if( error_status != SUCCESS ){
-				i++;
-				LL_mDelay( pmm_uart_delay_att_conn );
-			}
-		}
-
-		if(error_status == SUCCESS ){
-
-			 if( pmm_ptr->Active_CPU != backup_CPU_pmm.Active_CPU ){
-
-				 if(  backup_CPU_pmm.Active_CPU == 1){
-					 pmm_ptr->Active_CPU = 1;
-				 }else{
-					 pmm_ptr->Active_CPU = 0;
-				 }
-			 }
-		}
-
-	}else{//Only for Backup CPU Wait request PMM struct. from Main CPU
-
-		timeout_counter = 0;
-
-		while( timeout_counter  != 10000   ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
-
-			timeout_counter++;
-
-			if( UART_Main_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-				UART_EPS_Pars_Get_Package(UART_Main_eps_comm, pmm_ptr, &null_pdm);
-			}
-			if( UART_Backup_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-				UART_EPS_Pars_Get_Package( UART_Backup_eps_comm, pmm_ptr, &null_pdm);
-			}
-		}
-	}
-}
 
 
 

@@ -75,11 +75,11 @@ int main(void){
 	//_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
 
-	_EPS_Param eps_param = {0};
-
-	eps_param.eps_pmm_ptr = pmm_ptr;
-	eps_param.eps_pdm_ptr = pdm_ptr;
-	eps_param.eps_pbm_ptr = pbm_mas;
+	_EPS_Param eps_param = {.eps_pmm_ptr = pmm_ptr, 
+							.eps_pdm_ptr = pdm_ptr,
+							//.eps_pam_ptr = pam_ptr,
+							.eps_pbm_ptr = pbm_mas,
+						};
 
 	CAN_cmd_mask_status = 0;
 
@@ -123,7 +123,7 @@ int main(void){
 
 	//IWDG_Init();
 
-	PMM_Check_Active_CPU(pmm_ptr,  UART_M_eps_comm, UART_B_eps_comm); ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Возможно это убрать. Обработка отказа когда не ясен активный CPU
+	//PMM_Check_Active_CPU(pmm_ptr,  UART_M_eps_comm, UART_B_eps_comm); ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Возможно это убрать. Обработка отказа когда не ясен активный CPU
 
 	if( (pmm_ptr->Active_CPU == 0 && pmm_ptr->Main_Backup_mode_CPU == 0) || (pmm_ptr->Active_CPU == 1 && pmm_ptr->Main_Backup_mode_CPU == 1) ){ //Initialization Active CPU
 		
@@ -184,17 +184,17 @@ int main(void){
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 
 
-			CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr, pbm_mas );
+			CAN_Var5_fill_telemetry( eps_param );
 
 			if(CAN_cmd_mask_status != 0){
-				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, pdm_ptr, pmm_ptr, pbm_mas );
+				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
 			}
 
 		}else{//Initialization not active CPU
 
-			UART_EPS_Pars_Get_Package(UART_M_eps_comm, pmm_ptr, pdm_ptr);
+			UART_EPS_Pars_Get_Package(UART_M_eps_comm,  eps_param );
 
-			UART_EPS_Pars_Get_Package(UART_B_eps_comm, pmm_ptr, pdm_ptr);
+			UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
 
 		}
 

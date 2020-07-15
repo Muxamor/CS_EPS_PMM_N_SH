@@ -6,7 +6,7 @@ TARGET = CS_EPS_PMM_N_SH
 
 
 # Set the FLAG OS_SYSTEM - LINUX or MAC_OS or WINDOWS it depends which sistem are you use to build.
-BUILD_OS_SYSTEM = MAC_OS
+BUILD_OS_SYSTEM = WINDOWS
 
 
 ######################################

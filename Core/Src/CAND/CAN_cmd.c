@@ -27,7 +27,7 @@ extern struct CAN_IVar4 CAN_IVar4_RegCmd;
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 
 
-void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[] ){
+void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
 	uint8_t number_cmd_reg = 0;
 	uint64_t cmd_bit_flag = 0;
@@ -49,13 +49,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 1\n", CAN_PWR_CH1_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, ENABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 1\n", CAN_PWR_CH1_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
                     }
                     break;
 
@@ -65,13 +65,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 2\n", CAN_PWR_CH2_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, ENABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 2\n", CAN_PWR_CH2_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
                     }
                     break;
 
@@ -81,13 +81,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 3\n", CAN_PWR_CH3_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, ENABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 3\n", CAN_PWR_CH3_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_3, DISABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, DISABLE );
                     }
                     break;
 
@@ -97,13 +97,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 4\n", CAN_PWR_CH4_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, ENABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 4\n", CAN_PWR_CH4_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_4, DISABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, DISABLE );
                     }
                     break;
 
@@ -113,13 +113,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 5\n", CAN_PWR_CH5_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, ENABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_5, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 5\n", CAN_PWR_CH5_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_5, DISABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_5, DISABLE );
                     }
                     break;
 
@@ -129,13 +129,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 6\n", CAN_PWR_CH6_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, ENABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_6, ENABLE );
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 6\n", CAN_PWR_CH6_offset);
                         #endif
-                        PDM_Set_state_PWR_CH( pdm_ptr, PDM_PWR_Channel_6, DISABLE );
+                        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_6, DISABLE );
                     }
                     break;
 
@@ -145,15 +145,15 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power VBAT1\n", CAN_PWR_VBAT1_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT1_eF1, ENABLE );
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, ENABLE ); 
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT1_eF1, ENABLE );
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, ENABLE ); 
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power VBAT1\n", CAN_PWR_VBAT1_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT1_eF1, DISABLE );
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, DISABLE );
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT1_eF1, DISABLE );
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, DISABLE );
                     }
                     break;
 
@@ -163,15 +163,15 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power VBAT2\n", CAN_PWR_VBAT2_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT2_eF1, ENABLE );
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, ENABLE ); 
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF1, ENABLE );
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, ENABLE ); 
 
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power VBAT2\n", CAN_PWR_VBAT2_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT2_eF1, DISABLE );
-                        PMM_Set_state_PWR_CH( pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, DISABLE );
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF1, DISABLE );
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, DISABLE );
                     }
                     break;
                 
@@ -189,7 +189,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
 							printf("Get comm. reg. %d -> Disable constant mode\n", CAN_Constant_mode_offset);
 						#endif
 						//Need vrite config to PMM struct
-						CAN_Var5_fill_telemetry( pdm_ptr, pmm_ptr, pbm_mas);
+						CAN_Var5_fill_telemetry( eps_p );
 					}
 					break;
 
@@ -224,7 +224,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _PDM *pdm_ptr, _PMM *pmm_ptr, _PB
 }
 
 
-void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[]){
+void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 	uint8_t num_pwr_ch = 0;
 	/*for(uint16_t i = 0; i < sizeof(CAN_IVar5_telemetry); i++){
@@ -301,57 +301,57 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[]){
 //	    CAN_IVar5_telemetry.CAN_Charge_discharge_AB_key_status              =  0x9A9B;
 
 
-	CAN_IVar5_telemetry.CAN_Channel1_current                            =  (uint16_t)( pdm_ptr->PWR_Channel[0].Current_val );
-	CAN_IVar5_telemetry.CAN_Channel2_current                            =  (uint16_t)( pdm_ptr->PWR_Channel[1].Current_val );
-	CAN_IVar5_telemetry.CAN_Channel3_current                            =  (uint16_t)( pdm_ptr->PWR_Channel[2].Current_val );
-	CAN_IVar5_telemetry.CAN_Channel4_current                            =  (uint16_t)( pdm_ptr->PWR_Channel[3].Current_val );
+	CAN_IVar5_telemetry.CAN_Channel1_current                            =  (uint16_t)( eps_p.eps_pdm_ptr->PWR_Channel[0].Current_val );
+	CAN_IVar5_telemetry.CAN_Channel2_current                            =  (uint16_t)( eps_p.eps_pdm_ptr->PWR_Channel[1].Current_val );
+	CAN_IVar5_telemetry.CAN_Channel3_current                            =  (uint16_t)( eps_p.eps_pdm_ptr->PWR_Channel[2].Current_val );
+	CAN_IVar5_telemetry.CAN_Channel4_current                            =  (uint16_t)( eps_p.eps_pdm_ptr->PWR_Channel[3].Current_val );
 	CAN_IVar5_telemetry.CAN_Channel5_current                            =  0x0000;
 	CAN_IVar5_telemetry.CAN_Channel6_current                            =  0x0000;
 
 	//***
-    if( pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){  
-        CAN_IVar5_telemetry.CAN_VBAT1_voltage                           =  pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val;  
+    if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){  
+        CAN_IVar5_telemetry.CAN_VBAT1_voltage                           =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val;  
     }else{
-        CAN_IVar5_telemetry.CAN_VBAT1_voltage                           =  pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;  
+        CAN_IVar5_telemetry.CAN_VBAT1_voltage                           =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;  
     }
     //---
 
     //***
-    if( pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val < 4000 ){  
-        CAN_IVar5_telemetry.CAN_VBAT2_voltage                           =  pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val;  
+    if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val < 4000 ){  
+        CAN_IVar5_telemetry.CAN_VBAT2_voltage                           =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val;  
     }else{
-        CAN_IVar5_telemetry.CAN_VBAT2_voltage                           =  pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;  
+        CAN_IVar5_telemetry.CAN_VBAT2_voltage                           =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;  
     }
     //---
 
-    CAN_IVar5_telemetry.CAN_VBAT1_current                               = (uint16_t)( pmm_ptr->PWR_Ch_Vbat1_eF1_Current_val + pmm_ptr->PWR_Ch_Vbat1_eF2_Current_val );
-    CAN_IVar5_telemetry.CAN_VBAT2_current                               = (uint16_t)( pmm_ptr->PWR_Ch_Vbat2_eF1_Current_val + pmm_ptr->PWR_Ch_Vbat2_eF2_Current_val );
+    CAN_IVar5_telemetry.CAN_VBAT1_current                               = (uint16_t)( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Current_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Current_val );
+    CAN_IVar5_telemetry.CAN_VBAT2_current                               = (uint16_t)( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Current_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Current_val );
 
     //***
 	CAN_IVar5_telemetry.CAN_Subsystem_power_line_status                 =  0x00;
 	for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 
-		if( (pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out != SUCCESS) || (pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in != SUCCESS) || \
-				(pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out != SUCCESS) || (pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in != SUCCESS) ){
+		if( (eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out != SUCCESS) || (eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in != SUCCESS) || \
+				(eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out != SUCCESS) || (eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in != SUCCESS) ){
 
 			CAN_IVar5_telemetry.CAN_Subsystem_power_line_status = ( CAN_IVar5_telemetry.CAN_Subsystem_power_line_status | (1 << num_pwr_ch) );
 		}
 	}
 
-    if(  (pmm_ptr->Error_PWR_Ch_State_Vbat1_eF1 != SUCCESS) || (pmm_ptr->Error_PWR_Ch_State_Vbat1_eF2 != SUCCESS) || (pmm_ptr->PWR_Ch_PG_Vbat1_eF1 != SUCCESS) \
-        ||  (pmm_ptr->PWR_Ch_PG_Vbat1_eF2 != SUCCESS) ){
+    if(  (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF1 != SUCCESS) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF2 != SUCCESS) || (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF1 != SUCCESS) \
+        ||  (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF2 != SUCCESS) ){
 
         CAN_IVar5_telemetry.CAN_Subsystem_power_line_status = ( CAN_IVar5_telemetry.CAN_Subsystem_power_line_status | (1 << 6) );
     }
 
-    if(  (pmm_ptr->Error_PWR_Ch_State_Vbat2_eF1 != SUCCESS) || (pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 != SUCCESS) || (pmm_ptr->PWR_Ch_PG_Vbat2_eF1 != SUCCESS) \
-         ||  (pmm_ptr->PWR_Ch_PG_Vbat2_eF2 != SUCCESS) ){
+    if(  (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF1 != SUCCESS) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 != SUCCESS) || (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF1 != SUCCESS) \
+         ||  (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF2 != SUCCESS) ){
 
         CAN_IVar5_telemetry.CAN_Subsystem_power_line_status = ( CAN_IVar5_telemetry.CAN_Subsystem_power_line_status | (1 << 7) );
     }
     //---
 
-    CAN_IVar5_telemetry.CAN_SES_current_consumption                     = (uint16_t)(pmm_ptr->PWR_Supply_Backup_eF_out_Current_val + pmm_ptr->PWR_Supply_Main_eF_out_Current_val);
+    CAN_IVar5_telemetry.CAN_SES_current_consumption                     = (uint16_t)(eps_p.eps_pmm_ptr->PWR_Supply_Backup_eF_out_Current_val + eps_p.eps_pmm_ptr->PWR_Supply_Main_eF_out_Current_val);
     CAN_IVar5_telemetry.CAN_SES_Voltage_power_supply                    = 3300; // Позже придумать как мерить. 
 //	    CAN_IVar5_telemetry.CAN_Full_charge_discharge_power                 =  0xB5B6;
 //	    CAN_IVar5_telemetry.CAN_Total_power_SB                              =  0xB7B8;
@@ -360,18 +360,18 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[]){
 	CAN_IVar5_telemetry.CAN_Spacecraft_total_power                      =  0x0000;
 	for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 
-		CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + pdm_ptr->PWR_Channel[num_pwr_ch].Power_val;
+		CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Power_val;
 	}
 
-    CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + pmm_ptr->PWR_Ch_Vbat1_eF1_Power_val + pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val \
-                                                            + pmm_ptr->PWR_Ch_Vbat2_eF1_Power_val + pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val;
+    CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Power_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val \
+                                                            + eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Power_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val;
     //---
 
 
 //
-    CAN_IVar5_telemetry.CAN_Median_PMM_temp                              =  (uint8_t)pmm_ptr->Temp_sensor;
+    CAN_IVar5_telemetry.CAN_Median_PMM_temp                              =  (uint8_t)eps_p.eps_pmm_ptr->Temp_sensor;
 //	    CAN_IVar5_telemetry.CAN_Median_PAM_temp                             =  0xBC;
-	CAN_IVar5_telemetry.CAN_Median_PDM_temp                              =  (uint8_t)GetMedian( pdm_ptr->Temp_sensor, 4 );
+	CAN_IVar5_telemetry.CAN_Median_PDM_temp                              =  (uint8_t)GetMedian( eps_p.eps_pdm_ptr->Temp_sensor, 4 );
 //	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[0]        =  0xBE;
 //	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1]        =  0xBF;
 //	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]        =  0xC0;
@@ -409,10 +409,10 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[]){
 //	    CAN_IVar5_telemetry.CAN_Percent_charge_level_AB3_line1              =	0xE0;
 //	    CAN_IVar5_telemetry.CAN_Percent_charge_level_AB3_line2              =	0xE1;
 
-	CAN_IVar5_telemetry.CAN_Channel1_voltage                            =	pdm_ptr->PWR_Channel[0].Voltage_val;
-	CAN_IVar5_telemetry.CAN_Channel2_voltage                            =	pdm_ptr->PWR_Channel[1].Voltage_val;
-	CAN_IVar5_telemetry.CAN_Channel3_voltage                            =	pdm_ptr->PWR_Channel[2].Voltage_val;
-	CAN_IVar5_telemetry.CAN_Channel4_voltage                            =	pdm_ptr->PWR_Channel[3].Voltage_val;
+	CAN_IVar5_telemetry.CAN_Channel1_voltage                            =	eps_p.eps_pdm_ptr->PWR_Channel[0].Voltage_val;
+	CAN_IVar5_telemetry.CAN_Channel2_voltage                            =	eps_p.eps_pdm_ptr->PWR_Channel[1].Voltage_val;
+	CAN_IVar5_telemetry.CAN_Channel3_voltage                            =	eps_p.eps_pdm_ptr->PWR_Channel[2].Voltage_val;
+	CAN_IVar5_telemetry.CAN_Channel4_voltage                            =	eps_p.eps_pdm_ptr->PWR_Channel[3].Voltage_val;
 	CAN_IVar5_telemetry.CAN_Channel5_voltage                            =	0x0000;
 	CAN_IVar5_telemetry.CAN_Channel6_voltage                            =	0x0000;
 
@@ -544,24 +544,24 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[]){
     CAN_IVar5_telemetry.CAN_Line_VBAT2                                  =   CAN_IVar4_RegCmd.CAN_PWR_VBAT2;
 
     //***
-    if( pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){  
-        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
+    if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){  
+        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
     }else{
-        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;
+        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;
     }
     //---
 
 
-    CAN_IVar5_telemetry.CAN_PMM_sensor1                                 =	(uint8_t)pmm_ptr->Temp_sensor;
+    CAN_IVar5_telemetry.CAN_PMM_sensor1                                 =	(uint8_t)eps_p.eps_pmm_ptr->Temp_sensor;
 //	    CAN_IVar5_telemetry.CAN_PAM_sensor1                                 =	0x69;
 //	    CAN_IVar5_telemetry.CAN_PAM_sensor2                                 =	0x6A;
 //	    CAN_IVar5_telemetry.CAN_PAM_sensor3                                 =	0x6B;
 //	    CAN_IVar5_telemetry.CAN_PAM_sensor4                                 =	0x6C;
 
-	CAN_IVar5_telemetry.CAN_PDM_sensor1                                 =	(uint8_t)(pdm_ptr->Temp_sensor[0]);
-	CAN_IVar5_telemetry.CAN_PDM_sensor2                                 =	(uint8_t)(pdm_ptr->Temp_sensor[1]);
-	CAN_IVar5_telemetry.CAN_PDM_sensor3                                 =	(uint8_t)(pdm_ptr->Temp_sensor[2]);
-	CAN_IVar5_telemetry.CAN_PDM_sensor4                                 =	(uint8_t)(pdm_ptr->Temp_sensor[3]);
+	CAN_IVar5_telemetry.CAN_PDM_sensor1                                 =	(uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[0]);
+	CAN_IVar5_telemetry.CAN_PDM_sensor2                                 =	(uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[1]);
+	CAN_IVar5_telemetry.CAN_PDM_sensor3                                 =	(uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[2]);
+	CAN_IVar5_telemetry.CAN_PDM_sensor4                                 =	(uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[3]);
 
 	    // -------------------  ТМИ 0  ------------------ //
 	  //	    CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_pX		    =  0x74;
@@ -598,15 +598,15 @@ void CAN_Var5_fill_telemetry( _PDM *pdm_ptr, _PMM *pmm_ptr, _PBM pbm_mas[]){
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //!!!!!! Need  add to array 2 or array3 :
-//	    pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon
-//	    pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in
-//		pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out
-//		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in
-//		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out
-//		pdm_ptr->Error_temp_sensor_1
-//		pdm_ptr->Error_temp_sensor_2
-//		pdm_ptr->Error_temp_sensor_3
-//		pdm_ptr->Error_temp_sensor_4
+//	    eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon
+//	    eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in
+//		eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out
+//		eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in
+//		eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out
+//		eps_p.eps_pdm_ptr->Error_temp_sensor_1
+//		eps_p.eps_pdm_ptr->Error_temp_sensor_2
+//		eps_p.eps_pdm_ptr->Error_temp_sensor_3
+//		eps_p.eps_pdm_ptr->Error_temp_sensor_4
 //      Add errors PMM
 
 }

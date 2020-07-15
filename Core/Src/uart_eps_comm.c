@@ -1,14 +1,13 @@
 
+#include <string.h>
 #include "stm32l4xx.h"
 #include "Fn_CRC16.h"
-#include "pmm_struct.h"
-#include "pdm_struct.h"
-#include "pbm_struct.h"
+#include "eps_struct.h"
 #include "uart_comm.h"
 #include "pmm_config.h"
 #include "pmm_init.h"
 #include "uart_eps_comm.h"
-#include <string.h>
+
 
 /**********EPS UART Protocol***********/
 // 0. (1 byte) 0xAA preamble.
@@ -107,18 +106,18 @@ ErrorStatus UART_EPS_Chaeck_CRC_Packag( _UART_EPS_COMM *UART_eps_comm ){
 
 /** @brief Set error EPS UART ports to pmm_ptr structure.
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  *pmm_ptr - pointer to struct which contain all information about PMM.	
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.	
 	@retval None.
 */
-void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
+void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p ){
 
 	if( UART_eps_comm->error_port_counter == 0 ){ // Errors in UARTs
 
 		if( UART_eps_comm->USARTx == LPUART1 ){
-			pmm_ptr->Error_UART_port_M = SUCCESS;
+			eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
 			
 		}else if( UART_eps_comm->USARTx == USART3 ){
-			pmm_ptr->Error_UART_port_B = SUCCESS;
+			eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
 		}
 		 
 	}else{
@@ -126,10 +125,10 @@ void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 		if(UART_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold ){ // If there are five errors in a row, then set the UART port error
 
 			if( UART_eps_comm->USARTx == LPUART1 ){
-				pmm_ptr->Error_UART_port_M = ERROR;
+				eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
 
 			}else if( UART_eps_comm->USARTx == USART3 ){
-				pmm_ptr->Error_UART_port_B = ERROR;
+				eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
 			}
 		}
 	}
@@ -139,11 +138,10 @@ void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
 
 /** @brief  Parsing received CMD from UART EPS port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
-	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.	
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr ){
+ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p ){
 
 	uint8_t cmd_id = 0;
 	uint16_t size_ACK = 0;
@@ -159,28 +157,28 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 		
 		//Save reboot counter value.
 		uint32_t reboot_counter = 0;
-		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-			reboot_counter = pmm_ptr->reboot_counter_CPUm;
+		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			reboot_counter = eps_p.eps_pmm_ptr->reboot_counter_CPUm;
 		}else{
-			reboot_counter = pmm_ptr->reboot_counter_CPUb;
+			reboot_counter = eps_p.eps_pmm_ptr->reboot_counter_CPUb;
 		}
 
-		memcpy(pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *pmm_ptr) );
-		pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-		pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
+		memcpy( eps_p.eps_pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pmm_ptr) ) );
+		eps_p.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+		eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
 
 		//Save restore counter value.
-		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-			pmm_ptr->reboot_counter_CPUm = reboot_counter;
+		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			eps_p.eps_pmm_ptr->reboot_counter_CPUm = reboot_counter;
 		}else{
-			pmm_ptr->reboot_counter_CPUb = reboot_counter;
+			eps_p.eps_pmm_ptr->reboot_counter_CPUb = reboot_counter;
 		}
 
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
-		memcpy(pdm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *pdm_ptr) );
-		pdm_ptr->PDM_save_conf_flag = 1; //Save received settings in FRAM 
+		memcpy( eps_p.eps_pdm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pdm_ptr) ) );
+		eps_p.eps_pdm_ptr->PDM_save_conf_flag = 1; //Save received settings in FRAM 
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
@@ -197,19 +195,19 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_PMM_struct ){
 		uint16_t size_data = 0;
-		size_data = sizeof( *pmm_ptr);
+		size_data = sizeof( *(eps_p.eps_pmm_ptr) );
 		ACK_buf[0] = UART_EPS_ID_ACK_Get_PMM_struct;
-		memcpy( &(ACK_buf[1]), pmm_ptr, size_data );
+		memcpy( &(ACK_buf[1]), eps_p.eps_pmm_ptr, size_data );
 		size_ACK = size_data + 1;
 		ACK_Attribute = 2;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 		uint32_t reboot_counter = 0;
 
-		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-			reboot_counter = pmm_ptr->reboot_counter_CPUm; 
+		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			reboot_counter = eps_p.eps_pmm_ptr->reboot_counter_CPUm; 
 		}else{
-			reboot_counter = pmm_ptr->reboot_counter_CPUb; 
+			reboot_counter = eps_p.eps_pmm_ptr->reboot_counter_CPUb; 
 		}
 
 		ACK_buf[0] = UART_EPS_ID_ACK_Get_Reboot_count;
@@ -255,10 +253,10 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr,
 
 /** @brief  Parsing received ACK from UART port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.	
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr ){
+ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p ){
 
 	uint8_t cmd_id = 0;
 	int8_t error_status = SUCCESS;
@@ -274,14 +272,14 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr )
 		reboot_counter = *(uint32_t*)(&(UART_eps_comm->recv_pack_buf[7]));
 			//	(((uint32_t)UART_eps_comm->recv_pack_buf[7]) << 24) | (((uint32_t)UART_eps_comm->recv_pack_buf[8]) << 16)  (((uint32_t)UART_eps_comm->recv_pack_buf[9]) << 8) | ((uint32_t)UART_eps_comm->recv_pack_buf[10]);
 		
-		if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
-			pmm_ptr->reboot_counter_CPUb = reboot_counter;
+		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
+			eps_p.eps_pmm_ptr->reboot_counter_CPUb = reboot_counter;
 		}else{
-			pmm_ptr->reboot_counter_CPUm = reboot_counter;
+			eps_p.eps_pmm_ptr->reboot_counter_CPUm = reboot_counter;
 		}
 
 	}else if( cmd_id == UART_EPS_ID_ACK_Get_PMM_struct	 ){
-		memcpy(pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *pmm_ptr) );
+		memcpy( eps_p.eps_pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pmm_ptr) ) );
 
 	}else{ 
 		
@@ -300,9 +298,10 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr )
 
 /** @brief  Parsing received notification NFC from UART port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.	
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm ){
+ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p ){
 
 	uint8_t nfc_id = 0;
 	int8_t error_status = SUCCESS; //TO DO
@@ -326,11 +325,10 @@ ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm ){
 
 /** @brief  Parsing received CMD, ACK and NFC package from UART port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
-	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_ptr, _PDM *pdm_ptr){
+ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p ){
 
 	uint8_t package_tag = 0;
 	
@@ -352,13 +350,13 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 
 		// Parsing CMD, ACK or NFC. 
 		if( package_tag == UART_EPS_CMD ){
-			error_status = UART_EPS_Pars_Get_CMD( UART_eps_comm, pmm_ptr, pdm_ptr );
+			error_status = UART_EPS_Pars_Get_CMD( UART_eps_comm, eps_p );
 
 		}else if( package_tag == UART_EPS_ACK /* && UART_eps_comm->waiting_answer_flag == 1 */){
-			error_status = UART_EPS_Pars_Get_ACK( UART_eps_comm, pmm_ptr );
+			error_status = UART_EPS_Pars_Get_ACK( UART_eps_comm, eps_p );
 
 		}else if( package_tag == UART_EPS_NFC ){
-			error_status = UART_EPS_Pars_Get_NFC( UART_eps_comm );
+			error_status = UART_EPS_Pars_Get_NFC( UART_eps_comm, eps_p );
 
 		}else{
 			//Not recognize package tag.
@@ -385,11 +383,10 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _PMM *pmm_p
 	@param  choice_uart_por - Set the port through which to send the command. 0 - Auto fault port detection, 1 - Main UART port, 2 - Backup UART port.
 	@param  *UART_Main_eps_comm - pointer to main UART port struct with get data.
 	@param  *UART_Backup_eps_comm - pointer to backup UART port struct with get data.
-	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
-	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr,  _PDM *pdm_ptr,  _PBM pbm_mas[] ){
+ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p ){
 
 	uint8_t send_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint16_t size_send_data = 0;
@@ -405,15 +402,15 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	if( cmd_id == UART_EPS_ID_CMD_SAVE_PMM_struct ){
 		
 		send_buf[0] = UART_EPS_ID_CMD_SAVE_PMM_struct;
-		size_struct = sizeof( *pmm_ptr);
-		memcpy( (&(send_buf[1])), pmm_ptr, size_struct );
+		size_struct = sizeof( *(eps_p.eps_pmm_ptr) );
+		memcpy( (&(send_buf[1])), eps_p.eps_pmm_ptr, size_struct );
 		size_send_data = size_struct + 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PDM_struct ){
 
 		send_buf[0] = UART_EPS_ID_CMD_SAVE_PDM_struct;
-		size_struct = sizeof( *pdm_ptr);
-		memcpy( (&(send_buf[1])), pdm_ptr, size_struct );
+		size_struct = sizeof( *(eps_p.eps_pdm_ptr) );
+		memcpy( (&(send_buf[1])), eps_p.eps_pdm_ptr, size_struct );
 		size_send_data = size_struct + 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
@@ -448,7 +445,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 		UART_X_eps_comm = UART_Backup_eps_comm;
 
 	}else{//Set auto detect UART port 
-		if( pmm_ptr->Error_UART_port_M == SUCCESS ){
+		if( eps_p.eps_pmm_ptr->Error_UART_port_M == SUCCESS ){
 			UART_X_eps_comm = UART_Main_eps_comm;
 		}else{ //Error UART_port_M
 			UART_X_eps_comm = UART_Backup_eps_comm;
@@ -456,7 +453,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	}		
 
 	//Set source and destination address.
-	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
 		sourse_addr = UART_X_eps_comm->uart_unit_addr;
 		destination_addr = UART_EPS_CPUb_Addr;
 	}else{
@@ -467,7 +464,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	error_status = ERROR_N;
 
 	//Cleaar input EPS UART buffer.
-	UART_EPS_Pars_Get_Package( UART_X_eps_comm, pmm_ptr, pdm_ptr);
+	UART_EPS_Pars_Get_Package( UART_X_eps_comm, eps_p );
 	
 	//Send a command and wait for an answer.
 	if( UART_EPS_Send_Package( UART_X_eps_comm->USARTx, destination_addr,  sourse_addr, UART_EPS_CMD, send_buf, size_send_data) == SUCCESS ){
@@ -486,7 +483,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 			}
 
 			if( UART_X_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-				error_status = UART_EPS_Pars_Get_Package( UART_X_eps_comm, pmm_ptr, pdm_ptr);
+				error_status = UART_EPS_Pars_Get_Package( UART_X_eps_comm, eps_p);
 			}
 		}
 	}
@@ -504,10 +501,10 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	@param  choice_uart_por - Set the port through which to send the command. 0 - Auto fault port detection, 1 - Main UART port, 2 - Backup UART port.
 	@param  *UART_Main_eps_comm - pointer to main UART port struct with get data.
 	@param  *UART_Backup_eps_comm - pointer to backup UART port struct with get data.
-	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _PMM *pmm_ptr ){
+ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p ){
 
 	uint8_t send_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint16_t size_send_data = 0;
@@ -521,7 +518,7 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 		send_buf[0] = UART_EPS_ID_NFS_Prep_Take_CTRL;
 		size_send_data = 1;
 
-		PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
+		//PMM_Set_MUX_CAN_CPUm_CPUb( CPUmain );
 	}else{
 		return ERROR_N;
 	}
@@ -534,7 +531,7 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 		UART_X_eps_comm = UART_Backup_eps_comm;
 
 	}else{//Set auto detect UART port 
-		if( pmm_ptr->Error_UART_port_M == SUCCESS ){
+		if(eps_p.eps_pmm_ptr->Error_UART_port_M == SUCCESS ){
 			UART_X_eps_comm = UART_Main_eps_comm;
 		}else{ //Error UART_port_M
 			UART_X_eps_comm = UART_Backup_eps_comm;
@@ -542,7 +539,7 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 	}		
 
 	//Set source and destination address.
-	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
 		sourse_addr = UART_X_eps_comm->uart_unit_addr;
 		destination_addr = UART_EPS_CPUb_Addr;
 	}else{
