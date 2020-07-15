@@ -4,6 +4,7 @@
 #include "Fn_CRC16.h"
 #include "eps_struct.h"
 #include "uart_comm.h"
+#include "PBM_config.h"
 #include "pmm_config.h"
 #include "pmm_init.h"
 #include "uart_eps_comm.h"
@@ -184,13 +185,9 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
 		ACK_Attribute = 1;
 
-	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM1_struct ){
-		ACK_Attribute = 1;
-
-	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM2_struct ){
-		ACK_Attribute = 1;
-
-	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM3_struct ){
+	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM_struct ){
+		memcpy( eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), ( sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_QUANTITY ) );
+		eps_p.eps_pbm_ptr->PBM_save_conf_flag = 1; //Save received settings in FRAM
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_PMM_struct ){
@@ -223,6 +220,15 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Take_CTRL ){
+	//Need rewrite this code
+		// if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
+		// 	eps_p.eps_pmm_ptr->Active_CPU = 0;
+		// }else{
+		// 	eps_p.eps_pmm_ptr->Active_CPU = 1;
+		// }
+		// //To DO save PMM settings eps_p.eps_pdm_ptr->PDM_save_conf_flag = 1; 
+
+		// PMM_Init_ActiveCPUblock( eps_p );
 		ACK_Attribute = 1;
 
 	}else{
@@ -414,9 +420,12 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 		size_send_data = size_struct + 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
-	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM1_struct ){
-	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM2_struct ){
-	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM3_struct ){
+	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM_struct ){
+		send_buf[0] = UART_EPS_ID_CMD_SAVE_PBM_struct;
+		size_struct = sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_QUANTITY;
+		memcpy( (&(send_buf[1])),eps_p.eps_pbm_ptr, size_struct );
+		size_send_data = size_struct + 1;
+
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_PMM_struct ){
 		 send_buf[0] = UART_EPS_ID_CMD_Get_PMM_struct;
 		 size_send_data = 1;

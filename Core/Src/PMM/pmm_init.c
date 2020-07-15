@@ -1,10 +1,15 @@
-
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
 #include "Error_Handler.h"
+#include "SetupPeriph.h"
 #include "TCA9539.h"
+#include "CAND/CAN.h"
+#include "CAND/CAN_cmd.h"
+#include "CAND/canv.h"
+#include "pdm_init.h"
 #include "pmm_struct.h"
+#include "eps_struct.h"
 #include "pmm_config.h"
 #include "pmm_init_IC.h"
 #include "pmm_ctrl.h"
@@ -137,8 +142,37 @@ uint8_t PMM_Detect_MasterBackupCPU(void){
 
 }
 
+/** @rief  Initialization Active CPU 
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval None
+ */	
+void PMM_Init_ActiveCPUblock( _EPS_Param eps_p ){
+
+	PMM_Set_MUX_CAN_CPUm_CPUb( eps_p.eps_pmm_ptr );
+
+	ENABLE_TMUX1209_I2C();
+
+	if( eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE && eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
+		eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+	    eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+	}
+
+	CAN_init_eps(CAN1);
+	CAN_init_eps(CAN2);
+	CAN_RegisterAllVars();
+
+	PMM_init( eps_p.eps_pmm_ptr );
+}
 
 
-
-
-
+/** @rief  Initialization Active CPU 
+	@param  none
+	@retval None
+ */
+void PMM_Init_PassiveCPUblock(void){
+	
+	PMM_HARD_Reset_I2C_GPIOExt( PMM_I2CADDR_GPIOExt1);
+	DISABLE_TMUX1209_I2C();
+	CAN_DeInit(CAN1);
+	CAN_DeInit(CAN2);
+}

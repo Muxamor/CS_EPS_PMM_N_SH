@@ -83,7 +83,8 @@ typedef struct  // Structure for PBM data
 	uint16_t Error_Charge_2 :1; 			// Register error charge branch �2.
 	uint16_t Error_Discharge_1 :1; 			// Register error discharge branch �1.
 	uint16_t Error_Discharge_2 :1; 			// Register error discharge branch �2.
-	uint16_t :3;
+	uint16_t:2;
+	uint16_t PBM_save_conf_flag:1;
 
 } _PBM;
 
