@@ -19,6 +19,8 @@
 #include "PBM_control.h"
 #include "PBM.h"
 
+#include "pam_struct.h"
+
 #include "pdm_config.h"
 #include "pdm_struct.h"
 #include "pdm_init.h"
@@ -75,14 +77,14 @@ int main(void){
 
 	_PDM pdm = {0}, *pdm_ptr = &pdm;
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
-	//_PAM pam = {0}, *pam_ptr = &pam;
+	_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
 
 	_EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
 
 	_EPS_Param eps_param = {.eps_pmm_ptr = pmm_ptr, 
 							.eps_pdm_ptr = pdm_ptr,
-							//.eps_pam_ptr = pam_ptr,
+							.eps_pam_ptr = pam_ptr,
 							.eps_pbm_ptr = pbm_mas,
 							.eps_serv_ptr = eps_service_ptr
 						};
@@ -105,17 +107,17 @@ int main(void){
 //TODO read settings from FRAM.
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
 
-	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
 		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
 		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
-	}else{
+	}else{ // CPUbackup
 		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
 		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
 	}
 
-	if( pmm_ptr->Main_Backup_mode_CPU == 0 ){
+	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
 		pmm_ptr->reboot_counter_CPUm++;
-	}else{
+	}else{ // CPUbackup
 		pmm_ptr->reboot_counter_CPUb++;
 	}
 
@@ -135,7 +137,7 @@ int main(void){
 	PMM_Check_Active_CPU( UART_M_eps_comm, UART_B_eps_comm, eps_param ); 
 
 	//Initialization Active CPU
-	if( (pmm_ptr->Active_CPU == 0 && pmm_ptr->Main_Backup_mode_CPU == 0) || (pmm_ptr->Active_CPU == 1 && pmm_ptr->Main_Backup_mode_CPU == 1) ){ 
+	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
 		PMM_Init_ActiveCPUblock( eps_param );
 		PDM_init( pdm_ptr );
 		//Add init PAM
@@ -151,9 +153,18 @@ int main(void){
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
+
 	while(1){
 
-		if( (pmm_ptr->Active_CPU == 0 && pmm_ptr->Main_Backup_mode_CPU == 0) || (pmm_ptr->Active_CPU == 1 && pmm_ptr->Main_Backup_mode_CPU == 1) ){ //Initialization Active CPU
+		//Save setting to FRAM for Active and Passive  CPU 
+		if( pmm_ptr->PMM_save_conf_flag == 1 || pdm_ptr->PDM_save_conf_flag == 1 || pam_ptr->PAM_save_conf_flag == 1\
+				 || pbm_mas[0].PBM_save_conf_flag == 1 ||  pbm_mas[1].PBM_save_conf_flag == 1 ||  pbm_mas[2].PBM_save_conf_flag == 1 ){
+
+				//Add save settings to FRAM.
+		}
+
+		//Active CPU branch
+		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
 			PDM_Get_Telemetry( pdm_ptr );
 			PMM_Get_Telemetry( pmm_ptr );
 			 
@@ -170,11 +181,13 @@ int main(void){
 				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
 			}
 
+			//Switch active CPU 
 			if( eps_service_ptr->Req_SW_Active_CPU == 1 ){
 				PMM_Switch_Active_CPU( eps_service_ptr->Set_Active_CPU, UART_M_eps_comm, UART_B_eps_comm, eps_param ); // Need rewrite this function
 			}
 
-		}else{//Initialization not active CPU
+		// Passive CPU branch
+		}else{
 
 			UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
 			UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );

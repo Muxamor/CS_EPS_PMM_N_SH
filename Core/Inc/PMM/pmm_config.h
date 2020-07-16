@@ -55,8 +55,11 @@
 #define Service_Mode_EPS			0xFF
 
 
-#define CPUmain 					0x00
-#define CPUbackup					0x01
+#define CPUmain 					0
+#define CPUbackup					1
+
+#define CPUmain_Active				0
+#define CPUbackup_Active			1
 
 
 #define UART_EPS_CPUm_Addr 			0x01

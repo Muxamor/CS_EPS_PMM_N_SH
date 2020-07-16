@@ -7,6 +7,7 @@
 #include "PBM_config.h"
 #include "pmm_config.h"
 #include "pmm_init.h"
+#include "pmm_sw_cpu.h"
 #include "uart_eps_comm.h"
 
 
@@ -183,6 +184,8 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
+		memcpy( eps_p.eps_pam_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pam_ptr) ) );
+		eps_p.eps_pam_ptr->PAM_save_conf_flag = 1; //Save received settings in FRAM 
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM_struct ){
@@ -195,6 +198,30 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 		size_data = sizeof( *(eps_p.eps_pmm_ptr) );
 		ACK_buf[0] = UART_EPS_ID_ACK_Get_PMM_struct;
 		memcpy( &(ACK_buf[1]), eps_p.eps_pmm_ptr, size_data );
+		size_ACK = size_data + 1;
+		ACK_Attribute = 2;
+
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PDM_struct ){
+		uint16_t size_data = 0;
+		size_data = sizeof( *(eps_p.eps_pdm_ptr) );
+		ACK_buf[0] = UART_EPS_ID_ACK_Get_PDM_struct;
+		memcpy( &(ACK_buf[1]), eps_p.eps_pdm_ptr, size_data );
+		size_ACK = size_data + 1;
+		ACK_Attribute = 2;
+
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PAM_struct ){
+		uint16_t size_data = 0;
+		size_data = sizeof( *(eps_p.eps_pam_ptr) );
+		ACK_buf[0] = UART_EPS_ID_ACK_Get_PAM_struct;
+		memcpy( &(ACK_buf[1]), eps_p.eps_pam_ptr, size_data );
+		size_ACK = size_data + 1;
+		ACK_Attribute = 2;
+
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PBM_struct ){
+		uint16_t size_data = 0;
+		size_data = sizeof( eps_p.eps_pbm_ptr[0]) * PBM_QUANTITY;
+		ACK_buf[0] = UART_EPS_ID_ACK_Get_PBM_struct;
+		memcpy( &(ACK_buf[1]), eps_p.eps_pbm_ptr, size_data );
 		size_ACK = size_data + 1;
 		ACK_Attribute = 2;
 
@@ -220,15 +247,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Take_CTRL ){
-	//Need rewrite this code
-		// if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
-		// 	eps_p.eps_pmm_ptr->Active_CPU = 0;
-		// }else{
-		// 	eps_p.eps_pmm_ptr->Active_CPU = 1;
-		// }
-		// //To DO save PMM settings eps_p.eps_pdm_ptr->PDM_save_conf_flag = 1; 
-
-		// PMM_Init_ActiveCPUblock( eps_p );
+		PMM_Set_mode_Active_CPU( eps_p );
 		ACK_Attribute = 1;
 
 	}else{
@@ -287,6 +306,15 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_
 	}else if( cmd_id == UART_EPS_ID_ACK_Get_PMM_struct	 ){
 		memcpy( eps_p.eps_pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pmm_ptr) ) );
 
+	}else if( cmd_id == UART_EPS_ID_ACK_Get_PDM_struct	 ){
+		memcpy( eps_p.eps_pdm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pdm_ptr) ) );
+
+	}else if( cmd_id == UART_EPS_ID_ACK_Get_PAM_struct	 ){
+		memcpy( eps_p.eps_pam_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pam_ptr) ) );
+
+	}else if( cmd_id == UART_EPS_ID_ACK_Get_PBM_struct	 ){
+		memcpy( eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), ( sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_QUANTITY ) );
+		
 	}else{ 
 		
 		if (UART_eps_comm->recv_pack_buf[7] == 0x00 ) { // In answer Error
@@ -420,6 +448,12 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 		size_send_data = size_struct + 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PAM_struct ){
+
+		send_buf[0] = UART_EPS_ID_CMD_SAVE_PAM_struct;
+		size_struct = sizeof( *(eps_p.eps_pam_ptr) );
+		memcpy( (&(send_buf[1])), eps_p.eps_pam_ptr, size_struct );
+		size_send_data = size_struct + 1;
+
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM_struct ){
 		send_buf[0] = UART_EPS_ID_CMD_SAVE_PBM_struct;
 		size_struct = sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_QUANTITY;
