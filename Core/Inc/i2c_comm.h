@@ -17,7 +17,7 @@ typedef enum {
 } ErrorStatus; */
 
 ErrorStatus I2C_check_flag(uint32_t (*I2C_check_flag)(I2C_TypeDef *), I2C_TypeDef *I2Cx, uint8_t flag_state); 
-void I2C_Clear_Flag(I2C_TypeDef *I2Cx);
+void I2C_Clear_Error_Flags(I2C_TypeDef *I2Cx);
 
 ErrorStatus I2C_Read_byte_directly_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t *data);
 ErrorStatus I2C_Read_byte_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size_reg_addr , uint32_t reg_addr, uint8_t *data);

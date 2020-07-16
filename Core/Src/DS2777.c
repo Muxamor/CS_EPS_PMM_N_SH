@@ -1,4 +1,4 @@
-#include "main.h"
+#include "stm32l4xx.h"
 #include "i2c_comm.h"
 #include "DS2777.h"
 

@@ -788,8 +788,7 @@ void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider) {
 
 	uint32_t pwm_freq = 0;
 
-	pwm_freq = (uint32_t) (SystemCoreClock
-			/ (((uint32_t) (tim_devider + 1)) * freq));
+	pwm_freq = (uint32_t) (SystemCoreClock / (((uint32_t) (tim_devider + 1)) * freq));
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 	LL_TIM_InitTypeDef TIM_InitStruct = { 0 };
