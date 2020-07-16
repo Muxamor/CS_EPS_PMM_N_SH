@@ -10,8 +10,8 @@
 
 typedef struct  // Structure for PBM data
 {
-	uint8_t Branch_1_DchgEnableBit :1; 		// Discharge Enable Bit must be set to allow the ON state
-	uint8_t Branch_1_ChgEnableBit :1; 		// Charge Enable Bit must be set to allow the ON state.
+	uint8_t Branch_1_DchgEnableBit :1; 		// Discharge Enable Bit must be set to allow the ON state. // Need to save in flash.
+	uint8_t Branch_1_ChgEnableBit :1; 		// Charge Enable Bit must be set to allow the ON state. // Need to save in flash.
 	uint8_t Branch_1_DchgControlFlag :1; 	// Discharge Control Flag indicates the logic state of the DC pin driver.
 	uint8_t Branch_1_ChgControlFlag :1; 	// Charge Control Flag indicates the logic state of the CC pin driver.
 	uint8_t Branch_1_LrnFlag :1; 			// LEARN Flag indicates that the current-charge cycle can use to learn batt.
@@ -61,8 +61,8 @@ typedef struct  // Structure for PBM data
 	int8_t TMP1075_temp_3;					// Temperature TMP1075 �3 in �C.
 	
 	int8_t TMP1075_temp_4;					// Temperature TMP1075 �4 in �C.
-	uint8_t PCA9534_ON_Heat_1 :1; 			// PCA9534 port �1. Enable heat branch №1.
-	uint8_t PCA9534_ON_Heat_2 :1; 			// PCA9534 port �6. Enable heat branch №2.
+	uint8_t PCA9534_ON_Heat_1 :1; 			// PCA9534 port �1. Enable heat branch №1. // Need to save in flash.
+	uint8_t PCA9534_ON_Heat_2 :1; 			// PCA9534 port �6. Enable heat branch №2. // Need to save in flash.
 	uint8_t PCA9534_TempSens_State_1 :1; 	// PCA9534 port �7. Show state alarm TMP1075 branch №1.
 	uint8_t PCA9534_TempSens_State_2 :1; 	// PCA9534 port �4. Show state alarm TMP1075 branch №2.
 	uint8_t PCA9534_PIO_1 :1; 				// PCA9534 port �5. Show state PIO DS2777 branch №1.
@@ -85,6 +85,9 @@ typedef struct  // Structure for PBM data
 	uint16_t Error_Discharge_2 :1; 			// Register error discharge branch �2.
 	uint16_t:2;
 	uint16_t PBM_save_conf_flag:1;
+
+	uint16_t Reserve_1;						// Reserve data space.
+	uint16_t Reserve_2;						// Reserve data space.
 
 } _PBM;
 

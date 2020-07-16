@@ -2,7 +2,7 @@
 #ifndef INC_I2C_COMM_H_
 #define INC_I2C_COMM_H_
 
-#define I2C_TIMEOUT 750
+#define I2C_TIMEOUT 1000 // 400kHz - 150, 100kHz - 600.
 
 #define I2C_SIZE_REG_ADDR_U8  	1 
 #define I2C_SIZE_REG_ADDR_U16  	2 
@@ -17,6 +17,7 @@ typedef enum {
 } ErrorStatus; */
 
 ErrorStatus I2C_check_flag(uint32_t (*I2C_check_flag)(I2C_TypeDef *), I2C_TypeDef *I2Cx, uint8_t flag_state); 
+void I2C_Clear_Flag(I2C_TypeDef *I2Cx);
 
 ErrorStatus I2C_Read_byte_directly_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t *data);
 ErrorStatus I2C_Read_byte_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size_reg_addr , uint32_t reg_addr, uint8_t *data);

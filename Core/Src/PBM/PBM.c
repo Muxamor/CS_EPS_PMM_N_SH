@@ -24,6 +24,8 @@ ErrorStatus PBM_GetTelemetry(_PBM pbm[]) {
 	}
 	Error = Error + PBM_CalcTotalCapacityPBM(pbm);
 	Error = Error + PBM_CheckCapacityPBM(PBM_I2C_PORT, pbm);
+	Error = Error + PBM_CheckHeatOFF(pbm);
+	Error = Error + PBM_CheckChargeDischargeState(pbm);
 
 	if (Error == SUCCESS) {
 		return SUCCESS;
