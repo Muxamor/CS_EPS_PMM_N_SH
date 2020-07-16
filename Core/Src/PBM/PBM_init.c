@@ -74,6 +74,12 @@ ErrorStatus PBM_Init(_PBM pbm[]) {
 	uint8_t Error = 0;
 
 	for (i = 0; i < PBM_QUANTITY; i++) {
+
+		PBM_SetStateChargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, pbm[i].Branch_1_ChgEnableBit);
+		PBM_SetStateChargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, pbm[i].Branch_2_ChgEnableBit);
+		PBM_SetStateDischargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, pbm[i].Branch_1_DchgEnableBit);
+		PBM_SetStateDischargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, pbm[i].Branch_2_DchgEnableBit);
+
 		if (pbm[i].PCA9534_ON_Heat_1 == 1) {
 			Error = Error + PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_ON_HEAT);
 		} else {
@@ -103,6 +109,12 @@ ErrorStatus PBM_Re_Init(_PBM pbm[]) {
 	uint8_t Error = 0;
 
 	for (i = 0; i < PBM_QUANTITY; i++) {
+
+		PBM_SetStateChargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, pbm[i].Branch_1_ChgEnableBit);
+		PBM_SetStateChargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, pbm[i].Branch_2_ChgEnableBit);
+		PBM_SetStateDischargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, pbm[i].Branch_1_DchgEnableBit);
+		PBM_SetStateDischargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, pbm[i].Branch_2_DchgEnableBit);
+
 		if (pbm[i].PCA9534_ON_Heat_1 == 1) {
 			Error = Error + PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_ON_HEAT);
 		} else {

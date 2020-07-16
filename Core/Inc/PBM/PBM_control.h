@@ -22,8 +22,12 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 
 ErrorStatus PBM_CheckHeatOFF(_PBM pbm[]);
 
+ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[]);
+
 ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[]);
 
 ErrorStatus PBM_CalcTotalCapacityPBM(_PBM pbm[]);
+
+int8_t PBM_CheckSaveSetupFlag(_PBM pbm[]);
 
 #endif /* INC_PBM_control_H_ */

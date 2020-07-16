@@ -42,7 +42,7 @@
 #define PBM_3_TMP1075_ADDR_3                0x44 	//Address Temperature Sensor 3 TMP1075 Battery Module �1.
 #define PBM_3_TMP1075_ADDR_4                0x46 	//Address Temperature Sensor 4 TMP1075 Battery Module �1.
 
-#define PBM_TMP1075_TEMP_HI                	5.0 	//Hi limit for comparison TMP1075 Battery Module in �C.
+#define PBM_TMP1075_TEMP_HI                	8.0 	//Hi limit for comparison TMP1075 Battery Module in �C.
 #define PBM_TMP1075_TEMP_LO                	2.0 	//Lo limit for comparison TMP1075 Battery Module in �C.
 
 #define PBM_1                				0x00 	//Designation for choose PBM �1.
