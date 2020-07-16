@@ -236,7 +236,15 @@ $(BUILD_DIR):
 # clean up
 #######################################
 clean:
+
+ifeq ($(BUILD_OS_SYSTEM),LINUX)
 	-rm -fR $(BUILD_DIR)
+else ifeq ($(BUILD_OS_SYSTEM),MAC_OS)
+	-rm -fR $(BUILD_DIR)
+else ifeq ($(BUILD_OS_SYSTEM),WINDOWS)
+	-del -fR $(BUILD_DIR)
+endif
+
 
 #######################################
 # dependencies
