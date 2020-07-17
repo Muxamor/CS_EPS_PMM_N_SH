@@ -157,8 +157,7 @@ int main(void){
 	while(1){
 
 		//Save setting to FRAM for Active and Passive  CPU 
-		if( pmm_ptr->PMM_save_conf_flag == 1 || pdm_ptr->PDM_save_conf_flag == 1 || pam_ptr->PAM_save_conf_flag == 1\
-				 || pbm_mas[0].PBM_save_conf_flag == 1 ||  pbm_mas[1].PBM_save_conf_flag == 1 ||  pbm_mas[2].PBM_save_conf_flag == 1 ){
+		if( (pmm_ptr->PMM_save_conf_flag == 1) || (pdm_ptr->PDM_save_conf_flag == 1) || (pam_ptr->PAM_save_conf_flag == 1) || (PBM_CheckSaveSetupFlag( pbm_mas ) == 1) ){
 
 				//Add save settings to FRAM.
 		}

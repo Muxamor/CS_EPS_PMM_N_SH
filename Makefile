@@ -45,6 +45,7 @@ Core/Src/ADS1015.c \
 Core/Src/TCA9548.c \
 Core/Src/TCA6424A.c \
 Core/Src/INA231.c \
+Core/Src/DS2777.c \
 Core/Src/PDM/pdm_config.c \
 Core/Src/PDM/pdm_init_IC.c \
 Core/Src/PDM/pdm_init.c \
@@ -235,8 +236,16 @@ $(BUILD_DIR):
 # clean up
 #######################################
 clean:
+
+ifeq ($(BUILD_OS_SYSTEM),LINUX)
 	-rm -fR $(BUILD_DIR)
-  
+else ifeq ($(BUILD_OS_SYSTEM),MAC_OS)
+	-rm -fR $(BUILD_DIR)
+else ifeq ($(BUILD_OS_SYSTEM),WINDOWS)
+	-del -fR $(BUILD_DIR)
+endif
+
+
 #######################################
 # dependencies
 #######################################
