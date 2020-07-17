@@ -54,11 +54,26 @@ file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32L496QGIX_FLASH.ld)
 
+
+#find_library(Doolib libcanv_lib.a ${CMAKE_SOURCE_DIR}/Core/Src/LIB)
+add_library(canv_lib STATIC IMPORTED GLOBAL)
+
+set_target_properties( canv_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libcanv_lib.a )
+
+add_library(Flash_lib STATIC IMPORTED GLOBAL)
+
+set_target_properties( Flash_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libFlash_lib.a )
+
+#set_property(TARGET libcanv_lib.a PROPERTY IMPORTED_LOCATION ${Doolib})
+
 add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map)
 add_link_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
 add_link_options(-T ${LINKER_SCRIPT})
 
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}.elf canv_lib Flash_lib)
+
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
@@ -68,3 +83,5 @@ add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
         COMMENT "Building ${HEX_FILE}
 Building ${BIN_FILE}")
+
+#target_link_libraries(${PROJECT_NAME}.elf LINK_PUBLIK ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libcanv_lib.a ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libFlash_lib.a
