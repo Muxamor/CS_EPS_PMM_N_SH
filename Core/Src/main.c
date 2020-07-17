@@ -1,51 +1,21 @@
 #include "main.h"
-#include "Error_Handler.h"
 #include "SetupPeriph.h"
-#include "i2c_comm.h"
-#include "tim_pwm.h"
-#include "TCA9539.h"
-#include "PCA9534.h"
 #include "TMP1075.h"
-#include "FRAM.h"
-
-#include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
-#include "CAND/canv.h"
-
 #include "PBM_config.h"
 #include "PBM_struct.h"
-#include "PBM_init_IC.h"
-#include "PBM_init.h"
 #include "PBM_control.h"
-#include "PBM.h"
-
 #include "pam_struct.h"
-
-#include "pdm_config.h"
 #include "pdm_struct.h"
 #include "pdm_init.h"
-#include "pdm_ctrl.h"
 #include "pdm.h"
-
 #include "pmm_config.h"
 #include "pmm_struct.h"
-#include "pmm_init_IC.h"
 #include "pmm_init.h"
-#include "pmm_ctrl.h"
 #include "pmm_sw_cpu.h"
 #include "pmm.h"
-
 #include "eps_struct.h"
-
-
-
-#include "uart_comm.h"
 #include "uart_eps_comm.h"
-
-#include  <stdio.h>
-#include "fram.h"
-
-#include "DS2777.h"
 
 /****************************TODO*************************
 1. Need to think about delay 30 minuts. 
