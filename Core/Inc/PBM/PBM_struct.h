@@ -30,7 +30,7 @@ typedef struct  // Structure for PBM data
 	int16_t Branch_1_VoltageHi;				// Register voltage of high battery (on 8.4V) in mV.
 	int16_t Branch_1_VoltageLo;				// Register voltage of lower battery (on GND) in mV.
 	
-	int8_t Branch_1_Temperature;			// Register temperature of DS2777 in �C.
+	int8_t Branch_1_Temperature;			// Register temperature of DS2777 in °C.
 	uint8_t Branch_2_DchgEnableBit :1; 		// Discharge Enable Bit must be set to allow the ON state
 	uint8_t Branch_2_ChgEnableBit :1; 		// Charge Enable Bit must be set to allow the ON state.
 	uint8_t Branch_2_DchgControlFlag :1; 	// Discharge Control Flag indicates the logic state of the DC pin driver.
@@ -46,7 +46,7 @@ typedef struct  // Structure for PBM data
 	uint8_t Branch_2_AgeScalar;				// Register adjusts the cell capacity estimation in %.
 	
 	uint8_t Branch_2_CycleCounter;			// Register cycle counter is an absolute count of the discharge cycles.
-	int8_t Branch_2_Temperature;			// Register temperature of DS2777 in �C.
+	int8_t Branch_2_Temperature;			// Register temperature of DS2777 in °C.
 	
 	int16_t Branch_2_Current;				// Register current level over the preceding 3.52s in mA.
 	int16_t Branch_2_AverageCurrent;		// Register average current level over the preceding 28.16s in mA.
@@ -55,34 +55,34 @@ typedef struct  // Structure for PBM data
 	int16_t TotalAbcoluteCapacity;			// Register total accumulate charge of battery's in mAh.
 	
 	uint8_t TotalRelativeCapacity;			// Register total active relative capacity PBM in %.
-	int8_t TMP1075_temp_1;					// Temperature TMP1075 �1 in �C.
+	int8_t TMP1075_temp_1;					// Temperature TMP1075 №1 in °C.
 	
-	int8_t TMP1075_temp_2;					// Temperature TMP1075 �2 in �C.
-	int8_t TMP1075_temp_3;					// Temperature TMP1075 �3 in �C.
+	int8_t TMP1075_temp_2;					// Temperature TMP1075 №2 in °C.
+	int8_t TMP1075_temp_3;					// Temperature TMP1075 №3 in °C.
 	
-	int8_t TMP1075_temp_4;					// Temperature TMP1075 �4 in �C.
-	uint8_t PCA9534_ON_Heat_1 :1; 			// PCA9534 port �1. Enable heat branch №1. // Need to save in flash.
-	uint8_t PCA9534_ON_Heat_2 :1; 			// PCA9534 port �6. Enable heat branch №2. // Need to save in flash.
-	uint8_t PCA9534_TempSens_State_1 :1; 	// PCA9534 port �7. Show state alarm TMP1075 branch №1.
-	uint8_t PCA9534_TempSens_State_2 :1; 	// PCA9534 port �4. Show state alarm TMP1075 branch №2.
-	uint8_t PCA9534_PIO_1 :1; 				// PCA9534 port �5. Show state PIO DS2777 branch №1.
-	uint8_t PCA9534_PIO_2 :1; 				// PCA9534 port �8. Show state PIO DS2777 branch №2.
-	uint8_t PCA9534_P1 :1; 					// PCA9534 port �2.
-	uint8_t PCA9534_P2 :1; 					// PCA9534 port �3.
+	int8_t TMP1075_temp_4;					// Temperature TMP1075 №4 in °C.
+	uint8_t PCA9534_ON_Heat_1 :1; 			// PCA9534 port №1. Enable heat branch №1. // Need to save in flash.
+	uint8_t PCA9534_ON_Heat_2 :1; 			// PCA9534 port №6. Enable heat branch №2. // Need to save in flash.
+	uint8_t PCA9534_TempSens_State_1 :1; 	// PCA9534 port №7. Show state alarm TMP1075 branch №1.
+	uint8_t PCA9534_TempSens_State_2 :1; 	// PCA9534 port №4. Show state alarm TMP1075 branch №2.
+	uint8_t PCA9534_PIO_1 :1; 				// PCA9534 port №5. Show state PIO DS2777 branch №1.
+	uint8_t PCA9534_PIO_2 :1; 				// PCA9534 port №8. Show state PIO DS2777 branch №2.
+	uint8_t PCA9534_P1 :1; 					// PCA9534 port №2.
+	uint8_t PCA9534_P2 :1; 					// PCA9534 port №3.
 	
-	uint16_t Error_DS2777_1 :1; 			// Register error DS2777 �1.
-	uint16_t Error_DS2777_2 :1; 			// Register error DS2777 �2.
-	uint16_t Error_TMP1075_1 :1; 			// Register error TMP1075 �1.
-	uint16_t Error_TMP1075_2 :1; 			// Register error TMP1075 �1.
-	uint16_t Error_TMP1075_3 :1; 			// Register error TMP1075 �1.
-	uint16_t Error_TMP1075_4 :1; 			// Register error TMP1075 �1.
+	uint16_t Error_DS2777_1 :1; 			// Register error DS2777 №1.
+	uint16_t Error_DS2777_2 :1; 			// Register error DS2777 №2.
+	uint16_t Error_TMP1075_1 :1; 			// Register error TMP1075 №1.
+	uint16_t Error_TMP1075_2 :1; 			// Register error TMP1075 №2.
+	uint16_t Error_TMP1075_3 :1; 			// Register error TMP1075 №3.
+	uint16_t Error_TMP1075_4 :1; 			// Register error TMP1075 №4.
 	uint16_t Error_PCA9534 :1; 				// Register error PCA9534.
-	uint16_t Error_Heat_1 :1; 				// Register error heat branch �1.
-	uint16_t Error_Heat_2 :1; 				// Register error heat branch �2.
-	uint16_t Error_Charge_1 :1; 			// Register error charge branch �1.
-	uint16_t Error_Charge_2 :1; 			// Register error charge branch �2.
-	uint16_t Error_Discharge_1 :1; 			// Register error discharge branch �1.
-	uint16_t Error_Discharge_2 :1; 			// Register error discharge branch �2.
+	uint16_t Error_Heat_1 :1; 				// Register error heat branch №1.
+	uint16_t Error_Heat_2 :1; 				// Register error heat branch №2.
+	uint16_t Error_Charge_1 :1; 			// Register error charge branch №1.
+	uint16_t Error_Charge_2 :1; 			// Register error charge branch №2.
+	uint16_t Error_Discharge_1 :1; 			// Register error discharge branch №1.
+	uint16_t Error_Discharge_2 :1; 			// Register error discharge branch №2.
 	uint16_t:2;
 	uint16_t PBM_save_conf_flag:1;
 
