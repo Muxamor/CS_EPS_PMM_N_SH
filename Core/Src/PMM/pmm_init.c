@@ -13,6 +13,7 @@
 #include "pmm_config.h"
 #include "pmm_init_IC.h"
 #include "pmm_ctrl.h"
+#include "pmm_init_IC.h"
 #include "pmm_init.h"
 
 
@@ -169,10 +170,11 @@ void PMM_Init_ActiveCPUblock( _EPS_Param eps_p ){
 	@param  none
 	@retval None
  */
-void PMM_Init_PassiveCPUblock(void){
+void PMM_Init_PassiveCPUblock( _EPS_Param eps_p ){
 	
 	PMM_HARD_Reset_I2C_GPIOExt( PMM_I2CADDR_GPIOExt1);
 	DISABLE_TMUX1209_I2C();
 	CAN_DeInit(CAN1);
 	CAN_DeInit(CAN2);
+	PMM_Power_Down_TMP1075( eps_p.eps_pmm_ptr, PMM_I2Cx_TMP1075, PMM_I2CADDR_TMP1075);
 }
