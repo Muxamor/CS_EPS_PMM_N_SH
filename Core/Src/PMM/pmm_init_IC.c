@@ -54,6 +54,38 @@ ErrorStatus PMM_init_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_a
 	return error_I2C;
 }
 
+ErrorStatus PMM_Power_Down_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
+	
+	uint8_t i = 0;
+	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+
+	//Setup INA231
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+		error_I2C = TMP1075_set_mode(I2Cx, tmp1075_addr, TMP1075_SHUTDOWN_MODE);
+			
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pmm_i2c_delay_att_conn );
+		}
+	}
+
+	if( error_I2C == ERROR ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pmm_ptr->Temp_sensor = 0x7F;
+		pmm_ptr->Error_TMP1075_sensor = ERROR;
+	}else{
+		
+		pmm_ptr->Temp_sensor = 0x00;
+		pmm_ptr->Error_TMP1075_sensor = SUCCESS;
+	}
+
+	return error_I2C;
+}
+
+
 
 /** @brief  Init INA231 Power Monitor on PMM module.
     @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
