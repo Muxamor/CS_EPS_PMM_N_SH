@@ -41,9 +41,10 @@
 *.idb
 *.pdb
 *.lst
-
+*.ioc
 
 /Debug/
 /Build_gcc_eabi/
 /Release/
 /.settings/
+/cmake-build-debug/
