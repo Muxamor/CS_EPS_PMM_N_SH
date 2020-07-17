@@ -283,7 +283,11 @@ void I2C_ReInit(I2C_TypeDef *I2Cx) {
  */
 void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 
-	int period = 42, i = 0;
+	uint16_t period = 0, i = 0, count = 0;
+
+	//period = SystemCoreClock * 5 / 10000000;
+	period = 42;
+	count = period;
 
 	LL_I2C_DeInit(I2Cx);
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
@@ -297,18 +301,18 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-		LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+		LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-		for (i = 0; i < number_cycle; i++) {
-			while (period > 0) {
-				period--;
+		for (i = 0; i <= number_cycle; i++) {
+			while (count > 0) {
+				count--;
 			}
-			period = 42;
+			count = period;
 			LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_7);
-			while (period > 0) {
-				period--;
+			while (count > 0) {
+				count--;
 			}
-			period = 42;
+			count = period;
 			LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_7);
 		}
 		I2C3_Init();
@@ -325,17 +329,17 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 		LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-		for (i = 0; i < number_cycle; i++) {
-			while (period > 0) {
-				period--;
+		for (i = 0; i <= number_cycle; i++) {
+			while (count > 0) {
+				count--;
 			}
-			period = 42;
-			LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_14);
-			while (period > 0) {
-				period--;
-			}
-			period = 42;
+			count = period;
 			LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_14);
+			while (count > 0) {
+				count--;
+			}
+			count = period;
+			LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_14);
 		}
 		I2C4_Init();
 	}

@@ -616,8 +616,11 @@ ErrorStatus PBM_CheckHeatOFF(_PBM pbm[]) {
 		if ((pbm[i].TMP1075_temp_4 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_2 == 1)) {
 			count++;
 		}
-		if (count >= 3) {
+		if (count >= 2) {
 			PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_ALL, PBM_OFF_HEAT);
+			PBM_TempSensorInit(pbm, i);
+			pbm[i].PCA9534_ON_Heat_1 = 1;
+			pbm[i].PCA9534_ON_Heat_2 = 1;
 			pbm[i].Error_Heat_1 = ERROR;
 			pbm[i].Error_Heat_2 = ERROR;
 			#ifdef DEBUGprintf
@@ -625,6 +628,7 @@ ErrorStatus PBM_CheckHeatOFF(_PBM pbm[]) {
 			#endif
 			return ERROR_N;
 		}
+		count = 0;
 	}
 	return SUCCESS;
 }
