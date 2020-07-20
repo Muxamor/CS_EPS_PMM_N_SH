@@ -94,7 +94,7 @@ GCC_PATH = /opt/gcc-arm-none-eabi-7-2017-q4-major/bin
 else ifeq ($(BUILD_OS_SYSTEM),MAC_OS)
 GCC_PATH = /Users/Ivan/Development/opt/gcc-arm-none-eabi-7-2018-q2-update/bin
 else ifeq ($(BUILD_OS_SYSTEM),WINDOWS)
-GCC_PATH_WIN = C:\ST\STM32CubeIDE_1.3.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610\tools\bin
+GCC_PATH_WIN = c:\GNU_Toolchain\9_2020_q2_update\bin
 endif
 
 PREFIX = arm-none-eabi-
