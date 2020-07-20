@@ -8,11 +8,8 @@
 #include "TCA9539.h"
 #include "INA231.h"
 #include "ADS1015.h"
-#include "uart_eps_comm.h"
-#include "eps_struct.h"
 #include "pmm_struct.h"
 #include "pmm_config.h"
-#include "pmm_init_IC.h"
 #include "pmm_ctrl.h"
 
 /**********************TO DO ***********************************/
