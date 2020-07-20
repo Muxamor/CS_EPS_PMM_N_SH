@@ -65,8 +65,8 @@ typedef struct{
 }_UART_EPS_COMM;
 
 
-ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t sourse_addr, uint8_t package_tag, uint8_t send_data[], uint16_t size_data );
-ErrorStatus UART_EPS_Chaeck_CRC_Packag( _UART_EPS_COMM *UART_eps_comm );
+ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t source_addr, uint8_t package_tag, uint8_t send_data[], uint16_t size_data );
+ErrorStatus UART_EPS_Check_CRC_Package( _UART_EPS_COMM *UART_eps_comm );
 void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
 
 ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );

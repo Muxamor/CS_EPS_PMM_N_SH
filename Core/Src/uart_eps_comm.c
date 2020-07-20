@@ -13,11 +13,11 @@
 
 /**********EPS UART Protocol***********/
 // 0. (1 byte) 0xAA preamble.
-// 1. (1 byte) 0xYY destination address 254- broadcast package.
+// 1. (1 byte) 0xYY destination address 254- broadcast Package.
 // 2. (1 byte) 0xYY source address.
 // 3. (1 byte) 0xYY Package Tag 0x00-Command, 0x01-Answer, 0x02-Notification.
-// 4. (2 byte) 0xYYXX - Data size in package 0..65529.
-// 5. (2 byte) 0xYYXX - CRC-16-CCITT all package.
+// 4. (2 byte) 0xYYXX - Data size in Package 0..65529.
+// 5. (2 byte) 0xYYXX - CRC-16-CCITT all Package.
 /****************************************/
 
 
@@ -25,14 +25,14 @@
 /** @brief  Preparing and sending a packet on the UART in accordance with the protocol.
 	@param  *USARTx - pointer to UART port.
 	@param  destination_addr - destination address.
-	@param  sourse_addr - source address.
+	@param  source_addr - source address.
 	@param  package_tag - package tag CMD, ACK or NFC.
 	@param  send_data[] - send data massive.
 	@param 	size_data -  size sending data.
 	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t sourse_addr, uint8_t package_tag, uint8_t send_data[], uint16_t size_data ){
+ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t source_addr, uint8_t package_tag, uint8_t send_data[], uint16_t size_data ){
 
 	uint8_t send_pack_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint16_t size_package = 0;
@@ -49,7 +49,7 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
  	send_pack_buf[1] = destination_addr;
 
 	//2. Source address.
- 	send_pack_buf[2] = sourse_addr;
+ 	send_pack_buf[2] = source_addr;
 
 	//3. Package Tag 0x00-Command, 0x01-Answer, 0x02-Notification.
  	send_pack_buf[3] = package_tag;
@@ -85,7 +85,7 @@ ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_ad
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Chaeck_CRC_Packag( _UART_EPS_COMM *UART_eps_comm ){
+ErrorStatus UART_EPS_Check_CRC_Package( _UART_EPS_COMM *UART_eps_comm ){
 	
 	uint16_t crc_calc = 0;
 	uint16_t get_crc = 0;
@@ -373,10 +373,10 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _EPS_Param 
 		return SUCCESS;
 	}
 
-	//Check CRC get pakage
-	error_status = UART_EPS_Chaeck_CRC_Packag( UART_eps_comm ); 
+	//Check CRC get package
+	error_status = UART_EPS_Check_CRC_Package( UART_eps_comm );
 
-	// Start parsing get packeage 
+	// Start parsing get package
 	//Get Package ID tag (CMD, ACK, NFC)
 	if( error_status == SUCCESS ){
 
@@ -426,7 +426,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	uint16_t size_send_data = 0;
 	uint16_t size_struct = 0;
 	uint8_t destination_addr = 0;
-	uint8_t sourse_addr = 0;
+	uint8_t source_addr = 0;
 	uint32_t timeout_counter = 0;
 	int8_t error_status = ERROR_N;
 	
@@ -497,20 +497,20 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 
 	//Set source and destination address.
 	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
-		sourse_addr = UART_X_eps_comm->uart_unit_addr;
+		source_addr = UART_X_eps_comm->uart_unit_addr;
 		destination_addr = UART_EPS_CPUb_Addr;
 	}else{
-		sourse_addr = UART_X_eps_comm->uart_unit_addr; ;
+		source_addr = UART_X_eps_comm->uart_unit_addr;
 		destination_addr = UART_EPS_CPUm_Addr;
 	}
 
 	error_status = ERROR_N;
 
-	//Cleaar input EPS UART buffer.
+	//Clear input EPS UART buffer.
 	UART_EPS_Pars_Get_Package( UART_X_eps_comm, eps_p );
 	
 	//Send a command and wait for an answer.
-	if( UART_EPS_Send_Package( UART_X_eps_comm->USARTx, destination_addr,  sourse_addr, UART_EPS_CMD, send_buf, size_send_data) == SUCCESS ){
+	if( UART_EPS_Send_Package( UART_X_eps_comm->USARTx, destination_addr,  source_addr, UART_EPS_CMD, send_buf, size_send_data) == SUCCESS ){
 
 		UART_X_eps_comm->waiting_answer_flag = 1;
 		timeout_counter = 0;
@@ -552,7 +552,7 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 	uint8_t send_buf[UART_EPS_PACK_SIZE_BUFF];
 	uint16_t size_send_data = 0;
 	uint8_t destination_addr = 0;
-	uint8_t sourse_addr = 0;
+	uint8_t source_addr = 0;
 	int8_t error_status = ERROR_N;
 	_UART_EPS_COMM *UART_X_eps_comm;
 
@@ -583,16 +583,16 @@ ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_E
 
 	//Set source and destination address.
 	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
-		sourse_addr = UART_X_eps_comm->uart_unit_addr;
+		source_addr = UART_X_eps_comm->uart_unit_addr;
 		destination_addr = UART_EPS_CPUb_Addr;
 	}else{
-		sourse_addr = UART_X_eps_comm->uart_unit_addr; ;
+		source_addr = UART_X_eps_comm->uart_unit_addr;
 		destination_addr = UART_EPS_CPUm_Addr;
 	}		
 
 	error_status = ERROR_N;
 
-	error_status = UART_EPS_Send_Package( UART_X_eps_comm->USARTx, destination_addr,  sourse_addr, UART_EPS_NFC, send_buf, size_send_data);
+	error_status = UART_EPS_Send_Package( UART_X_eps_comm->USARTx, destination_addr,  source_addr, UART_EPS_NFC, send_buf, size_send_data);
 
 	if( error_status == ERROR_N ){
 		UART_X_eps_comm->error_port_counter++;
