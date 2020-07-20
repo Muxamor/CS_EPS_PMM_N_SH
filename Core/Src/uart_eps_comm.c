@@ -13,11 +13,11 @@
 
 /**********EPS UART Protocol***********/
 // 0. (1 byte) 0xAA preamble.
-// 1. (1 byte) 0xYY destination address 254- broadcast Package.
+// 1. (1 byte) 0xYY destination address 254- broadcast package.
 // 2. (1 byte) 0xYY source address.
 // 3. (1 byte) 0xYY Package Tag 0x00-Command, 0x01-Answer, 0x02-Notification.
-// 4. (2 byte) 0xYYXX - Data size in Package 0..65529.
-// 5. (2 byte) 0xYYXX - CRC-16-CCITT all Package.
+// 4. (2 byte) 0xYYXX - Data size in package 0..65529.
+// 5. (2 byte) 0xYYXX - CRC-16-CCITT all package.
 /****************************************/
 
 
