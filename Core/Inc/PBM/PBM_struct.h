@@ -61,10 +61,10 @@ typedef struct  // Structure for PBM data
 	int8_t TMP1075_temp_3;					// Temperature TMP1075 №3 in °C.
 	
 	int8_t TMP1075_temp_4;					// Temperature TMP1075 №4 in °C.
-	uint8_t PCA9534_ON_Heat_1 :1; 			// PCA9534 port №1. Enable heat branch №1. // Need to save in flash.
-	uint8_t PCA9534_ON_Heat_2 :1; 			// PCA9534 port №6. Enable heat branch №2. // Need to save in flash.
-	uint8_t PCA9534_TempSens_State_1 :1; 	// PCA9534 port №7. Show state alarm TMP1075 branch №1.
-	uint8_t PCA9534_TempSens_State_2 :1; 	// PCA9534 port №4. Show state alarm TMP1075 branch №2.
+	uint8_t PCA9534_ON_Heat_1 :1; 			// PCA9534 port №1. State permission bit auto heat branch №1. // Need to save in flash.
+	uint8_t PCA9534_ON_Heat_2 :1; 			// PCA9534 port №6. State permission bit auto heat branch №2. // Need to save in flash.
+	uint8_t PCA9534_TempSens_State_1 :1; 	// PCA9534 port №7. Show state auto heat branch №1.
+	uint8_t PCA9534_TempSens_State_2 :1; 	// PCA9534 port №4. Show state auto heat branch №2.
 	uint8_t PCA9534_PIO_1 :1; 				// PCA9534 port №5. Show state PIO DS2777 branch №1.
 	uint8_t PCA9534_PIO_2 :1; 				// PCA9534 port №8. Show state PIO DS2777 branch №2.
 	uint8_t PCA9534_P1 :1; 					// PCA9534 port №2.
