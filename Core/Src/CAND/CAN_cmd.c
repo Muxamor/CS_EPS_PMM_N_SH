@@ -23,10 +23,12 @@
 #include "CAN.h"
 #include "CAN_cmd.h"
 
+
+
 #include  <stdio.h>
 
-extern struct CAN_IVar4 CAN_IVar4_RegCmd;
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
+extern struct CAN_IVar4  CAN_IVar4_RegCmd;
 
 extern _UART_EPS_COMM *UART_M_eps_comm;
 extern _UART_EPS_COMM *UART_B_eps_comm;
