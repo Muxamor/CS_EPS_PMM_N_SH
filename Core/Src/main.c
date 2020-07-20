@@ -138,7 +138,7 @@ int main(void) {
 		LL_mDelay(10); //Delay for startup power supply
 
 	} else { //Initialization passiveCPU
-		PMM_Init_PassiveCPUblock();
+		//PMM_Init_PassiveCPUblock();
 	}
 
 	ENABLE_TMUX1209_I2C();
@@ -164,6 +164,7 @@ int main(void) {
 		LL_mDelay(10);
 		PBM_GetTelemetry(pbm_mas);
 		PBM_Re_Init(pbm_mas);
+		CAN_Var5_fill_telemetry(eps_param);
 	}
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
