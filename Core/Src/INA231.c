@@ -1,6 +1,4 @@
-
 #include "stm32l4xx.h"
-#include "Error_Handler.h"
 #include "i2c_comm.h"
 #include "INA231.h"
 
