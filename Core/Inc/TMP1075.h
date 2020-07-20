@@ -14,7 +14,7 @@ typedef enum {
 
 
 #define TMP1075_SHUTDOWN_MODE            1
-#define TMP1075_CONTINUOS_CONV		     0
+#define TMP1075_CONTINUOUS_CONV		     0
 
 #define TMP1075_CR_VERY_FAST	0  // 27.5 ms
 #define TMP1075_CR_FAST    		1  // 55 ms
