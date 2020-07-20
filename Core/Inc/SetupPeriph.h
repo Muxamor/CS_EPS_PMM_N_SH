@@ -19,7 +19,7 @@ void USART3_Init(void);
 void UART5_Init(void);
 void SetupInterrupt(void);
 void GPIO_Init(void);
-void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider);
+void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider);
 int8_t CAN_init_eps(CAN_TypeDef *can_ref);
 int8_t CAN_DeInit(CAN_TypeDef *can_ref);
 void IWDG_Init(void);

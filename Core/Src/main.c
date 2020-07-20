@@ -70,7 +70,7 @@ int main(void){
 	UART5_Init();
 	
 //Think abot power off CPU
-//	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim devider=0
+//	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 

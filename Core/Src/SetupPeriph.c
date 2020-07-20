@@ -76,7 +76,7 @@ void SystemClock_Config(void) {
 
 	LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
 
-	/* Enabele HSE */
+	/* Enable HSE */
 	LL_RCC_HSE_EnableBypass();
 	LL_RCC_HSE_Enable();
 	/* Wait till HSE is ready */
@@ -89,7 +89,7 @@ void SystemClock_Config(void) {
 		HSE_Fault = 1;
 		Error_Handler();
 
-		/* Enabele HSI - backup clock*/
+		/* Enable HSI - backup clock*/
 		LL_RCC_HSI_Enable();
 		/* Wait till HSI is ready */
 		while (LL_RCC_HSI_IsReady() != 1) {
@@ -628,7 +628,7 @@ void GPIO_Init(void) {
 	/****************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/
-	/* Configure GPIO pin to control write protaction on FRAM1 and FRAM2  FM24Cl64 */
+	/* Configure GPIO pin to control write protection on FRAM1 and FRAM2  FM24Cl64 */
 	/** FRAM write control pin  
 	 PG15 ------> Write control FRAM1 (main)
 	 PC3  ------> Write control FRAM1 (backup)
@@ -785,14 +785,14 @@ void GPIO_Init(void) {
 /** @rief  This function setup interrupts for all ports and inside event .
  * @param  freq - Frequency  PWM in Hz
  * @param  duty_cycle - PWM in %
- * @param  tim_devider - devider Timer
+ * @param  tim_divider - divider Timer
  * @retval None
  */
-void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider) {
+void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider) {
 
 	uint32_t pwm_freq = 0;
 
-	pwm_freq = (uint32_t) (SystemCoreClock / (((uint32_t) (tim_devider + 1)) * freq));
+	pwm_freq = (uint32_t) (SystemCoreClock / (((uint32_t) (tim_divider + 1)) * freq));
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 	LL_TIM_InitTypeDef TIM_InitStruct = { 0 };
@@ -821,7 +821,7 @@ void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider) {
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM3);
 
 	LL_TIM_StructInit(&TIM_InitStruct);
-	TIM_InitStruct.Prescaler = tim_devider;
+	TIM_InitStruct.Prescaler = tim_divider;
 	TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
 	TIM_InitStruct.Autoreload = pwm_freq - 1;
 	TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
@@ -879,7 +879,7 @@ void IWDG_Init(void) {
 }
 
 /** @brief Init CAN
- * @param *can_ref - pointre to CAN number port.
+ * @param *can_ref - pointer to CAN number port.
  * @retval None
  */
 int8_t CAN_init_eps(CAN_TypeDef *can_ref) {
@@ -948,7 +948,7 @@ int8_t CAN_init_eps(CAN_TypeDef *can_ref) {
 }
 
 /** @brief DeInit CAN
- * @param *can_ref - pointre to CAN number port.
+ * @param *can_ref - pointer to CAN number port.
  * @retval None
  */
 int8_t CAN_DeInit(CAN_TypeDef *can_ref) {

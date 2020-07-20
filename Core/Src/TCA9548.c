@@ -7,7 +7,7 @@
 /** @brief	Read control register TCA9548
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	tca9539_I2C_addr - 8-bit device address.
-	@param 	*data_reg - pointer to variable where will be store value registr .
+	@param 	*data_reg - pointer to variable where will be store value register.
 	@retval 0-OK, ERROR_N-Error I2C bus
 */
 ErrorStatus TCA9548_Read_reg(I2C_TypeDef *I2Cx, uint8_t tca9548_I2C_addr, uint8_t *data_reg){

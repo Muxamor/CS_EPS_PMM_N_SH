@@ -1,9 +1,8 @@
 
-
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_i2c.h"
 #include "i2c_comm.h"
-#include "SetupPeriph.h"
+
 
 
 
@@ -237,7 +236,7 @@ ErrorStatus I2C_Read_word_u16_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint
 }
 
 
-/**@brief	Writing uint8_t data (byte) straight without register address  in devices. (St genereate only one start)
+/**@brief	Writing uint8_t data (byte) straight without register address  in devices. (St generate only one start)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	SlaveAddr - 8-bit device address.
 	@param  data - uint8_t data to be writing
@@ -273,7 +272,7 @@ ErrorStatus I2C_Write_byte_directly_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uin
 }
 
 
-/**@brief	Writing uint8_t data (byte) to address reg_addr. (St genereate only one start)
+/**@brief	Writing uint8_t data (byte) to address reg_addr. (St generate only one start)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	SlaveAddr - 8-bit device address.
 	@param  size_reg_addr - size of reg_addr in byte if:
@@ -335,7 +334,7 @@ ErrorStatus I2C_Write_byte_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size
 	return 0;
 }
 
-/**@brief	Writing uint16_t data  by address reg_addr. (St genereate only one start)
+/**@brief	Writing uint16_t data  by address reg_addr. (St generate only one start)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	SlaveAddr - 8-bit device address.
 	@param  size_reg_addr - size of reg_addr in byte if:
@@ -406,7 +405,7 @@ ErrorStatus I2C_Write_word_u16_St(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t 
 }
 
 
-/**@brief	Writing uint8_t array by address reg_addr. (St genereate only one start)
+/**@brief	Writing uint8_t array by address reg_addr. (St generate only one start)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	SlaveAddr - 8-bit device address.
 	@param  size_reg_addr - size of reg_addr in byte if:

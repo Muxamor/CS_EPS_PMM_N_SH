@@ -112,7 +112,7 @@ void LPUART1_IRQHandler(void){
 
 				UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] = input_byte;
 			
-			if(	UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] == UART_M_eps_comm->uart_unit_addr || UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] == 254 ){ // Chaeck addres in parsel. 254- broadcast package.
+			if(	UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] == UART_M_eps_comm->uart_unit_addr || UART_M_eps_comm->recv_pack_buf[UART_M_eps_comm->size_recv_pack] == 254 ){ // Check addres in parsel. 254- broadcast package.
 				
 				UART_M_eps_comm->size_recv_pack++;
 
@@ -195,7 +195,7 @@ void USART3_IRQHandler(void){
 
 			UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] = input_byte;
 
-			if(	UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] == UART_B_eps_comm->uart_unit_addr || UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] == 254 ){ // Chaeck addres in parsel. 254- broadcast package.
+			if(	UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] == UART_B_eps_comm->uart_unit_addr || UART_B_eps_comm->recv_pack_buf[UART_B_eps_comm->size_recv_pack] == 254 ){ // Check addres in parsel. 254- broadcast package.
 
 				UART_B_eps_comm->size_recv_pack++;
 
