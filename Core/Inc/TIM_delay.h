@@ -10,11 +10,7 @@
 
 #include "main.h"
 
-uint8_t TIM2_finished; // Global flag that indicates status of timer. 0 - still counting; 1 - finished
-uint8_t TIM4_finished; // Global flag that indicates status of timer. 0 - still counting; 1 - finished
-uint8_t TIM5_finished; // Global flag that indicates status of timer. 0 - still counting; 1 - finished
-
-ErrorStatus TIM_init(TIM_TypeDef *TIMx, uint32_t delay);
+ErrorStatus TIM_init(TIM_TypeDef *TIMx, uint32_t delay, uint8_t loop_mode);
 ErrorStatus TIM_DeInit(TIM_TypeDef *TIMx);
 
 void TIM2_IRQHandler();

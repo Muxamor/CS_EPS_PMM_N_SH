@@ -3,7 +3,12 @@
 #include "PCA9534.h"
 #include "ADS1015.h"
 #include "TIM_delay.h"
+#include "pmm_ctrl.h"
 #include "Error_Handler.h"
+
+extern uint8_t TIM2_finished; // Global flag that indicates status of timer. 0 - still counting; 1 - finished
+extern uint8_t TIM4_finished; // Global flag that indicates status of timer. 0 - still counting; 1 - finished
+extern uint8_t TIM5_finished; // Global flag that indicates status of timer. 0 - still counting; 1 - finished
 
 #define I2C_ADS1015_ADDR		0x48
 #define PCA9534_ADDR			0x38
@@ -161,7 +166,7 @@ ErrorStatus PMM_check_wire(uint32_t burn_time, uint8_t wire_num){
 	float meas_voltage = 0;
 	uint8_t burn_status = 0;
 
-	TIM_init(TIM2, burn_time);
+	TIM_init(TIM2, burn_time, 0);
 	while(TIM2_finished != 1){
 		status += PMM_ADS1015_average_meas(I2C4, I2C_ADS1015_ADDR, wire_num+3, 16, &meas_voltage);  // read the voltage on the limit switches of "deploy control"
 		if(status != SUCCESS){
@@ -212,7 +217,7 @@ ErrorStatus PMM_burn_the_wire(uint32_t burn_const_time, uint32_t burn_time1, uin
 		return ERROR_N;
 	}
 
-	TIM_init(TIM2, burn_const_time);
+	TIM_init(TIM2, burn_const_time, 0 );
 	while(TIM2_finished != 1){
 		//waiting first time without reading ADC
 	}
@@ -295,7 +300,7 @@ ErrorStatus PMM_Deploy(){
 				else{
 					switch_trouble = 2;
 				}
-				TIM_init(TIM2, PMM_1SEC_DELAY);
+				TIM_init(TIM2, PMM_1SEC_DELAY, 0);
 				while(TIM2_finished != 1){
 					//WAITING 1 SEC
 				}
@@ -318,7 +323,7 @@ ErrorStatus PMM_Deploy(){
 
 		}
 		else{
-			TIM_init(TIM2, PMM_1MIN_DELAY);
+			TIM_init(TIM2, PMM_1MIN_DELAY, 0);
 			status += PMM_Disable_eF_Deploy_L();  // While waiting, turn off the power to the logic.
 			Check_error_status;
 			while(TIM2_finished != 1){
@@ -331,7 +336,7 @@ ErrorStatus PMM_Deploy(){
 	}
 
 	//	As soon as we read the state that we have left the container, we begin the countdown of 30 minutes.
-	TIM_init(TIM2, 10000);
+	TIM_init(TIM2, 10000, 0);
 	status += PMM_Disable_eF_Deploy_L(); // While waiting, turn off the power of the logic
 	Check_error_status;
 	while(TIM2_finished != 1){
