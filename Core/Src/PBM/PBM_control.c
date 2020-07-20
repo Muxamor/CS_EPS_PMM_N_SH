@@ -442,6 +442,7 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 	pbm_table = PBM_Table(PBM_number);
 
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)) {
+		pbm[PBM_number].Branch_1_ChgEnableBit = State;
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			Error = DS2777_EnableChg(I2Cx, pbm_table.BRANCH_1_Addr, State);
 			LL_mDelay(10);
@@ -452,7 +453,6 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 			}
 		}
 		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch_1_ChgEnableBit = Struct.ChgEnableBit;
 			if (pbm[PBM_number].Branch_1_ChgControlFlag == State) {
 				pbm[PBM_number].Error_Charge_1 = SUCCESS;
 			} else {
@@ -473,6 +473,7 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 	Error = -1;
 	count = 0;
 	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+		pbm[PBM_number].Branch_2_ChgEnableBit = State;
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			Error = DS2777_EnableChg(I2Cx, pbm_table.BRANCH_2_Addr, State);
 			LL_mDelay(10);
@@ -483,7 +484,6 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 			}
 		}
 		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch_2_ChgEnableBit = Struct.ChgEnableBit;
 			if (pbm[PBM_number].Branch_2_ChgControlFlag == State) {
 				pbm[PBM_number].Error_Charge_2 = SUCCESS;
 			} else {
@@ -528,6 +528,7 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 	pbm_table = PBM_Table(PBM_number);
 
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)) {
+		pbm[PBM_number].Branch_1_DchgEnableBit = State;
 		while ((Error != 0) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			Error = DS2777_EnableDchg(I2Cx, pbm_table.BRANCH_1_Addr, State);
 			LL_mDelay(10);
@@ -538,7 +539,6 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 			}
 		}
 		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch_1_DchgEnableBit = Struct.DchgEnableBit;
 			if (pbm[PBM_number].Branch_1_DchgControlFlag == State) {
 				pbm[PBM_number].Error_Discharge_1 = SUCCESS;
 			} else {
@@ -559,6 +559,7 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 	Error = -1;
 	count = 0;
 	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+		pbm[PBM_number].Branch_2_DchgEnableBit = State;
 		while ((Error != 0) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			Error = DS2777_EnableDchg(I2Cx, pbm_table.BRANCH_2_Addr, State);
 			LL_mDelay(10);
@@ -569,7 +570,6 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 			}
 		}
 		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch_2_DchgEnableBit = Struct.DchgEnableBit;
 			if (pbm[PBM_number].Branch_2_DchgControlFlag == State) {
 				pbm[PBM_number].Error_Discharge_2 = SUCCESS;
 			} else {
@@ -602,6 +602,7 @@ ErrorStatus PBM_CheckHeatOFF(_PBM pbm[]) {
 	uint8_t count = 0;
 	uint8_t Hi_Limit = (uint8_t) (PBM_TMP1075_TEMP_HI + 2);
 	uint8_t i = 0;
+	int8_t Error_count = 0;
 
 	for (i = 0; i < PBM_QUANTITY; i++) {
 		if ((pbm[i].TMP1075_temp_1 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_1 == 1)) {
@@ -610,27 +611,42 @@ ErrorStatus PBM_CheckHeatOFF(_PBM pbm[]) {
 		if ((pbm[i].TMP1075_temp_2 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_1 == 1)) {
 			count++;
 		}
+		if (count >= 1) {
+			PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_OFF_HEAT);
+			PBM_TempSensorInit(pbm, i);
+			pbm[i].PCA9534_ON_Heat_1 = 1;
+			pbm[i].Error_Heat_1 = ERROR;
+			Error_count = Error_count + 1;
+			#ifdef DEBUGprintf
+				Error_Handler();
+			#endif
+		}
+
+		count = 0;
 		if ((pbm[i].TMP1075_temp_3 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_2 == 1)) {
 			count++;
 		}
 		if ((pbm[i].TMP1075_temp_4 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_2 == 1)) {
 			count++;
 		}
-		if (count >= 2) {
-			PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_ALL, PBM_OFF_HEAT);
+		if (count >= 1) {
+			PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, PBM_OFF_HEAT);
 			PBM_TempSensorInit(pbm, i);
-			pbm[i].PCA9534_ON_Heat_1 = 1;
 			pbm[i].PCA9534_ON_Heat_2 = 1;
-			pbm[i].Error_Heat_1 = ERROR;
 			pbm[i].Error_Heat_2 = ERROR;
+			Error_count = Error_count + 1;
 			#ifdef DEBUGprintf
 				Error_Handler();
 			#endif
-			return ERROR_N;
 		}
 		count = 0;
 	}
-	return SUCCESS;
+
+	if (Error_count == SUCCESS) {
+		return SUCCESS;
+	} else {
+		return ERROR_N;
+	}
 }
 
 /** @brief	Check state charge/discharge keys for all PBM.
