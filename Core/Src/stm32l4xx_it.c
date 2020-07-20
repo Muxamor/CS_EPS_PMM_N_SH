@@ -1,8 +1,7 @@
 #include "stm32l4xx_ll_system.h"
 #include "stm32l4xx_it.h"
-#include "CAND/CAN.h"
-
-#include "uart_comm.h"
+#include "stm32l4xx_ll_lpuart.h"
+#include "stm32l4xx_ll_usart.h"
 #include "uart_eps_comm.h"
 
 /******************************************************************************/
