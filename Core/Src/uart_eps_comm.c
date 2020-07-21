@@ -1,6 +1,7 @@
 
 #include <string.h>
 #include "stm32l4xx.h"
+#include "Error_Handler.h"
 #include "Fn_CRC16.h"
 #include "eps_struct.h"
 #include "uart_comm.h"
@@ -10,7 +11,7 @@
 #include "pmm_sw_cpu.h"
 #include "uart_eps_comm.h"
 
-
+extern uint32_t SysTick_Counter;
 /**********EPS UART Protocol***********/
 // 0. (1 byte) 0xAA preamble.
 // 1. (1 byte) 0xYY destination address 254- broadcast package.
@@ -403,6 +404,9 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _EPS_Param 
 	if(error_status == SUCCESS ){
 		UART_eps_comm->error_port_counter = 0;
 	}else{
+        #ifdef DEBUGprintf
+            Error_Handler();
+        #endif
 		UART_eps_comm->error_port_counter++;
 	}
 
@@ -463,19 +467,21 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_PMM_struct ){
 		 send_buf[0] = UART_EPS_ID_CMD_Get_PMM_struct;
 		 size_send_data = 1;
-	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 		send_buf[0] = UART_EPS_ID_CMD_Get_Reboot_count;
 		size_send_data = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Reboot ){
-
+		return ERROR_N; //Temporarily until the command is implemented
 	}else if( cmd_id == UART_EPS_ID_CMD_Take_CTRL ){
+		send_buf[0] = UART_EPS_ID_CMD_Take_CTRL;
+		size_send_data = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Ping ){
-
 		send_buf[0] = UART_EPS_ID_CMD_Ping;
 		size_send_data = 1;
+
 	}else{
 		return ERROR_N;
 	}
@@ -511,17 +517,20 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 	
 	//Send a command and wait for an answer.
 	if( UART_EPS_Send_Package( UART_X_eps_comm->USARTx, destination_addr,  source_addr, UART_EPS_CMD, send_buf, size_send_data) == SUCCESS ){
-
+		timeout_counter = SysTick_Counter;
 		UART_X_eps_comm->waiting_answer_flag = 1;
-		timeout_counter = 0;
+		//timeout_counter = 0;
 
 		while( UART_X_eps_comm->waiting_answer_flag != 0 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
 
-			timeout_counter++;
+		//	timeout_counter++;
 
 			if ( timeout_counter == UART_EPS_ACK_TIMEOUT ){
 				UART_X_eps_comm->waiting_answer_flag = 0;
 				UART_X_eps_comm->error_port_counter++;
+                #ifdef DEBUGprintf
+				    Error_Handler();
+                #endif
 				break;
 			}
 

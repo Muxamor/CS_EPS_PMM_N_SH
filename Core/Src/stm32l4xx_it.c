@@ -59,9 +59,11 @@ void PendSV_Handler(void){
 
 }
 
+extern uint32_t SysTick_Counter;
+
 /** @brief This function handles System tick timer. */
 void SysTick_Handler(void){
-
+    SysTick_Counter++;
 }
 
 /******************************************************************************/
