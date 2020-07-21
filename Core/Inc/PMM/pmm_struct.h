@@ -99,6 +99,9 @@ typedef struct{
 
 	int8_t Temp_sensor; //PMM temperature
 
+	uint16_t Reserve_1;
+	uint16_t Reserve_2;
+
 }_PMM;
 
 //#pragma pack(pop)

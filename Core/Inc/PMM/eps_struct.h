@@ -22,7 +22,7 @@ typedef struct{
 
 	_PMM *const eps_pmm_ptr;
 	_PDM *const eps_pdm_ptr;
-	_PAM * const eps_pam_ptr;
+	_PAM *const eps_pam_ptr;
 	_PBM *const eps_pbm_ptr;
 	_EPS_Service *const eps_serv_ptr;
 

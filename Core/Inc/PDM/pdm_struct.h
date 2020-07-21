@@ -46,6 +46,8 @@ typedef struct{
 	uint8_t PDM_address_module;
 	uint8_t Alignment_structure1; //Alignment
 
+	uint16_t Reserve_1;
+	uint16_t Reserve_2;
 }_PDM;
 
 //#pragma pack(pop)
