@@ -2,6 +2,9 @@
 #ifndef INC_UART_EPS_COMM_H_
 #define INC_UART_EPS_COMM_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "eps_struct.h"
 
@@ -12,7 +15,7 @@
 #define UART_EPS_PACK_SIZE_BUFF  512
 #define UART_EPS_ERROR_Threshold 6
 
-#define UART_EPS_ACK_TIMEOUT 10000000
+#define UART_EPS_ACK_TIMEOUT 500 //ms
 
 //Protocol UART EPS
 #define UART_EPS_ID_CMD_SAVE_PMM_struct 	0x01
@@ -78,6 +81,8 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p );
 ErrorStatus UART_EPS_Send_ACK ( _UART_EPS_COMM *UART_eps_comm , uint8_t send_data[], uint16_t size_data );
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_UART_EPS_COMM_H_ */

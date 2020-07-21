@@ -510,22 +510,19 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 		destination_addr = UART_EPS_CPUm_Addr;
 	}
 
-	error_status = ERROR_N;
-
 	//Clear input EPS UART buffer.
 	UART_EPS_Pars_Get_Package( UART_X_eps_comm, eps_p );
-	
+
+    error_status = ERROR_N;
 	//Send a command and wait for an answer.
 	if( UART_EPS_Send_Package( UART_X_eps_comm->USARTx, destination_addr,  source_addr, UART_EPS_CMD, send_buf, size_send_data) == SUCCESS ){
-		timeout_counter = SysTick_Counter;
-		UART_X_eps_comm->waiting_answer_flag = 1;
-		//timeout_counter = 0;
+
+        timeout_counter = SysTick_Counter;
+        UART_X_eps_comm->waiting_answer_flag = 1;
 
 		while( UART_X_eps_comm->waiting_answer_flag != 0 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
 
-		//	timeout_counter++;
-
-			if ( timeout_counter == UART_EPS_ACK_TIMEOUT ){
+			if ( (SysTick_Counter - timeout_counter) > UART_EPS_ACK_TIMEOUT ){
 				UART_X_eps_comm->waiting_answer_flag = 0;
 				UART_X_eps_comm->error_port_counter++;
                 #ifdef DEBUGprintf
