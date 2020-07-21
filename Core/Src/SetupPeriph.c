@@ -6,19 +6,19 @@
 #include "stm32l4xx_ll_pwr.h"
 #include "stm32l4xx_ll_i2c.h"
 #include "stm32l4xx_ll_iwdg.h"
-#include "stm32l4xx_ll_crs.h"
+//#include "stm32l4xx_ll_crs.h"
 #include "stm32l4xx_ll_bus.h"
-#include "stm32l4xx_ll_exti.h"
+//#include "stm32l4xx_ll_exti.h"
 #include "stm32l4xx_ll_gpio.h"
 #include "stm32l4xx_ll_tim.h"
 #include "stm32l4xx_ll_lpuart.h"
 #include "stm32l4xx_ll_usart.h"
-#include  "Error_Handler.h"
+#include "Error_Handler.h"
 #include "SetupPeriph.h"
-#include "CAN.h"
-#include "canv.h"
-#include  <stdio.h>
 
+#include "canv.h"
+
+//#include  <stdio.h>
 //#include "stm32l4xx_ll_dma.h"
 
 /** @brief Initialization of basic functionality
@@ -33,26 +33,19 @@ void LL_Init(void) {
 
 	/* System interrupt init*/
 	/* MemoryManagement_IRQn interrupt configuration */
-	NVIC_SetPriority(MemoryManagement_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+	NVIC_SetPriority(MemoryManagement_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 	/* BusFault_IRQn interrupt configuration */
-	NVIC_SetPriority(BusFault_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+	NVIC_SetPriority(BusFault_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 	/* UsageFault_IRQn interrupt configuration */
-	NVIC_SetPriority(UsageFault_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+	NVIC_SetPriority(UsageFault_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 	/* SVCall_IRQn interrupt configuration */
-	NVIC_SetPriority(SVCall_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+	NVIC_SetPriority(SVCall_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 	/* DebugMonitor_IRQn interrupt configuration */
-	NVIC_SetPriority(DebugMonitor_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+	NVIC_SetPriority(DebugMonitor_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 	/* PendSV_IRQn interrupt configuration */
-	NVIC_SetPriority(PendSV_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+	NVIC_SetPriority(PendSV_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 	/* SysTick_IRQn interrupt configuration */
-	NVIC_SetPriority(SysTick_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 15, 0));
+	NVIC_SetPriority(SysTick_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 15, 0));
 
 	/* PVD Configuration */
 	LL_PWR_SetPVDLevel(LL_PWR_PVDLEVEL_1);
@@ -76,7 +69,7 @@ void SystemClock_Config(void) {
 
 	LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
 
-	/* Enabele HSE */
+	/* Enable HSE */
 	LL_RCC_HSE_EnableBypass();
 	LL_RCC_HSE_Enable();
 	/* Wait till HSE is ready */
@@ -89,7 +82,7 @@ void SystemClock_Config(void) {
 		HSE_Fault = 1;
 		Error_Handler();
 
-		/* Enabele HSI - backup clock*/
+		/* Enable HSI - backup clock*/
 		LL_RCC_HSI_Enable();
 		/* Wait till HSI is ready */
 		while (LL_RCC_HSI_IsReady() != 1) {
@@ -131,6 +124,7 @@ void SystemClock_Config(void) {
 	LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
 
 	LL_Init1msTick(80000000);
+	LL_SYSTICK_EnableIT();
 
 	LL_SetSystemCoreClock(80000000);
 
@@ -199,7 +193,7 @@ void I2C3_Init(void) {
 	LL_I2C_EnableClockStretching(I2C3);
 
 	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-	I2C_InitStruct.Timing = 0x00702991;
+	I2C_InitStruct.Timing = 0x00702991;//0x00702991 - 400kHz, 0x10909CEC - 100kHz.
 	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
 	I2C_InitStruct.DigitalFilter = 0;
 	I2C_InitStruct.OwnAddress1 = 0;
@@ -248,7 +242,7 @@ void I2C4_Init(void) {
 	LL_I2C_EnableClockStretching(I2C4);
 
 	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-	I2C_InitStruct.Timing = 0x10909CEC; //0x00702991 - 400kHz, 0x10909CEC - 100kHz.
+	I2C_InitStruct.Timing = 0xB0801A1F; //0x00702991 - 400kHz, 0x10909CEC - 100kHz.
 	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
 	I2C_InitStruct.DigitalFilter = 0;
 	I2C_InitStruct.OwnAddress1 = 0;
@@ -285,8 +279,9 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 
 	uint16_t period = 0, i = 0, count = 0;
 
-	//period = SystemCoreClock * 5 / 10000000;
-	period = 42;
+	period = SystemCoreClock * 5 / 1000000 / 10.5;
+	//period = 42;
+
 	count = period;
 
 	LL_I2C_DeInit(I2Cx);
@@ -489,8 +484,7 @@ void SetupInterrupt(void) {
 	//LL_EXTI_InitTypeDef EXTI_InitStruct;
 
 	/* LPUART1 interrupt Init */
-	NVIC_SetPriority(LPUART1_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 0)); //Set priority №2 from 0..15
+	NVIC_SetPriority(LPUART1_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 0)); //Set priority №2 from 0..15
 	LL_LPUART_EnableIT_RXNE(LPUART1); //Enable Interrupt RX buff no empty 
 	//LL_LPUART_DisableIT_RXNE(LPUART1);
 	//LL_LPUART_DisableIT_ERROR(LPUART1);
@@ -499,8 +493,7 @@ void SetupInterrupt(void) {
 	/**********************************************/
 
 	/* USART3 interrupt Init */
-	NVIC_SetPriority(USART3_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 3, 0)); //Set priority №14 from 0..15
+	NVIC_SetPriority(USART3_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 3, 0)); //Set priority №14 from 0..15
 	LL_USART_EnableIT_RXNE(USART3); //Enable Interrupt RX buff no empty 
 	//LL_USART_DisableIT_RXNE(USART3);
 	//LL_USART_DisableIT_ERROR(USART3);
@@ -509,8 +502,7 @@ void SetupInterrupt(void) {
 	/**********************************************/
 
 	/* UART5 interrupt Init */
-	NVIC_SetPriority(UART5_IRQn,
-			NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 14, 0)); //Set priority №14 from 0..15
+	NVIC_SetPriority(UART5_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 14, 0)); //Set priority №14 from 0..15
 	LL_USART_EnableIT_RXNE(UART5); //Enable Interrupt RX buff no empty 
 	//LL_USART_DisableIT_RXNE(UART5);
 	//LL_USART_DisableIT_ERROR(USART5);
@@ -628,7 +620,7 @@ void GPIO_Init(void) {
 	/****************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/
-	/* Configure GPIO pin to control write protaction on FRAM1 and FRAM2  FM24Cl64 */
+	/* Configure GPIO pin to control write protection on FRAM1 and FRAM2  FM24Cl64 */
 	/** FRAM write control pin  
 	 PG15 ------> Write control FRAM1 (main)
 	 PC3  ------> Write control FRAM1 (backup)
@@ -785,14 +777,14 @@ void GPIO_Init(void) {
 /** @rief  This function setup interrupts for all ports and inside event .
  * @param  freq - Frequency  PWM in Hz
  * @param  duty_cycle - PWM in %
- * @param  tim_devider - devider Timer
+ * @param  tim_divider - divider Timer
  * @retval None
  */
-void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider) {
+void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider) {
 
 	uint32_t pwm_freq = 0;
 
-	pwm_freq = (uint32_t) (SystemCoreClock / (((uint32_t) (tim_devider + 1)) * freq));
+	pwm_freq = (uint32_t) (SystemCoreClock / (((uint32_t) (tim_divider + 1)) * freq));
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 	LL_TIM_InitTypeDef TIM_InitStruct = { 0 };
@@ -821,7 +813,7 @@ void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider) {
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM3);
 
 	LL_TIM_StructInit(&TIM_InitStruct);
-	TIM_InitStruct.Prescaler = tim_devider;
+	TIM_InitStruct.Prescaler = tim_divider;
 	TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
 	TIM_InitStruct.Autoreload = pwm_freq - 1;
 	TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
@@ -879,7 +871,7 @@ void IWDG_Init(void) {
 }
 
 /** @brief Init CAN
- * @param *can_ref - pointre to CAN number port.
+ * @param *can_ref - pointer to CAN number port.
  * @retval None
  */
 int8_t CAN_init_eps(CAN_TypeDef *can_ref) {
@@ -948,7 +940,7 @@ int8_t CAN_init_eps(CAN_TypeDef *can_ref) {
 }
 
 /** @brief DeInit CAN
- * @param *can_ref - pointre to CAN number port.
+ * @param *can_ref - pointer to CAN number port.
  * @retval None
  */
 int8_t CAN_DeInit(CAN_TypeDef *can_ref) {

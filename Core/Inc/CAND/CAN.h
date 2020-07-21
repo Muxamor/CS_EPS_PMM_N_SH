@@ -127,7 +127,7 @@ struct CAN_IVar5{
     uint8_t  CAN_Beacon_panel_median_temperature_pX;				//+0      |  const = 0x74                 |   Медианная температура панели +X
     uint8_t  CAN_Beacon_panel_median_temperature_nX;				//+1      |  const = 0x75                 |   Медианная температура панели -X
     uint8_t  CAN_Beacon_solar_panel_status[5];						//+2      |  const = 0x7A7B7C7D7E         |   Статус солнечных панелей, битовая маска (в т.ч. ФЭП)
-    uint16_t CAN_Beacon_full_capacity_charge_level_AB3_line2;		//+7      |  const = 0x8C8D               |   Полный уровень заряда АБ в mAh
+    uint16_t CAN_Beacon_full_capacity_charge_level;					//+7      |  const = 0x8C8D               |   Полный уровень заряда АБ в mAh
     uint8_t  CAN_Beacon_AB_status[3];								//+9      |  const = 0x979899             |   Статус АБ, битовая маска
     uint16_t CAN_Beacon_charge_discharge_AB_key_status;             //+12     |  const = 0x9A9B               |   Статус ключей заряда и разряда АБ, битовая маска
     uint8_t  CAN_Beacon_subsystem_power_line_status;				//+14     |  const = 0xB0                 |   Статус линии пит. подсистем, битовая маска
