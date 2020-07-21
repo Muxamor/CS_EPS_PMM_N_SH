@@ -12,7 +12,7 @@
 #define UART_EPS_PACK_SIZE_BUFF  512
 #define UART_EPS_ERROR_Threshold 6
 
-#define UART_EPS_ACK_TIMEOUT 10000
+#define UART_EPS_ACK_TIMEOUT 10000000
 
 //Protocol UART EPS
 #define UART_EPS_ID_CMD_SAVE_PMM_struct 	0x01

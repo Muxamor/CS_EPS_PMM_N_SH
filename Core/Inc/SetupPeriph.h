@@ -5,7 +5,7 @@
 #ifndef __SETUPPERIPH_H
 #define __SETUPPERIPH_H
 
-
+#include "stm32l4xx_ll_i2c.h"
 
 
 void LL_Init(void);
@@ -21,7 +21,7 @@ void SetupInterrupt(void);
 void GPIO_Init(void);
 void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider);
 int8_t CAN_init_eps(CAN_TypeDef *can_ref);
-int8_t CAN_DeInit(CAN_TypeDef *can_ref);
+int8_t CAN_DeInit_eps(CAN_TypeDef *can_ref);
 void IWDG_Init(void);
 
 /*For control multiplexor TMUX1209  need use: */

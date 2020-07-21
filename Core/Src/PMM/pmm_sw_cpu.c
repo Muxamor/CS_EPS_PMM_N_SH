@@ -1,12 +1,11 @@
 
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
-#include "stm32l4xx_ll_gpio.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
+#include "CAND/CAN.h"
 #include "eps_struct.h"
 #include "pmm_config.h"
-#include "pmm_init_IC.h"
 #include "pmm_init.h"
 #include "pmm_ctrl.h"
 #include "uart_eps_comm.h"
@@ -130,9 +129,8 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 			}
 
 			if( error_status == SUCCESS ){
-				//LL_mDelay(5);
-				eps_p.eps_pmm_ptr->Active_CPU = set_active_CPU;
-				PMM_Init_PassiveCPUblock( eps_p );
+				//eps_p.eps_pmm_ptr->Active_CPU = set_active_CPU;
+				PMM_Set_mode_Passive_CPU(eps_p);
 				eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; 
 			}
 
@@ -140,6 +138,7 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 
 		if( error_status == ERROR_N ){
 			eps_p.eps_pmm_ptr->Active_CPU = !set_active_CPU;
+			PMM_Set_MUX_CAN_CPUm_CPUb( eps_p.eps_pmm_ptr );
 			#ifdef DEBUGprintf
 				Error_Handler();
 			#endif
@@ -150,21 +149,47 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 	return error_status;
 }
 
-/** @brief  Set Active CPU mode if we get request from another CPU 
+/** @brief  Set Active CPU mode if we get or sent request from/to another CPU
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-void  PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
+void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
 		
 	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
 		eps_p.eps_pmm_ptr->Active_CPU = CPUmain_Active;
 	}else{
 		eps_p.eps_pmm_ptr->Active_CPU = CPUbackup_Active;
 	}
-		
-	PMM_Init_ActiveCPUblock( eps_p );
+
+	CAN_init_eps(CAN1);
+	CAN_init_eps(CAN2);
+	CAN_RegisterAllVars();
+
+	PMM_init( eps_p.eps_pmm_ptr );
+
+	eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+}
+
+/** @brief  Set Passive CPU mode if we get or sent request from/to another CPU
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
+void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
+
+	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
+		eps_p.eps_pmm_ptr->Active_CPU = CPUbackup_Active ;
+	}else{
+		eps_p.eps_pmm_ptr->Active_CPU = CPUmain_Active;
+	}
+
+	CAN_DeInit_eps(CAN1);
+	CAN_DeInit_eps(CAN2);
+
+	PMM_init( eps_p.eps_pmm_ptr );
 
 	eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; 
-	 
 }
+
+
+
 
