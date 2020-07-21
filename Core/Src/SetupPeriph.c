@@ -484,8 +484,10 @@ void SetupInterrupt(void) {
 
 	//LL_EXTI_InitTypeDef EXTI_InitStruct;
 
-    //Enable interupt fo Systick
+	/*Enable interrupt for SysTick */
     LL_SYSTICK_EnableIT();
+    //LL_SYSTICK_DisableIT();
+    /**********************************************/
 
 	/* LPUART1 interrupt Init */
 	NVIC_SetPriority(LPUART1_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 0)); //Set priority №2 from 0..15

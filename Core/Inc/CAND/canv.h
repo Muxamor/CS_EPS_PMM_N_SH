@@ -1,6 +1,9 @@
 #ifndef _CANV_H_
 #define _CANV_H_
 
+#ifdef __cplusplus
+}
+#endif
 
 typedef union {
   struct {
@@ -60,6 +63,10 @@ extern uint8_t CANMasterWriteAckFlg;
 extern uint8_t CANMasterRxFlg;
 #endif
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

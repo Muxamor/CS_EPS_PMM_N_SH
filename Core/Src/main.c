@@ -110,13 +110,13 @@ int main(void){
 
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
-		CAN_init_eps(CAN1);
-		CAN_init_eps(CAN2);
-		CAN_RegisterAllVars();
-
 		PDM_init( pdm_ptr );
 		//Add init PAM
 		//Add init PBM
+
+		CAN_init_eps(CAN1);
+		CAN_init_eps(CAN2);
+		CAN_RegisterAllVars();
 		//LL_mDelay(10); //Delay for startup power supply
 
     //Initialization CAN for passive CPU

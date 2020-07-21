@@ -2,6 +2,10 @@
 #ifndef INC_PMM_EPS_STRUCT_H_
 #define INC_PMM_EPS_STRUCT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "pmm_struct.h"
 #include "pdm_struct.h"
 #include "pam_struct.h"
@@ -27,5 +31,9 @@ typedef struct{
 	_EPS_Service *const eps_serv_ptr;
 
 }_EPS_Param;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PMM_EPS_STRUCT_H_ */

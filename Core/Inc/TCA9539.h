@@ -1,6 +1,10 @@
 #ifndef INC_TCA9539_H_
 #define INC_TCA9539_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 typedef enum {
   ERROR_N = -1,
@@ -59,6 +63,8 @@ ErrorStatus TCA9539_conf_IO_pol_inversion(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539
 ErrorStatus TCA9539_Set_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
 ErrorStatus TCA9539_Reset_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_tca9539_addr, uint16_t pin);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_TCA9539_H_ */

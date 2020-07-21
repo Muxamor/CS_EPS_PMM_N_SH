@@ -3,6 +3,10 @@
 #ifndef INC_TMP1075_H_
 #define INC_TMP1075_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stm32l4xx.h"
 
 /*
@@ -52,5 +56,9 @@ ErrorStatus TMP1075_set_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float
 ErrorStatus TMP1075_set_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float high_limit);
 ErrorStatus TMP1075_get_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data);
 ErrorStatus TMP1075_get_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_TMP1075_H_ */

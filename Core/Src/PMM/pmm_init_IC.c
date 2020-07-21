@@ -305,7 +305,7 @@ void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
 		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-		//need write
+		//TO DO need write
 	}
 
 }
@@ -330,7 +330,7 @@ void PMM_Reset_pin_Pull_Down_I2C_GPIOExt( uint8_t tca9539_addr ){
 		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_2);
 
 	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-		//need write
+		//TO DO need write
 	}
 }
 

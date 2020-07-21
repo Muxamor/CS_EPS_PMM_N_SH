@@ -2,6 +2,10 @@
 #ifndef INC_PDM_PDM_STRUCT_H_
 #define INC_PDM_PDM_STRUCT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "pdm_config.h"
 
 //#pragma pack(push, 1)
@@ -51,5 +55,9 @@ typedef struct{
 }_PDM;
 
 //#pragma pack(pop)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PDM_PDM_STRUCT_H_ */

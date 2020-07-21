@@ -3,6 +3,9 @@
 #ifndef INC_INA231_H_
 #define INC_INA231_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define INA231_CONFIGURATION_REG_ADDR			0x00
 #define INA231_SHUNT_VOLTAGE_REG_ADDR			0x01
@@ -116,5 +119,9 @@ ErrorStatus INA231_Get_shunt_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr,
 ErrorStatus INA231_Get_shunt_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, int16_t *shunt_voltage);
 ErrorStatus INA231_Get_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, float max_current, float *current, float *bus_voltage, float *power);
 ErrorStatus INA231_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr, uint16_t max_current, int16_t *current, uint16_t *bus_voltage, uint16_t *power);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_INA231_H_ */

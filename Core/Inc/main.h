@@ -27,6 +27,11 @@
 extern "C" {
 #endif
 
+#include "uart_eps_comm.h"
+
+extern _UART_EPS_COMM *UART_M_eps_comm;
+extern _UART_EPS_COMM *UART_B_eps_comm;
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_iwdg.h"

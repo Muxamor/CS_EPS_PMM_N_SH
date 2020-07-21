@@ -161,11 +161,11 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
 		eps_p.eps_pmm_ptr->Active_CPU = CPUbackup_Active;
 	}
 
+	PMM_init( eps_p.eps_pmm_ptr );
+
 	CAN_init_eps(CAN1);
 	CAN_init_eps(CAN2);
 	CAN_RegisterAllVars();
-
-	PMM_init( eps_p.eps_pmm_ptr );
 
 	eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 }

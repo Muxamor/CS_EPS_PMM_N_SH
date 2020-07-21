@@ -1,6 +1,10 @@
 #ifndef INC_ADS1015_H_
 #define INC_ADS1015_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 typedef enum {
   ERROR_N = -1,
@@ -106,5 +110,9 @@ ErrorStatus ADS1015_setup_latching_comp(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 ErrorStatus ADS1015_setup_comp_queue(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t mode);
 ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float th_val_volts);
 ErrorStatus ADS1015_setup_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float th_val_volts);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_ADS1015_H_ */

@@ -208,10 +208,9 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         
                         if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Set_active_CPU ){
                             eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
-                            eps_p.eps_serv_ptr->Set_Active_CPU = CAN_IVar4_RegCmd.CAN_Set_active_CPU;
+                            eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
                         }
-       
-                     
+
 					}else if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x01 ){
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUbackup\n", CAN_Switch_active_CPU_offset);
@@ -219,7 +218,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                         if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Set_active_CPU ){
                             eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
-                            eps_p.eps_serv_ptr->Set_Active_CPU = CAN_IVar4_RegCmd.CAN_Set_active_CPU;
+                            eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup_Active;
                         }
                         
          			}

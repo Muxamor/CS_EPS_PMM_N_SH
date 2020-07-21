@@ -1,6 +1,10 @@
 #ifndef INC_PMM_PMM_CTRL_H_
 #define INC_PMM_PMM_CTRL_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "pmm_struct.h"
 
 ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_t state_channel );
@@ -14,6 +18,8 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 
 ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr );
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PMM_PMM_CTRL_H_ */

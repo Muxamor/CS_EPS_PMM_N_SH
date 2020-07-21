@@ -1,7 +1,9 @@
 #ifndef INC_FRAM_H_
 #define INC_FRAM_H_
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define FRAM_Addr_segment_1		0x0000
 #define FRAM_Addr_segment_2		0x5555
@@ -10,8 +12,6 @@
 
 #define FRAM_WRITE_PROTECTION_ENABLE	1
 #define FRAM_WRITE_PROTECTION_DISABLE	0
-
-
 
 /*
 typedef enum {
@@ -33,5 +33,8 @@ ErrorStatus FRAM_majority_read_data_two_fram(I2C_TypeDef *I2Cx, uint8_t I2C_addr
 
 ErrorStatus FRAM_majority_read_byte(I2C_TypeDef *I2Cx, uint8_t fram_addr, uint32_t offset, uint8_t *read_byte);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_FRAM_H_ */

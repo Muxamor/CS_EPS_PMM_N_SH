@@ -5,8 +5,13 @@
 #ifndef __SETUPPERIPH_H
 #define __SETUPPERIPH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stm32l4xx_ll_i2c.h"
 
+extern uint32_t SysTick_Counter;
 
 void LL_Init(void);
 void SystemClock_Config(void);
@@ -76,10 +81,8 @@ void IWDG_Init(void);
                                                                  0 bit  for subpriority */
 #endif
 
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SETUPPERIPH_H_ */

@@ -1,6 +1,11 @@
 #ifndef _CAN_H_
 #define _CAN_H_
-#include "main.h"
+
+#ifdef __cplusplus
+}
+#endif
+
+#include "stm32l4xx.h"
 #include "Error_Handler.h"
 
 #define CAN_ID_DEV            			0x03
@@ -33,7 +38,12 @@
 #define CAN_PWR_VBAT2_offset		35
 #define CAN_Switch_active_CPU_offset 37
 
+extern struct CAN_IVar5 CAN_IVar5_telemetry;
+extern struct CAN_IVar4  CAN_IVar4_RegCmd;
 
+extern uint64_t CAN_cmd_mask_status;
+extern uint8_t CAN1_exchange_timeout_flag;
+extern uint8_t CAN2_exchange_timeout_flag;
 
 typedef union {
   struct {
@@ -363,7 +373,6 @@ struct CAN_IVar5{
 #pragma pack(pop)
 
 
-
 #pragma pack(push, 2)
 
 typedef struct {
@@ -381,6 +390,9 @@ void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_
 
 int8_t CAN_RegisterAllVars();
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
