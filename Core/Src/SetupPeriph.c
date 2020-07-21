@@ -279,7 +279,7 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 
 	uint16_t period = 0, i = 0, count = 0;
 
-	period = SystemCoreClock * 5 / 1000000 / 10.5;
+	period = (uint16_t) (SystemCoreClock * 5 / (1000000 * 10.5));
 	//period = 42;
 
 	count = period;
