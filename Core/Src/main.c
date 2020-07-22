@@ -1,4 +1,5 @@
 //#include "main.h"
+#include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
 #include "TMP1075.h"
 #include "CAND/CAN_cmd.h"
@@ -141,7 +142,7 @@ int main(void){
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
-		//LL_mDelay(10); //Delay for startup power supply
+		LL_mDelay(20); //Delay for startup power supply
 
     //Initialization CAN for passive CPU
 	}else{
