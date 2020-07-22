@@ -5,6 +5,13 @@
 
 //__attribute__((weak)) typeRegistrationRec RegistrationRec[14] = {0};
 
+struct CAN_IVar5 CAN_IVar5_telemetry;
+struct CAN_IVar4  CAN_IVar4_RegCmd;
+
+uint64_t CAN_cmd_mask_status;
+uint8_t CAN1_exchange_timeout_flag;
+uint8_t CAN2_exchange_timeout_flag;
+
 const CAN_typeRegistrationRec RegistrationRec[] = {
 /*{указатель на IVar, размер IVar, указатель на Callback, id_IVar, доступ}*/
 	{&CAN_IVar4_RegCmd, sizeof(CAN_IVar4_RegCmd), CAN_ProcCallbackCmds, CAN_ID_IVAR_REGCMD, 0},

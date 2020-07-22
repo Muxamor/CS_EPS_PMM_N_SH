@@ -3,6 +3,10 @@
 #ifndef INC_PDM_PDM_CONFIG_H_
 #define INC_PDM_PDM_CONFIG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*********************** Configuration for PDM  ***********************/
 
 #define PDM_I2Cx_GPIOExt1 			I2C4 //I2C GPIO extender TCA9539 in PDM
@@ -95,5 +99,8 @@ typedef struct{
 
 _PDM_table PDM__Table(uint8_t number_pwr_channel);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PDM_PDM_CONFIG_H_ */

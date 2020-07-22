@@ -46,6 +46,8 @@ else ()
     add_compile_options(-Og -g)
 endif ()
 
+
+
 include_directories(Drivers/CMSIS/Include Core/Inc Core/Inc/PMM Core/Inc/PAM Core/Inc/PDM Core/Inc/PBM Core/Inc/CAND Core/Inc/FLASH Drivers/CMSIS/Device/ST/STM32L4xx/Include Drivers/STM32L4xx_HAL_Driver/Inc)
 
 add_definitions(-DHSE_VALUE=16000000 -DMSI_VALUE=4000000 -DLSI_VALUE=32000 -DHSE_STARTUP_TIMEOUT=100 -DHSI_VALUE=16000000 -DDEBUG -DDATA_CACHE_ENABLE=1 -DVDD_VALUE=3300 -DINSTRUCTION_CACHE_ENABLE=1 -DEXTERNALSAI2_CLOCK_VALUE=2097000 -DUSE_FULL_LL_DRIVER -DEXTERNALSAI1_CLOCK_VALUE=2097000 -DPREFETCH_ENABLE=0 -DSTM32L496xx -DDEBUGprintf)
@@ -54,25 +56,21 @@ file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32L496QGIX_FLASH.ld)
 
-
-#find_library(Doolib libcanv_lib.a ${CMAKE_SOURCE_DIR}/Core/Src/LIB)
-add_library(canv_lib STATIC IMPORTED GLOBAL)
-
-set_target_properties( canv_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libcanv_lib.a )
-
 add_library(Flash_lib STATIC IMPORTED GLOBAL)
-
 set_target_properties( Flash_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libFlash_lib.a )
 
-#set_property(TARGET libcanv_lib.a PROPERTY IMPORTED_LOCATION ${Doolib})
+add_library(canv_lib STATIC IMPORTED GLOABAL)
+set_target_properties( canv_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libcanv_lib.a )
+
 
 add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map)
-add_link_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
+add_link_options(-mcpu=cortex-m4 -mthumb  -specs=nano.specs -specs=nosys.specs -mthumb-interwork)
 add_link_options(-T ${LINKER_SCRIPT})
 
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}.elf canv_lib Flash_lib)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}.elf canv_lib)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}.elf Flash_lib)
 
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
@@ -83,5 +81,3 @@ add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
         COMMENT "Building ${HEX_FILE}
 Building ${BIN_FILE}")
-
-#target_link_libraries(${PROJECT_NAME}.elf LINK_PUBLIK ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libcanv_lib.a ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libFlash_lib.a

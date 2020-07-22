@@ -2,6 +2,10 @@
 #ifndef INC_PMM_PMM_STRUCT_H_
 #define INC_PMM_PMM_STRUCT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stm32l4xx.h"
 
 //#pragma pack(push, 1)
@@ -99,8 +103,15 @@ typedef struct{
 
 	int8_t Temp_sensor; //PMM temperature
 
+	uint16_t Reserve_1;
+	uint16_t Reserve_2;
+
 }_PMM;
 
 //#pragma pack(pop)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PMM_PMM_STRUCT_H_ */

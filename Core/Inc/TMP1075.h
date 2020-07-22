@@ -3,6 +3,10 @@
 #ifndef INC_TMP1075_H_
 #define INC_TMP1075_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stm32l4xx.h"
 
 /*
@@ -14,7 +18,7 @@ typedef enum {
 
 
 #define TMP1075_SHUTDOWN_MODE            1
-#define TMP1075_CONTINUOS_CONV		     0
+#define TMP1075_CONTINUOUS_CONV		     0
 
 #define TMP1075_CR_VERY_FAST	0  // 27.5 ms
 #define TMP1075_CR_FAST    		1  // 55 ms
@@ -52,5 +56,9 @@ ErrorStatus TMP1075_set_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float
 ErrorStatus TMP1075_set_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, float high_limit);
 ErrorStatus TMP1075_get_low_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data);
 ErrorStatus TMP1075_get_high_limit(I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint16_t *read_data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_TMP1075_H_ */

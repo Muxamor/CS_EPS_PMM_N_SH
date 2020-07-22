@@ -5,8 +5,13 @@
 #ifndef __SETUPPERIPH_H
 #define __SETUPPERIPH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+#include "stm32l4xx_ll_i2c.h"
 
+extern uint32_t SysTick_Counter;
 
 void LL_Init(void);
 void SystemClock_Config(void);
@@ -19,9 +24,9 @@ void USART3_Init(void);
 void UART5_Init(void);
 void SetupInterrupt(void);
 void GPIO_Init(void);
-void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_devider);
+void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider);
 int8_t CAN_init_eps(CAN_TypeDef *can_ref);
-int8_t CAN_DeInit(CAN_TypeDef *can_ref);
+int8_t CAN_DeInit_eps(CAN_TypeDef *can_ref);
 void IWDG_Init(void);
 
 /*For control multiplexor TMUX1209  need use: */
@@ -76,10 +81,8 @@ void IWDG_Init(void);
                                                                  0 bit  for subpriority */
 #endif
 
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SETUPPERIPH_H_ */

@@ -1,4 +1,3 @@
-
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
@@ -10,24 +9,24 @@
 #include "ADS1015.h"
 #include "pmm_config.h"
 #include "pmm_struct.h"
-
 #include "pmm_init_IC.h"
 
-/*********************** TODO *********************/
-//1. Change or delate fn. PMM_default_init_I2C_GPIOExt1 - temporary function for debugging period
-
-/**************************************************/
-
+/** @brief  Init TMP1075 temperature sensor at PMM
+    @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
+    @param 	I2Cx - number I2C port
+    @param  tmp1075_addr - I2C addres
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
 ErrorStatus PMM_init_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
 
-	
+
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 
 	//Setup INA231
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-		if (TMP1075_set_mode(I2Cx, tmp1075_addr, TMP1075_CONTINUOS_CONV) == SUCCESS ){
+		if (TMP1075_set_mode(I2Cx, tmp1075_addr, TMP1075_CONTINUOUS_CONV) == SUCCESS ){
 			if ( TMP1075_set_time_conversion(I2Cx, tmp1075_addr, TMP1075_CR_MEDIUM) == SUCCESS ){
 
 				error_I2C = TMP1075_disable_ALERT_pin( I2Cx, tmp1075_addr);
@@ -54,8 +53,14 @@ ErrorStatus PMM_init_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_a
 	return error_I2C;
 }
 
+/** @brief  Set power down mode for TMP1075 temperature sensor at PMM
+    @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
+    @param 	I2Cx - number I2C port
+    @param  tmp1075_addr - I2C addres
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
 ErrorStatus PMM_Power_Down_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
-	
+
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 
@@ -63,7 +68,7 @@ ErrorStatus PMM_Power_Down_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
 		error_I2C = TMP1075_set_mode(I2Cx, tmp1075_addr, TMP1075_SHUTDOWN_MODE);
-			
+
 		if( error_I2C != SUCCESS ){
 			i++;
 			LL_mDelay( pmm_i2c_delay_att_conn );
@@ -77,7 +82,7 @@ ErrorStatus PMM_Power_Down_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp
 		pmm_ptr->Temp_sensor = 0x7F;
 		pmm_ptr->Error_TMP1075_sensor = ERROR;
 	}else{
-		
+
 		pmm_ptr->Temp_sensor = 0x00;
 		pmm_ptr->Error_TMP1075_sensor = SUCCESS;
 	}
@@ -101,13 +106,13 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
-	
+
 	_PMM_table pmm_table;
 
 	SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
 
 	//Fill pmm_table depends in number power channel.
-	pmm_table = PMM__Table(num_pwr_ch); 
+	pmm_table = PMM__Table(num_pwr_ch);
 
 	//Setup INA231
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
@@ -135,49 +140,49 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 	if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF1 ){
 
 		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = SUCCESS; 
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = SUCCESS;
 
 		}else{
 			#ifdef DEBUGprintf
 				Error_Handler();
 			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = ERROR; 
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = ERROR;
 		}
-		
+
 	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
 
 		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS; 
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS;
 
 		}else{
 			#ifdef DEBUGprintf
 				Error_Handler();
 			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR; 
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR;
 		}
-	
+
 	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF1 ){
 
 		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = SUCCESS; 
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = SUCCESS;
 
 		}else{
 			#ifdef DEBUGprintf
 				Error_Handler();
 			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = ERROR; 
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = ERROR;
 		}
 
 	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
 
 		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS; 
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS;
 
 		}else{
 			#ifdef DEBUGprintf
 				Error_Handler();
 			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR; 
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR;
 		}
 
 	}
@@ -243,7 +248,7 @@ ErrorStatus ADS1015_init( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
 ErrorStatus PMM_DeInit_I2C_GPIOExt (_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tca9539_addr){
-	
+
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 
@@ -300,7 +305,7 @@ void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
 		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-		//need write
+		//TO DO need write
 	}
 
 }
@@ -325,7 +330,7 @@ void PMM_Reset_pin_Pull_Down_I2C_GPIOExt( uint8_t tca9539_addr ){
 		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_2);
 
 	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-		//need write
+		//TO DO need write
 	}
 }
 

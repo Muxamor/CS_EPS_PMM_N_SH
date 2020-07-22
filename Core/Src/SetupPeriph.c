@@ -13,13 +13,16 @@
 #include "stm32l4xx_ll_tim.h"
 #include "stm32l4xx_ll_lpuart.h"
 #include "stm32l4xx_ll_usart.h"
-#include "Error_Handler.h"
+#include  "Error_Handler.h"
 #include "SetupPeriph.h"
 
 #include "canv.h"
 
 //#include  <stdio.h>
 //#include "stm32l4xx_ll_dma.h"
+
+
+uint32_t SysTick_Counter;
 
 /** @brief Initialization of basic functionality
  * @retval None
@@ -124,7 +127,6 @@ void SystemClock_Config(void) {
 	LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
 
 	LL_Init1msTick(80000000);
-	LL_SYSTICK_EnableIT();
 
 	LL_SetSystemCoreClock(80000000);
 
@@ -242,7 +244,7 @@ void I2C4_Init(void) {
 	LL_I2C_EnableClockStretching(I2C4);
 
 	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-	I2C_InitStruct.Timing = 0xB0801A1F; //0x00702991 - 400kHz, 0x10909CEC - 100kHz.
+	I2C_InitStruct.Timing = 0xB0801A1F; //0x00702991 - 400kHz, 0x10909CEC - 100kHz, 0xB0801A1F-100kHz and Rise time=1000ns
 	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
 	I2C_InitStruct.DigitalFilter = 0;
 	I2C_InitStruct.OwnAddress1 = 0;
@@ -279,9 +281,8 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 
 	uint16_t period = 0, i = 0, count = 0;
 
-	period = (uint16_t) (SystemCoreClock * 5 / (1000000 * 10.5));
+	period = ( uint16_t )(( ((float)SystemCoreClock) * 5.0) / (1000000.0 * 10.5));
 	//period = 42;
-
 	count = period;
 
 	LL_I2C_DeInit(I2Cx);
@@ -482,6 +483,11 @@ void UART5_Init(void) {
 void SetupInterrupt(void) {
 
 	//LL_EXTI_InitTypeDef EXTI_InitStruct;
+
+	/*Enable interrupt for SysTick */
+    LL_SYSTICK_EnableIT();
+    //LL_SYSTICK_DisableIT();
+    /**********************************************/
 
 	/* LPUART1 interrupt Init */
 	NVIC_SetPriority(LPUART1_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 0)); //Set priority №2 from 0..15
@@ -943,7 +949,7 @@ int8_t CAN_init_eps(CAN_TypeDef *can_ref) {
  * @param *can_ref - pointer to CAN number port.
  * @retval None
  */
-int8_t CAN_DeInit(CAN_TypeDef *can_ref) {
+int8_t CAN_DeInit_eps(CAN_TypeDef *can_ref) {
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 

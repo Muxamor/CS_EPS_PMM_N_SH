@@ -1,8 +1,6 @@
 #include "stm32l4xx.h"
-#include "stm32l4xx_ll_utils.h"
 #include "TCA9539.h"
 #include "INA231.h"
-#include "pmm_struct.h"
 #include "pmm_config.h"
 
 _PMM_table PMM__Table(uint8_t number_pwr_channel){

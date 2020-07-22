@@ -2,6 +2,9 @@
 #ifndef INC_PMM_PMM_H_
 #define INC_PMM_PMM_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
 typedef enum {
@@ -62,6 +65,8 @@ typedef enum {
 ErrorStatus FRAM_save_data(I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, data_struct_1 *struct_1, data_struct_2 *struct_2, data_struct_3 *struct_3, data_struct_4 *struct_4);
 ErrorStatus FRAM_read_data(I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, data_struct_1 *struct_1, data_struct_2 *struct_2, data_struct_3 *struct_3, data_struct_4 *struct_4);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PMM_PMM_H_ */

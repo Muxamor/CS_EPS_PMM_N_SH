@@ -1,8 +1,10 @@
 
-
 #ifndef INC_PMM_PMM_CONFIG_H_
 #define INC_PMM_PMM_CONFIG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*********************** Configuration for PMM module ***********************/
 
@@ -100,5 +102,9 @@ typedef struct{
 
 
 _PMM_table PMM__Table(uint8_t number_pwr_channel);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PMM_PMM_CONFIG_H_ */

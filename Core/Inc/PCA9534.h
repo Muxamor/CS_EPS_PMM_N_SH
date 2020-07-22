@@ -2,6 +2,9 @@
 #ifndef INC_PCA9534_H_
 #define INC_PCA9534_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
 typedef enum {
@@ -46,6 +49,8 @@ ErrorStatus PCA9534_conf_IO_pol_inversion(I2C_TypeDef *I2Cx, uint8_t I2C_PCA9534
 ErrorStatus PCA9534_Set_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_PCA9534_addr, uint8_t pin);
 ErrorStatus PCA9534_Reset_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_PCA9534_addr, uint8_t pin);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PCA9534_H_ */

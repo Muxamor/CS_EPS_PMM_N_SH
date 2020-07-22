@@ -8,19 +8,9 @@
 #include "TCA9539.h"
 #include "INA231.h"
 #include "ADS1015.h"
-#include "uart_eps_comm.h"
-#include "eps_struct.h"
 #include "pmm_struct.h"
 #include "pmm_config.h"
-#include "pmm_init_IC.h"
 #include "pmm_ctrl.h"
-
-/**********************TO DO ***********************************/
-/*1. Change PMM_Set_MUX_CAN_CPUm_CPUb after 08.06
- *
- *
- *
- */
 
 
 /** @brief  Set state (enable/disable) PMM power channel.
@@ -384,7 +374,7 @@ ErrorStatus PDM_Get_PG_all_PWR_CH( _PMM *pmm_ptr ){
 	pmm_ptr->PWR_Supply_Main_PG = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_2));
 	pmm_ptr->PWR_Supply_Backup_PG = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_3));
 
-	//Read PG PMM power chanels
+	//Read PG PMM power channels
 	if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
 		pmm_ptr->PWR_Ch_PG_PBMs_Logic = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_4));
 	}else{
@@ -616,7 +606,7 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 /** @brief  Average 16 measuring for ADS1015.
 	@param  *I2Cx - Number I2C bus.
-	@param  I2C_ADS1015_addr - I2C addres
+	@param  I2C_ADS1015_addr - I2C address.
 	@param  num_ch_mux - number channel mux ADC.
 	@param  average_num - average number.
 	@param  *average_data - pointer to get average data. 

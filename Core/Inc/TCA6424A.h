@@ -1,6 +1,10 @@
 #ifndef INC_TCA6424A_H_
 #define INC_TCA6424A_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define TCA6424A_INPUT_PORT0_ADDR			0x00
 #define TCA6424A_INPUT_PORT1_ADDR			0x01
 #define TCA6424A_INPUT_PORT2_ADDR			0x02
@@ -69,5 +73,9 @@ ErrorStatus TCA6424A_conf_IO_pol_inversion(I2C_TypeDef *I2Cx, uint8_t I2C_TCA642
 
 ErrorStatus TCA6424A_Set_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_TCA6424A_addr, uint32_t pin);
 ErrorStatus TCA6424A_Reset_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_TCA6424A_addr, uint32_t pin);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_TCA6424A_H_ */

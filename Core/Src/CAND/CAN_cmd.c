@@ -23,10 +23,12 @@
 #include "CAN.h"
 #include "CAN_cmd.h"
 
+
+
 #include  <stdio.h>
 
-extern struct CAN_IVar4 CAN_IVar4_RegCmd;
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
+extern struct CAN_IVar4  CAN_IVar4_RegCmd;
 
 extern _UART_EPS_COMM *UART_M_eps_comm;
 extern _UART_EPS_COMM *UART_B_eps_comm;
@@ -206,10 +208,9 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         
                         if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Set_active_CPU ){
                             eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
-                            eps_p.eps_serv_ptr->Set_Active_CPU = CAN_IVar4_RegCmd.CAN_Set_active_CPU;
+                            eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
                         }
-       
-                     
+
 					}else if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x01 ){
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUbackup\n", CAN_Switch_active_CPU_offset);
@@ -217,7 +218,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                         if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Set_active_CPU ){
                             eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
-                            eps_p.eps_serv_ptr->Set_Active_CPU = CAN_IVar4_RegCmd.CAN_Set_active_CPU;
+                            eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup_Active;
                         }
                         
          			}

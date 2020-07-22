@@ -1,12 +1,10 @@
-/*
- * DS2777.h
- *
- *  Created on: 6 апр. 2020 г.
- *      Author: A Morsin
- */
 
 #ifndef DS2777_H
 #define DS2777_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // Default setups for EEROM 1 address from 0x60 to 0x7F DS2777 PBM_v1.0
 #define DS2777_ControlReg       	0x0C  		// Control Register
@@ -139,8 +137,7 @@ ErrorStatus DS2777_ReadCycleCounter(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint8
 
 ErrorStatus DS2777_WriteCycleCounter(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint8_t CycleCounter);
 
-ErrorStatus DS2777_ReadEEPROMState(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint8_t *CopyFlag, uint8_t *Block_0_LockFlag,
-		uint8_t *Block_1_LockFlag);
+ErrorStatus DS2777_ReadEEPROMState(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint8_t *CopyFlag, uint8_t *Block_0_LockFlag, uint8_t *Block_1_LockFlag);
 
 ErrorStatus DS2777_ReadFullCapacity(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint16_t *FullCapacity);
 
@@ -149,5 +146,9 @@ ErrorStatus DS2777_ReadActEmptyCapacity(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, u
 ErrorStatus DS2777_ReadStbEmptyCapacity(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint16_t *StbEmptyCapacity);
 
 ErrorStatus DS2777_ReadEEPROM_1(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, DS2777_EEPROM_1 *Data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DS2777_H */
