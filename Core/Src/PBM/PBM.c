@@ -7,7 +7,7 @@
 #include "PBM_struct.h"
 #include "PBM_control.h"
 
-/** @brief	Read data for selected PBM.
+/** @brief	Read data for all PBM.
  @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
  @param 	*Data - structure data for all PBM modules.
  @retval 	none
@@ -21,11 +21,11 @@ ErrorStatus PBM_GetTelemetry(_PBM pbm[]) {
 		Error = PBM_ReadBatteryData(PBM_I2C_PORT, pbm, i);
 		Error = Error + PBM_ReadTempSensors(PBM_I2C_PORT, pbm, i);
 		Error = Error + PBM_ReadGPIO(PBM_I2C_PORT, pbm, i);
+		Error = Error + PBM_CheckCapacityPBM(PBM_I2C_PORT, pbm, i);
+		Error = Error + PBM_CalcTotalCapacityPBM(pbm, i);
+		Error = Error + PBM_CheckHeatOFF(pbm, i);
+		Error = Error + PBM_CheckChargeDischargeState(pbm, i);
 	}
-	Error = Error + PBM_CalcTotalCapacityPBM(pbm);
-	Error = Error + PBM_CheckCapacityPBM(PBM_I2C_PORT, pbm);
-	Error = Error + PBM_CheckHeatOFF(pbm);
-	Error = Error + PBM_CheckChargeDischargeState(pbm);
 
 	if (Error == SUCCESS) {
 		return SUCCESS;

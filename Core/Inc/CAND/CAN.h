@@ -27,6 +27,19 @@
 #define ERR_CAN_ACCESS_RANGE      	-7
 #define ERR_CAN_DCL_INVALID       	-8
 
+#define CAN_AB1_Charge_key_1_offset			16
+#define CAN_AB1_Discharge_key_1_offset		17
+#define CAN_AB1_Charge_key_2_offset			18
+#define CAN_AB1_Discharge_key_2_offset		19
+#define CAN_AB2_Charge_key_1_offset			20
+#define CAN_AB2_Discharge_key_1_offset		21
+#define CAN_AB2_Charge_key_2_offset			22
+#define CAN_AB2_Discharge_key_2_offset		23
+#define CAN_AB3_Charge_key_1_offset			24
+#define CAN_AB3_Discharge_key_1_offset		25
+#define CAN_AB3_Charge_key_2_offset			26
+#define CAN_AB3_Discharge_key_2_offset		27
+
 #define CAN_Constant_mode_offset	4
 #define CAN_PWR_CH1_offset			28
 #define CAN_PWR_CH2_offset			29
@@ -83,18 +96,18 @@ struct CAN_IVar4 {
     uint8_t CAN_Common_cmd10;				//+15
 
     // Массив командных регистров ключей разряда АБ
-    uint8_t CAN_Charge_gate_1_AB1;  		//+16            Командный регистр ключа заряда ветви 1 АБ1
-    uint8_t CAN_Discharge_gate_1_AB1;       //+17            Командный регистр ключа разряда ветви 1 АБ1
-    uint8_t CAN_Charge_gate_2_AB1;  		//+18            Командный регистр ключа заряда ветви 2 АБ1
-    uint8_t CAN_Discharge_gate_2_AB1;       //+19            Командный регистр ключа разряда ветви 2 АБ1
-    uint8_t CAN_Charge_gate_1_AB2;   		//+20            Командный регистр ключа заряда ветви 1 АБ2
-    uint8_t CAN_Discharge_gate_1_AB2;   	//+21            Командный регистр ключа разряда ветви 1 АБ2
-    uint8_t CAN_Charge_gate_2_AB2;   		//+22            Командный регистр ключа заряда ветви 2 АБ2
-    uint8_t CAN_Discharge_gate_2_AB2;   	//+23            Командный регистр ключа разряда ветви 2 АБ2
-    uint8_t CAN_Charge_gate_1_AB3;   		//+24            Командный регистр ключа заряда ветви 1 АБ3
-    uint8_t CAN_Discharge_gate_1_AB3;   	//+25            Командный регистр ключа разряда ветви 1 АБ3
-    uint8_t CAN_Charge_gate_2_AB3;   		//+26            Командный регистр ключа заряда ветви 2 АБ3
-    uint8_t CAN_Discharge_gate_2_AB3;   	//+27            Командный регистр ключа разряда ветви 2 АБ3
+    uint8_t CAN_AB1_Charge_key_branch_1;  		//+16            Командный регистр ключа заряда ветви 1 АБ1
+    uint8_t CAN_AB1_Discharge_key_branch_1;     //+17            Командный регистр ключа разряда ветви 1 АБ1
+    uint8_t CAN_AB1_Charge_key_branch_2;  		//+18            Командный регистр ключа заряда ветви 2 АБ1
+    uint8_t CAN_AB1_Discharge_key_branch_2;     //+19            Командный регистр ключа разряда ветви 2 АБ1
+    uint8_t CAN_AB2_Charge_key_branch_1;   		//+20            Командный регистр ключа заряда ветви 1 АБ2
+    uint8_t CAN_AB2_Discharge_key_branch_1;   	//+21            Командный регистр ключа разряда ветви 1 АБ2
+    uint8_t CAN_AB2_Charge_key_branch_2;   		//+22            Командный регистр ключа заряда ветви 2 АБ2
+    uint8_t CAN_AB2_Discharge_key_branch_2;   	//+23            Командный регистр ключа разряда ветви 2 АБ2
+    uint8_t CAN_AB3_Charge_key_branch_1;   		//+24            Командный регистр ключа заряда ветви 1 АБ3
+    uint8_t CAN_AB3_Discharge_key_branch_1;   	//+25            Командный регистр ключа разряда ветви 1 АБ3
+    uint8_t CAN_AB3_Charge_key_branch_2;   		//+26            Командный регистр ключа заряда ветви 2 АБ3
+    uint8_t CAN_AB3_Discharge_key_branch_2;   	//+27            Командный регистр ключа разряда ветви 2 АБ3
 
     // Массив командных регистров линий питания
     uint8_t CAN_PWR_CH1;                    //+28           Командный регистр канал питаня 1 (СОП1)
@@ -123,7 +136,7 @@ struct CAN_IVar5{
     uint8_t  CAN_Beacon_panel_median_temperature_pX;				//+0      |  const = 0x74                 |   Медианная температура панели +X
     uint8_t  CAN_Beacon_panel_median_temperature_nX;				//+1      |  const = 0x75                 |   Медианная температура панели -X
     uint8_t  CAN_Beacon_solar_panel_status[5];						//+2      |  const = 0x7A7B7C7D7E         |   Статус солнечных панелей, битовая маска (в т.ч. ФЭП)
-    uint16_t CAN_Beacon_full_capacity_charge_level_AB3_line2;		//+7      |  const = 0x8C8D               |   Полный уровень заряда АБ в mAh
+    uint16_t CAN_Beacon_full_capacity_charge_level;					//+7      |  const = 0x8C8D               |   Полный уровень заряда АБ в mAh
     uint8_t  CAN_Beacon_AB_status[3];								//+9      |  const = 0x979899             |   Статус АБ, битовая маска
     uint16_t CAN_Beacon_charge_discharge_AB_key_status;             //+12     |  const = 0x9A9B               |   Статус ключей заряда и разряда АБ, битовая маска
     uint8_t  CAN_Beacon_subsystem_power_line_status;				//+14     |  const = 0xB0                 |   Статус линии пит. подсистем, битовая маска
@@ -163,7 +176,7 @@ struct CAN_IVar5{
     uint8_t  CAN_Solar_panel_status[5];                             //+59    |  const = 0x7A7B7C7D7E         |   Статус солнечных панелей, битовая маска (в т.ч. ФЭП)
 
     //Массив уровня заряда АБ в %                                        |                               |
-    uint8_t  CAN_Full_percent_charge_level_AB3_line2;               //+64    |  const = 0x7F                 |   Полный уровень заряда АБ в %
+    uint8_t  CAN_Full_percent_charge_level;              			//+64    |  const = 0x7F                 |   Полный уровень заряда АБ в %
 
     //Массив уровня заряда АБ в mAh                                      |                               |
     uint16_t CAN_Capacity_charge_level_AB1_line1;                   //+65    |  const = 0x8081               |   Уровень заряда АБ1 ветвь 1
@@ -172,7 +185,7 @@ struct CAN_IVar5{
     uint16_t CAN_Capacity_charge_level_AB2_line2;                   //+71    |  const = 0x8687               |   Уровень заряда АБ2 ветвь 2
     uint16_t CAN_Capacity_charge_level_AB3_line1;                   //+73    |  const = 0x8889               |   Уровень заряда АБ3 ветвь 1
     uint16_t CAN_Capacity_charge_level_AB3_line2;                   //+75    |  const = 0x8A8B               |   Уровень заряда АБ3 ветвь 2
-    uint16_t CAN_Full_capacity_charge_level_AB3_line2;              //+77    |  const = 0x8C8D               |   Полный уровень заряда АБ в mAh
+    uint16_t CAN_Full_capacity_charge_level;			            //+77    |  const = 0x8C8D               |   Полный уровень заряда АБ в mAh
 
     //Массив средних температур модулей АБ                               |                               |
     uint8_t  CAN_Average_temp_controller_AB1;                       //+79    |  const = 0x8E                 |   Средняя температура контроллера АБ1
@@ -320,18 +333,18 @@ struct CAN_IVar5{
     uint8_t  CAN_AB3_sensor_on_board4;                              //+298     |  const = 0x51               |   АБ3 датчик на плате 4
 
     //Массив командных регистров ключей разряда АБ
-    uint8_t  CAN_Charge_gate_1_AB1;                                 //+299     |  const = 0x52                 |   Командный регистр ключа заряда ветви 1 АБ1
-    uint8_t  CAN_Discharge_gate_1_AB1;                              //+300     |  const = 0x53                 |   Командный регистр ключа разряда ветви 1 АБ1
-    uint8_t  CAN_Charge_gate_2_AB1;                                 //+301     |  const = 0x54                 |   Командный регистр ключа заряда ветви 2 АБ1
-    uint8_t  CAN_Discharge_gate_2_AB1;                              //+302     |  const = 0x55                 |   Командный регистр ключа разряда ветви 2 АБ1
-    uint8_t  CAN_Charge_gate_1_AB2;                                 //+303     |  const = 0x56                 |   Командный регистр ключа заряда ветви 1 АБ2
-    uint8_t  CAN_Discharge_gate_1_AB2;                              //+304     |  const = 0x57                 |   Командный регистр ключа разряда ветви 1 АБ2
-    uint8_t  CAN_Charge_gate_2_AB2;                                 //+305     |  const = 0x58                 |   Командный регистр ключа заряда ветви 2 АБ2
-    uint8_t  CAN_Discharge_gate_2_AB2;                              //+306     |  const = 0x59                 |   Командный регистр ключа разряда ветви 2 АБ2
-    uint8_t  CAN_Charge_gate_1_AB3;                                 //+307     |  const = 0x5A                 |   Командный регистр ключа заряда ветви 1 АБ3
-    uint8_t  CAN_Discharge_gate_1_AB3;                              //+308     |  const = 0x5B                 |   Командный регистр ключа разряда ветви 1 АБ3
-    uint8_t  CAN_Charge_gate_2_AB3;                                 //+309     |  const = 0x5C                 |   Командный регистр ключа заряда ветви 2 АБ3
-    uint8_t  CAN_Discharge_gate_2_AB3;                              //+310     |  const = 0x5D                 |   Командный регистр ключа разряда ветви 2 АБ3
+    uint8_t  CAN_AB1_Charge_key_branch_1;                           //+299     |  const = 0x52                 |   Командный регистр ключа заряда ветви 1 АБ1
+    uint8_t  CAN_AB1_Discharge_key_branch_1;                        //+300     |  const = 0x53                 |   Командный регистр ключа разряда ветви 1 АБ1
+    uint8_t  CAN_AB1_Charge_key_branch_2;                           //+301     |  const = 0x54                 |   Командный регистр ключа заряда ветви 2 АБ1
+    uint8_t  CAN_AB1_Discharge_key_branch_2;                        //+302     |  const = 0x55                 |   Командный регистр ключа разряда ветви 2 АБ1
+    uint8_t  CAN_AB2_Charge_key_branch_1;                           //+303     |  const = 0x56                 |   Командный регистр ключа заряда ветви 1 АБ2
+    uint8_t  CAN_AB2_Discharge_key_branch_1;                        //+304     |  const = 0x57                 |   Командный регистр ключа разряда ветви 1 АБ2
+    uint8_t  CAN_AB2_Charge_key_branch_2;                           //+305     |  const = 0x58                 |   Командный регистр ключа заряда ветви 2 АБ2
+    uint8_t  CAN_AB2_Discharge_key_branch_2;                        //+306     |  const = 0x59                 |   Командный регистр ключа разряда ветви 2 АБ2
+    uint8_t  CAN_AB3_Charge_key_branch_1;                           //+307     |  const = 0x5A                 |   Командный регистр ключа заряда ветви 1 АБ3
+    uint8_t  CAN_AB3_Discharge_key_branch_1;                        //+308     |  const = 0x5B                 |   Командный регистр ключа разряда ветви 1 АБ3
+    uint8_t  CAN_AB3_Charge_key_branch_2;                           //+309     |  const = 0x5C                 |   Командный регистр ключа заряда ветви 2 АБ3
+    uint8_t  CAN_AB3_Discharge_key_branch_2;                        //+310     |  const = 0x5D                 |   Командный регистр ключа разряда ветви 2 АБ3
 
     //Массив командных регистров линий питания
     uint8_t  CAN_Line1;                                             //+311     |  const = 0x5E                 |   Командный регистр линии 1 (СОП1)

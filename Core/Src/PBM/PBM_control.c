@@ -442,6 +442,7 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 	pbm_table = PBM_Table(PBM_number);
 
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)) {
+		pbm[PBM_number].Branch_1_ChgEnableBit = State;
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			Error = DS2777_EnableChg(I2Cx, pbm_table.BRANCH_1_Addr, State);
 			LL_mDelay(10);
@@ -452,7 +453,6 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 			}
 		}
 		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch_1_ChgEnableBit = Struct.ChgEnableBit;
 			if (pbm[PBM_number].Branch_1_ChgControlFlag == State) {
 				pbm[PBM_number].Error_Charge_1 = SUCCESS;
 			} else {
@@ -473,6 +473,7 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 	Error = -1;
 	count = 0;
 	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+		pbm[PBM_number].Branch_2_ChgEnableBit = State;
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			Error = DS2777_EnableChg(I2Cx, pbm_table.BRANCH_2_Addr, State);
 			LL_mDelay(10);
@@ -483,7 +484,6 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 			}
 		}
 		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch_2_ChgEnableBit = Struct.ChgEnableBit;
 			if (pbm[PBM_number].Branch_2_ChgControlFlag == State) {
 				pbm[PBM_number].Error_Charge_2 = SUCCESS;
 			} else {
@@ -528,6 +528,7 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 	pbm_table = PBM_Table(PBM_number);
 
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)) {
+		pbm[PBM_number].Branch_1_DchgEnableBit = State;
 		while ((Error != 0) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			Error = DS2777_EnableDchg(I2Cx, pbm_table.BRANCH_1_Addr, State);
 			LL_mDelay(10);
@@ -538,7 +539,6 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 			}
 		}
 		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch_1_DchgEnableBit = Struct.DchgEnableBit;
 			if (pbm[PBM_number].Branch_1_DchgControlFlag == State) {
 				pbm[PBM_number].Error_Discharge_1 = SUCCESS;
 			} else {
@@ -559,6 +559,7 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 	Error = -1;
 	count = 0;
 	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+		pbm[PBM_number].Branch_2_DchgEnableBit = State;
 		while ((Error != 0) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			Error = DS2777_EnableDchg(I2Cx, pbm_table.BRANCH_2_Addr, State);
 			LL_mDelay(10);
@@ -569,7 +570,6 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 			}
 		}
 		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch_2_DchgEnableBit = Struct.DchgEnableBit;
 			if (pbm[PBM_number].Branch_2_DchgControlFlag == State) {
 				pbm[PBM_number].Error_Discharge_2 = SUCCESS;
 			} else {
@@ -595,80 +595,50 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 
 /** @brief	Check auto heat OFF.
  @param 	pbm[] - structure data for all PBM modules.
+ @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
  @retval 	ErrorStatus
  */
-ErrorStatus PBM_CheckHeatOFF(_PBM pbm[]) {
+ErrorStatus PBM_CheckHeatOFF(_PBM pbm[], uint8_t PBM_number) {
 
 	uint8_t count = 0;
 	uint8_t Hi_Limit = (uint8_t) (PBM_TMP1075_TEMP_HI + 2);
-	uint8_t i = 0;
-
-	for (i = 0; i < PBM_QUANTITY; i++) {
-		if ((pbm[i].TMP1075_temp_1 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_1 == 1)) {
-			count++;
-		}
-		if ((pbm[i].TMP1075_temp_2 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_1 == 1)) {
-			count++;
-		}
-		if ((pbm[i].TMP1075_temp_3 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_2 == 1)) {
-			count++;
-		}
-		if ((pbm[i].TMP1075_temp_4 >= Hi_Limit) && (pbm[i].PCA9534_TempSens_State_2 == 1)) {
-			count++;
-		}
-		if (count >= 2) {
-			PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_ALL, PBM_OFF_HEAT);
-			PBM_TempSensorInit(pbm, i);
-			pbm[i].PCA9534_ON_Heat_1 = 1;
-			pbm[i].PCA9534_ON_Heat_2 = 1;
-			pbm[i].Error_Heat_1 = ERROR;
-			pbm[i].Error_Heat_2 = ERROR;
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-			return ERROR_N;
-		}
-		count = 0;
-	}
-	return SUCCESS;
-}
-
-/** @brief	Check state charge/discharge keys for all PBM.
- @param 	pbm[] - structure data for all PBM modules.
- @retval 	ErrorStatus
- */
-ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[]) {
-
-	uint8_t i = 0;
 	int8_t Error_count = 0;
 
-	for (i = 0; i < PBM_QUANTITY; i++) {
-
-		if((pbm[i].Branch_1_ChgEnableBit == pbm[i].Branch_1_ChgControlFlag) && (pbm[i].Error_DS2777_1 == SUCCESS)){
-			pbm[i].Error_Charge_1 = SUCCESS;
-		} else {
-			Error_count = Error_count + 1;
-			pbm[i].Error_Charge_1 = ERROR;
-		}
-		if((pbm[i].Branch_2_ChgEnableBit == pbm[i].Branch_2_ChgControlFlag) && (pbm[i].Error_DS2777_2 == SUCCESS)){
-			pbm[i].Error_Charge_2 = SUCCESS;
-		} else {
-			Error_count = Error_count + 1;
-			pbm[i].Error_Charge_2 = ERROR;
-		}
-		if((pbm[i].Branch_1_DchgEnableBit == pbm[i].Branch_1_DchgControlFlag) && (pbm[i].Error_DS2777_1 == SUCCESS)){
-			pbm[i].Error_Discharge_1 = SUCCESS;
-		} else {
-			Error_count = Error_count + 1;
-			pbm[i].Error_Discharge_1 = ERROR;
-		}
-		if((pbm[i].Branch_2_DchgEnableBit == pbm[i].Branch_2_DchgControlFlag) && (pbm[i].Error_DS2777_2 == SUCCESS)){
-			pbm[i].Error_Discharge_2 = SUCCESS;
-		} else {
-			Error_count = Error_count + 1;
-			pbm[i].Error_Discharge_2 = ERROR;
-		}
+	if ((pbm[PBM_number].TMP1075_temp_1 >= Hi_Limit) && (pbm[PBM_number].PCA9534_TempSens_State_1 == 1)) {
+		count++;
 	}
+	if ((pbm[PBM_number].TMP1075_temp_2 >= Hi_Limit) && (pbm[PBM_number].PCA9534_TempSens_State_1 == 1)) {
+		count++;
+	}
+	if (count >= 1) { // off heat if at least one temp sense dont work right
+		PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, PBM_number, PBM_BRANCH_1, PBM_OFF_HEAT);
+		PBM_TempSensorInit(pbm, PBM_number);
+		pbm[PBM_number].PCA9534_ON_Heat_1 = 1;
+		pbm[PBM_number].Error_Heat_1 = ERROR;
+		Error_count = Error_count + 1;
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+	}
+
+	count = 0;
+	if ((pbm[PBM_number].TMP1075_temp_3 >= Hi_Limit) && (pbm[PBM_number].PCA9534_TempSens_State_2 == 1)) {
+		count++;
+	}
+	if ((pbm[PBM_number].TMP1075_temp_4 >= Hi_Limit) && (pbm[PBM_number].PCA9534_TempSens_State_2 == 1)) {
+		count++;
+	}
+	if (count >= 1) { // off heat if at least one temp sense dont work right
+		PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, PBM_number, PBM_BRANCH_2, PBM_OFF_HEAT);
+		PBM_TempSensorInit(pbm, PBM_number);
+		pbm[PBM_number].PCA9534_ON_Heat_2 = 1;
+		pbm[PBM_number].Error_Heat_2 = ERROR;
+		Error_count = Error_count + 1;
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+	}
+
 	if (Error_count == SUCCESS) {
 		return SUCCESS;
 	} else {
@@ -676,52 +646,92 @@ ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[]) {
 	}
 }
 
-/** @brief	Check and correct capacity all PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+/** @brief	Check state charge/discharge keys for all PBM.
  @param 	pbm[] - structure data for all PBM modules.
+  @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
  @retval 	ErrorStatus
  */
-ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[]) {
+ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[], uint8_t PBM_number) {
+
+	int8_t Error_count = 0;
+
+	if((pbm[PBM_number].Branch_1_ChgEnableBit == pbm[PBM_number].Branch_1_ChgControlFlag) && (pbm[PBM_number].Error_DS2777_1 == SUCCESS)){
+		pbm[PBM_number].Error_Charge_1 = SUCCESS;
+	} else {
+		Error_count = Error_count + 1;
+		pbm[PBM_number].Error_Charge_1 = ERROR;
+	}
+	if((pbm[PBM_number].Branch_2_ChgEnableBit == pbm[PBM_number].Branch_2_ChgControlFlag) && (pbm[PBM_number].Error_DS2777_2 == SUCCESS)){
+		pbm[PBM_number].Error_Charge_2 = SUCCESS;
+	} else {
+		Error_count = Error_count + 1;
+		pbm[PBM_number].Error_Charge_2 = ERROR;
+	}
+	if((pbm[PBM_number].Branch_1_DchgEnableBit == pbm[PBM_number].Branch_1_DchgControlFlag) && (pbm[PBM_number].Error_DS2777_1 == SUCCESS)){
+		pbm[PBM_number].Error_Discharge_1 = SUCCESS;
+	} else {
+		Error_count = Error_count + 1;
+		pbm[PBM_number].Error_Discharge_1 = ERROR;
+	}
+	if((pbm[PBM_number].Branch_2_DchgEnableBit == pbm[PBM_number].Branch_2_DchgControlFlag) && (pbm[PBM_number].Error_DS2777_2 == SUCCESS)){
+		pbm[PBM_number].Error_Discharge_2 = SUCCESS;
+	} else {
+		Error_count = Error_count + 1;
+		pbm[PBM_number].Error_Discharge_2 = ERROR;
+	}
+
+	if (Error_count == SUCCESS) {
+		return SUCCESS;
+	} else {
+		return ERROR_N;
+	}
+}
+
+/** @brief	Check and correct capacity selected PBM.
+ @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+ @param 	pbm[] - structure data for all PBM modules.
+ @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+ @retval 	ErrorStatus
+ */
+ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 
 	int16_t AbcoluteCapacity = 0;
 	float Capacity = 0, Voltage = 0;
 	float Error = 0;
 	int8_t Error_count = 0;
-	uint8_t i = 0;
 	_PBM_table pbm_table = { 0 };
 
 	SW_TMUX1209_I2C_main_PBM();
 
-	for (i = 0; i < PBM_QUANTITY; i++) {
-		pbm_table = PBM_Table(i);
-		if (pbm[i].Error_DS2777_1 == 0) {
-			Capacity = ((float) (pbm[i].Branch_1_AbcoluteCapacity) / 3000.0 * 100.0); // in %
-			Voltage = ((float) (pbm[i].Branch_1_VoltageHi + pbm[i].Branch_1_VoltageLo)) / 2.0;
-			Voltage = (float) (Voltage - 2500.0) * 100.0 / 1650.0; // in %
-			Error = (float) (Voltage / Capacity);
-			Error = (float) (Error - 1.0) * 100.0;  // in %
-			if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
-				AbcoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
-				DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_1_Addr, AbcoluteCapacity);
-			}
-		} else {
-			Error_count = Error_count + 1;
+	pbm_table = PBM_Table(PBM_number);
+	if (pbm[PBM_number].Error_DS2777_1 == 0) {
+		Capacity = ((float) (pbm[PBM_number].Branch_1_AbcoluteCapacity) / 3000.0 * 100.0); // in %
+		Voltage = ((float) (pbm[PBM_number].Branch_1_VoltageHi + pbm[PBM_number].Branch_1_VoltageLo)) / 2.0;
+		Voltage = (float) (Voltage - 2500.0) * 100.0 / 1650.0; // in %
+		Error = (float) (Voltage / Capacity);
+		Error = (float) (Error - 1.0) * 100.0;  // in %
+		if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
+			AbcoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
+			DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_1_Addr, AbcoluteCapacity);
 		}
-
-		if (pbm[i].Error_DS2777_2 == 0) {
-			Capacity = ((float) (pbm[i].Branch_2_AbcoluteCapacity) / 3000.0 * 100.0); // in %
-			Voltage = ((float) (pbm[i].Branch_2_VoltageHi + pbm[i].Branch_2_VoltageLo)) / 2.0;
-			Voltage = (float) (Voltage - 2500.0) * 100.0 / 1650.0; // in %
-			Error = (float) (Voltage / Capacity);
-			Error = (float) (Error - 1.0) * 100.0;  // in %
-			if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
-				AbcoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
-				DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_2_Addr, AbcoluteCapacity);
-			}
-		} else {
-				Error_count = Error_count + 1;
-		}
+	} else {
+		Error_count = Error_count + 1;
 	}
+
+	if (pbm[PBM_number].Error_DS2777_2 == 0) {
+		Capacity = ((float) (pbm[PBM_number].Branch_2_AbcoluteCapacity) / 3000.0 * 100.0); // in %
+		Voltage = ((float) (pbm[PBM_number].Branch_2_VoltageHi + pbm[PBM_number].Branch_2_VoltageLo)) / 2.0;
+		Voltage = (float) (Voltage - 2500.0) * 100.0 / 1650.0; // in %
+		Error = (float) (Voltage / Capacity);
+		Error = (float) (Error - 1.0) * 100.0;  // in %
+		if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
+			AbcoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
+			DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_2_Addr, AbcoluteCapacity);
+		}
+	} else {
+			Error_count = Error_count + 1;
+	}
+
 	if (Error_count == SUCCESS) {
 		return SUCCESS;
 	} else {
@@ -729,30 +739,27 @@ ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[]) {
 	}
 }
 
-/** @brief	Calculate full capacity all PBM.
+/** @brief	Calculate full capacity selected PBM.
  @param 	pbm[] - structure data for all PBM modules.
+ @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
  @retval 	ErrorStatus
  */
-ErrorStatus PBM_CalcTotalCapacityPBM(_PBM pbm[]) {
+ErrorStatus PBM_CalcTotalCapacityPBM(_PBM pbm[], uint8_t PBM_number) {
 
 	int16_t TotalAbsCapacity = 0;
 	uint8_t TotalRelCapacity = 0;
-	uint8_t i = 0;
 
-	for (i = 0; i < PBM_QUANTITY; i++) {
-		if ((pbm[i].Branch_1_DchgControlFlag == 1) && (pbm[i].Error_DS2777_1 == 0)) {
-			TotalAbsCapacity = pbm[i].Branch_1_AbcoluteCapacity;
-			TotalRelCapacity = pbm[i].Branch_1_RelativeCapacity;
-		}
-		if ((pbm[i].Branch_2_DchgControlFlag == 1) && (pbm[i].Error_DS2777_2 == 0)) {
-			TotalAbsCapacity = TotalAbsCapacity + pbm[i].Branch_2_AbcoluteCapacity;
-			TotalRelCapacity = TotalRelCapacity + pbm[i].Branch_2_RelativeCapacity;
-		}
-		pbm[i].TotalRelativeCapacity = TotalRelCapacity / 2;
-		pbm[i].TotalAbcoluteCapacity = TotalAbsCapacity;
-		TotalAbsCapacity = 0;
-		TotalRelCapacity = 0;
+	if ((pbm[PBM_number].Branch_1_DchgControlFlag == 1) && (pbm[PBM_number].Error_DS2777_1 == 0)) {
+		TotalAbsCapacity = pbm[PBM_number].Branch_1_AbcoluteCapacity;
+		TotalRelCapacity = pbm[PBM_number].Branch_1_RelativeCapacity;
 	}
+	if ((pbm[PBM_number].Branch_2_DchgControlFlag == 1) && (pbm[PBM_number].Error_DS2777_2 == 0)) {
+		TotalAbsCapacity = TotalAbsCapacity + pbm[PBM_number].Branch_2_AbcoluteCapacity;
+		TotalRelCapacity = TotalRelCapacity + pbm[PBM_number].Branch_2_RelativeCapacity;
+	}
+	pbm[PBM_number].TotalRelativeCapacity = TotalRelCapacity / 2;
+	pbm[PBM_number].TotalAbcoluteCapacity = TotalAbsCapacity;
+
 	return SUCCESS;
 }
 

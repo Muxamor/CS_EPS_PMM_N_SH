@@ -20,13 +20,13 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 
 ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t State);
 
-ErrorStatus PBM_CheckHeatOFF(_PBM pbm[]);
+ErrorStatus PBM_CheckHeatOFF(_PBM pbm[], uint8_t PBM_number);
 
-ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[]);
+ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[], uint8_t PBM_number);
 
-ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[]);
+ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number);
 
-ErrorStatus PBM_CalcTotalCapacityPBM(_PBM pbm[]);
+ErrorStatus PBM_CalcTotalCapacityPBM(_PBM pbm[], uint8_t PBM_number);
 
 int8_t PBM_CheckSaveSetupFlag(_PBM pbm[]);
 
