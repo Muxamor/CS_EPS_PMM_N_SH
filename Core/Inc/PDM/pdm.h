@@ -3,7 +3,7 @@
 #define INC_PDM_PDM_H_
 
 #ifdef __cplusplus
-}
+extern "C" {
 #endif
 
 ErrorStatus PDM_Get_Telemetry( _PDM *pdm_ptr );

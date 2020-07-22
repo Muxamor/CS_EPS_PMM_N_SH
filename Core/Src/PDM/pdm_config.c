@@ -1,5 +1,4 @@
 #include "stm32l4xx.h"
-#include "stm32l4xx_ll_utils.h"
 #include "TCA9539.h"
 #include "TCA9548.h"
 #include "INA231.h"

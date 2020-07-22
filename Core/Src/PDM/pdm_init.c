@@ -34,19 +34,16 @@ ErrorStatus PDM_init(_PDM *pdm_ptr){
 	//Note: We don’t check return errors because in any case, trying to configure the chips behind the I2C MUX
 	TCA9548_Disable_I2C_ch( PDM_I2Cx_I2C_MUX, PDM_I2CADDR_I2C_MUX, TCA9548_ALL_CHANNELS );
 
-
 	//Initialization temperature sensors.
 	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_1, PDM_I2CADDR_TMP1075_1, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_2, PDM_I2CADDR_TMP1075_2, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX, TCA9548_CH6 );
 
-
 	//Initialization Power monitor INA231 power channel
 	for(num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++){
 		error_status += PDM_init_PWR_Mon_INA231( pdm_ptr, num_pwr_ch);
 	}
-
 
 	if(error_status != SUCCESS){
 		#ifdef DEBUGprintf

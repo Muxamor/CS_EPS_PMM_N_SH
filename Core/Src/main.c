@@ -3,9 +3,9 @@
 #include "TMP1075.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
-#include "PBM_config.h"
-#include "PBM_struct.h"
-#include "PBM_control.h"
+#include "pbm_config.h"
+#include "pbm_struct.h"
+#include "pbm_control.h"
 #include "pam_struct.h"
 #include "pdm_struct.h"
 #include "pdm_init.h"
@@ -15,7 +15,7 @@
 #include "pmm_init.h"
 #include "pmm_sw_cpu.h"
 #include "pmm.h"
-#include "PBM_init.h"
+#include "pbm_init.h"
 #include "PBM.h"
 #include "eps_struct.h"
 #include "uart_eps_comm.h"
@@ -108,16 +108,22 @@ int main(void){
     pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
     pbm_mas[0].Branch_2_ChgEnableBit = ENABLE;
     pbm_mas[0].Branch_2_DchgEnableBit = ENABLE;
+    pbm_mas[0].PCA9534_ON_Heat_1 = ENABLE;
+    pbm_mas[0].PCA9534_ON_Heat_2 = ENABLE;
 
     pbm_mas[1].Branch_1_ChgEnableBit = ENABLE;
     pbm_mas[1].Branch_1_DchgEnableBit = ENABLE;
     pbm_mas[1].Branch_2_ChgEnableBit = ENABLE;
     pbm_mas[1].Branch_2_DchgEnableBit = ENABLE;
+    pbm_mas[1].PCA9534_ON_Heat_1 = ENABLE;
+    pbm_mas[1].PCA9534_ON_Heat_2 = ENABLE;
 
     pbm_mas[2].Branch_1_ChgEnableBit = ENABLE;
     pbm_mas[2].Branch_1_DchgEnableBit = ENABLE;
     pbm_mas[2].Branch_2_ChgEnableBit = ENABLE;
     pbm_mas[2].Branch_2_DchgEnableBit = ENABLE;
+    pbm_mas[2].PCA9534_ON_Heat_1 = ENABLE;
+    pbm_mas[2].PCA9534_ON_Heat_2 = ENABLE;
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Check Active flag between active and passive CPU.
@@ -175,8 +181,8 @@ int main(void){
 			}
 
 
-			 eps_service_ptr->Req_SW_Active_CPU =1;
-			 eps_service_ptr->Set_Active_CPU = 1;
+			// eps_service_ptr->Req_SW_Active_CPU =1;
+			// eps_service_ptr->Set_Active_CPU = 1;
 
 
 			//Switch active CPU 
@@ -231,9 +237,6 @@ int main(void){
 
 
 //==========================================//
-
-
-
 
 //	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
 //	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);

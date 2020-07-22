@@ -1,19 +1,16 @@
-/*
- * PBM_config.h
- *
- *  Created on: Apr 23, 2020
- *      Author: A Morsin
- */
 
 #ifndef INC_PBM_CONFIG_H_
 #define INC_PBM_CONFIG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*********************** Configuration for PBM module ***********************/
 
 #define PBM_I2C_PORT                		I2C4 	//Number of I2C port for PBM.
 #define PBM_I2C_ATTEMPT_CONN                3 	    //Quantity attempt to connection through I2C.
-#define PBM_i2c_delay_att_conn				5 	 	//ms Delay between attempts connection through I2C in millisecond
+#define PBM_i2c_delay_att_conn				3 	 	//ms Delay between attempts connection through I2C in millisecond
 #define PBM_QUANTITY 						0x03 	// Total quantity power channels on the PDM
 
 #define PBM_1_DS2777_ADDR_1                 0x60 	//Address DS2777 mux №1 Battery Module №1.
@@ -78,5 +75,8 @@ typedef struct{
 
 _PBM_table PBM_Table(uint8_t PBM_number);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PBM_CONFIG_H_ */

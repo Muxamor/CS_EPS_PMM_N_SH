@@ -1,12 +1,11 @@
-/*
- * PBM_struct.h
- *
- *  Created on: Apr 23, 2020
- *      Author: A Morsin
- */
+
 
 #ifndef INC_PBM_STRUCT_H_
 #define INC_PBM_STRUCT_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct  // Structure for PBM data
 {
@@ -90,5 +89,9 @@ typedef struct  // Structure for PBM data
 	uint16_t Reserve_2;						// Reserve data space.
 
 } _PBM;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PBM_STRUCT_H_ */
