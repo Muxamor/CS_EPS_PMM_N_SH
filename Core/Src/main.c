@@ -174,8 +174,9 @@ int main(void){
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-
-			CAN_Var5_fill_telemetry( eps_param );
+            if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
+                CAN_Var5_fill_telemetry(eps_param);
+            }
 
 			if(CAN_cmd_mask_status != 0){
 				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );

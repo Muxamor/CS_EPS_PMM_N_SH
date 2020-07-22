@@ -49,6 +49,204 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
 			switch (number_cmd_reg) {
 
+                case CAN_Constant_mode_offset://Constant mode command
+
+                    if( CAN_IVar4_RegCmd.CAN_Constant_mode == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Enable constant mode\n", CAN_Constant_mode_offset);
+                        #endif
+                        eps_p.eps_pmm_ptr->CAN_constatnt_mode = 1;
+                        CAN_Var5_fill_telemetry_const();
+
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Disable constant mode\n", CAN_Constant_mode_offset);
+                        #endif
+                        eps_p.eps_pmm_ptr->CAN_constatnt_mode = 0;
+                        CAN_Var5_fill_telemetry( eps_p );
+                    }
+                    break;
+
+                case CAN_AB1_Charge_key_1_offset: //Enable/Disable Charge AB1 branch 1 // PBM_data
+
+                    if( CAN_IVar4_RegCmd.CAN_AB1_Charge_key_branch_1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE charge AB1 branch 1\n", CAN_AB1_Charge_key_1_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_ON_CHARGE);
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE charge AB1 branch 1\n", CAN_AB1_Charge_key_1_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_OFF_CHARGE);
+                    }
+                    break;
+
+                case CAN_AB1_Discharge_key_1_offset: //Enable/Disable Discharge AB1 branch 1 // PBM_data
+
+                    if( CAN_IVar4_RegCmd.CAN_AB1_Discharge_key_branch_1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE discharge AB1 branch 1\n", CAN_AB1_Discharge_key_1_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_ON_DISCHARGE);
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE discharge AB1 branch 1\n", CAN_AB1_Discharge_key_1_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_OFF_DISCHARGE);
+                    }
+                    break;
+
+                case CAN_AB1_Charge_key_2_offset: //Enable/Disable Charge AB1 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB1_Charge_key_branch_2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE charge AB1 branch 2\n", CAN_AB1_Charge_key_2_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_ON_CHARGE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE charge AB1 branch 2\n", CAN_AB1_Charge_key_2_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_OFF_CHARGE);
+                    }
+                    break;
+
+                case CAN_AB1_Discharge_key_2_offset: //Enable/Disable Discharge AB1 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB1_Discharge_key_branch_2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE discharge AB1 branch 2\n", CAN_AB1_Discharge_key_2_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_ON_DISCHARGE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE discharge AB1 branch 2\n", CAN_AB1_Discharge_key_2_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_OFF_DISCHARGE);
+                    }
+                    break;
+
+                case CAN_AB2_Charge_key_1_offset: //Enable/Disable Charge AB2 branch 1 // PBM_data
+
+                    if( CAN_IVar4_RegCmd.CAN_AB2_Charge_key_branch_1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE charge AB2 branch 1\n", CAN_AB2_Charge_key_1_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_ON_CHARGE);
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE charge AB2 branch 1\n", CAN_AB2_Charge_key_1_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_OFF_CHARGE);
+                    }
+                    break;
+
+                case CAN_AB2_Discharge_key_1_offset: //Enable/Disable Discharge AB2 branch 1 // PBM_data
+
+                    if( CAN_IVar4_RegCmd.CAN_AB2_Discharge_key_branch_1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE discharge AB2 branch 1\n", CAN_AB2_Discharge_key_1_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_ON_DISCHARGE);
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE discharge AB2 branch 1\n", CAN_AB2_Discharge_key_1_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_OFF_DISCHARGE);
+                    }
+                    break;
+
+                case CAN_AB2_Charge_key_2_offset: //Enable/Disable Charge AB2 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB2_Charge_key_branch_2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE charge AB2 branch 2\n", CAN_AB2_Charge_key_2_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_ON_CHARGE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE charge AB2 branch 2\n", CAN_AB2_Charge_key_2_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_OFF_CHARGE);
+                    }
+                    break;
+
+                case CAN_AB2_Discharge_key_2_offset: //Enable/Disable Discharge AB2 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB2_Discharge_key_branch_2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE discharge AB2 branch 2\n", CAN_AB2_Discharge_key_2_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_ON_DISCHARGE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE discharge AB2 branch 2\n", CAN_AB2_Discharge_key_2_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_OFF_DISCHARGE);
+                    }
+                    break;
+
+                case CAN_AB3_Charge_key_1_offset: //Enable/Disable Charge AB3 branch 1 // PBM_data
+
+                    if( CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE charge AB3 branch 1\n", CAN_AB3_Charge_key_1_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_ON_CHARGE);
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE charge AB3 branch 1\n", CAN_AB3_Charge_key_1_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_OFF_CHARGE);
+                    }
+                    break;
+
+                case CAN_AB3_Discharge_key_1_offset: //Enable/Disable Discharge AB3 branch 1 // PBM_data
+
+                    if( CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE discharge AB3 branch 1\n", CAN_AB3_Discharge_key_1_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_ON_DISCHARGE);
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE discharge AB3 branch 1\n", CAN_AB3_Discharge_key_1_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_OFF_DISCHARGE);
+                    }
+                    break;
+
+                case CAN_AB3_Charge_key_2_offset: //Enable/Disable Charge AB3 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE charge AB3 branch 2\n", CAN_AB3_Charge_key_2_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_ON_CHARGE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE charge AB3 branch 2\n", CAN_AB3_Charge_key_2_offset);
+                        #endif
+                        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_OFF_CHARGE);
+                    }
+                    break;
+
+                case CAN_AB3_Discharge_key_2_offset: //Enable/Disable Discharge AB3 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE discharge AB3 branch 2\n", CAN_AB3_Discharge_key_2_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_ON_DISCHARGE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE discharge AB3 branch 2\n", CAN_AB3_Discharge_key_2_offset);
+                        #endif
+                        PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_OFF_DISCHARGE);
+                    }
+                    break;
+
                 case CAN_PWR_CH1_offset: //Enable/Disable power channel 1 (SOP1)
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_CH1 == 0x01 ){
@@ -56,7 +254,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power channel 1\n", CAN_PWR_CH1_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, ENABLE );
-
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 1\n", CAN_PWR_CH1_offset);
@@ -72,7 +269,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power channel 2\n", CAN_PWR_CH2_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, ENABLE );
-
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 2\n", CAN_PWR_CH2_offset);
@@ -88,7 +284,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power channel 3\n", CAN_PWR_CH3_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE );
-
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 3\n", CAN_PWR_CH3_offset);
@@ -104,7 +299,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power channel 4\n", CAN_PWR_CH4_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE );
-
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 4\n", CAN_PWR_CH4_offset);
@@ -120,7 +314,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power channel 5\n", CAN_PWR_CH5_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_5, ENABLE );
-
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 5\n", CAN_PWR_CH5_offset);
@@ -136,7 +329,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power channel 6\n", CAN_PWR_CH6_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_6, ENABLE );
-
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power channel 6\n", CAN_PWR_CH6_offset);
@@ -153,7 +345,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT1_eF1, ENABLE );
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, ENABLE ); 
-
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power VBAT1\n", CAN_PWR_VBAT1_offset);
@@ -171,7 +362,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF1, ENABLE );
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, ENABLE ); 
-
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power VBAT2\n", CAN_PWR_VBAT2_offset);
@@ -180,24 +370,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, DISABLE );
                     }
                     break;
-                
-				case CAN_Constant_mode_offset://Constant mode command
-
-					if( CAN_IVar4_RegCmd.CAN_Constant_mode == 0x01 ){
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> Enable constant mode\n", CAN_Constant_mode_offset);
-						#endif
-						CAN_Var5_fill_telemetry_const();
-						//Need write config to PMM struct
-
-					}else{
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> Disable constant mode\n", CAN_Constant_mode_offset);
-						#endif
-						//Need vrite config to PMM struct
-						CAN_Var5_fill_telemetry( eps_p );
-					}
-					break;
 
 				case CAN_Switch_active_CPU_offset: // Switch active CPU (CPUmain active or CPUbackup
 
@@ -205,203 +377,19 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUmain\n", CAN_Switch_active_CPU_offset);
 						#endif
-                        
                         if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Set_active_CPU ){
                             eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
                             eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
                         }
-
 					}else if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x01 ){
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUbackup\n", CAN_Switch_active_CPU_offset);
 						#endif
-
                         if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Set_active_CPU ){
                             eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
                             eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup_Active;
                         }
-                        
          			}
-					break;
-
-				 case CAN_AB1_Charge_key_1_offset: //Enable/Disable Charge AB1 branch 1 // PBM_data
-
-				    if( CAN_IVar4_RegCmd.CAN_AB1_Charge_key_branch_1 == 0x01 ){
-				    	#ifdef DEBUGprintf
-				    		printf("Get comm. reg. %d -> ENABLE charge AB1 branch 1\n", CAN_AB1_Charge_key_1_offset);
-						#endif
-				    	PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_ON_CHARGE);
-				    }else{
-				        #ifdef DEBUGprintf
-				        	printf("Get comm. reg. %d -> DISABLE charge AB1 branch 1\n", CAN_AB1_Charge_key_1_offset);
-				        #endif
-				        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_OFF_CHARGE);
-				    }
-				    break;
-
-				 case CAN_AB1_Discharge_key_1_offset: //Enable/Disable Discharge AB1 branch 1 // PBM_data
-
-				 	if( CAN_IVar4_RegCmd.CAN_AB1_Discharge_key_branch_1 == 0x01 ){
-				 		#ifdef DEBUGprintf
-				 			printf("Get comm. reg. %d -> ENABLE discharge AB1 branch 1\n", CAN_AB1_Discharge_key_1_offset);
-				 		#endif
-				 		PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_ON_DISCHARGE);
-				 	}else{
-				 		#ifdef DEBUGprintf
-					 		printf("Get comm. reg. %d -> DISABLE discharge AB1 branch 1\n", CAN_AB1_Discharge_key_1_offset);
-						#endif
-					 	PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_OFF_DISCHARGE);
-				 	}
-				 	break;
-
-				 case CAN_AB1_Charge_key_2_offset: //Enable/Disable Charge AB1 branch 2 // PBM_data
-
-					 if (CAN_IVar4_RegCmd.CAN_AB1_Charge_key_branch_2 == 0x01) {
-						#ifdef DEBUGprintf
-						 	printf("Get comm. reg. %d -> ENABLE charge AB1 branch 2\n", CAN_AB1_Charge_key_2_offset);
-					 	#endif
-						PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_ON_CHARGE);
-					 } else {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> DISABLE charge AB1 branch 2\n", CAN_AB1_Charge_key_2_offset);
-						#endif
-						PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_OFF_CHARGE);
-					 }
-					 break;
-
-				case CAN_AB1_Discharge_key_2_offset: //Enable/Disable Discharge AB1 branch 2 // PBM_data
-
-					if (CAN_IVar4_RegCmd.CAN_AB1_Discharge_key_branch_2 == 0x01) {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> ENABLE discharge AB1 branch 2\n", CAN_AB1_Discharge_key_2_offset);
-						#endif
-						PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_ON_DISCHARGE);
-					} else {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> DISABLE discharge AB1 branch 2\n", CAN_AB1_Discharge_key_2_offset);
-						#endif
-						PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_OFF_DISCHARGE);
-					}
-					break;
-
-				 case CAN_AB2_Charge_key_1_offset: //Enable/Disable Charge AB2 branch 1 // PBM_data
-
-				    if( CAN_IVar4_RegCmd.CAN_AB2_Charge_key_branch_1 == 0x01 ){
-				    	#ifdef DEBUGprintf
-				    		printf("Get comm. reg. %d -> ENABLE charge AB2 branch 1\n", CAN_AB2_Charge_key_1_offset);
-						#endif
-				    	PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_ON_CHARGE);
-				    }else{
-				        #ifdef DEBUGprintf
-				        	printf("Get comm. reg. %d -> DISABLE charge AB2 branch 1\n", CAN_AB2_Charge_key_1_offset);
-				        #endif
-				        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_OFF_CHARGE);
-				    }
-				    break;
-
-				 case CAN_AB2_Discharge_key_1_offset: //Enable/Disable Discharge AB2 branch 1 // PBM_data
-
-				 	if( CAN_IVar4_RegCmd.CAN_AB2_Discharge_key_branch_1 == 0x01 ){
-				 		#ifdef DEBUGprintf
-				 			printf("Get comm. reg. %d -> ENABLE discharge AB2 branch 1\n", CAN_AB2_Discharge_key_1_offset);
-				 		#endif
-				 		PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_ON_DISCHARGE);
-				 	}else{
-				 		#ifdef DEBUGprintf
-					 		printf("Get comm. reg. %d -> DISABLE discharge AB2 branch 1\n", CAN_AB2_Discharge_key_1_offset);
-						#endif
-					 	PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_OFF_DISCHARGE);
-				 	}
-				 	break;
-
-				 case CAN_AB2_Charge_key_2_offset: //Enable/Disable Charge AB2 branch 2 // PBM_data
-
-				 	if (CAN_IVar4_RegCmd.CAN_AB2_Charge_key_branch_2 == 0x01) {
-						#ifdef DEBUGprintf
-						 	printf("Get comm. reg. %d -> ENABLE charge AB2 branch 2\n", CAN_AB2_Charge_key_2_offset);
-					 	#endif
-						PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_ON_CHARGE);
-					 } else {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> DISABLE charge AB2 branch 2\n", CAN_AB2_Charge_key_2_offset);
-						#endif
-						PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_OFF_CHARGE);
-					 }
-					 break;
-
-				case CAN_AB2_Discharge_key_2_offset: //Enable/Disable Discharge AB2 branch 2 // PBM_data
-
-					if (CAN_IVar4_RegCmd.CAN_AB2_Discharge_key_branch_2 == 0x01) {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> ENABLE discharge AB2 branch 2\n", CAN_AB2_Discharge_key_2_offset);
-						#endif
-						PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_ON_DISCHARGE);
-					} else {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> DISABLE discharge AB2 branch 2\n", CAN_AB2_Discharge_key_2_offset);
-						#endif
-						PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_OFF_DISCHARGE);
-					}
-					break;
-
-				 case CAN_AB3_Charge_key_1_offset: //Enable/Disable Charge AB3 branch 1 // PBM_data
-
-				    if( CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_1 == 0x01 ){
-				    	#ifdef DEBUGprintf
-				    		printf("Get comm. reg. %d -> ENABLE charge AB3 branch 1\n", CAN_AB3_Charge_key_1_offset);
-						#endif
-				    	PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_ON_CHARGE);
-				    }else{
-				        #ifdef DEBUGprintf
-				        	printf("Get comm. reg. %d -> DISABLE charge AB3 branch 1\n", CAN_AB3_Charge_key_1_offset);
-				        #endif
-				        PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_OFF_CHARGE);
-				    }
-				    break;
-
-				 case CAN_AB3_Discharge_key_1_offset: //Enable/Disable Discharge AB3 branch 1 // PBM_data
-
-				 	if( CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_1 == 0x01 ){
-				 		#ifdef DEBUGprintf
-				 			printf("Get comm. reg. %d -> ENABLE discharge AB3 branch 1\n", CAN_AB3_Discharge_key_1_offset);
-				 		#endif
-				 		PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_ON_DISCHARGE);
-				 	}else{
-				 		#ifdef DEBUGprintf
-					 		printf("Get comm. reg. %d -> DISABLE discharge AB3 branch 1\n", CAN_AB3_Discharge_key_1_offset);
-						#endif
-					 	PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_OFF_DISCHARGE);
-				 	}
-				 	break;
-
-				 case CAN_AB3_Charge_key_2_offset: //Enable/Disable Charge AB3 branch 2 // PBM_data
-
-				 	if (CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_2 == 0x01) {
-						#ifdef DEBUGprintf
-						 	printf("Get comm. reg. %d -> ENABLE charge AB3 branch 2\n", CAN_AB3_Charge_key_2_offset);
-					 	#endif
-						PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_ON_CHARGE);
-					 } else {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> DISABLE charge AB3 branch 2\n", CAN_AB3_Charge_key_2_offset);
-						#endif
-						PBM_SetStateChargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_OFF_CHARGE);
-					 }
-					 break;
-
-				case CAN_AB3_Discharge_key_2_offset: //Enable/Disable Discharge AB3 branch 2 // PBM_data
-
-					if (CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_2 == 0x01) {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> ENABLE discharge AB3 branch 2\n", CAN_AB3_Discharge_key_2_offset);
-						#endif
-						PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_ON_DISCHARGE);
-					} else {
-						#ifdef DEBUGprintf
-							printf("Get comm. reg. %d -> DISABLE discharge AB3 branch 2\n", CAN_AB3_Discharge_key_2_offset);
-						#endif
-						PBM_SetStateDischargeBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_OFF_DISCHARGE);
-					}
 					break;
 
 				default:

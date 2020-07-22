@@ -3,7 +3,7 @@
 #define INC_CAND_CAN_CMD_H_
 
 #ifdef __cplusplus
-}
+extern "C" {
 #endif
 
 #include "eps_struct.h"

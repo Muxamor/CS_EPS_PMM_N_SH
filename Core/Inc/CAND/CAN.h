@@ -2,7 +2,7 @@
 #define _CAN_H_
 
 #ifdef __cplusplus
-}
+extern "C" {
 #endif
 
 #include "stm32l4xx.h"
@@ -19,37 +19,41 @@
 #define CAN_ID_IVAR_REGCMD      		0x04
 #define CAN_ID_VAR_TELEMETRY 			0x05
 
-#define ERR_INVALID_PARAMS        	-1
-#define ERR_CAN_INIT_MODE         	-2
-#define ERR_CAN_NORMAL_MODE       	-3
-#define ERR_CAN_NO_FREE_FILTER    	-4
-#define ERR_CAN_NO_TXMAILBOXES    	-5
-#define ERR_CAN_ACCESS_RANGE      	-7
-#define ERR_CAN_DCL_INVALID       	-8
+#define ERR_INVALID_PARAMS        	    -1
+#define ERR_CAN_INIT_MODE         	    -2
+#define ERR_CAN_NORMAL_MODE       	    -3
+#define ERR_CAN_NO_FREE_FILTER    	    -4
+#define ERR_CAN_NO_TXMAILBOXES    	    -5
+#define ERR_CAN_ACCESS_RANGE      	    -7
+#define ERR_CAN_DCL_INVALID       	    -8
 
-#define CAN_AB1_Charge_key_1_offset			16
-#define CAN_AB1_Discharge_key_1_offset		17
-#define CAN_AB1_Charge_key_2_offset			18
-#define CAN_AB1_Discharge_key_2_offset		19
-#define CAN_AB2_Charge_key_1_offset			20
-#define CAN_AB2_Discharge_key_1_offset		21
-#define CAN_AB2_Charge_key_2_offset			22
-#define CAN_AB2_Discharge_key_2_offset		23
-#define CAN_AB3_Charge_key_1_offset			24
-#define CAN_AB3_Discharge_key_1_offset		25
-#define CAN_AB3_Charge_key_2_offset			26
-#define CAN_AB3_Discharge_key_2_offset		27
+//VarID4 Offset
+#define CAN_Constant_mode_offset        4
 
-#define CAN_Constant_mode_offset	4
-#define CAN_PWR_CH1_offset			28
-#define CAN_PWR_CH2_offset			29
-#define CAN_PWR_CH3_offset			30
-#define CAN_PWR_CH4_offset			31
-#define CAN_PWR_CH5_offset			32
-#define CAN_PWR_CH6_offset			33
-#define CAN_PWR_VBAT1_offset		34
-#define CAN_PWR_VBAT2_offset		35
-#define CAN_Switch_active_CPU_offset 37
+#define CAN_AB1_Charge_key_1_offset     16
+#define CAN_AB1_Discharge_key_1_offset  17
+#define CAN_AB1_Charge_key_2_offset     18
+#define CAN_AB1_Discharge_key_2_offset  19
+#define CAN_AB2_Charge_key_1_offset     20
+#define CAN_AB2_Discharge_key_1_offset  21
+#define CAN_AB2_Charge_key_2_offset	    22
+#define CAN_AB2_Discharge_key_2_offset  23
+#define CAN_AB3_Charge_key_1_offset     24
+#define CAN_AB3_Discharge_key_1_offset  25
+#define CAN_AB3_Charge_key_2_offset	    26
+#define CAN_AB3_Discharge_key_2_offset  27
+
+#define CAN_PWR_CH1_offset			    28
+#define CAN_PWR_CH2_offset			    29
+#define CAN_PWR_CH3_offset              30
+#define CAN_PWR_CH4_offset			    31
+#define CAN_PWR_CH5_offset			    32
+#define CAN_PWR_CH6_offset			    33
+#define CAN_PWR_VBAT1_offset		    34
+#define CAN_PWR_VBAT2_offset		    35
+
+#define CAN_Switch_active_CPU_offset    37
+
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
