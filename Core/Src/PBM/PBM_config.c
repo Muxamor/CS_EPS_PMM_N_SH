@@ -5,8 +5,8 @@
 
 
 /** @brief	Fills the table of data about the selected module PBM
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3 or PBM_ALL).
- @retval 	PBM table structure
+    @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3 or PBM_ALL).
+    @retval 	PBM table structure
  */
 _PBM_table PBM_Table(uint8_t PBM_number) {
 

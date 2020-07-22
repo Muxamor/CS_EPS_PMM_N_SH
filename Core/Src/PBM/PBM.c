@@ -4,9 +4,9 @@
 #include "pbm_control.h"
 
 /** @brief	Read data for all PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
- @param 	*Data - structure data for all PBM modules.
- @retval 	none
+    @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+    @param 	*Data - structure data for all PBM modules.
+    @retval 	none
  */
 ErrorStatus PBM_GetTelemetry(_PBM pbm[]) {
 

@@ -12,10 +12,10 @@
 #include "Error_Handler.h"
 
 /** @brief	Read state pin PCA9534 for selected PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @retval 	ErrorStatus
+    @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+    @param 	pbm[] - structure data for all PBM modules.
+    @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+    @retval ErrorStatus
  */
 ErrorStatus PBM_ReadGPIO(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 
