@@ -3,12 +3,12 @@
 #include "stm32l4xx_ll_gpio.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
-#include "pdm_struct.h"
-#include "pdm_config.h"
 #include "TCA9539.h"
 #include "TMP1075.h"
 #include "TCA9548.h"
 #include "INA231.h"
+#include "pdm_struct.h"
+#include "pdm_config.h"
 #include "pdm_ctrl.h"
 
 
@@ -65,7 +65,8 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){
 
 		if( state_channel == ENABLE ){
-			error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse ); // Input pin -  because hardware auto-enable
+            // Input pin -  because hardware auto-enable
+			error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse );
 
 		}else{ //Disable power channel
 			if ( TCA9539_Reset_output_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse ) == SUCCESS ){
@@ -92,7 +93,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 			if( state_channel == ENABLE ){
 				error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse ); // Input pin -  because hardware auto-enable
 				
-			}else{ //Disabel power channel
+			}else{ //Disable power channel
 				if ( TCA9539_Reset_output_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse ) == SUCCESS ){
 					error_I2C = TCA9539_conf_IO_dir_output( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse );
 				}
