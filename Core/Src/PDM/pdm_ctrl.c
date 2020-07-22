@@ -45,16 +45,17 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 
 	pdm_table = PDM__Table(num_pwr_ch);
 
+	if( pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in != state_channel || pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out != state_channel  ){
+        pdm_ptr->PDM_save_conf_flag = 1; //Need save configure in FRAM.
+	}
+
 	if( state_channel == ENABLE){
 		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in = ENABLE; 
-		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = ENABLE; 
-			
+		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = ENABLE;
 	}else{
 		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in = DISABLE; 
 		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = DISABLE; 
 	}
-	
-	pdm_ptr->PDM_save_conf_flag = 1; //Need save configure in FRAM.
 
 	//Write to I2C GPIO Extender.
 	i=0;
@@ -66,9 +67,8 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 		if( state_channel == ENABLE ){
 			error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse ); // Input pin -  because hardware auto-enable
 
-		}else if( state_channel == DISABLE ){
+		}else{ //Disable power channel
 			if ( TCA9539_Reset_output_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse ) == SUCCESS ){
-
 				error_I2C = TCA9539_conf_IO_dir_output( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_in_eFuse );
 			}
 		}
@@ -81,19 +81,19 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 
 	//Enable/Disable OUTPUT Efuse power channel.
 	if( error_I2C == SUCCESS ){
-		LL_mDelay(40); //Delay for startup power supply
+        if( state_channel == ENABLE ) {
+            LL_mDelay(40); //Delay for startup power supply
+        }
 
 		i=0;
  		error_I2C = ERROR_N;
-
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
 			if( state_channel == ENABLE ){
 				error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse ); // Input pin -  because hardware auto-enable
 				
-			}else if( state_channel == DISABLE ){
+			}else{ //Disabel power channel
 				if ( TCA9539_Reset_output_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse ) == SUCCESS ){
-
 					error_I2C = TCA9539_conf_IO_dir_output( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_out_eFuse );
 				}
 			}
@@ -105,15 +105,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 		}
 	}
 
-	if( error_I2C == SUCCESS ){
-
-		LL_mDelay(20); //Delay for startup power supply
-		if( PDM_Check_state_PWR_CH( pdm_ptr, num_pwr_ch ) != SUCCESS ){
-			return ERROR_N;
-		}
-
-	}else{ //Error I2C GPIO Expander
-
+    if( error_I2C != SUCCESS ){
 
 		if( pdm_table.I2C_addr_GPIO_Ext == PDM_I2CADDR_GPIOExt1 ){
 			#ifdef DEBUGprintf
