@@ -29,12 +29,19 @@ ErrorStatus PBM_ReadGPIO(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 	pbm_table = PBM_Table(PBM_number);
 
 	while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
-		Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+		if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00) == SUCCESS){
+			if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05) == SUCCESS){
+				Error = PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
+			}
+		}
+		if (Error == SUCCESS) {
+			Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+		}
 
-        if( Error != SUCCESS ){
-            count++;
-            LL_mDelay( PBM_i2c_delay_att_conn);
-        }
+		if (Error != SUCCESS) {
+	        count++;
+			LL_mDelay(PBM_i2c_delay_att_conn);
+		}
 	}
 
 	if (Error == SUCCESS) {
@@ -79,10 +86,10 @@ ErrorStatus PBM_ReadGPIO(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 }
 
 /** @brief	Read temperature all TMP1075 sensor for selected PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @retval 	ErrorStatus
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+	@retval 	ErrorStatus
  */
 ErrorStatus PBM_ReadTempSensors(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 
@@ -193,10 +200,10 @@ ErrorStatus PBM_ReadTempSensors(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_numbe
 }
 
 /** @brief	Read data from two DS2777 for selected PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @retval 	ErrorStatus
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+	@retval 	ErrorStatus
  */
 ErrorStatus PBM_ReadBatteryData(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 
@@ -341,12 +348,12 @@ ErrorStatus PBM_ReadBatteryData(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_numbe
  }*/
 
 /** @brief	ON/OFF heat for selected branch for selected PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2 or PBM_BRANCH_ALL).
- @param 	State - select state heat (PBM_ON_HEAT or PBM_OFF_HEAT).
- @retval 	ErrorStatus
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2 or PBM_BRANCH_ALL).
+	@param 	State - select state heat (PBM_ON_HEAT or PBM_OFF_HEAT).
+	@retval 	ErrorStatus
  */
 ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t State) {
 
@@ -360,17 +367,11 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 
 	pbm_table = PBM_Table(PBM_number);
 
-	while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
-		Error = PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
-
-		if (Error != SUCCESS) {
-            count++;
-			LL_mDelay(PBM_i2c_delay_att_conn);
-		}
-	}
-
-	Error = ERROR_N;
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)){
+
+		if(pbm[PBM_number].PCA9534_ON_Heat_1 != State){
+			pbm[PBM_number].PBM_save_conf_flag = 1;
+		}
 
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 
@@ -381,7 +382,7 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
             }
 
             if (Error == SUCCESS) {
-                Error =  PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00);
+            	Error = PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00);
             }
 
             if (Error == SUCCESS) {
@@ -416,6 +417,11 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 	Error = ERROR_N;
 	count = 0;
 	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+
+		if(pbm[PBM_number].PCA9534_ON_Heat_2 != State){
+			pbm[PBM_number].PBM_save_conf_flag = 1;
+		}
+
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			if (State == PBM_ON_HEAT) {
 				Error = PCA9534_Set_output_pin(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05);
@@ -423,12 +429,12 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
                 Error = PCA9534_Reset_output_pin(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05);
 			}
 
-            if( Error == SUCCESS ){
-                Error = PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05);
+            if (Error == SUCCESS) {
+            	Error = PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05);
             }
 
-			if( Error == SUCCESS ){
-                Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+            if (Error == SUCCESS) {
+				Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
 			}
 
 			if (Error != 0) {
@@ -464,12 +470,12 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 }
 
 /** @brief	ON/OFF Charge for selected branch for selected PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2 or PBM_BRANCH_ALL).
- @param 	State - select state charge (PBM_ON_CHARGE or PBM_OFF_CHARGE).
- @retval 	ErrorStatus
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2 or PBM_BRANCH_ALL).
+	@param 	State - select state charge (PBM_ON_CHARGE or PBM_OFF_CHARGE).
+	@retval 	ErrorStatus
  */
 ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t State) {
 
@@ -484,6 +490,9 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 	pbm_table = PBM_Table(PBM_number);
 
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)) {
+		if(pbm[PBM_number].Branch_1_ChgEnableBit != State){
+			pbm[PBM_number].PBM_save_conf_flag = 1;
+		}
 		pbm[PBM_number].Branch_1_ChgEnableBit = State;
 
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
@@ -518,6 +527,9 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 	Error = ERROR_N;
 	count = 0;
 	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+		if(pbm[PBM_number].Branch_2_ChgEnableBit != State){
+			pbm[PBM_number].PBM_save_conf_flag = 1;
+		}
 		pbm[PBM_number].Branch_2_ChgEnableBit = State;
 
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
@@ -556,12 +568,12 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 }
 
 /** @brief	ON/OFF Disharge for selected branch for selected PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3 or PBM_ALL).
- @param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2 or PBM_BRANCH_ALL).
- @param 	State - select state charge (PBM_ON_DISCHARGE or PBM_OFF_DISCHARGE).
- @retval 	ErrorStatus
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3 or PBM_ALL).
+	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2 or PBM_BRANCH_ALL).
+	@param 	State - select state charge (PBM_ON_DISCHARGE or PBM_OFF_DISCHARGE).
+	@retval 	ErrorStatus
  */
 ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t State) {
 
@@ -576,6 +588,9 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 	pbm_table = PBM_Table(PBM_number);
 
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)) {
+		if(pbm[PBM_number].Branch_1_DchgEnableBit != State){
+			pbm[PBM_number].PBM_save_conf_flag = 1;
+		}
 		pbm[PBM_number].Branch_1_DchgEnableBit = State;
 
 		while ((Error != 0) && (count < PBM_I2C_ATTEMPT_CONN)) {
@@ -609,6 +624,9 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 	Error = ERROR_N;
 	count = 0;
 	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+		if(pbm[PBM_number].Branch_2_DchgEnableBit != State){
+			pbm[PBM_number].PBM_save_conf_flag = 1;
+		}
 		pbm[PBM_number].Branch_2_DchgEnableBit = State;
 
 		while ((Error != 0) && (count < PBM_I2C_ATTEMPT_CONN)) {
@@ -647,9 +665,9 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 }
 
 /** @brief	Check auto heat OFF.
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @retval 	ErrorStatus
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+	@retval 	ErrorStatus
  */
 ErrorStatus PBM_CheckHeatOFF(_PBM pbm[], uint8_t PBM_number) {
 
@@ -700,9 +718,9 @@ ErrorStatus PBM_CheckHeatOFF(_PBM pbm[], uint8_t PBM_number) {
 }
 
 /** @brief	Check state charge/discharge keys for all PBM.
- @param 	pbm[] - structure data for all PBM modules.
-  @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @retval 	ErrorStatus
+ 	@param 	pbm[] - structure data for all PBM modules.
+  	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+	@retval 	ErrorStatus
  */
 ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[], uint8_t PBM_number) {
 
@@ -741,12 +759,12 @@ ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[], uint8_t PBM_number) {
 }
 
 /** @brief	Check and correct capacity selected PBM.
- @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @retval 	ErrorStatus
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+	@retval 	ErrorStatus
  */
-ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
+ErrorStatus PBM_CheckCapacity(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 
 	int16_t AbcoluteCapacity = 0;
 	float Capacity = 0, Voltage = 0;
@@ -793,11 +811,10 @@ ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_numb
 }
 
 /** @brief	Calculate full capacity selected PBM.
- @param 	pbm[] - structure data for all PBM modules.
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
- @retval 	ErrorStatus
- */
-void PBM_CalcTotalCapacityPBM(_PBM pbm[], uint8_t PBM_number) {
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+*/
+void PBM_CalcTotalCapacity(_PBM pbm[], uint8_t PBM_number) {
 
 	int16_t TotalAbsCapacity = 0;
 	uint8_t TotalRelCapacity = 0;
@@ -814,6 +831,39 @@ void PBM_CalcTotalCapacityPBM(_PBM pbm[], uint8_t PBM_number) {
 	pbm[PBM_number].TotalAbcoluteCapacity = TotalAbsCapacity;
 }
 
+/** @brief	Check level battery energy for selected PBM.
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+*/
+void PBM_CheckLevelEnergy(_PBM pbm[], uint8_t PBM_number) {
+
+	int16_t Voltage_Branch_1 = 0, Voltage_Branch_2 = 0;
+
+	Voltage_Branch_1 = pbm[PBM_number].Branch_1_VoltageHi + pbm[PBM_number].Branch_1_VoltageLo;
+	Voltage_Branch_2 = pbm[PBM_number].Branch_2_VoltageHi + pbm[PBM_number].Branch_2_VoltageLo;
+
+	if (((Voltage_Branch_1 <= PBM_LOW_ENERGY_WARNING) &&
+			((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == 1))) ||
+			((Voltage_Branch_2 <= PBM_LOW_ENERGY_WARNING) &&
+			((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == 1)))) {
+		pbm[PBM_number].PBM_Low_Energy_Flag = 1;
+	} else if (pbm[PBM_number].PBM_Low_Energy_Flag == 1) {
+		if((Voltage_Branch_1 >= PBM_LOW_ENERGY_HYSTERESIS) || (pbm[PBM_number].Error_DS2777_1 == ERROR) || (pbm[PBM_number].Branch_1_DchgControlFlag == 0)) {
+			if ((Voltage_Branch_2 >= PBM_LOW_ENERGY_HYSTERESIS) || (pbm[PBM_number].Error_DS2777_2 == ERROR) || (pbm[PBM_number].Branch_2_DchgControlFlag == 0)){
+				pbm[PBM_number].PBM_Low_Energy_Flag = 0;
+			}
+		}
+	}
+
+	if (((Voltage_Branch_1 <= PBM_LOW_ENERGY_EDGE) &&
+			((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == 1))) ||
+			((Voltage_Branch_2 <= PBM_LOW_ENERGY_EDGE) &&
+			((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == 1)))) {
+		pbm[PBM_number].PBM_Zero_Energy_Flag = 1;
+	} else if (pbm[PBM_number].PBM_Low_Energy_Flag == 0){
+		pbm[PBM_number].PBM_Zero_Energy_Flag = 0;
+	}
+}
 
 /** @brief    Check flag to save setting.
     @param     pbm[] - structure data for all PBM modules.

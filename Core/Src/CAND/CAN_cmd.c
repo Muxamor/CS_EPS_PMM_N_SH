@@ -613,12 +613,12 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 //	    CAN_IVar5_telemetry.CAN_SES_module_data_array1                  	 =  0xCBCCCDCE;
 //	    CAN_IVar5_telemetry.CAN_Primary_standby_switch                      =  0xCF;
 //	    // -------------------  ТМИ 7  ------------------ //
-	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB1_line1          = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_1_AverageCurrent;  // PBM_data
-	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB1_line2          = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_2_AverageCurrent;  // PBM_data
-	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB2_line1          = (uint16_t) eps_p.eps_pbm_ptr[1].Branch_1_AverageCurrent;  // PBM_data
-	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB2_line2          = (uint16_t) eps_p.eps_pbm_ptr[1].Branch_2_AverageCurrent;  // PBM_data
-	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB3_line1          = (uint16_t) eps_p.eps_pbm_ptr[2].Branch_1_AverageCurrent;  // PBM_data
-	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB3_line2          = (uint16_t) eps_p.eps_pbm_ptr[2].Branch_2_AverageCurrent;  // PBM_data
+	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB1_line1          = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_1_Current;  // PBM_data
+	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB1_line2          = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_2_Current;  // PBM_data
+	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB2_line1          = (uint16_t) eps_p.eps_pbm_ptr[1].Branch_1_Current;  // PBM_data
+	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB2_line2          = (uint16_t) eps_p.eps_pbm_ptr[1].Branch_2_Current;  // PBM_data
+	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB3_line1          = (uint16_t) eps_p.eps_pbm_ptr[2].Branch_1_Current;  // PBM_data
+	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB3_line2          = (uint16_t) eps_p.eps_pbm_ptr[2].Branch_2_Current;  // PBM_data
 
 	CAN_IVar5_telemetry.CAN_Voltage_AB1_line1_battery_1                 = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_1_VoltageHi; 		// PBM_data
 	CAN_IVar5_telemetry.CAN_Voltage_AB1_line1_battery_2                 = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_1_VoltageLo; 		// PBM_data
@@ -810,12 +810,12 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_Beacon_subsystem_power_line_status		    =  CAN_IVar5_telemetry.CAN_Subsystem_power_line_status;
 	//***
 	CAN_IVar5_telemetry.CAN_Beacon_full_charge_discharge_power		    =  (uint16_t)(((eps_p.eps_pbm_ptr[0].Branch_1_VoltageHi +
-			eps_p.eps_pbm_ptr[0].Branch_1_VoltageLo) / 2000 * eps_p.eps_pbm_ptr[0].Branch_1_AverageCurrent) + ((eps_p.eps_pbm_ptr[0].Branch_2_VoltageHi +
-			eps_p.eps_pbm_ptr[0].Branch_2_VoltageLo) / 2000 * eps_p.eps_pbm_ptr[0].Branch_2_AverageCurrent) + ((eps_p.eps_pbm_ptr[1].Branch_1_VoltageHi +
-			eps_p.eps_pbm_ptr[1].Branch_1_VoltageLo) / 2000 * eps_p.eps_pbm_ptr[1].Branch_1_AverageCurrent) + ((eps_p.eps_pbm_ptr[1].Branch_2_VoltageHi +
-			eps_p.eps_pbm_ptr[1].Branch_2_VoltageLo) / 2000 * eps_p.eps_pbm_ptr[1].Branch_2_AverageCurrent) + ((eps_p.eps_pbm_ptr[2].Branch_1_VoltageHi +
-			eps_p.eps_pbm_ptr[2].Branch_1_VoltageLo) / 2000 * eps_p.eps_pbm_ptr[2].Branch_1_AverageCurrent) + ((eps_p.eps_pbm_ptr[2].Branch_2_VoltageHi +
-			eps_p.eps_pbm_ptr[2].Branch_2_VoltageLo) / 2000 * eps_p.eps_pbm_ptr[2].Branch_2_AverageCurrent));
+			eps_p.eps_pbm_ptr[0].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[0].Branch_1_Current) + ((eps_p.eps_pbm_ptr[0].Branch_2_VoltageHi +
+			eps_p.eps_pbm_ptr[0].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[0].Branch_2_Current) + ((eps_p.eps_pbm_ptr[1].Branch_1_VoltageHi +
+			eps_p.eps_pbm_ptr[1].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[1].Branch_1_Current) + ((eps_p.eps_pbm_ptr[1].Branch_2_VoltageHi +
+			eps_p.eps_pbm_ptr[1].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[1].Branch_2_Current) + ((eps_p.eps_pbm_ptr[2].Branch_1_VoltageHi +
+			eps_p.eps_pbm_ptr[2].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[2].Branch_1_Current) + ((eps_p.eps_pbm_ptr[2].Branch_2_VoltageHi +
+			eps_p.eps_pbm_ptr[2].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[2].Branch_2_Current));
 	//***
 	  //	    CAN_IVar5_telemetry.CAN_Beacon_total_power_SB                       =  0xB7B8;
 	CAN_IVar5_telemetry.CAN_Beacon_spacecraft_total_power               =  CAN_IVar5_telemetry.CAN_Spacecraft_total_power;
