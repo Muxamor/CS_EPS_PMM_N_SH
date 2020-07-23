@@ -5,7 +5,7 @@
 #include "Fn_CRC16.h"
 #include "eps_struct.h"
 #include "uart_comm.h"
-#include "PBM_config.h"
+#include "pbm_config.h"
 #include "pmm_config.h"
 #include "pmm_init.h"
 #include "pmm_sw_cpu.h"

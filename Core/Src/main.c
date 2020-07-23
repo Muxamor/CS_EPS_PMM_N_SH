@@ -1,11 +1,11 @@
-//#include "main.h"
+#include  <stdio.h>
+#include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
-#include "TMP1075.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
-#include "PBM_config.h"
-#include "PBM_struct.h"
-#include "PBM_control.h"
+#include "pbm_config.h"
+#include "pbm_struct.h"
+#include "pbm_control.h"
 #include "pam_struct.h"
 #include "pdm_struct.h"
 #include "pdm_init.h"
@@ -15,8 +15,11 @@
 #include "pmm_init.h"
 #include "pmm_sw_cpu.h"
 #include "pmm.h"
+#include "pbm_init.h"
+#include "pbm.h"
 #include "eps_struct.h"
 #include "uart_eps_comm.h"
+
 
 /*//TODO
 1. Need to think about delay 30 minutes.
@@ -24,11 +27,11 @@
 7. Подумать над тем если CAN при инициализации выдает ошибку стоит ли переходить на резервный МК.
 **********************************************************/
 
-extern uint32_t SysTick_Counter;
+//extern uint32_t SysTick_Counter;
 
-extern uint64_t CAN_cmd_mask_status;
-extern uint8_t CAN1_exchange_timeout_flag;
-extern uint8_t CAN2_exchange_timeout_flag;
+//extern uint64_t CAN_cmd_mask_status;
+//extern uint8_t CAN1_exchange_timeout_flag;
+//extern uint8_t CAN2_exchange_timeout_flag;
 
 _UART_EPS_COMM uart_m_eps_communication = {0}, *UART_M_eps_comm = &uart_m_eps_communication;  // Main EPS UART is LPUART1
 _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_communication;  // Backup EPS UART is USART3
@@ -98,9 +101,31 @@ int main(void){
 	SetupInterrupt();
 
 	//IWDG_Init();
-	//!!!
+
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записиво флеш.
-	// !!!!
+
+    pbm_mas[0].Branch_1_ChgEnableBit = ENABLE;
+    pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
+    pbm_mas[0].Branch_2_ChgEnableBit = ENABLE;
+    pbm_mas[0].Branch_2_DchgEnableBit = ENABLE;
+    pbm_mas[0].PCA9534_ON_Heat_1 = ENABLE;
+    pbm_mas[0].PCA9534_ON_Heat_2 = ENABLE;
+
+    pbm_mas[1].Branch_1_ChgEnableBit = ENABLE;
+    pbm_mas[1].Branch_1_DchgEnableBit = ENABLE;
+    pbm_mas[1].Branch_2_ChgEnableBit = ENABLE;
+    pbm_mas[1].Branch_2_DchgEnableBit = ENABLE;
+    pbm_mas[1].PCA9534_ON_Heat_1 = ENABLE;
+    pbm_mas[1].PCA9534_ON_Heat_2 = ENABLE;
+
+    pbm_mas[2].Branch_1_ChgEnableBit = ENABLE;
+    pbm_mas[2].Branch_1_DchgEnableBit = ENABLE;
+    pbm_mas[2].Branch_2_ChgEnableBit = ENABLE;
+    pbm_mas[2].Branch_2_DchgEnableBit = ENABLE;
+    pbm_mas[2].PCA9534_ON_Heat_1 = ENABLE;
+    pbm_mas[2].PCA9534_ON_Heat_2 = ENABLE;
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Check Active flag between active and passive CPU.
 	PMM_Check_Active_CPU( UART_M_eps_comm, UART_B_eps_comm, eps_param );
@@ -112,12 +137,12 @@ int main(void){
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
 		PDM_init( pdm_ptr );
 		//Add init PAM
-		//Add init PBM
+        PBM_Init( pbm_mas );
 
-		CAN_init_eps(CAN1);
+        CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
-		//LL_mDelay(10); //Delay for startup power supply
+		LL_mDelay(20); //Delay for startup power supply
 
     //Initialization CAN for passive CPU
 	}else{
@@ -129,6 +154,10 @@ int main(void){
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
+//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
 	while(1){
 
@@ -142,23 +171,24 @@ int main(void){
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
 			PDM_Get_Telemetry( pdm_ptr );
 			PMM_Get_Telemetry( pmm_ptr );
-			 
+            PBM_GetTelemetry( pbm_mas );
 
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param );
 	//		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-
-			CAN_Var5_fill_telemetry( eps_param );
+            if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
+                CAN_Var5_fill_telemetry(eps_param);
+            }
 
 			if(CAN_cmd_mask_status != 0){
 				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
 			}
 
 
-			 eps_service_ptr->Req_SW_Active_CPU =1;
-			 eps_service_ptr->Set_Active_CPU = 1;
+			// eps_service_ptr->Req_SW_Active_CPU =1;
+			// eps_service_ptr->Set_Active_CPU = 1;
 
 
 			//Switch active CPU 
@@ -213,9 +243,6 @@ int main(void){
 
 
 //==========================================//
-
-
-
 
 //	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
 //	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);

@@ -3,7 +3,6 @@
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "pmm_struct.h"
-#include "eps_struct.h"
 #include "pmm_config.h"
 #include "pmm_init_IC.h"
 #include "pmm_ctrl.h"

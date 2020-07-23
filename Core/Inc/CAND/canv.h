@@ -2,7 +2,7 @@
 #define _CANV_H_
 
 #ifdef __cplusplus
-}
+extern "C" {
 #endif
 
 typedef union {

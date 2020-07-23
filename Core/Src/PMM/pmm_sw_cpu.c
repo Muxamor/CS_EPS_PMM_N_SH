@@ -131,7 +131,7 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 			if( error_status == SUCCESS ){
 				//eps_p.eps_pmm_ptr->Active_CPU = set_active_CPU;
 				PMM_Set_mode_Passive_CPU(eps_p);
-				eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; 
+				//eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 			}
 
 		}

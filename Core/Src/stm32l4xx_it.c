@@ -2,6 +2,7 @@
 #include "stm32l4xx_it.h"
 #include "stm32l4xx_ll_lpuart.h"
 #include "stm32l4xx_ll_usart.h"
+#include "SetupPeriph.h"
 #include "uart_eps_comm.h"
 
 /******************************************************************************/
@@ -59,7 +60,7 @@ void PendSV_Handler(void){
 
 }
 
-extern uint32_t SysTick_Counter;
+//extern uint32_t SysTick_Counter;
 
 /** @brief This function handles System tick timer. */
 void SysTick_Handler(void){

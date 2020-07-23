@@ -9,7 +9,7 @@ extern "C" {
 #include "pmm_struct.h"
 #include "pdm_struct.h"
 #include "pam_struct.h"
-#include "PBM_struct.h"
+#include "pbm_struct.h"
 
 
 typedef struct{

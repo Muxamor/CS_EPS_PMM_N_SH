@@ -1,4 +1,3 @@
-
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
@@ -50,6 +49,10 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
  	pmm_table = PMM__Table( num_pwr_channel );
 
 	if(num_pwr_channel == PMM_PWR_Ch_CANmain ){
+	    if( pmm_ptr->PWR_Ch_State_CANmain != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+	    }
+
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
 		}else{
@@ -57,6 +60,10 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_CANbackup ){
+        if( pmm_ptr->PWR_Ch_State_CANbackup != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
 		}else{
@@ -64,6 +71,10 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_VBAT1_eF1 ){
+        if( pmm_ptr->PWR_Ch_State_Vbat1_eF1 != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_Vbat1_eF1 = ENABLE;
 		}else{
@@ -71,6 +82,10 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_VBAT1_eF2 ){
+        if( pmm_ptr->PWR_Ch_State_Vbat1_eF2 != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_Vbat1_eF2 = ENABLE;
 		}else{
@@ -78,6 +93,10 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_VBAT2_eF1 ){
+        if( pmm_ptr->PWR_Ch_State_Vbat2_eF1 != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_Vbat2_eF1 = ENABLE;
 		}else{
@@ -85,6 +104,10 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_VBAT2_eF2 ){
+        if( pmm_ptr->PWR_Ch_State_Vbat2_eF2 != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_Vbat2_eF2 = ENABLE;
 		}else{
@@ -92,13 +115,21 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_PBMs_Logic ){
-		if( state_channel == ENABLE ){
+        if( pmm_ptr->PWR_Ch_State_PBMs_Logic != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
+        if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE;
 		}else{
 			pmm_ptr->PWR_Ch_State_PBMs_Logic = DISABLE;
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_Deploy_Logic ){
+        if( pmm_ptr->PWR_Ch_State_Deploy_Logic != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
 		if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_Deploy_Logic = ENABLE;
 		}else{
@@ -106,28 +137,44 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_Deploy_Power ){
-		if( state_channel == ENABLE ){
+        if( pmm_ptr->PWR_Ch_State_Deploy_Power != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
+        if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_Deploy_Power = ENABLE;
 		}else{
 			pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_5V_Bus ){
-		if( state_channel == ENABLE ){
+        if( pmm_ptr->PWR_Ch_State_5V_Bus != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
+        if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_5V_Bus = ENABLE;
 		}else{
 			pmm_ptr->PWR_Ch_State_5V_Bus = DISABLE;
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_3_3V_Bus ){
-		if( state_channel == ENABLE ){
+        if( pmm_ptr->PWR_Ch_State_3_3V_Bus != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
+        if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_3_3V_Bus = ENABLE;
 		}else{
 			pmm_ptr->PWR_Ch_State_3_3V_Bus = DISABLE;
 		}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_I2C_Bus ){
-		if( state_channel == ENABLE ){
+        if( pmm_ptr->PWR_Ch_State_I2C_Bus != state_channel ){
+            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
+        }
+
+        if( state_channel == ENABLE ){
 			pmm_ptr->PWR_Ch_State_I2C_Bus = ENABLE;
 		}else{
 			pmm_ptr->PWR_Ch_State_I2C_Bus = DISABLE;
@@ -136,8 +183,6 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 	}else{
 		return ERROR_N;
 	}
-
-	pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
 
 	//Write to I2C GPIO Extender.
 	i=0;
@@ -148,7 +193,7 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		if( state_channel == ENABLE ){
 			error_I2C = TCA9539_Set_output_pin( pmm_table.I2Cx_GPIO_Ext, pmm_table.I2C_addr_GPIO_Ext, pmm_table.pin_GPIO_Ext );
 
-		}else if( state_channel == DISABLE ){
+		}else{
 			error_I2C = TCA9539_Reset_output_pin( pmm_table.I2Cx_GPIO_Ext, pmm_table.I2C_addr_GPIO_Ext, pmm_table.pin_GPIO_Ext );
 		}
 
@@ -162,9 +207,6 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}
 	}
 
-	LL_mDelay(20); //Delay for startup power supply
-	error_I2C = PMM_Check_state_PWR_CH( pmm_ptr, num_pwr_channel );
-	
 	#ifdef DEBUGprintf
 		if (error_I2C == ERROR){
 			Error_Handler();
@@ -619,8 +661,8 @@ ErrorStatus PMM_ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 	int8_t error_I2C = ERROR_N;
 	uint8_t conv_status = 0;
 	uint8_t timeout = 0;
-	float data = 0.0;
-	float total_data = 0.0;
+	float data = (float)0.0;
+	float total_data = (float)0.0;
 
 	i=0;
 	error_I2C = ERROR_N;
@@ -687,7 +729,7 @@ ErrorStatus PMM_ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 		}	
 	}
 
-	*average_data = total_data / average_num;
+	*average_data = total_data / (float)average_num;
 
 	return SUCCESS;
 }
@@ -703,10 +745,10 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 
 	//uint8_t i = 0;
 	int8_t error_I2C = ERROR_N;
-	float ch0_meas = 0.0;
-	float ch1_meas = 0.0;
-	float ch2_meas = 0.0;
-	float ch3_meas = 0.0;
+	float ch0_meas = (float)0.0;
+	float ch1_meas = (float)0.0;
+	float ch2_meas = (float)0.0;
+	float ch3_meas = (float)0.0;
 	int16_t Backup_eF_in_Current_val = 0;
 	int16_t Backup_eF_out_Current_val = 0;
 	int16_t Main_eF_in_Current_val = 0;

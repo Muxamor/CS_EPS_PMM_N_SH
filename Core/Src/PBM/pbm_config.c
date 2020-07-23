@@ -1,17 +1,12 @@
-#include "main.h"
+
+#include "stm32l4xx.h"
 #include "PCA9534.h"
-#include "TMP1075.h"
-#include "DS2777.h"
-#include "SetupPeriph.h"
-#include "PBM_init.h"
-#include "PBM_config.h"
-#include "PBM_struct.h"
-#include "PBM_control.h"
-#include "Error_Handler.h"
+#include "pbm_config.h"
+
 
 /** @brief	Fills the table of data about the selected module PBM
- @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3 or PBM_ALL).
- @retval 	PBM table structure
+    @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3 or PBM_ALL).
+    @retval 	PBM table structure
  */
 _PBM_table PBM_Table(uint8_t PBM_number) {
 

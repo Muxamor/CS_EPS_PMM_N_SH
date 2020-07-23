@@ -58,10 +58,11 @@ Core/Src/PMM/pmm_ctrl.c \
 Core/Src/PMM/pmm_savedata.c \
 Core/Src/PMM/pmm_sw_cpu.c \
 Core/Src/PMM/pmm.c \
-Core/Src/PBM/PBM_init_IC.c \
-Core/Src/PBM/PBM_init.c \
-Core/Src/PBM/PBM_control.c \
-Core/Src/PBM/PBM.c \
+Core/Src/PBM/pbm_config.c \
+Core/Src/PBM/pbm_init_IC.c \
+Core/Src/PBM/pbm_init.c \
+Core/Src/PBM/pbm_control.c \
+Core/Src/PBM/pbm.c \
 Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
 Core/Src/stm32l4xx_it.c \
