@@ -5,7 +5,6 @@
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "TMP1075.h"
-#include "TCA9539.h"
 #include "TCA9548.h"
 #include "INA231.h"
 #include "pdm_config.h"

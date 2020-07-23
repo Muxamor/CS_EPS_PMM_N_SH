@@ -43,9 +43,11 @@ void IWDG_Init(void);
                                        LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_13);
 
 #define SW_TMUX1209_I2C_main_PMM();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
-                                       LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_13);                                       
+                                       LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_13);
 
-
+/*For control pin PBM Energy Level LOW  need use:			*/
+#define PBM_Set_Energy_Low_level_pin();      	 LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_12);
+#define PBM_Reset_Energy_Low_level_pin();        LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_12);
 
 /*The table below gives the allowed values of the pre-emption priority and subpriority according
  to the Priority Grouping configuration performed by NVIC_PriorityGroupConfig function

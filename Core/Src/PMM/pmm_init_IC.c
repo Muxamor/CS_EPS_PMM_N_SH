@@ -14,7 +14,7 @@
 /** @brief  Init TMP1075 temperature sensor at PMM
     @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
     @param 	I2Cx - number I2C port
-    @param  tmp1075_addr - I2C addres
+    @param  tmp1075_addr - I2C address
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
 ErrorStatus PMM_init_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
@@ -56,7 +56,7 @@ ErrorStatus PMM_init_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_a
 /** @brief  Set power down mode for TMP1075 temperature sensor at PMM
     @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
     @param 	I2Cx - number I2C port
-    @param  tmp1075_addr - I2C addres
+    @param  tmp1075_addr - I2C address
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
 ErrorStatus PMM_Power_Down_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
@@ -193,7 +193,7 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 /** @brief  Init ADS1015 on PMM module.
     @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
     @param  *I2Cx - Number I2C bus.
-	@param  I2C_ADS1015_addr - I2C addres  
+	@param  I2C_ADS1015_addr - I2C address
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
 ErrorStatus ADS1015_init( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr){
