@@ -34,21 +34,14 @@ ErrorStatus PBM_ReadGPIO(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 				Error = PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
 			}
 		}
+		if (Error == SUCCESS) {
+			Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+		}
 
 		if (Error != SUCCESS) {
 	        count++;
 			LL_mDelay(PBM_i2c_delay_att_conn);
 		}
-	}
-
-	Error = ERROR_N;
-	while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
-		Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
-
-        if( Error != SUCCESS ){
-            count++;
-            LL_mDelay( PBM_i2c_delay_att_conn);
-        }
 	}
 
 	if (Error == SUCCESS) {
@@ -374,20 +367,6 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 
 	pbm_table = PBM_Table(PBM_number);
 
-	while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
-		if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00) == SUCCESS){
-			if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05) == SUCCESS){
-				Error = PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, (PCA9534_IO_P03 | PCA9534_IO_P06));
-			}
-		}
-
-		if (Error != SUCCESS) {
-	        count++;
-			LL_mDelay(PBM_i2c_delay_att_conn);
-		}
-	}
-
-	Error = ERROR_N;
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)){
 
 		if(pbm[PBM_number].PCA9534_ON_Heat_1 != State){
@@ -400,6 +379,10 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
                 Error = PCA9534_Set_output_pin(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00);
             } else {
                 Error = PCA9534_Reset_output_pin(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00);
+            }
+
+            if (Error == SUCCESS) {
+            	Error = PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00);
             }
 
             if (Error == SUCCESS) {
@@ -446,7 +429,11 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
                 Error = PCA9534_Reset_output_pin(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05);
 			}
 
-			if (Error == SUCCESS) {
+            if (Error == SUCCESS) {
+            	Error = PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05);
+            }
+
+            if (Error == SUCCESS) {
 				Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
 			}
 
@@ -850,22 +837,31 @@ void PBM_CalcTotalCapacity(_PBM pbm[], uint8_t PBM_number) {
 */
 void PBM_CheckLevelEnergy(_PBM pbm[], uint8_t PBM_number) {
 
-	if ((((pbm[PBM_number].Branch_1_VoltageHi + pbm[PBM_number].Branch_1_VoltageLo) <= PBM_LOW_ENERGY_WARNING) &&
+	int16_t Voltage_Branch_1 = 0, Voltage_Branch_2 = 0;
+
+	Voltage_Branch_1 = pbm[PBM_number].Branch_1_VoltageHi + pbm[PBM_number].Branch_1_VoltageLo;
+	Voltage_Branch_2 = pbm[PBM_number].Branch_2_VoltageHi + pbm[PBM_number].Branch_2_VoltageLo;
+
+	if (((Voltage_Branch_1 <= PBM_LOW_ENERGY_WARNING) &&
 			((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == 1))) ||
-			(((pbm[PBM_number].Branch_2_VoltageHi + pbm[PBM_number].Branch_2_VoltageLo) <= PBM_LOW_ENERGY_WARNING) &&
+			((Voltage_Branch_2 <= PBM_LOW_ENERGY_WARNING) &&
 			((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == 1)))) {
-		pbm[PBM_number].PBM_Low_Power_Warning_Flag = 1;
-	} else {
-		pbm[PBM_number].PBM_Low_Power_Warning_Flag = 0;
+		pbm[PBM_number].PBM_Low_Energy_Flag = 1;
+	} else if (pbm[PBM_number].PBM_Low_Energy_Flag == 1) {
+		if((Voltage_Branch_1 >= PBM_LOW_ENERGY_HYSTERESIS) || (pbm[PBM_number].Error_DS2777_1 == ERROR) || (pbm[PBM_number].Branch_1_DchgControlFlag == 0)) {
+			if ((Voltage_Branch_2 >= PBM_LOW_ENERGY_HYSTERESIS) || (pbm[PBM_number].Error_DS2777_2 == ERROR) || (pbm[PBM_number].Branch_2_DchgControlFlag == 0)){
+				pbm[PBM_number].PBM_Low_Energy_Flag = 0;
+			}
+		}
 	}
 
-	if ((((pbm[PBM_number].Branch_1_VoltageHi + pbm[PBM_number].Branch_1_VoltageLo) <= PBM_LOW_ENERGY_EDGE) &&
+	if (((Voltage_Branch_1 <= PBM_LOW_ENERGY_EDGE) &&
 			((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == 1))) ||
-			(((pbm[PBM_number].Branch_2_VoltageHi + pbm[PBM_number].Branch_2_VoltageLo) <= PBM_LOW_ENERGY_EDGE) &&
+			((Voltage_Branch_2 <= PBM_LOW_ENERGY_EDGE) &&
 			((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == 1)))) {
-		pbm[PBM_number].PBM_Low_Power_Edge_Flag = 1;
-	} else {
-		pbm[PBM_number].PBM_Low_Power_Edge_Flag = 0;
+		pbm[PBM_number].PBM_Zero_Energy_Flag = 1;
+	} else if (pbm[PBM_number].PBM_Low_Energy_Flag == 0){
+		pbm[PBM_number].PBM_Zero_Energy_Flag = 0;
 	}
 }
 

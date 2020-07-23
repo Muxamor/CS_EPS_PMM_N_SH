@@ -60,6 +60,7 @@ extern "C" {
 #define PBM_OFF_DISCHARGE                	0x00 	//Disable discharge branch.
 
 #define PBM_LOW_ENERGY_WARNING              6400 	//Voltage in mV for warning low energy PBM.
+#define PBM_LOW_ENERGY_HYSTERESIS           7200 	//Voltage in mV for hysteresis loop warning low energy PBM.
 #define PBM_LOW_ENERGY_EDGE                	6000 	//Voltage in mV for off all payload.
 
 typedef struct{
