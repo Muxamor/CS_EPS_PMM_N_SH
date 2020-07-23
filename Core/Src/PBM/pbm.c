@@ -2,6 +2,8 @@
 #include "pbm_config.h"
 #include "pbm_struct.h"
 #include "pbm_control.h"
+#include "pbm.h"
+
 
 /** @brief	Read data for all PBM.
     @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).

@@ -661,8 +661,8 @@ ErrorStatus PMM_ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 	int8_t error_I2C = ERROR_N;
 	uint8_t conv_status = 0;
 	uint8_t timeout = 0;
-	float data = 0.0;
-	float total_data = 0.0;
+	float data = (float)0.0;
+	float total_data = (float)0.0;
 
 	i=0;
 	error_I2C = ERROR_N;
@@ -729,7 +729,7 @@ ErrorStatus PMM_ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 		}	
 	}
 
-	*average_data = total_data / average_num;
+	*average_data = total_data / (float)average_num;
 
 	return SUCCESS;
 }
@@ -745,10 +745,10 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 
 	//uint8_t i = 0;
 	int8_t error_I2C = ERROR_N;
-	float ch0_meas = 0.0;
-	float ch1_meas = 0.0;
-	float ch2_meas = 0.0;
-	float ch3_meas = 0.0;
+	float ch0_meas = (float)0.0;
+	float ch1_meas = (float)0.0;
+	float ch2_meas = (float)0.0;
+	float ch3_meas = (float)0.0;
 	int16_t Backup_eF_in_Current_val = 0;
 	int16_t Backup_eF_out_Current_val = 0;
 	int16_t Main_eF_in_Current_val = 0;

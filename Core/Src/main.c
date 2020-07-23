@@ -1,7 +1,6 @@
-//#include "main.h"
+#include  <stdio.h>
 #include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
-#include "TMP1075.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
 #include "pbm_config.h"
@@ -17,9 +16,10 @@
 #include "pmm_sw_cpu.h"
 #include "pmm.h"
 #include "pbm_init.h"
-#include "PBM.h"
+#include "pbm.h"
 #include "eps_struct.h"
 #include "uart_eps_comm.h"
+
 
 /*//TODO
 1. Need to think about delay 30 minutes.
@@ -27,11 +27,11 @@
 7. Подумать над тем если CAN при инициализации выдает ошибку стоит ли переходить на резервный МК.
 **********************************************************/
 
-extern uint32_t SysTick_Counter;
+//extern uint32_t SysTick_Counter;
 
-extern uint64_t CAN_cmd_mask_status;
-extern uint8_t CAN1_exchange_timeout_flag;
-extern uint8_t CAN2_exchange_timeout_flag;
+//extern uint64_t CAN_cmd_mask_status;
+//extern uint8_t CAN1_exchange_timeout_flag;
+//extern uint8_t CAN2_exchange_timeout_flag;
 
 _UART_EPS_COMM uart_m_eps_communication = {0}, *UART_M_eps_comm = &uart_m_eps_communication;  // Main EPS UART is LPUART1
 _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_communication;  // Backup EPS UART is USART3
@@ -154,6 +154,10 @@ int main(void){
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
+//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
 	while(1){
 
