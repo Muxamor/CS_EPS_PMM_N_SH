@@ -184,8 +184,8 @@ int main(void){
 			}
 
 
-			 eps_service_ptr->Req_SW_Active_CPU =1;
-			 eps_service_ptr->Set_Active_CPU = 1;
+			//eps_service_ptr->Req_SW_Active_CPU =1;
+			// eps_service_ptr->Set_Active_CPU = 1;
 
 
 			//Switch active CPU 
