@@ -59,6 +59,9 @@ extern "C" {
 #define PBM_ON_DISCHARGE                	0x01 	//Enable discharge branch.
 #define PBM_OFF_DISCHARGE                	0x00 	//Disable discharge branch.
 
+#define PBM_LOW_ENERGY_WARNING              6400 	//Voltage in mV for warning low energy PBM.
+#define PBM_LOW_ENERGY_EDGE                	6000 	//Voltage in mV for off all payload.
+
 typedef struct{
 
 	uint8_t  BRANCH_1_Addr;

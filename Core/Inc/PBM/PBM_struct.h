@@ -82,8 +82,9 @@ typedef struct  // Structure for PBM data
 	uint16_t Error_Charge_2 :1; 			// Register error charge branch №2.
 	uint16_t Error_Discharge_1 :1; 			// Register error discharge branch №1.
 	uint16_t Error_Discharge_2 :1; 			// Register error discharge branch №2.
-	uint16_t:2;
-	uint16_t PBM_save_conf_flag:1;
+	uint16_t PBM_Low_Power_Warning_Flag :1; // Indicates warning low energy PBM.
+	uint16_t PBM_Low_Power_Edge_Flag :1;	// Indicates moment for off all payload.
+	uint16_t PBM_save_conf_flag:1;			// Indicates that data have been modificate.
 
 	uint16_t Reserve_1;						// Reserve data space.
 	uint16_t Reserve_2;						// Reserve data space.

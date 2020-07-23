@@ -17,11 +17,12 @@ ErrorStatus PBM_GetTelemetry(_PBM pbm[]) {
 		Error = PBM_ReadBatteryData(PBM_I2C_PORT, pbm, i);
 		Error = Error + PBM_ReadTempSensors(PBM_I2C_PORT, pbm, i);
 		Error = Error + PBM_ReadGPIO(PBM_I2C_PORT, pbm, i);
-		Error = Error + PBM_CheckCapacityPBM(PBM_I2C_PORT, pbm, i);
+		Error = Error + PBM_CheckCapacity(PBM_I2C_PORT, pbm, i);
 		Error = Error + PBM_CheckHeatOFF(pbm, i);
 		Error = Error + PBM_CheckChargeDischargeState(pbm, i);
 
-        PBM_CalcTotalCapacityPBM(pbm, i);
+        PBM_CalcTotalCapacity(pbm, i);
+        PBM_CheckLevelEnergy(pbm, i);
 	}
 
 	if (Error != SUCCESS) {

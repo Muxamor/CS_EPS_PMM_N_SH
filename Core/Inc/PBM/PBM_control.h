@@ -22,9 +22,11 @@ ErrorStatus PBM_CheckHeatOFF(_PBM pbm[], uint8_t PBM_number);
 
 ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[], uint8_t PBM_number);
 
-ErrorStatus PBM_CheckCapacityPBM(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number);
+ErrorStatus PBM_CheckCapacity(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number);
 
-void  PBM_CalcTotalCapacityPBM(_PBM pbm[], uint8_t PBM_number);
+void  PBM_CalcTotalCapacity(_PBM pbm[], uint8_t PBM_number);
+
+void PBM_CheckLevelEnergy(_PBM pbm[], uint8_t PBM_number);
 
 uint8_t PBM_CheckSaveSetupFlag(_PBM pbm[]);
 
