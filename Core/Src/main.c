@@ -159,6 +159,7 @@ int main(void){
     printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
+
 	while(1){
 
 		//Save setting to FRAM for Active and Passive  CPU 
@@ -187,8 +188,8 @@ int main(void){
 			}
 
 
-			// eps_service_ptr->Req_SW_Active_CPU =1;
-			// eps_service_ptr->Set_Active_CPU = 1;
+			 eps_service_ptr->Req_SW_Active_CPU =1;
+			 eps_service_ptr->Set_Active_CPU = 1;
 
 
 			//Switch active CPU 
