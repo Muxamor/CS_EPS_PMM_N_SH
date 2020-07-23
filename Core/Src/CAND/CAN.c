@@ -1,7 +1,7 @@
-#include "CAN.h"
+#include "CAND/CAN.h"
 #include <stdio.h>
-#include "canv.h"
-#include "flash_lib.h"
+#include "CAND/canv.h"
+#include "FLASH/flash_lib.h"
 
 //__attribute__((weak)) typeRegistrationRec RegistrationRec[14] = {0};
 

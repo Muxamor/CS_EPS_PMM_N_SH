@@ -49,7 +49,7 @@ extern "C" {
 #define PDM_I2CADDR_PWR_Mon_Ch6 	0x46 //Power Monitor INA231 power channel 6 in PDM
 
 #define pdm_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
-#define pdm_i2c_delay_att_conn		5 	 //ms Delay between attempts connection through I2C in millisecond
+#define pdm_i2c_delay_att_conn		3 	 //ms Delay between attempts connection through I2C in millisecond
 
 
 //!!!! Later transfer to structure PDM

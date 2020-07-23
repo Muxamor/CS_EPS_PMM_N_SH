@@ -685,21 +685,37 @@ void GPIO_Init(void) {
 	/****************************************************************************************/
 
     /*-------------------------------------------------------------------------------------*/
-    /* Pins for get Power Good */
-    /** PD12 - PBM Energy level Low pin. Reset pin when PBM Energy level is Low.
-
-
-     */
+    /* Pins for show  PBM Energy Low*/
+    /** PD12 - PBM Energy level Low pin. Reset pin when PBM Energy level is Low.*/
     GPIO_InitStruct.Pin = LL_GPIO_PIN_12;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-    /*For control pin PBM Energy Level LOW  need use:			*/
-    /*PBM_Set_Energy_Low_level_pin();       		    		*/
-    /*PBM_Reset_Energy_Low_level_pin();       		    		*/
+    /*For control pin PBM Energy Level LOW  need use:	*/
+    /*PBM_Low_Energy_Set_pin();       		    		*/
+    /*PBM_Low_Energy_Reset_pin();       		    	*/
+    PBM_Low_Energy_Reset_pin(); //Set defaule state
+    /****************************************************************************************/
 
+    /*-------------------------------------------------------------------------------------*/
+    /* Pins for poll request from BRK */
+    /** PD13 - RT_FL_EPS1*/
+    /** PD14 - RT_FL_EPS2*/
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_13|LL_GPIO_PIN_14;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    /*For control pin PBM Energy Level LOW  need use:	*/
+    /*PMM_RT_FL_EPS1_Set_pin();     		    		*/
+    /*PMM_RT_FL_EPS1_Reset_pin();      		    		*/
+    /* PMM_RT_FL_EPS2_Set_pin();      		    		*/
+    /*PMM_RT_FL_EPS2_Reset_pin();     		    		*/
+    PMM_RT_FL_EPS1_Reset_pin();
+    PMM_RT_FL_EPS2_Reset_pin();
     /****************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/

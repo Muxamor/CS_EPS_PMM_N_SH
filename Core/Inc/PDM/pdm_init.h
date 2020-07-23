@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-#include "pdm_struct.h"
+#include "PDM/pdm_struct.h"
 
 ErrorStatus PDM_init(_PDM *pdm_ptr);
 

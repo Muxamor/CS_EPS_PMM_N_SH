@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-#include "pdm_config.h"
+#include "PDM/pdm_config.h"
 
 //#pragma pack(push, 1)
 

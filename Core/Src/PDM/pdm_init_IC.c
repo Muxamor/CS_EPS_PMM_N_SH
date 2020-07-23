@@ -7,9 +7,9 @@
 #include "TMP1075.h"
 #include "TCA9548.h"
 #include "INA231.h"
-#include "pdm_config.h"
-#include "pdm_struct.h"
-#include "pdm_init_IC.h"
+#include "PDM/pdm_config.h"
+#include "PDM/pdm_struct.h"
+#include "PDM/pdm_init_IC.h"
 
 
 /** @brief  Init TMP1075 sensor on PDM module

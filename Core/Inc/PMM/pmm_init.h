@@ -7,8 +7,7 @@
 extern "C" {
 #endif
 
-#include "pmm_struct.h"
-#include "eps_struct.h"
+#include "PMM/eps_struct.h"
 
 ErrorStatus PMM_init(_PMM *pmm_ptr);
 uint8_t PMM_Detect_MasterBackupCPU(void);

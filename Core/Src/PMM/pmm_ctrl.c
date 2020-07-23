@@ -7,9 +7,9 @@
 #include "TCA9539.h"
 #include "INA231.h"
 #include "ADS1015.h"
-#include "pmm_struct.h"
-#include "pmm_config.h"
-#include "pmm_ctrl.h"
+#include "PMM/pmm_struct.h"
+#include "PMM/pmm_config.h"
+#include "PMM/pmm_ctrl.h"
 
 
 /** @brief  Set state (enable/disable) PMM power channel.

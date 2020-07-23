@@ -1,9 +1,9 @@
 #include "stm32l4xx.h"
 #include "Error_Handler.h"
-#include "pmm_config.h"
-#include "pmm_struct.h"
-#include "pmm_ctrl.h"
-#include "pmm.h"
+#include "PMM/pmm_config.h"
+#include "PMM/pmm_struct.h"
+#include "PMM/pmm_ctrl.h"
+#include "PMM/pmm.h"
 
 
 /** @brief  Get all telemetry data from PMM

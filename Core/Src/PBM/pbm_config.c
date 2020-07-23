@@ -1,7 +1,6 @@
-
 #include "stm32l4xx.h"
 #include "PCA9534.h"
-#include "pbm_config.h"
+#include "PBM/pbm_config.h"
 
 
 /** @brief	Fills the table of data about the selected module PBM

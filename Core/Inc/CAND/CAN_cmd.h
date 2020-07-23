@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-#include "eps_struct.h"
+#include "PMM/eps_struct.h"
 /*
 typedef enum
 {

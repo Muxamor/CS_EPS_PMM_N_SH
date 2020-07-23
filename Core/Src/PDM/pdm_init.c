@@ -1,11 +1,11 @@
 #include "stm32l4xx.h"
 #include "Error_Handler.h"
-#include "pdm_config.h"
-#include "pdm_struct.h"
-#include "pdm_init_IC.h"
 #include "TCA9548.h"
-#include "pdm_ctrl.h"
-#include "pdm_init.h"
+#include "PDM/pdm_config.h"
+#include "PDM/pdm_struct.h"
+#include "PDM/pdm_init_IC.h"
+#include "PDM/pdm_ctrl.h"
+#include "PDM/pdm_init.h"
 
 
 

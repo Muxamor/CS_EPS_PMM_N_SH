@@ -5,10 +5,9 @@
 #include "PCA9534.h"
 #include "TMP1075.h"
 #include "DS2777.h"
-#include "pbm_init.h"
-#include "pbm_config.h"
-#include "pbm_struct.h"
-#include "pbm_control.h"
+#include "PBM/pbm_init.h"
+#include "PBM/pbm_config.h"
+#include "PBM/pbm_control.h"
 #include "Error_Handler.h"
 
 /** @brief	Read state pin PCA9534 for selected PBM.
@@ -29,10 +28,8 @@ ErrorStatus PBM_ReadGPIO(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 	pbm_table = PBM_Table(PBM_number);
 
 	while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
-		if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00) == SUCCESS){
-			if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05) == SUCCESS){
-				Error = PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
-			}
+		if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00|PCA9534_IO_P05) == SUCCESS){
+		    Error = PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
 		}
 		if (Error == SUCCESS) {
 			Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
@@ -567,7 +564,7 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
     return SUCCESS;
 }
 
-/** @brief	ON/OFF Disharge for selected branch for selected PBM.
+/** @brief	ON/OFF Discharge for selected branch for selected PBM.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	pbm[] - structure data for all PBM modules.
 	@param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3 or PBM_ALL).
@@ -766,7 +763,7 @@ ErrorStatus PBM_CheckChargeDischargeState(_PBM pbm[], uint8_t PBM_number) {
  */
 ErrorStatus PBM_CheckCapacity(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 
-	int16_t AbcoluteCapacity = 0;
+	int16_t AbsoluteCapacity = 0;
 	float Capacity = 0, Voltage = 0;
 	float Error = 0;
 	int8_t Error_count = 0;
@@ -782,8 +779,8 @@ ErrorStatus PBM_CheckCapacity(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number)
 		Error = (float) (Voltage / Capacity);
 		Error = (float) (Error - 1.0) * 100.0;  // in %
 		if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
-			AbcoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
-			DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_1_Addr, AbcoluteCapacity);
+			AbsoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
+			DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_1_Addr, AbsoluteCapacity);
 		}
 	} else {
 		Error_count = Error_count + 1;
@@ -796,8 +793,8 @@ ErrorStatus PBM_CheckCapacity(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number)
 		Error = (float) (Voltage / Capacity);
 		Error = (float) (Error - 1.0) * 100.0;  // in %
 		if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
-			AbcoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
-			DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_2_Addr, AbcoluteCapacity);
+			AbsoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
+			DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_2_Addr, AbsoluteCapacity);
 		}
 	} else {
 			Error_count = Error_count + 1;
@@ -842,26 +839,27 @@ void PBM_CheckLevelEnergy(_PBM pbm[], uint8_t PBM_number) {
 	Voltage_Branch_1 = pbm[PBM_number].Branch_1_VoltageHi + pbm[PBM_number].Branch_1_VoltageLo;
 	Voltage_Branch_2 = pbm[PBM_number].Branch_2_VoltageHi + pbm[PBM_number].Branch_2_VoltageLo;
 
-	if (((Voltage_Branch_1 <= PBM_LOW_ENERGY_WARNING) &&
-			((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == 1))) ||
-			((Voltage_Branch_2 <= PBM_LOW_ENERGY_WARNING) &&
-			((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == 1)))) {
-		pbm[PBM_number].PBM_Low_Energy_Flag = 1;
-	} else if (pbm[PBM_number].PBM_Low_Energy_Flag == 1) {
-		if((Voltage_Branch_1 >= PBM_LOW_ENERGY_HYSTERESIS) || (pbm[PBM_number].Error_DS2777_1 == ERROR) || (pbm[PBM_number].Branch_1_DchgControlFlag == 0)) {
-			if ((Voltage_Branch_2 >= PBM_LOW_ENERGY_HYSTERESIS) || (pbm[PBM_number].Error_DS2777_2 == ERROR) || (pbm[PBM_number].Branch_2_DchgControlFlag == 0)){
-				pbm[PBM_number].PBM_Low_Energy_Flag = 0;
+	if (((Voltage_Branch_1 <= PBM_LOW_ENERGY_EDGE) && ((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == ENABLE))) ||
+			((Voltage_Branch_2 <= PBM_LOW_ENERGY_EDGE) && ((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == ENABLE)))) {
+
+	    pbm[PBM_number].Low_Energy_Flag = 1;
+
+	}else if( pbm[PBM_number].Low_Energy_Flag == 1 ){
+
+	    if((Voltage_Branch_1 >= PBM_NORMAL_ENERGY_EDGE) || (pbm[PBM_number].Error_DS2777_1 == ERROR) || (pbm[PBM_number].Branch_1_DchgControlFlag == DISABLE)) {
+			if ((Voltage_Branch_2 >= PBM_NORMAL_ENERGY_EDGE) || (pbm[PBM_number].Error_DS2777_2 == ERROR) || (pbm[PBM_number].Branch_2_DchgControlFlag == DISABLE)){
+				pbm[PBM_number].Low_Energy_Flag = 0;
 			}
 		}
 	}
 
-	if (((Voltage_Branch_1 <= PBM_LOW_ENERGY_EDGE) &&
-			((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == 1))) ||
-			((Voltage_Branch_2 <= PBM_LOW_ENERGY_EDGE) &&
-			((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == 1)))) {
-		pbm[PBM_number].PBM_Zero_Energy_Flag = 1;
-	} else if (pbm[PBM_number].PBM_Low_Energy_Flag == 0){
-		pbm[PBM_number].PBM_Zero_Energy_Flag = 0;
+	//if (((Voltage_Branch_1 <= PBM_ZERO_ENERGY_EDGE) && ((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == ENABLE))) ||
+	//    ((Voltage_Branch_2 <= PBM_ZERO_ENERGY_EDGE) && ((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == ENABLE)))) {
+    if( ( (Voltage_Branch_1 <= PBM_ZERO_ENERGY_EDGE) || (Voltage_Branch_2 <= PBM_ZERO_ENERGY_EDGE) ) && (pbm[PBM_number].Low_Energy_Flag == 1) ){
+	    pbm[PBM_number].Zero_Energy_Flag = 1;
+
+	}else if(pbm[PBM_number].Low_Energy_Flag == 0) {
+	    pbm[PBM_number].Zero_Energy_Flag = 0;
 	}
 }
 

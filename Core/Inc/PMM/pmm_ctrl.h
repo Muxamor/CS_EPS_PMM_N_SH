@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "pmm_struct.h"
+#include "PMM/pmm_struct.h"
 
 ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_t state_channel );
 ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel );
