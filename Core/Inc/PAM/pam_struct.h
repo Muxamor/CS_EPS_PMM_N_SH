@@ -2,6 +2,9 @@
 #ifndef INC_PAM_PAM_STRUCT_H_
 #define INC_PAM_PAM_STRUCT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 //#pragma pack(push, 1)
@@ -34,5 +37,9 @@ typedef struct{
 }_PAM;
 
 //#pragma pack(pop)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_PDM_PDM_STRUCT_H_ */
