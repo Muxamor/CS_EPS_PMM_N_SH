@@ -21,6 +21,7 @@
 1. Need to think about delay 30 minutes.
 4. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ?
 7. Подумать над тем если CAN при инициализации выдает ошибку стоит ли переходить на резервный МК.
+8. Проводить дэинит для переферии МК в пассивном режиме
 **********************************************************/
 
 //extern uint32_t SysTick_Counter;
@@ -142,6 +143,7 @@ int main(void){
 
     //Initialization CAN for passive CPU
 	}else{
+        I2C4_DeInit();
 		CAN_DeInit_eps(CAN1);
 		CAN_DeInit_eps(CAN2);
 	}
@@ -184,8 +186,8 @@ int main(void){
 			}
 
 
-			//eps_service_ptr->Req_SW_Active_CPU =1;
-			// eps_service_ptr->Set_Active_CPU = 1;
+			eps_service_ptr->Req_SW_Active_CPU =1;
+			eps_service_ptr->Set_Active_CPU = 1;
 
 
 			//Switch active CPU 

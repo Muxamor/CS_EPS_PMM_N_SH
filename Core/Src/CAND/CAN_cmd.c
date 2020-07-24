@@ -12,8 +12,8 @@
 #include "CAND/CAN_cmd.h"
 #include  <stdio.h>
 
-extern struct CAN_IVar5 CAN_IVar5_telemetry;
-extern struct CAN_IVar4  CAN_IVar4_RegCmd;
+//extern struct CAN_IVar5 CAN_IVar5_telemetry;
+//extern struct CAN_IVar4  CAN_IVar4_RegCmd;
 
 extern _UART_EPS_COMM *UART_M_eps_comm;
 extern _UART_EPS_COMM *UART_B_eps_comm;
@@ -920,6 +920,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 //		Add PBM DS2777 control byte
 //      Add Low Energy flag
 //      Add zero Energy flag
+//      Add value hate from IDVar 4
 }
 
 void CAN_Var5_fill_telemetry_const(void){

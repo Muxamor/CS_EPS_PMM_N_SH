@@ -162,6 +162,8 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
 		eps_p.eps_pmm_ptr->Active_CPU = CPUbackup_Active;
 	}
 
+    I2C4_Init();
+
 	PMM_init( eps_p.eps_pmm_ptr );
 
 	CAN_init_eps(CAN1);
@@ -186,13 +188,14 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
 	CAN_DeInit_eps(CAN1);
 	CAN_DeInit_eps(CAN2);
 
+    I2C4_DeInit();
+
     PBM_Low_Energy_Reset_pin();
     PMM_RT_FL_EPS1_Reset_pin();
     PMM_RT_FL_EPS2_Reset_pin();
 
 	PMM_init( eps_p.eps_pmm_ptr );
-
-	eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; 
+	eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 }
 
 

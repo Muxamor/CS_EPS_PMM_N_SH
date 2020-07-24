@@ -155,7 +155,7 @@ void SystemClock_Config(void) {
 void I2C3_Init(void) {
 
 	LL_I2C_Disable(I2C3);
-	LL_I2C_Enable(I2C3);
+	//LL_I2C_Enable(I2C3);
 
 	LL_I2C_DeInit(I2C3);
 
@@ -208,6 +208,39 @@ void I2C3_Init(void) {
 	LL_I2C_Enable(I2C3);
 }
 
+/** @brief I2C3 DeInitialization Function. Main I2C4 communication
+ * 		with module PAM and PDM and another part of PMM module.
+ * @param None
+ * @retval None */
+void I2C3_DeInit(void){
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+    LL_I2C_Disable(I2C3);
+
+    LL_I2C_DeInit(I2C3);
+
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+    LL_PWR_EnableVddIO2();
+
+    /**I2C3 GPIO Configuration
+	 PA7   ------> I2C3_SCL
+	 PG8   ------> I2C3_SDA */
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+    /* Peripheral clock disable */
+    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_I2C3);
+}
+
 /** @brief I2C4 Initialization Function. Main I2C4 communication 
  * 		with module PAM and PDM and another part of PMM module.
  * @param None
@@ -215,7 +248,7 @@ void I2C3_Init(void) {
 void I2C4_Init(void) {
 
 	LL_I2C_Disable(I2C4);
-	LL_I2C_Enable(I2C4);
+	//LL_I2C_Enable(I2C4);
 
 	LL_I2C_DeInit(I2C4);
 
@@ -255,6 +288,31 @@ void I2C4_Init(void) {
 	LL_I2C_SetOwnAddress2(I2C4, 0, LL_I2C_OWNADDRESS2_NOMASK);
 
 	LL_I2C_Enable(I2C4);
+}
+
+/** @brief I2C4 DeInitialization Function. Main I2C4 communication
+ * 		with module PAM and PDM and another part of PMM module.
+ * @param None
+ * @retval None */
+void I2C4_DeInit(void){
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+    LL_I2C_Disable(I2C4);
+
+    LL_I2C_DeInit(I2C4);
+
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
+    /**I2C4 GPIO Configuration
+     PF14   ------> I2C4_SCL
+     PF15   ------> I2C4_SDA */
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_14 | LL_GPIO_PIN_15;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+    /* Peripheral clock disable */
+    LL_APB1_GRP2_DisableClock(LL_APB1_GRP2_PERIPH_I2C4);
 }
 
 /** @brief Re-initialization selected I2C
