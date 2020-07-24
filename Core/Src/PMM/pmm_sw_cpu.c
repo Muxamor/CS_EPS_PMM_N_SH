@@ -22,51 +22,48 @@ void PMM_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *U
 	_PMM backup_CPU_pmm = {0};
 	_EPS_Param tmp_eps_param = {.eps_pmm_ptr = &backup_CPU_pmm };
 
-
 	int8_t error_status = ERROR_N;
 	uint32_t i = 0;
 	uint32_t timeout_counter = 0;
 
-	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){ //Only for Main CPU
+	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ) { //Only for Main CPU
 
-		while( ( error_status != SUCCESS ) && ( i < pmm_uart_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+        while ((error_status != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
+            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
 
-			error_status = UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param );
+            if (error_status != SUCCESS) {
+                i++;
+                LL_mDelay(pmm_uart_delay_att_conn);
+            }
+        }
 
-			if( error_status != SUCCESS ){
-				i++;
-				LL_mDelay( pmm_uart_delay_att_conn );
-			}
-		}
+        if (error_status == SUCCESS) {
 
-		if(error_status == SUCCESS ){
+            if (eps_p.eps_pmm_ptr->Active_CPU != tmp_eps_param.eps_pmm_ptr->Active_CPU) {
+                if (tmp_eps_param.eps_pmm_ptr->Active_CPU == 1) {
+                    eps_p.eps_pmm_ptr->Active_CPU = 1;
+                } else {
+                    eps_p.eps_pmm_ptr->Active_CPU = 0;
+                }
+            }
+        }
 
-			 if( eps_p.eps_pmm_ptr->Active_CPU != tmp_eps_param.eps_pmm_ptr->Active_CPU ){
-
-				 if(  tmp_eps_param.eps_pmm_ptr->Active_CPU == 1){
-					 eps_p.eps_pmm_ptr->Active_CPU = 1;
-				 }else{
-					 eps_p.eps_pmm_ptr->Active_CPU = 0;
-				 }
-			 }
-		}
-
-	}else{//Only for Backup CPU Wait request PMM struct. from Main CPU
-
-		timeout_counter = 0;
-
-		while( timeout_counter != 10000 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
-
-			timeout_counter++;
-
-			if( UART_Main_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-				UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p );
-			}
-			if( UART_Backup_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-				UART_EPS_Pars_Get_Package( UART_Backup_eps_comm, eps_p );
-			}
-		}
-	}
+	}//else{//Only for Backup CPU Wait request PMM struct. from Main CPU
+//
+//		timeout_counter = 0;
+//
+//		while( timeout_counter != 10000 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
+//
+//			timeout_counter++;
+//
+//			if( UART_Main_eps_comm->stop_recv_pack_flag == 1){ //Response processing
+//				UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p );
+//			}
+//			if( UART_Backup_eps_comm->stop_recv_pack_flag == 1){ //Response processing
+//				UART_EPS_Pars_Get_Package( UART_Backup_eps_comm, eps_p );
+//			}
+//		}
+//	}
 }
 
 
@@ -162,6 +159,7 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
 		eps_p.eps_pmm_ptr->Active_CPU = CPUbackup_Active;
 	}
 
+	//TODO Call function Fill VarID4
     I2C4_Init();
 
 	PMM_init( eps_p.eps_pmm_ptr );
