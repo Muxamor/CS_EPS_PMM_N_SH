@@ -52,6 +52,8 @@ extern "C" {
 #define CAN_PWR_VBAT1_offset		    34
 #define CAN_PWR_VBAT2_offset		    35
 
+#define CAN_EPS_Mode_offset             36
+
 #define CAN_Switch_active_CPU_offset    37
 
 #define CAN_AB1_Heat_Branch1_offset     40
@@ -129,7 +131,7 @@ struct CAN_IVar4 {
     uint8_t CAN_PWR_CH6;                    //+33           Командный регистр канал питаня 6 ( - )
     uint8_t CAN_PWR_VBAT1;                  //+34           Командный регистр линии VBAT1 (МС)
     uint8_t CAN_PWR_VBAT2;                  //+35           Командный регистр линии VBAT2 (МС)
-    uint8_t CAN_Turn_SES_mode;              //+36			Установить режим СЭС
+    uint8_t CAN_EPS_Mode;                   //+36			Установить режим СЭС
     uint8_t CAN_Set_active_CPU;             //+37		    Переключатель основной/резервный
     uint8_t CAN_Reset_to_default;           //+38           Сброс параметров в состояние "по умолчанию"
     uint8_t CAN_Perform_disclosure;         //+39           Выполнить раскрытие
