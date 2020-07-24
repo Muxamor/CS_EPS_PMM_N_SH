@@ -135,11 +135,11 @@ int main(void){
 		PDM_init( pdm_ptr );
 		//Add init PAM
         PBM_Init( pbm_mas );
-
+        //TODO Call function Fill VarID4
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
-		LL_mDelay(20); //Delay for startup power supply
+		//LL_mDelay(20); //Delay for startup power supply
 
     //Initialization CAN for passive CPU
 	}else{
@@ -161,8 +161,11 @@ int main(void){
 	while(1){
 
 		//Save setting to FRAM for Active and Passive  CPU 
-		if( (pmm_ptr->PMM_save_conf_flag == 1) || (pdm_ptr->PDM_save_conf_flag == 1) || (pam_ptr->PAM_save_conf_flag == 1) || (PBM_CheckSaveSetupFlag( pbm_mas ) == 1) ){
-
+		if( (pmm_ptr->PMM_save_conf_flag == SET ) || (pdm_ptr->PDM_save_conf_flag == SET ) || (pam_ptr->PAM_save_conf_flag == SET ) || (PBM_CheckSaveSetupFlag( pbm_mas ) == SET ) ){
+            pmm_ptr->PMM_save_conf_flag = RESET;
+            pdm_ptr->PDM_save_conf_flag = RESET;
+            pam_ptr->PAM_save_conf_flag = RESET;
+            PBM_ClearSaveSetupFlag( pbm_mas );
 				//Add save settings to FRAM.
 		}
 
@@ -181,14 +184,14 @@ int main(void){
                 CAN_Var5_fill_telemetry(eps_param);
             }
 
+
+
 			if(CAN_cmd_mask_status != 0){
 				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
 			}
 
-
-			eps_service_ptr->Req_SW_Active_CPU =1;
-			eps_service_ptr->Set_Active_CPU = 1;
-
+			//eps_service_ptr->Req_SW_Active_CPU =1;
+			//eps_service_ptr->Set_Active_CPU = 1;
 
 			//Switch active CPU 
 			if( eps_service_ptr->Req_SW_Active_CPU == 1 ){
