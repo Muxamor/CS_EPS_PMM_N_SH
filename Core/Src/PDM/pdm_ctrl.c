@@ -7,9 +7,8 @@
 #include "TMP1075.h"
 #include "TCA9548.h"
 #include "INA231.h"
-#include "pdm_struct.h"
-#include "pdm_config.h"
-#include "pdm_ctrl.h"
+#include "PDM/pdm_struct.h"
+#include "PDM/pdm_ctrl.h"
 
 
 /** @brief  Set state (enable/disable) power channel.

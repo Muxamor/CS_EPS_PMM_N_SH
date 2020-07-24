@@ -1,15 +1,16 @@
 
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
+#include "stm32l4xx_ll_gpio.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "CAND/CAN.h"
-#include "eps_struct.h"
-#include "pmm_config.h"
-#include "pmm_init.h"
-#include "pmm_ctrl.h"
+#include "PMM/eps_struct.h"
+#include "PMM/pmm_config.h"
+#include "PMM/pmm_init.h"
+#include "PMM/pmm_ctrl.h"
 #include "uart_eps_comm.h"
-#include "pmm_sw_cpu.h"
+#include "PMM/pmm_sw_cpu.h"
 
 /** @brief Checking active CPU flag  (pmm_ptr->Active_CPU) between main and backup CPU.
  * 			In case when (pmm_ptr->Active_CPU) the same value in the Main and Backup CPU
@@ -184,6 +185,10 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
 
 	CAN_DeInit_eps(CAN1);
 	CAN_DeInit_eps(CAN2);
+
+    PBM_Low_Energy_Reset_pin();
+    PMM_RT_FL_EPS1_Reset_pin();
+    PMM_RT_FL_EPS2_Reset_pin();
 
 	PMM_init( eps_p.eps_pmm_ptr );
 

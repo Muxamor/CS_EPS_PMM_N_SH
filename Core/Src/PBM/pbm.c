@@ -1,10 +1,9 @@
 #include "stm32l4xx_ll_gpio.h"
-#include "TMP1075.h"
 #include "SetupPeriph.h"
-#include "pbm_config.h"
-#include "pbm_struct.h"
-#include "pbm_control.h"
-#include "pbm.h"
+#include "PBM/pbm_config.h"
+#include "PBM/pbm_struct.h"
+#include "PBM/pbm_control.h"
+#include "PBM/pbm.h"
 
 
 /** @brief	Read data for all PBM.
@@ -29,10 +28,10 @@ ErrorStatus PBM_GetTelemetry(_PBM pbm[]) {
         PBM_CheckLevelEnergy(pbm, i);
 	}
 
-	if((pbm[0].PBM_Low_Energy_Flag + pbm[1].PBM_Low_Energy_Flag + pbm[2].PBM_Low_Energy_Flag) >= 1){
-		PBM_Set_Energy_Low_level_pin();
+	if((pbm[0].Low_Energy_Flag + pbm[1].Low_Energy_Flag + pbm[2].Low_Energy_Flag) >= 1){
+		PBM_Low_Energy_Set_pin();
 	} else {
-		PBM_Reset_Energy_Low_level_pin();
+		PBM_Low_Energy_Reset_pin();
 	}
 
 	if (Error != SUCCESS) {

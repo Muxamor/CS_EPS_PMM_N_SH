@@ -1,30 +1,15 @@
 #include "stm32l4xx.h"
-//#include "stm32l4xx_ll_utils.h"
-#include "stm32l4xx_ll_gpio.h"
-#include "SetupPeriph.h"
 #include "median_filter.h"
-
-#include "pbm_struct.h"
-#include "pbm_config.h"
-#include "pbm_control.h"
-
-#include "pdm_struct.h"
-#include "pdm_config.h"
-#include "pdm_ctrl.h"
-
-#include "pmm_struct.h"
-#include "pmm_config.h"
-#include "pmm_ctrl.h"
-#include "pmm_sw_cpu.h"
-
+#include "PBM/pbm_config.h"
+#include "PBM/pbm_control.h"
+#include "PDM/pdm_config.h"
+#include "PDM/pdm_ctrl.h"
+#include "PMM/pmm_struct.h"
+#include "PMM/pmm_config.h"
+#include "PMM/pmm_ctrl.h"
 #include "uart_eps_comm.h"
-#include "uart_comm.h"
-
-#include "CAN.h"
-#include "CAN_cmd.h"
-
-
-
+#include "CAND/CAN.h"
+#include "CAND/CAN_cmd.h"
 #include  <stdio.h>
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
@@ -457,9 +442,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 //	    CAN_IVar5_telemetry.CAN_Solar_panel_status[4]                       =  0x7E;
 //
 
-	CAN_IVar5_telemetry.CAN_Full_percent_charge_level         = (uint8_t) ((eps_p.eps_pbm_ptr[0].TotalRelativeCapacity +
-	    		eps_p.eps_pbm_ptr[1].TotalRelativeCapacity + eps_p.eps_pbm_ptr[2].TotalRelativeCapacity) / 3); 						 // PBM_data
-
+	CAN_IVar5_telemetry.CAN_Full_percent_charge_level                   = (uint8_t) ((eps_p.eps_pbm_ptr[0].TotalRelativeCapacity + eps_p.eps_pbm_ptr[1].TotalRelativeCapacity +
+	                                                                        eps_p.eps_pbm_ptr[2].TotalRelativeCapacity) / 3);// PBM_data
 
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB1_line1             = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_1_AbcoluteCapacity; // PBM_data
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB1_line2             = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_2_AbcoluteCapacity; // PBM_data
@@ -467,10 +451,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB2_line2             = (uint16_t) eps_p.eps_pbm_ptr[1].Branch_2_AbcoluteCapacity; // PBM_data
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB3_line1             = (uint16_t) eps_p.eps_pbm_ptr[2].Branch_1_AbcoluteCapacity; // PBM_data
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB3_line2             = (uint16_t) eps_p.eps_pbm_ptr[2].Branch_2_AbcoluteCapacity; // PBM_data
-	CAN_IVar5_telemetry.CAN_Full_capacity_charge_level       = (uint16_t) (eps_p.eps_pbm_ptr[0].TotalAbcoluteCapacity +
-	    		eps_p.eps_pbm_ptr[1].TotalAbcoluteCapacity + eps_p.eps_pbm_ptr[2].TotalAbcoluteCapacity); 							 // PBM_data
-
-
+	CAN_IVar5_telemetry.CAN_Full_capacity_charge_level                  = (uint16_t) (eps_p.eps_pbm_ptr[0].TotalAbcoluteCapacity + eps_p.eps_pbm_ptr[1].TotalAbcoluteCapacity +
+	                                                                        eps_p.eps_pbm_ptr[2].TotalAbcoluteCapacity);// PBM_data
 	//***
 	int8_t temp_mas [2] = {0}; 																					// PBM_data
 
@@ -503,34 +485,29 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_Average_line2_temp_AB3                      =  (uint8_t) GetMedian(temp_mas, 2); 	// PBM_data
 	//***
 
-    CAN_IVar5_telemetry.CAN_AB_status[0]                                = (uint8_t)((eps_p.eps_pbm_ptr[0].Error_DS2777_1) |
-	    		(eps_p.eps_pbm_ptr[0].Error_DS2777_2 << 1) | (eps_p.eps_pbm_ptr[0].Error_Heat_1 << 2) |
-				(eps_p.eps_pbm_ptr[0].Error_Heat_2 << 3) |	(eps_p.eps_pbm_ptr[0].Error_TMP1075_1 << 4) |
-	    		(eps_p.eps_pbm_ptr[0].Error_TMP1075_2 << 5) | (eps_p.eps_pbm_ptr[0].Error_TMP1075_3 << 6) |
-				(eps_p.eps_pbm_ptr[0].Error_TMP1075_4 << 7));													// PBM_data
+    CAN_IVar5_telemetry.CAN_AB_status[0]                                = (uint8_t)((eps_p.eps_pbm_ptr[0].Error_DS2777_1) | (eps_p.eps_pbm_ptr[0].Error_DS2777_2 << 1) |
+                                                                            (eps_p.eps_pbm_ptr[0].Error_Heat_1 << 2)    | (eps_p.eps_pbm_ptr[0].Error_Heat_2 << 3) |
+                                                                            (eps_p.eps_pbm_ptr[0].Error_TMP1075_1 << 4) | (eps_p.eps_pbm_ptr[0].Error_TMP1075_2 << 5) |
+                                                                            (eps_p.eps_pbm_ptr[0].Error_TMP1075_3 << 6) | (eps_p.eps_pbm_ptr[0].Error_TMP1075_4 << 7));													// PBM_data
 
-    CAN_IVar5_telemetry.CAN_AB_status[1]                                = (uint8_t)((eps_p.eps_pbm_ptr[1].Error_DS2777_1) |
-    			(eps_p.eps_pbm_ptr[1].Error_DS2777_2 << 1) | (eps_p.eps_pbm_ptr[1].Error_Heat_1 << 2) |
-				(eps_p.eps_pbm_ptr[1].Error_Heat_2 << 3) |	(eps_p.eps_pbm_ptr[1].Error_TMP1075_1 << 4) |
-				(eps_p.eps_pbm_ptr[1].Error_TMP1075_2 << 5) | (eps_p.eps_pbm_ptr[1].Error_TMP1075_3 << 6) |
-				(eps_p.eps_pbm_ptr[1].Error_TMP1075_4 << 7));													// PBM_data
+    CAN_IVar5_telemetry.CAN_AB_status[1]                                = (uint8_t)((eps_p.eps_pbm_ptr[1].Error_DS2777_1) | (eps_p.eps_pbm_ptr[1].Error_DS2777_2 << 1) |
+                                                                            (eps_p.eps_pbm_ptr[1].Error_Heat_1 << 2)    | (eps_p.eps_pbm_ptr[1].Error_Heat_2 << 3) |
+                                                                            (eps_p.eps_pbm_ptr[1].Error_TMP1075_1 << 4) | (eps_p.eps_pbm_ptr[1].Error_TMP1075_2 << 5) |
+                                                                            (eps_p.eps_pbm_ptr[1].Error_TMP1075_3 << 6) | (eps_p.eps_pbm_ptr[1].Error_TMP1075_4 << 7));													// PBM_data
 
-    CAN_IVar5_telemetry.CAN_AB_status[2]                                = (uint8_t)((eps_p.eps_pbm_ptr[2].Error_DS2777_1) |
-    			(eps_p.eps_pbm_ptr[2].Error_DS2777_2 << 1) | (eps_p.eps_pbm_ptr[2].Error_Heat_1 << 2) |
-				(eps_p.eps_pbm_ptr[2].Error_Heat_2 << 3) |	(eps_p.eps_pbm_ptr[2].Error_TMP1075_1 << 4) |
-				(eps_p.eps_pbm_ptr[2].Error_TMP1075_2 << 5) | (eps_p.eps_pbm_ptr[2].Error_TMP1075_3 << 6) |
-				(eps_p.eps_pbm_ptr[2].Error_TMP1075_4 << 7));													// PBM_data
+    CAN_IVar5_telemetry.CAN_AB_status[2]                                = (uint8_t)((eps_p.eps_pbm_ptr[2].Error_DS2777_1) | (eps_p.eps_pbm_ptr[2].Error_DS2777_2 << 1) |
+                                                                            (eps_p.eps_pbm_ptr[2].Error_Heat_1 << 2)    | (eps_p.eps_pbm_ptr[2].Error_Heat_2 << 3) |
+                                                                            (eps_p.eps_pbm_ptr[2].Error_TMP1075_1 << 4) | (eps_p.eps_pbm_ptr[2].Error_TMP1075_2 << 5) |
+                                                                            (eps_p.eps_pbm_ptr[2].Error_TMP1075_3 << 6) | (eps_p.eps_pbm_ptr[2].Error_TMP1075_4 << 7));													// PBM_data
 
 	//***
-	CAN_IVar5_telemetry.CAN_Charge_discharge_AB_key_status              = (uint16_t)((eps_p.eps_pbm_ptr[0].Error_Charge_1) |
-   	    		(eps_p.eps_pbm_ptr[0].Error_Discharge_1 << 1) | (eps_p.eps_pbm_ptr[0].Error_Charge_2 << 2) |
-				(eps_p.eps_pbm_ptr[0].Error_Discharge_2 << 3) |	(eps_p.eps_pbm_ptr[1].Error_Charge_1 << 4) |
-   	    		(eps_p.eps_pbm_ptr[1].Error_Discharge_1 << 5) | (eps_p.eps_pbm_ptr[1].Error_Charge_2 << 6) |
-				(eps_p.eps_pbm_ptr[1].Error_Discharge_2 << 7) | (eps_p.eps_pbm_ptr[2].Error_Charge_1 << 8) |
-   	    		(eps_p.eps_pbm_ptr[2].Error_Discharge_1 << 9) | (eps_p.eps_pbm_ptr[2].Error_Charge_2 << 10) |
-				(eps_p.eps_pbm_ptr[2].Error_Discharge_2 << 11));   	  											// PBM_data
-	//***
-
+	CAN_IVar5_telemetry.CAN_Charge_discharge_AB_key_status              = (uint16_t)((eps_p.eps_pbm_ptr[0].Error_Charge_1) | (eps_p.eps_pbm_ptr[0].Error_Discharge_1 << 1) |
+	                                                                        (eps_p.eps_pbm_ptr[0].Error_Charge_2 << 2) | (eps_p.eps_pbm_ptr[0].Error_Discharge_2 << 3) |
+	                                                                        (eps_p.eps_pbm_ptr[1].Error_Charge_1 << 4) | (eps_p.eps_pbm_ptr[1].Error_Discharge_1 << 5) |
+	                                                                        (eps_p.eps_pbm_ptr[1].Error_Charge_2 << 6) | (eps_p.eps_pbm_ptr[1].Error_Discharge_2 << 7) |
+	                                                                        (eps_p.eps_pbm_ptr[2].Error_Charge_1 << 8) | (eps_p.eps_pbm_ptr[2].Error_Discharge_1 << 9) |
+	                                                                        (eps_p.eps_pbm_ptr[2].Error_Charge_2 << 10) | (eps_p.eps_pbm_ptr[2].Error_Discharge_2 << 11));   	  											// PBM_data
+    //---
 
 	CAN_IVar5_telemetry.CAN_Channel1_current                            =  (uint16_t)( eps_p.eps_pdm_ptr->PWR_Channel[0].Current_val );
 	CAN_IVar5_telemetry.CAN_Channel2_current                            =  (uint16_t)( eps_p.eps_pdm_ptr->PWR_Channel[1].Current_val );
@@ -583,35 +560,40 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     //---
 
     CAN_IVar5_telemetry.CAN_SES_current_consumption                     = (uint16_t)(eps_p.eps_pmm_ptr->PWR_Supply_Backup_eF_out_Current_val + eps_p.eps_pmm_ptr->PWR_Supply_Main_eF_out_Current_val);
-    CAN_IVar5_telemetry.CAN_SES_Voltage_power_supply                    = 3300; // Позже придумать как мерить. 
-//	    CAN_IVar5_telemetry.CAN_Full_charge_discharge_power                 =  0xB5B6;
+    CAN_IVar5_telemetry.CAN_SES_Voltage_power_supply                    = 3300; // TODO Позже придумать как мерить.
+    CAN_IVar5_telemetry.CAN_Full_charge_discharge_power                 =  (uint16_t)(((eps_p.eps_pbm_ptr[0].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[0].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[0].Branch_1_Current) +
+                                                                            ((eps_p.eps_pbm_ptr[0].Branch_2_VoltageHi + eps_p.eps_pbm_ptr[0].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[0].Branch_2_Current) +
+                                                                            ((eps_p.eps_pbm_ptr[1].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[1].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[1].Branch_1_Current) +
+                                                                            ((eps_p.eps_pbm_ptr[1].Branch_2_VoltageHi + eps_p.eps_pbm_ptr[1].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[1].Branch_2_Current) +
+                                                                            ((eps_p.eps_pbm_ptr[2].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[2].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[2].Branch_1_Current) +
+                                                                            ((eps_p.eps_pbm_ptr[2].Branch_2_VoltageHi + eps_p.eps_pbm_ptr[2].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[2].Branch_2_Current));
 //	    CAN_IVar5_telemetry.CAN_Total_power_SB                              =  0xB7B8;
 
     //***
 	CAN_IVar5_telemetry.CAN_Spacecraft_total_power                      =  0x0000;
 	for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
-
-		CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Power_val;
+		CAN_IVar5_telemetry.CAN_Spacecraft_total_power                  = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Power_val;
 	}
 
-    CAN_IVar5_telemetry.CAN_Spacecraft_total_power = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Power_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val \
-                                                            + eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Power_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val;
+    CAN_IVar5_telemetry.CAN_Spacecraft_total_power                      = CAN_IVar5_telemetry.CAN_Spacecraft_total_power + eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Power_val +
+                                                                            eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Power_val +
+                                                                            eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val;
     //---
 
 
 //
-    CAN_IVar5_telemetry.CAN_Median_PMM_temp                              =  (uint8_t)eps_p.eps_pmm_ptr->Temp_sensor;
+    CAN_IVar5_telemetry.CAN_Median_PMM_temp                             =  (uint8_t)eps_p.eps_pmm_ptr->Temp_sensor;
 //	    CAN_IVar5_telemetry.CAN_Median_PAM_temp                             =  0xBC;
-	CAN_IVar5_telemetry.CAN_Median_PDM_temp                              =  (uint8_t)GetMedian( eps_p.eps_pdm_ptr->Temp_sensor, 4 );
-//	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[0]        =  0xBE;
+	CAN_IVar5_telemetry.CAN_Median_PDM_temp                             =  (uint8_t)GetMedian( eps_p.eps_pdm_ptr->Temp_sensor, 4 );
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[0]        =  eps_p.eps_pmm_ptr->Main_Backup_mode_CPU; //TODO добавить битовую маску
 //	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1]        =  0xBF;
 //	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]        =  0xC0;
 //	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[3]        =  0xC1;
 //	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[4]        =  0xC2;
-//	    CAN_IVar5_telemetry.CAN_Number_of_restarts_of_the_SES_module        =  0xC3C4C5C6;
-//	    CAN_IVar5_telemetry.CAN_Number_of_restarts_of_the_reserve_SES_module=  0xC7C8C9CA;
+    CAN_IVar5_telemetry.CAN_Number_of_restarts_of_the_SES_module        =  eps_p.eps_pmm_ptr->reboot_counter_CPUm;
+    CAN_IVar5_telemetry.CAN_Number_of_restarts_of_the_reserve_SES_module=  eps_p.eps_pmm_ptr->reboot_counter_CPUb;
 //	    CAN_IVar5_telemetry.CAN_SES_module_data_array1                  	 =  0xCBCCCDCE;
-//	    CAN_IVar5_telemetry.CAN_Primary_standby_switch                      =  0xCF;
+    CAN_IVar5_telemetry.CAN_Primary_standby_switch                      =  eps_p.eps_pmm_ptr->Active_CPU;
 //	    // -------------------  ТМИ 7  ------------------ //
 	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB1_line1          = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_1_Current;  // PBM_data
 	CAN_IVar5_telemetry.CAN_Charge_discharge_current_AB1_line2          = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_2_Current;  // PBM_data
@@ -809,13 +791,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_Beacon_charge_discharge_AB_key_status       =  CAN_IVar5_telemetry.CAN_Charge_discharge_AB_key_status;
 	CAN_IVar5_telemetry.CAN_Beacon_subsystem_power_line_status		    =  CAN_IVar5_telemetry.CAN_Subsystem_power_line_status;
 	//***
-	CAN_IVar5_telemetry.CAN_Beacon_full_charge_discharge_power		    =  (uint16_t)(((eps_p.eps_pbm_ptr[0].Branch_1_VoltageHi +
-			eps_p.eps_pbm_ptr[0].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[0].Branch_1_Current) + ((eps_p.eps_pbm_ptr[0].Branch_2_VoltageHi +
-			eps_p.eps_pbm_ptr[0].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[0].Branch_2_Current) + ((eps_p.eps_pbm_ptr[1].Branch_1_VoltageHi +
-			eps_p.eps_pbm_ptr[1].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[1].Branch_1_Current) + ((eps_p.eps_pbm_ptr[1].Branch_2_VoltageHi +
-			eps_p.eps_pbm_ptr[1].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[1].Branch_2_Current) + ((eps_p.eps_pbm_ptr[2].Branch_1_VoltageHi +
-			eps_p.eps_pbm_ptr[2].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[2].Branch_1_Current) + ((eps_p.eps_pbm_ptr[2].Branch_2_VoltageHi +
-			eps_p.eps_pbm_ptr[2].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[2].Branch_2_Current));
+	CAN_IVar5_telemetry.CAN_Beacon_full_charge_discharge_power		    =  CAN_IVar5_telemetry.CAN_Full_charge_discharge_power;
+
 	//***
 	  //	    CAN_IVar5_telemetry.CAN_Beacon_total_power_SB                       =  0xB7B8;
 	CAN_IVar5_telemetry.CAN_Beacon_spacecraft_total_power               =  CAN_IVar5_telemetry.CAN_Spacecraft_total_power;
@@ -1144,7 +1121,6 @@ void CAN_Var5_fill_telemetry_const(void){
     CAN_IVar5_telemetry.CAN_Line_VBAT2                                  =	0x65;
 
     CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                    =	0x6667;
-
 
     CAN_IVar5_telemetry.CAN_PMM_sensor1                                 =	0x68;
     CAN_IVar5_telemetry.CAN_PAM_sensor1                                 =	0x69;

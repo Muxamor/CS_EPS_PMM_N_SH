@@ -2,11 +2,11 @@
 #include "stm32l4xx_ll_gpio.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
-#include "pmm_struct.h"
-#include "pmm_config.h"
-#include "pmm_init_IC.h"
-#include "pmm_ctrl.h"
-#include "pmm_init.h"
+#include "PMM/pmm_struct.h"
+#include "PMM/pmm_config.h"
+#include "PMM/pmm_init_IC.h"
+#include "PMM/pmm_ctrl.h"
+#include "PMM/pmm_init.h"
 
 
 //*******TO DO ******//

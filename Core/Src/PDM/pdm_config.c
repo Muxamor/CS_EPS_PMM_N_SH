@@ -2,7 +2,7 @@
 #include "TCA9539.h"
 #include "TCA9548.h"
 #include "INA231.h"
-#include "pdm_config.h"
+#include "PDM/pdm_config.h"
 
 _PDM_table PDM__Table(uint8_t number_pwr_channel){
 

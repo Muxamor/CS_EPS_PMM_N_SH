@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-#include "pbm_struct.h"
+#include "PBM/pbm_struct.h"
 
 ErrorStatus PBM_Init(_PBM pbm[]);
 

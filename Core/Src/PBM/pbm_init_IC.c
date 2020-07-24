@@ -2,8 +2,8 @@
 #include "stm32l4xx_ll_gpio.h"
 #include "SetupPeriph.h"
 #include "TMP1075.h"
-#include "pbm_config.h"
-#include "pbm_init_IC.h"
+#include "PBM/pbm_config.h"
+#include "PBM/pbm_init_IC.h"
 
 /** @brief	Initialize single TMP1075 sensor.
     @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).

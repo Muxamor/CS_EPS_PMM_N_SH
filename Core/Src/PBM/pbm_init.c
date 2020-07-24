@@ -1,9 +1,9 @@
 #include "stm32l4xx.h"
-#include "pbm_config.h"
-#include "pbm_struct.h"
-#include "pbm_init_IC.h"
-#include "pbm_init.h"
-#include "pbm_control.h"
+#include "PBM/pbm_config.h"
+#include "PBM/pbm_struct.h"
+#include "PBM/pbm_init_IC.h"
+#include "PBM/pbm_init.h"
+#include "PBM/pbm_control.h"
 #include "Error_Handler.h"
 
 /** @brief	Initialize TMP1075 sensor for selected PBM.

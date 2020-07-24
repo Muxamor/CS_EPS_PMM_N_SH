@@ -3,12 +3,12 @@
 #include "stm32l4xx.h"
 #include "Error_Handler.h"
 #include "Fn_CRC16.h"
-#include "eps_struct.h"
 #include "uart_comm.h"
-#include "pbm_config.h"
-#include "pmm_config.h"
-#include "pmm_init.h"
-#include "pmm_sw_cpu.h"
+#include "PMM/eps_struct.h"
+#include "PMM/pmm_config.h"
+#include "PMM/pmm_init.h"
+#include "PMM/pmm_sw_cpu.h"
+#include "PBM/pbm_config.h"
 #include "uart_eps_comm.h"
 
 extern uint32_t SysTick_Counter;

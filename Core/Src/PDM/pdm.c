@@ -1,9 +1,9 @@
 #include "stm32l4xx.h"
-#include "pdm_config.h"
-#include "pdm_struct.h"
-#include "pdm_ctrl.h"
 #include "TCA9548.h"
-#include "pdm.h"
+#include "PDM/pdm_config.h"
+#include "PDM/pdm_struct.h"
+#include "PDM/pdm_ctrl.h"
+#include "PDM/pdm.h"
 
 
 /** @brief  Get all telemetry data from PDM

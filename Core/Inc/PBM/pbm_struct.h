@@ -11,7 +11,7 @@ typedef struct  // Structure for PBM data
 {
 	uint8_t Branch_1_DchgEnableBit :1; 		// Discharge Enable Bit must be set to allow the ON state. // Need to save in flash.
 	uint8_t Branch_1_ChgEnableBit :1; 		// Charge Enable Bit must be set to allow the ON state. // Need to save in flash.
-	uint8_t Branch_1_DchgControlFlag :1; 	// Discharge Control Flag indicates the logic state of the DC pin driver.
+	uint8_t Branch_1_DchgControlFlag :1; 	// Discharge Control Flag indicates the real logic state of the DC pin driver.
 	uint8_t Branch_1_ChgControlFlag :1; 	// Charge Control Flag indicates the logic state of the CC pin driver.
 	uint8_t Branch_1_LrnFlag :1; 			// LEARN Flag indicates that the current-charge cycle can use to learn batt.
 	uint8_t Branch_1_StbEmptyFlag :1; 		// Standby-Empty Flag is set to indicate power battery is less than 10%.
@@ -32,7 +32,7 @@ typedef struct  // Structure for PBM data
 	int8_t Branch_1_Temperature;			// Register temperature of DS2777 in °C.
 	uint8_t Branch_2_DchgEnableBit :1; 		// Discharge Enable Bit must be set to allow the ON state
 	uint8_t Branch_2_ChgEnableBit :1; 		// Charge Enable Bit must be set to allow the ON state.
-	uint8_t Branch_2_DchgControlFlag :1; 	// Discharge Control Flag indicates the logic state of the DC pin driver.
+	uint8_t Branch_2_DchgControlFlag :1; 	// Discharge Control Flag indicates the real logic state of the DC pin driver.
 	uint8_t Branch_2_ChgControlFlag :1; 	// Charge Control Flag indicates the logic state of the CC pin driver.
 	uint8_t Branch_2_LrnFlag :1; 			// LEARN Flag indicates that the current-charge cycle can use to learn batt.
 	uint8_t Branch_2_StbEmptyFlag :1; 		// Standby-Empty Flag is set to indicate power battery is less than 10%.
@@ -82,8 +82,8 @@ typedef struct  // Structure for PBM data
 	uint16_t Error_Charge_2 :1; 			// Register error charge branch №2.
 	uint16_t Error_Discharge_1 :1; 			// Register error discharge branch №1.
 	uint16_t Error_Discharge_2 :1; 			// Register error discharge branch №2.
-	uint16_t PBM_Low_Energy_Flag :1; 		// Indicates warning low energy PBM.
-	uint16_t PBM_Zero_Energy_Flag :1;		// Indicates moment for off all payload.
+	uint16_t Low_Energy_Flag :1; 		    // Indicates warning low energy PBM.
+	uint16_t Zero_Energy_Flag :1;		    // Indicates moment for off all load.
 	uint16_t PBM_save_conf_flag:1;			// Indicates that data have been modificate.
 
 	uint16_t Reserve_1;						// Reserve data space.

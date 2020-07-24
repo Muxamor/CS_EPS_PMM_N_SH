@@ -7,9 +7,9 @@
 #include "TCA9539.h"
 #include "INA231.h"
 #include "ADS1015.h"
-#include "pmm_config.h"
-#include "pmm_struct.h"
-#include "pmm_init_IC.h"
+#include "PMM/pmm_config.h"
+#include "PMM/pmm_struct.h"
+#include "PMM/pmm_init_IC.h"
 
 /** @brief  Init TMP1075 temperature sensor at PMM
     @param 	*pmm_ptr - pointer to struct which contain all information about PMM.

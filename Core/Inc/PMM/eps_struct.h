@@ -6,10 +6,10 @@
 extern "C" {
 #endif
 
-#include "pmm_struct.h"
-#include "pdm_struct.h"
-#include "pam_struct.h"
-#include "pbm_struct.h"
+#include "PMM/pmm_struct.h"
+#include "PDM/pdm_struct.h"
+#include "PAM/pam_struct.h"
+#include "PBM/pbm_struct.h"
 
 
 typedef struct{

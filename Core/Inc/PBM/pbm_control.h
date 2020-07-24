@@ -6,6 +6,8 @@
 extern "C" {
 #endif
 
+#include "PBM/pbm_struct.h"
+
 ErrorStatus PBM_ReadGPIO(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number);
 
 ErrorStatus PBM_ReadTempSensors(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number);
