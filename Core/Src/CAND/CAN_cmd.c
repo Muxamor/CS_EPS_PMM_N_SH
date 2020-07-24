@@ -232,6 +232,96 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                     }
                     break;
 
+                case CAN_AB1_Heat_Branch1_offset: //Enable/Disable Auto heat (termostate) AB1 branch 1 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB1_Heat_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto heat AB1 branch 1\n", CAN_AB1_Heat_Branch1_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_ON_HEAT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto heat AB1 branch 1\n", CAN_AB1_Heat_Branch1_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_1, PBM_OFF_HEAT);
+                    }
+                    break;
+
+                case CAN_AB1_Heat_Branch2_offset: //Enable/Disable Auto heat (termostate) AB1 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB1_Heat_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto heat AB1 branch 2\n", CAN_AB1_Heat_Branch2_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_ON_HEAT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto heat AB1 branch 2\n", CAN_AB1_Heat_Branch2_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 0, PBM_BRANCH_2, PBM_OFF_HEAT);
+                    }
+                    break;
+
+                case CAN_AB2_Heat_Branch1_offset: //Enable/Disable Auto heat (termostate) AB2 branch 1 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB2_Heat_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto heat AB2 branch 1\n", CAN_AB2_Heat_Branch1_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_ON_HEAT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto heat AB2 branch 1\n", CAN_AB2_Heat_Branch1_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_1, PBM_OFF_HEAT);
+                    }
+                    break;
+
+                case CAN_AB2_Heat_Branch2_offset: //Enable/Disable Auto heat (termostate) AB2 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB2_Heat_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto heat AB2 branch 2\n", CAN_AB2_Heat_Branch2_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_ON_HEAT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto heat AB2 branch 2\n", CAN_AB2_Heat_Branch2_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 1, PBM_BRANCH_2, PBM_OFF_HEAT);
+                    }
+                    break;
+
+                case CAN_AB3_Heat_Branch1_offset: //Enable/Disable Auto heat (termostate) AB3 branch 1 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB3_Heat_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto heat AB3 branch 1\n", CAN_AB3_Heat_Branch1_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_ON_HEAT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto heat AB3 branch 1\n", CAN_AB3_Heat_Branch1_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_1, PBM_OFF_HEAT);
+                    }
+                    break;
+
+                case CAN_AB3_Heat_Branch2_offset: //Enable/Disable Auto heat (termostate) AB3 branch 2 // PBM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_AB3_Heat_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto heat AB3 branch 2\n", CAN_AB3_Heat_Branch2_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_ON_HEAT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto heat AB3 branch 2\n", CAN_AB3_Heat_Branch2_offset);
+                        #endif
+                        PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_OFF_HEAT);
+                    }
+                    break;
+
                 case CAN_PWR_CH1_offset: //Enable/Disable power channel 1 (SOP1)
 
                     if( CAN_IVar4_RegCmd.CAN_PWR_CH1 == 0x01 ){
@@ -826,7 +916,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 //      Add errors PMM
 //
 //		Add PBM error GPIO
-//		Add PBM GPIO data byte
+//		Add PBM GPIO data byte (heat data 4 bit per PBM)
 //		Add PBM DS2777 control byte
 //      Add Low Energy flag
 //      Add zero Energy flag
