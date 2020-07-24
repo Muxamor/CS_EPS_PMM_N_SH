@@ -54,6 +54,13 @@ extern "C" {
 
 #define CAN_Switch_active_CPU_offset    37
 
+#define CAN_AB1_Heat_Branch1_offset     40
+#define CAN_AB1_Heat_Branch2_offset     41
+#define CAN_AB2_Heat_Branch1_offset     42
+#define CAN_AB2_Heat_Branch2_offset     43
+#define CAN_AB3_Heat_Branch1_offset     44
+#define CAN_AB3_Heat_Branch2_offset     45
+
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
@@ -126,6 +133,12 @@ struct CAN_IVar4 {
     uint8_t CAN_Set_active_CPU;             //+37		    Переключатель основной/резервный
     uint8_t CAN_Reset_to_default;           //+38           Сброс параметров в состояние "по умолчанию"
     uint8_t CAN_Perform_disclosure;         //+39           Выполнить раскрытие
+    uint8_t CAN_AB1_Heat_Branch1;           //+40           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 1
+    uint8_t CAN_AB1_Heat_Branch2;           //+41           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 1
+    uint8_t CAN_AB2_Heat_Branch1;           //+42           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 2
+    uint8_t CAN_AB2_Heat_Branch2;           //+43           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 2
+    uint8_t CAN_AB3_Heat_Branch1;           //+44           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 3
+    uint8_t CAN_AB3_Heat_Branch2;           //+45           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 3
 
 };
 

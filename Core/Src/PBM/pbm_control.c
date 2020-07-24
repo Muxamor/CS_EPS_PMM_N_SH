@@ -853,8 +853,7 @@ void PBM_CheckLevelEnergy(_PBM pbm[], uint8_t PBM_number) {
 		}
 	}
 
-	//if (((Voltage_Branch_1 <= PBM_ZERO_ENERGY_EDGE) && ((pbm[PBM_number].Error_DS2777_1 == SUCCESS) && (pbm[PBM_number].Branch_1_DchgControlFlag == ENABLE))) ||
-	//    ((Voltage_Branch_2 <= PBM_ZERO_ENERGY_EDGE) && ((pbm[PBM_number].Error_DS2777_2 == SUCCESS) && (pbm[PBM_number].Branch_2_DchgControlFlag == ENABLE)))) {
+
     if( ( (Voltage_Branch_1 <= PBM_ZERO_ENERGY_EDGE) || (Voltage_Branch_2 <= PBM_ZERO_ENERGY_EDGE) ) && (pbm[PBM_number].Low_Energy_Flag == 1) ){
 	    pbm[PBM_number].Zero_Energy_Flag = 1;
 

@@ -828,7 +828,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 //		Add PBM error GPIO
 //		Add PBM GPIO data byte
 //		Add PBM DS2777 control byte
-
+//      Add Low Energy flag
+//      Add zero Energy flag
 }
 
 void CAN_Var5_fill_telemetry_const(void){
