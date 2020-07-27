@@ -48,7 +48,10 @@ int main(void){
 	_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
 
-	_EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
+    pmm_ptr->Version_FW = 0x0000;
+
+
+    _EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
 
 	_EPS_Param eps_param = {.eps_pmm_ptr = pmm_ptr, 
 							.eps_pdm_ptr = pdm_ptr,
@@ -154,7 +157,7 @@ int main(void){
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
+   // printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
 

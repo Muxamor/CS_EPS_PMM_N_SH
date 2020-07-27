@@ -104,21 +104,22 @@ typedef struct{
     uint8_t Deploy_stage;           //  0 - in container 1 - one Limi sitch whait generation 2 - low level energy  3 - whait time out 4- deployed Z+  5- deployed Z-
                                     //  6 - deployed Y+ 7- deployed Y- Deploy stage  8 - Finish deploy // Need to save in flash.
 
-	uint16_t Deploy_Lim_SW_Exit_1   :1; //0 - не сработал 1 - сработал. Deploy Limit switch 1 exit from container
-    uint16_t Deploy_Lim_SW_Exit_2   :1; //0 - не сработал 1 - сработал. Deploy Limit switch 2 exit from container
-    uint16_t Deploy_Lim_SW_Y1_1     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 1
-    uint16_t Deploy_Lim_SW_Y1_2     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 2
-    uint16_t Deploy_Lim_SW_Y2_1     :1; //0 - не сработал 1 - сработал. Y- Limit switch 1
-    uint16_t Deploy_Lim_SW_Y2_2     :1; //0 - не сработал 1 - сработал. Y- Limit switch 2
-    uint16_t Deploy_Lim_SW_Z1_1     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 1
-    uint16_t Deploy_Lim_SW_Z1_2     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 2
-    uint16_t Deploy_Lim_SW_Z2_1     :1; //0 - не сработал 1 - сработал. Z- Limit switch 1
-    uint16_t Deploy_Lim_SW_Z2_2     :1; //0 - не сработал 1 - сработал. Z- Limit switch 2
+	uint16_t Deploy_Lim_SW_Exit_1   :1; //0 - не сработал 1 - сработал. Deploy Limit switch 1 exit from container// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Exit_2   :1; //0 - не сработал 1 - сработал. Deploy Limit switch 2 exit from container// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Y1_1     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Y1_2     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Y2_1     :1; //0 - не сработал 1 - сработал. Y- Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Y2_2     :1; //0 - не сработал 1 - сработал. Y- Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Z1_1     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Z1_2     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Z2_1     :1; //0 - не сработал 1 - сработал. Z- Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Z2_2     :1; //0 - не сработал 1 - сработал. Z- Limit switch 2// Need to save in flash.
     uint16_t :6;
 
-	uint16_t Reserve_1;
+	uint16_t Version_FW;  // Version firmware HB.LB
+
+    uint16_t Reserve_1;
     uint16_t Reserve_2;
-    uint16_t Reserve_3;
 
 }_PMM;
 
