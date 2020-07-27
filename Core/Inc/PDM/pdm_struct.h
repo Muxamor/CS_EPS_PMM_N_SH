@@ -16,8 +16,8 @@ typedef struct{
 	int16_t Current_val;
 	uint16_t Power_val;
 
-	uint8_t State_eF_in  		:1; //0-DISABLE, 1-ENABLE. State power channel input Efuse
-	uint8_t State_eF_out 		:1; //0-DISABLE, 1-ENABLE. State power channel output Efuse
+	uint8_t State_eF_in  		:1; //0-DISABLE, 1-ENABLE. State power channel input Efuse // Need to save in flash.
+	uint8_t State_eF_out 		:1; //0-DISABLE, 1-ENABLE. State power channel output Efuse // Need to save in flash.
 	uint8_t PG_eF_in			:1; //0-OK, 1-ERROR. Power good channel status input eFuse
 	uint8_t PG_eF_out 	 		:1; //0-OK, 1-ERROR. Power good channel status output eFuse
 	uint8_t :4;

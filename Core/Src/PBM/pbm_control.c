@@ -868,9 +868,7 @@ void PBM_CheckLevelEnergy(_PBM pbm[], uint8_t PBM_number) {
 */
 uint8_t PBM_CheckSaveSetupFlag(_PBM pbm[]){
 
-    uint16_t i = 0;
-
-    for( i = 0; i < PBM_QUANTITY; i++){
+    for( uint16_t i = 0; i < PBM_QUANTITY; i++){
 
         if( pbm[i].PBM_save_conf_flag == 1){
             return 1;
@@ -880,3 +878,15 @@ uint8_t PBM_CheckSaveSetupFlag(_PBM pbm[]){
     return 0;
 }
 
+/** @brief    Clear flag to save setting.
+    @param     pbm[] - structure data for all PBM modules.
+    @retval    ErrorStatus
+*/
+void PBM_ClearSaveSetupFlag(_PBM pbm[]){
+
+    for( uint16_t i = 0; i < PBM_QUANTITY; i++){
+
+        pbm[i].PBM_save_conf_flag = 0;
+    }
+
+}

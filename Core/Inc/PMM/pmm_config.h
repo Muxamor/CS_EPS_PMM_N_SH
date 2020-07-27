@@ -48,10 +48,10 @@ extern "C" {
 
 
 #define pmm_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
-#define pmm_i2c_delay_att_conn		5 	 //ms Delay between attempts connection through I2C in millisecond
+#define pmm_i2c_delay_att_conn		3 	 //ms Delay between attempts connection through I2C in millisecond
 
 #define pmm_uart_attempt_conn		3 	 // Quantity attempt to connection through UART
-#define pmm_uart_delay_att_conn		6 	 //ms Delay between attempts connection through UART in millisecond
+#define pmm_uart_delay_att_conn		3 	 //ms Delay between attempts connection through UART in millisecond
 
 
 #define Service_Mode_EPS			0xFF
@@ -62,6 +62,9 @@ extern "C" {
 
 #define CPUmain_Active				0
 #define CPUbackup_Active			1
+
+#define EPS_COMBAT_MODE             0x00
+#define EPS_SERVICE_MODE            0xFF
 
 
 #define UART_EPS_CPUm_Addr 			0x01
