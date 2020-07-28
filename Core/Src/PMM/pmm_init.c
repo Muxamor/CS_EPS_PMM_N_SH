@@ -27,7 +27,7 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 
         //Set CAN mux at active CPU
 		PMM_Set_MUX_CAN_CPUm_CPUb( pmm_ptr );
-
+//TODO Move enable CAN шт another function fith potection BRK 
 		if( pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
 			pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
 			pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
