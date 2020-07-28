@@ -1,3 +1,4 @@
+#include "stdlib.h"
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
@@ -750,8 +751,11 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 	float ch3_meas = (float)0.0;
 	int16_t Backup_eF_in_Current_val = 0;
 	int16_t Backup_eF_out_Current_val = 0;
+	int16_t Diff_out_in_Current_Backup = 0;
+
 	int16_t Main_eF_in_Current_val = 0;
 	int16_t Main_eF_out_Current_val = 0;
+	int16_t Diff_out_in_Current_Main = 0;
 
 	SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
 
@@ -767,14 +771,16 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 
 		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = SUCCESS;
 
-		Main_eF_in_Current_val = (int16_t)(( ch1_meas * 495.0 ) - 13.0 ); //Current in mA. (-13) - correction coefficient
-		Main_eF_out_Current_val = (int16_t)(( ch3_meas * 2778.0 ) - 13.0 ); //Current in mA. (-13) - correction coefficient
+		Main_eF_in_Current_val = (int16_t)(( ch1_meas * 495.0 ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
+		Main_eF_out_Current_val = (int16_t)(( ch3_meas * 2778.0 ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
 
 
-		Backup_eF_in_Current_val = (int16_t)(( ch0_meas * 495.0 ) - 13.0 ); //Current in mA. (-13) - correction coefficient
-		Backup_eF_out_Current_val = (int16_t)(( ch2_meas * 2778.0 ) - 13.0 ); //Current in mA. (-13) - correction coefficient
+		Backup_eF_in_Current_val = (int16_t)(( ch0_meas * 495.0 ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
+		Backup_eF_out_Current_val = (int16_t)(( ch2_meas * 2778.0 ) /* - 13.0 */ ); //Current in mA. (-13) - correction coefficient
 
-		if( (Main_eF_out_Current_val - Main_eF_in_Current_val) < 5 ){ // Small currents are poorly measured. This is incorrect measurement protection
+
+		Diff_out_in_Current_Main = Main_eF_out_Current_val - Main_eF_in_Current_val;
+		if( abs( Diff_out_in_Current_Main ) < 8 ){ // Small currents are poorly measured. This is incorrect measurement protection
 			pmm_ptr->PWR_Supply_Main_eF_in_Current_val = 0;
 			pmm_ptr->PWR_Supply_Main_eF_out_Current_val = 0;
 		}else{
@@ -782,7 +788,8 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 			pmm_ptr->PWR_Supply_Main_eF_out_Current_val = Main_eF_out_Current_val;
 		}
 
-		if( (Backup_eF_out_Current_val - Backup_eF_in_Current_val) < 5 ){// Small currents are poorly measured. This is incorrect measurement protection
+		Diff_out_in_Current_Backup = Backup_eF_out_Current_val - Backup_eF_in_Current_val;
+		if( abs( Diff_out_in_Current_Backup ) < 8 ){// Small currents are poorly measured. This is incorrect measurement protection
 			pmm_ptr->PWR_Supply_Backup_eF_in_Current_val = 0;
 			pmm_ptr->PWR_Supply_Backup_eF_out_Current_val = 0;
 		}else{
