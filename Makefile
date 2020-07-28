@@ -2,8 +2,9 @@
 ######################################
 # target
 ######################################
-TARGET = CS_EPS_PMM_N_SH
+TARGET = CS_EPS_PMM_N_SH_v
 
+VERSION_FIRMWARE = 0102
 
 # Set the FLAG OS_SYSTEM - LINUX or MAC_OS or WINDOWS it depends which system are you use to build.
 BUILD_OS_SYSTEM = WINDOWS
@@ -155,7 +156,9 @@ C_DEFS =  \
 -DINSTRUCTION_CACHE_ENABLE=1 \
 -DDATA_CACHE_ENABLE=1 \
 -DSTM32L496xx\
+-DVERSION_FW=$(VERSION_FIRMWARE)\
 -DEBUGprintf
+
 
 
 # AS includes
@@ -198,10 +201,10 @@ LDSCRIPT = STM32L496QGIX_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys -lcanv_lib -lFlash_lib
 LIBDIR = -L./Core/Src/LIB
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET)_$(VERSION_FIRMWARE).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+all: $(BUILD_DIR)/$(TARGET)_$(VERSION_FIRMWARE).elf $(BUILD_DIR)/$(TARGET)_$(VERSION_FIRMWARE).hex $(BUILD_DIR)/$(TARGET)_$(VERSION_FIRMWARE).bin
 
 
 #######################################
@@ -220,7 +223,7 @@ $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+$(BUILD_DIR)/$(TARGET)_$(VERSION_FIRMWARE).elf: $(OBJECTS) Makefile
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
 

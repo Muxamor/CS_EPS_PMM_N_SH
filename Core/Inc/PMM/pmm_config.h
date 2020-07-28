@@ -8,6 +8,11 @@ extern "C" {
 
 /*********************** Configuration for PMM module ***********************/
 
+#ifndef VERSION_FW
+  #define VERSION_FW    0000  /*!< Value of the External oscillator in Hz */
+#endif
+
+
 #define PMM_I2Cx_TMP1075 				I2C3 //Temp. sensor in PMM CPU block
 #define PMM_I2CADDR_TMP1075 			0x48 //Temp. sensor in PMM CPU block
 

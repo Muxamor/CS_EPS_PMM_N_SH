@@ -48,7 +48,7 @@ int main(void){
 	_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
 
-    pmm_ptr->Version_FW = 0x0000; //Firmware version
+    pmm_ptr->Version_FW = VERSION_FW; //Firmware version
 
 
     _EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
