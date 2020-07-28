@@ -101,7 +101,7 @@ typedef struct{
 
     uint8_t EPS_Mode;               // Mode of operation EPS Service or Combat. 0xFF - Service mode. 0x00- Combat Mode // Need to save in flash.
 
-    uint8_t Deploy_stage;           //  0 - in container 1 - one Limi sitch whait generation 2 - low level energy  3 - whait time out 4- deployed Z+  5- deployed Z-
+    uint8_t Deploy_stage;           //  0 - in container 1 - one Limit switch, whait generation 2 - low level energy  3 - whait time out 4- deployed Z+  5- deployed Z-
                                     //  6 - deployed Y+ 7- deployed Y- Deploy stage  8 - Finish deploy // Need to save in flash.
 
 	uint16_t Deploy_Lim_SW_Exit_1   :1; //0 - не сработал 1 - сработал. Deploy Limit switch 1 exit from container// Need to save in flash.
