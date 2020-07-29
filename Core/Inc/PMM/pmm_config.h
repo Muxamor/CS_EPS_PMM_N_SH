@@ -62,6 +62,7 @@ extern "C" {
 #define pmm_uart_attempt_conn		3 	 // Quantity attempt to connection through UART
 #define pmm_uart_delay_att_conn		3 	 //ms Delay between attempts connection through UART in millisecond
 
+#define PMM_Deploy_Time_Delay           1800000 //in milliseconds 1800000 = 30 minuts
 
 #define Service_Mode_EPS			0xFF
 

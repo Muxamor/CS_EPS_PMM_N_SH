@@ -261,7 +261,7 @@ ErrorStatus PMM_burn_the_wire(uint32_t burn_const_time, uint32_t burn_time1, uin
 /** @brief	Starting deployment procedure of PMM.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus PMM_Deploy(){
+ErrorStatus PMM_DeployD(){
 
 	int8_t status = 0;
 	uint8_t i;
