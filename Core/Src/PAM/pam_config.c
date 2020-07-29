@@ -1,3 +1,7 @@
+#include "stm32l4xx.h"
+#include "INA231.h"
+#include "TCA6424A.h"
+#include "TCA9548.h"
 #include "pam_config.h"
 
 _PAM_table PAM__Table(uint8_t number_pwr_channel) {
@@ -6,7 +10,8 @@ _PAM_table PAM__Table(uint8_t number_pwr_channel) {
 
 	//Config I2C MUX, same for all power channels
 	pam_table.I2Cx_PORT = PAM_I2C_PORT;
-	pam_table.I2C_addr_I2C_MUX = PAM_I2CADDR_I2C_MUX_1;
+	pam_table.I2C_addr_I2C_MUX_PWR = PAM_I2CADDR_I2C_MUX_1;
+	pam_table.I2C_addr_I2C_MUX_SP = PAM_I2CADDR_I2C_MUX_2;
 	pam_table.I2C_addr_GPIO_Ext = PAM_I2CADDR_GPIO_Ext;
 
 	//Config Power monitor INA231, same for all power channels
@@ -19,6 +24,11 @@ _PAM_table PAM__Table(uint8_t number_pwr_channel) {
 	pam_table.PWR_Mon_bus_conv_time = INA231_CONVERSION_TIME_1100us; 	// Conversion time 1.1ms
 	pam_table.PWR_Mon_shunt_conv_time = INA231_CONVERSION_TIME_1100us; 	// Conversion time 1.1ms
 	pam_table.PWR_Mon_work_mode = INA231_SHUNT_AND_BUS_CONTINUOUS; 		// Conversion time 1.1ms
+
+	pam_table.pin_State_ID = 0;
+	pam_table.pin_Enable_eF = 0;
+	pam_table.I2C_addr_PWR_Mon = 0;
+	pam_table.I2C_MUX_Ch = 0;
 
 	switch (number_pwr_channel) {
 
@@ -88,9 +98,25 @@ _PAM_table PAM__Table(uint8_t number_pwr_channel) {
 		pam_table.I2C_MUX_Ch = TCA9548_CH4;
 		break;
 
+	case PAM_PWR_DC_DC:
+		//Config I2C GPIO Expander TCA6424A for power DC_DC
+		pam_table.pin_State_ID = TCA6424A_IO_P20;			//Show State DC_DC (U15)
+		pam_table.pin_Enable_eF = TCA6424A_IO_P00;			//Set State DC_DC (U15)
+
+		break;
+
+	case PAM_PWR_LDO:
+		//Config I2C GPIO Expander TCA6424A for power LDO
+		pam_table.pin_State_ID = TCA6424A_IO_P21;			//Show State LDO (U15)
+		pam_table.pin_Enable_eF = TCA6424A_IO_P01;			//Set State LDO (U15)
+
+		break;
+
 	default:
 		break;
 	}
 
 	return pam_table;
 }
+
+

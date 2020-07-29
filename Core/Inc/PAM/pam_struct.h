@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-#include "PAM/pam_config.h"
+#include "pam_config.h"
 
 typedef struct{
 
@@ -19,7 +19,7 @@ typedef struct{
 	uint8_t State_ID_out_5			:1; //SP state ideal diode
 	uint8_t State_ID_out_6			:1; //SP state ideal diode
 
-	uint8_t State_eF_out 			:1; //0-DISABLE, 1-ENABLE. State power channel output Efuse // Need to save in flash.????
+	uint8_t State_eF_out 			:1; //0-DISABLE, 1-ENABLE. State power channel output Efuse.
 	uint8_t PG_eF_out				:1; //0-OK, 1-ERROR. Fault status channel output eFuse.
 	uint8_t :2;
 
@@ -47,13 +47,13 @@ typedef struct{
 
 typedef struct{
 
-	_PAM_PWR_IN_CH PAM_Channel[PAM_Pwr_In_Ch_quantity];
+	_PAM_PWR_IN_CH PWR_IN_Channel[PAM_PWR_IN_Ch_quantity];
 	//_PAM_SP SP_Channel [PAM_SP_quantity];
 
 	int8_t Temp_sensor[4]; //PAM temperature
 
-	uint8_t State_DC_DC 			:1;
-	uint8_t State_LDO 				:1;
+	uint8_t State_DC_DC 			:1; // Need to save in flash
+	uint8_t State_LDO 				:1; // Need to save in flash
 	uint8_t PG_DC_DC 				:1;
 	uint8_t PG_LDO 					:1;
 	uint8_t PAM_save_conf_flag		:1;
