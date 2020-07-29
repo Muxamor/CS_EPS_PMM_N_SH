@@ -318,7 +318,7 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 */
 ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t i2c_mux_addr, uint8_t i2c_mux_ch ){
 
-	int8_t temp_value;
+	int8_t temp_value = 0;
 	uint8_t i = 0;
 	int8_t Error_I2C_MUX = ERROR_N;
 	int8_t error_I2C = ERROR_N; 

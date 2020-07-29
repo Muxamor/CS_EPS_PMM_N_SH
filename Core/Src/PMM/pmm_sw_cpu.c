@@ -2,6 +2,7 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
+#include "TCA9539.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "CAND/CAN.h"
@@ -22,18 +23,26 @@ void PMM_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *U
 	_PMM backup_CPU_pmm = {0};
 	_EPS_Param tmp_eps_param = {.eps_pmm_ptr = &backup_CPU_pmm };
 
+    int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+    uint8_t read_val_CAN_MUX_pin14 = 2;
+    uint8_t read_val_CAN_MUX_pin16 = 2;
+    uint8_t UART_port_Number = 0;
 	int8_t error_status = ERROR_N;
 	uint32_t i = 0;
-	uint32_t timeout_counter = 0;
 
 	if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ) { //Only for Main CPU
 
         while ((error_status != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
-            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
+            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, UART_port_Number, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
 
             if (error_status != SUCCESS) {
                 i++;
                 LL_mDelay(pmm_uart_delay_att_conn);
+                if( i == 1 ){
+                    UART_port_Number = 1;
+                }else{
+                    UART_port_Number = 2;
+                }
             }
         }
 
@@ -44,6 +53,30 @@ void PMM_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *U
                     eps_p.eps_pmm_ptr->Active_CPU = 1;
                 } else {
                     eps_p.eps_pmm_ptr->Active_CPU = 0;
+                }
+            }
+
+        }else{
+        //If UART communication is broken
+            i = 0;
+            error_I2C = ERROR_N;
+            while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
+
+                if( TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14, &read_val_CAN_MUX_pin14) == SUCCESS ){
+                    error_I2C = TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P16, &read_val_CAN_MUX_pin16);
+                }
+
+                if( error_I2C != SUCCESS ){
+                    i++;
+                    LL_mDelay(pmm_i2c_delay_att_conn);
+                }
+            }
+
+            if( error_I2C == SUCCESS ){
+                if((read_val_CAN_MUX_pin14 == 0) && (read_val_CAN_MUX_pin16 == 0)){
+                    eps_p.eps_pmm_ptr->Active_CPU = 0;
+                }else{
+                    eps_p.eps_pmm_ptr->Active_CPU = 1;
                 }
             }
         }

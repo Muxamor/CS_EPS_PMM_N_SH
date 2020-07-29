@@ -1,8 +1,8 @@
 
 #include "stm32l4xx_ll_utils.h"
 #include "i2c_comm.h"
-#include  "FRAM.h"
-#include  "PMM/pmm_savedata.h"
+#include "FRAM.h"
+#include "PMM/pmm_savedata.h"
 
 
 

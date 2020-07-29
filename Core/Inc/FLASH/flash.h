@@ -1,6 +1,11 @@
 #ifndef _FLASH_H_
 #define _FLASH_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "stm32l4xx.h"
 
 #define SECT_IN_RAM_FLASH_PROC_SIZE       0x00000320     /*�������� �� ���������������� map-�����  */
 
@@ -67,7 +72,9 @@ int8_t CheckBlock(register uint32_t *addr);
 uint8_t HavePrefFlashBlockNum(void);
 uint8_t HaveRunFlashBlockNum(void);
 
-
+#ifdef __cplusplus
+}/*extern "C"*/
+#endif
 
 #endif
 
