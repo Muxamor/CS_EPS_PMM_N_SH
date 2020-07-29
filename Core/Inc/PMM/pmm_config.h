@@ -8,8 +8,12 @@ extern "C" {
 
 /*********************** Configuration for PMM module ***********************/
 
-#ifndef VERSION_FW
-  #define VERSION_FW    0000  /*!< Value of the External oscillator in Hz */
+#ifndef DVERSION_FW_MAJOR
+  #define  DVERSION_FW_MAJOR 00  // version major update  0..255
+#endif
+
+#ifndef DVERSION_FW_MINOR
+#define  DVERSION_FW_MINOR 00 // version minor update  0..255
 #endif
 
 
