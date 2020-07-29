@@ -48,13 +48,8 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
         pdm_ptr->PDM_save_conf_flag = 1; //Need save configure in FRAM.
 	}
 
-	if( state_channel == ENABLE){
-		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in = ENABLE; 
-		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = ENABLE;
-	}else{
-		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in = DISABLE; 
-		pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = DISABLE; 
-	}
+	pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in = state_channel;
+	pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out = state_channel;
 
 	//Write to I2C GPIO Extender.
 	i=0;
@@ -81,7 +76,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 
 	//Enable/Disable OUTPUT Efuse power channel.
 	if( error_I2C == SUCCESS ){
-        if( state_channel == ENABLE ) {
+        if( state_channel == ENABLE  &&  pdm_ptr->PDM_save_conf_flag == 1) {
             LL_mDelay(40); //Delay for startup power supply
         }
 
@@ -122,11 +117,9 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in = ERROR; 
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out = ERROR;
-
-		return ERROR_N;
 	}
 
-	return SUCCESS;
+	return error_I2C;
 }
 
 
@@ -533,7 +526,6 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 	pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = val_bus_voltage;
 	pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = val_current;
 	pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = val_power;
-		
 
 	return error_I2C;
 }

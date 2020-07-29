@@ -1,4 +1,5 @@
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_utils.h"
 #include "Error_Handler.h"
 #include "TCA9548.h"
 #include "PAM/pam_config.h"
@@ -18,30 +19,35 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 	int8_t error_status = SUCCESS;
 	uint8_t num_pwr_ch;
 
-
 	//Restoring power channels.
-	PAM_Set_state_source_PWR( pam_ptr, PAM_PWR_DC_DC, pam_ptr->State_DC_DC );
-	PAM_Set_state_source_PWR( pam_ptr, PAM_PWR_LDO, pam_ptr->State_LDO );
-	PAM_Get_PG_PWR_CH(pam_ptr, PAM_PWR_DC_DC);
-	PAM_Get_PG_PWR_CH(pam_ptr, PAM_PWR_LDO);
+	//А проверить на ошибку ?
+    PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, pam_ptr->State_DC_DC);
+    PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, pam_ptr->State_LDO);
 
+    //??????????????????????????????????????? может убрать в Get telemetry ?
+    PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
+    PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
+
+    //??????????????????????????????????????? может убрать в Get telemetry ?
 	if((pam_ptr->State_DC_DC == ENABLE) && (pam_ptr->State_DC_DC != pam_ptr->PG_DC_DC) && (pam_ptr->State_LDO == DISABLE)){
 
-		PAM_Set_state_source_PWR( pam_ptr, PAM_PWR_LDO, ENABLE );
+        PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, ENABLE);
+        //А проверить на ошибку ?
 		pam_ptr->State_LDO == ENABLE;
 		LL_mDelay(40); //Delay for startup power supply
-		PAM_Get_PG_PWR_CH(pam_ptr, PAM_PWR_LDO);
+        PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 	}
 
 	if((pam_ptr->State_LDO == ENABLE) && (pam_ptr->State_LDO != pam_ptr->PG_LDO) && (pam_ptr->State_DC_DC == DISABLE)){
 
-		PAM_Set_state_source_PWR( pam_ptr, PAM_PWR_DC_DC, ENABLE );
+        PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, ENABLE);
+        //А проверить на ошибку ?
 		pam_ptr->State_DC_DC == ENABLE;
 		LL_mDelay(40); //Delay for startup power supply
-		PAM_Get_PG_PWR_CH(pam_ptr, PAM_PWR_DC_DC);
+        PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
 	}
 
-	//Disable all channels TCA9548 I2C MUX on PDM module.
+	//Disable all channels TCA9548 I2C MUX on PAM module.
 	//Note: We don’t check return errors because in any case, trying to configure the chips behind the I2C MUX
 	TCA9548_Disable_I2C_ch( PAM_I2C_PORT, PAM_I2CADDR_I2C_MUX_1, TCA9548_ALL_CHANNELS );
 	TCA9548_Disable_I2C_ch( PAM_I2C_PORT, PAM_I2CADDR_I2C_MUX_2, TCA9548_ALL_CHANNELS );

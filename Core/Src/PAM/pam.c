@@ -15,14 +15,19 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
 	int8_t error_status = SUCCESS;
 	uint8_t num_pwr_ch = 0;
 
-	 PAM_Get_PG_PWR_CH(pam_ptr, PAM_PWR_DC_DC);
-	 PAM_Get_PG_PWR_CH(pam_ptr, PAM_PWR_LDO);
+	//Добавить функцию PDM_Check_state_PWR_Supply
+    PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
+    PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
+
+    //???????????????? Суда добавить переключение повер суплай и только воднй сторону?
 
 	//Get value Current, Voltage, Power
 	for(num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++){
 
 		error_status += PAM_Get_PWR_CH_I_V_P( pam_ptr, num_pwr_ch);
 	}
+
+	//Добавить функцию опроса состояния Ideal Diode
 
 	//Get temperature value.
 	error_status += PAM_Get_Temperature( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1, PAM_I2CADDR_I2C_MUX_2, TCA9548_CH6 );

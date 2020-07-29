@@ -18,6 +18,7 @@ typedef struct{
 	uint8_t State_ID_out_4			:1; //SP state ideal diode
 	uint8_t State_ID_out_5			:1; //SP state ideal diode
 	uint8_t State_ID_out_6			:1; //SP state ideal diode
+    uint8_t :1;
 
 	uint8_t State_eF_out 			:1; //0-DISABLE, 1-ENABLE. State power channel output Efuse.
 	uint8_t PG_eF_out				:1; //0-OK, 1-ERROR. Fault status channel output eFuse.
@@ -29,6 +30,8 @@ typedef struct{
 	uint8_t Error_temp_sensor_4		:1;
 	uint8_t Error_I2C_GPIO_Ext	 	:1;
 	uint8_t :3;
+
+    uint8_t Alignment_structure; //Alignment
 	
 
 }_PAM_SP;
@@ -36,12 +39,14 @@ typedef struct{
 typedef struct{
 	
 	uint16_t Voltage_val;
-	uint16_t Current_val;
+	int16_t Current_val;  //Ток может быть отрицательным!
 	uint16_t Power_val;
 
-	uint8_t State_ID_In  		:1; //0-Open, 1-Close. Show State power channel input ideal diode.
+	uint8_t State_ID_In  		:1; //0-Open, 1-Close. Show State power channel input ideal diode. //СДелать отдельную функцию ????
 	uint8_t Error_PWR_Mon 		:1;
 	uint8_t :6;
+
+    uint8_t Alignment_structure; //Alignment
 
 }_PAM_PWR_IN_CH;
 
@@ -56,9 +61,11 @@ typedef struct{
 	uint8_t State_LDO 				:1; // Need to save in flash
 	uint8_t PG_DC_DC 				:1;
 	uint8_t PG_LDO 					:1;
+    uint8_t Error_State_DC_DC       :1;
+    uint8_t Error_State_LDO         :1;
 	uint8_t PAM_save_conf_flag		:1;
-	uint8_t :3;
-	
+	uint8_t :1;
+
 	uint8_t Error_I2C_GPIO_Ext	 	:1;
 	uint8_t Error_I2C_MUX_1		 	:1;
 	uint8_t Error_I2C_MUX_2		 	:1;
