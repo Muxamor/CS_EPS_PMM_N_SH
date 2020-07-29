@@ -1,7 +1,3 @@
-/*
- * Setup peripheral of MC STM32L452
- */
-
 #ifndef __SETUPPERIPH_H
 #define __SETUPPERIPH_H
 
