@@ -8,12 +8,12 @@ extern "C" {
 
 /*********************** Configuration for PMM module ***********************/
 
-#ifndef DVERSION_FW_MAJOR
-  #define  DVERSION_FW_MAJOR 00  // version major update  0..255
+#ifndef VERSION_FW_MAJOR
+  #define  VERSION_FW_MAJOR 0  // version major update  0..255
 #endif
 
-#ifndef DVERSION_FW_MINOR
-#define  DVERSION_FW_MINOR 00 // version minor update  0..255
+#ifndef VERSION_FW_MINOR
+#define  VERSION_FW_MINOR 0 // version minor update  0..255
 #endif
 
 

@@ -5,9 +5,9 @@
 TARGET = CS_EPS_PMM_N_SH_v
 
 # version major update  0..255
-VERSION_FIRMWARE_MAJOR = 10
+VERSION_FIRMWARE_MAJOR = 0
 # version mainor update 0..255
-VERSION_FIRMWARE_MINOR = 11
+VERSION_FIRMWARE_MINOR = 1
 
 # Set the FLAG OS_SYSTEM - LINUX or MAC_OS or WINDOWS it depends which system are you use to build.
 BUILD_OS_SYSTEM = WINDOWS
