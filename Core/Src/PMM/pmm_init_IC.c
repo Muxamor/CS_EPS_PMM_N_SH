@@ -23,8 +23,8 @@ ErrorStatus PMM_init_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_a
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 
-	//Setup INA231
-	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+	//Setup TMP1075
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){
 
 		if (TMP1075_set_mode(I2Cx, tmp1075_addr, TMP1075_CONTINUOUS_CONV) == SUCCESS ){
 			if ( TMP1075_set_time_conversion(I2Cx, tmp1075_addr, TMP1075_CR_MEDIUM) == SUCCESS ){
@@ -64,8 +64,7 @@ ErrorStatus PMM_Power_Down_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 
-	//Setup INA231
-	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){
 
 		error_I2C = TMP1075_set_mode(I2Cx, tmp1075_addr, TMP1075_SHUTDOWN_MODE);
 
