@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-#include "eps_struct.h"
+#include "PMM/eps_struct.h"
 
 #define UART_EPS_CMD 0x01
 #define UART_EPS_ACK 0x02
