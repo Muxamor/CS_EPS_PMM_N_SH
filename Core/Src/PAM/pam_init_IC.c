@@ -24,7 +24,7 @@ ErrorStatus PAM_init_TMP1075( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 	int8_t Error_I2C_MUX = ERROR_N;
 
-	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PDM I2C bus on PMM
+	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
 
 	//Enable I2C MUX channel
 	i=0;
@@ -163,9 +163,9 @@ ErrorStatus PAM_init_PWR_Mon_INA231(_PAM *pam_ptr, uint8_t num_pwr_ch){
 		return ERROR_N;
 	}
 
-	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PDM
+	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PAM
 
-	//Fill pdm_table depends in number power channel.
+	//Fill pam_table depends in number power channel.
 	pam_table = PAM__Table(num_pwr_ch);
 
 	//Enable I2C MUX channel

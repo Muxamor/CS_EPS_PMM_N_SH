@@ -264,7 +264,7 @@ ErrorStatus TCA6424A_conf_IO_pol_inversion(I2C_TypeDef *I2Cx, uint8_t I2C_TCA642
 */
 ErrorStatus TCA6424A_Set_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_TCA6424A_addr, uint32_t pin){
 
-	return TCA6424A_Write_three_reg(I2Cx, I2C_TCA6424A_addr, pin, TCA6424A_OUTPUT_PORT0_ADDR, 0);
+	return TCA6424A_Write_three_reg(I2Cx, I2C_TCA6424A_addr, pin, TCA6424A_OUTPUT_PORT0_ADDR, 1);
 }
 
 
@@ -277,5 +277,5 @@ ErrorStatus TCA6424A_Set_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_TCA6424A_addr
 */
 ErrorStatus TCA6424A_Reset_output_pin(I2C_TypeDef *I2Cx, uint8_t I2C_TCA6424A_addr, uint32_t pin){
 
-	return TCA6424A_Write_three_reg(I2Cx, I2C_TCA6424A_addr, pin, TCA6424A_OUTPUT_PORT0_ADDR, 1);
+	return TCA6424A_Write_three_reg(I2Cx, I2C_TCA6424A_addr, pin, TCA6424A_OUTPUT_PORT0_ADDR, 0);
 }

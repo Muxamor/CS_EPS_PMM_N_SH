@@ -14,6 +14,8 @@
 #include "PBM/pbm_control.h"
 #include "PBM/pbm_init.h"
 #include "PBM/pbm.h"
+#include "PAM/pam_init.h"
+#include "PAM/pam.h"
 #include "uart_eps_comm.h"
 
 
@@ -105,6 +107,9 @@ int main(void){
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записиво флеш.
 
+	pam_ptr->State_DC_DC = ENABLE;
+	pam_ptr->State_LDO = DISABLE;
+
     pbm_mas[0].Branch_1_ChgEnableBit = ENABLE;
     pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
     pbm_mas[0].Branch_2_ChgEnableBit = ENABLE;
@@ -138,6 +143,7 @@ int main(void){
 		PDM_init( pdm_ptr );
 		//Add init PAM
         PBM_Init( pbm_mas );
+        PAM_init( pam_ptr );
         //TODO Call function Fill VarID4
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
@@ -179,6 +185,7 @@ int main(void){
 			PDM_Get_Telemetry( pdm_ptr );
 			PMM_Get_Telemetry( pmm_ptr );
             PBM_GetTelemetry( pbm_mas );
+            PAM_Get_Telemetry( pam_ptr );
 
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param );
 	//		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
