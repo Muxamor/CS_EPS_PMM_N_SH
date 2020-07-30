@@ -48,9 +48,6 @@ int main(void){
 	_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
 
-    pmm_ptr->Version_FW = VERSION_FW; //Firmware version
-
-
     _EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
 
 	_EPS_Param eps_param = {.eps_pmm_ptr = pmm_ptr, 
@@ -76,6 +73,9 @@ int main(void){
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
 //TODO read settings from FRAM.
+
+    pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
+
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
 
 	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
@@ -146,6 +146,8 @@ int main(void){
 
     //Initialization CAN for passive CPU
 	}else{
+
+        PMM_Set_mode_Passive_CPU( eps_param );
         I2C4_DeInit();
 		CAN_DeInit_eps(CAN1);
 		CAN_DeInit_eps(CAN2);

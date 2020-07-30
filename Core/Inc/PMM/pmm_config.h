@@ -8,8 +8,12 @@ extern "C" {
 
 /*********************** Configuration for PMM module ***********************/
 
-#ifndef VERSION_FW
-  #define VERSION_FW    0000  /*!< Value of the External oscillator in Hz */
+#ifndef VERSION_FW_MAJOR
+  #define  VERSION_FW_MAJOR 0  // version major update  0..255
+#endif
+
+#ifndef VERSION_FW_MINOR
+#define  VERSION_FW_MINOR 0 // version minor update  0..255
 #endif
 
 
@@ -58,6 +62,7 @@ extern "C" {
 #define pmm_uart_attempt_conn		3 	 // Quantity attempt to connection through UART
 #define pmm_uart_delay_att_conn		3 	 //ms Delay between attempts connection through UART in millisecond
 
+#define PMM_Deploy_Time_Delay           1800000 //in milliseconds 1800000 = 30 minuts
 
 #define Service_Mode_EPS			0xFF
 

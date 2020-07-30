@@ -408,7 +408,7 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PDM_Get_PG_all_PWR_CH( _PMM *pmm_ptr ){
+ErrorStatus PMM_Get_PG_all_PWR_CH( _PMM *pmm_ptr ){
 
 	//int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 

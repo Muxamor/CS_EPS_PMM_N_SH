@@ -10,7 +10,7 @@ extern "C" {
 
 
 
-
+void PMM_Deploy( _EPS_Param eps_p);
 
 
 

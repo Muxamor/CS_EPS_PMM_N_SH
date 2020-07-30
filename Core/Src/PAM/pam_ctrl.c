@@ -11,15 +11,15 @@
 #include "PAM/pam_ctrl.h"
 
 
-/** @brief  Set state (enable/disable) power PAM.
+/** @brief  Set state (enable/disable) power supply PAM.
 	@param  *pam_ptr - pointer to struct which contain all information about PAM.
-	@param  pwr_source - source (PWR_DC_DC, PWR_LDO).
+	@param  pwr_source_num - source (PWR_DC_DC, PWR_LDO).
 	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
 								ENABLE
 								DISABLE
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PAM_Set_state_source_PWR( _PAM *pam_ptr, uint8_t pwr_source, uint8_t state_channel ){
+ErrorStatus PAM_Set_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num, uint8_t state_channel ){
 
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
 	uint8_t i=0;
@@ -32,16 +32,16 @@ ErrorStatus PAM_Set_state_source_PWR( _PAM *pam_ptr, uint8_t pwr_source, uint8_t
 		return ERROR_N;
 	}
 
-	pam_table = PAM__Table(pwr_source);
+	pam_table = PAM__Table(pwr_source_num);
 
 	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
 
-	if((pwr_source == PAM_PWR_DC_DC) && (pam_ptr->State_DC_DC != state_channel)){
+	if((pwr_source_num == PAM_PWR_DC_DC) && (pam_ptr->State_DC_DC != state_channel)){
 		pam_ptr->PAM_save_conf_flag = 1; //Need save configure in FRAM.
 		pam_ptr->State_DC_DC = state_channel;
 	}
 
-	if((pwr_source == PAM_PWR_LDO) && (pam_ptr->State_LDO != state_channel)){
+	if((pwr_source_num == PAM_PWR_LDO) && (pam_ptr->State_LDO != state_channel)){
 		pam_ptr->PAM_save_conf_flag = 1; //Need save configure in FRAM.
 		pam_ptr->State_LDO = state_channel;
 	}
@@ -56,10 +56,8 @@ ErrorStatus PAM_Set_state_source_PWR( _PAM *pam_ptr, uint8_t pwr_source, uint8_t
 		if( state_channel == ENABLE ){
 			if ( TCA9539_Set_output_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF) == SUCCESS ){
 				error_I2C = TCA9539_conf_IO_dir_output( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF);
-				 if(pam_ptr->PAM_save_conf_flag == 1 ) {
-					 LL_mDelay(40); //Delay for startup power supply
-				 }
 			}
+
 		}else{ //Disable power channel
 			if ( TCA9539_Reset_output_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF) == SUCCESS ){
 				error_I2C = TCA9539_conf_IO_dir_output( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF);
@@ -72,35 +70,36 @@ ErrorStatus PAM_Set_state_source_PWR( _PAM *pam_ptr, uint8_t pwr_source, uint8_t
 		}
 	}
 
-	if( error_I2C != SUCCESS ){
+    if( (state_channel == ENABLE) && (pam_ptr->PAM_save_conf_flag == 1) && (error_I2C == SUCCESS) ) {
+        LL_mDelay(40); //Delay for startup power supply
+    }
 
+	if( error_I2C != SUCCESS ){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
 		pam_ptr->Error_I2C_GPIO_Ext = ERROR;
-
-		return ERROR_N;
 	}
 
-	return SUCCESS;
+	return error_I2C;
 }
 
 /** @brief  Get Power Good power PAM
 	@param  *pam_ptr - pointer to struct which contain all information about PAM.
-	@param  pwr_source - source (PWR_DC_DC, PWR_LDO).
+	@param  pwr_source_num - source (PWR_DC_DC, PWR_LDO).
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PAM_Get_PG_PWR_CH( _PAM *pam_ptr, uint8_t pwr_source ){
+ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
 	uint8_t i = 0;
 	uint8_t read_val_pin_PG_eF = 0;
 	int8_t error_I2C = ERROR_N;
 	_PAM_table pam_table;
 
-	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PDM I2C bus on PMM
+	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
 
 	//Get real state value pins TCA9539.
-	pam_table = PAM__Table(pwr_source);
+	pam_table = PAM__Table(pwr_source_num);
 
 	i=0;
  	error_I2C = ERROR_N;
@@ -120,11 +119,11 @@ ErrorStatus PAM_Get_PG_PWR_CH( _PAM *pam_ptr, uint8_t pwr_source ){
 
 	if( error_I2C == SUCCESS  ){
 
-		if(pwr_source == PAM_PWR_DC_DC){
+		if( pwr_source_num == PAM_PWR_DC_DC){
 
 			pam_ptr->PG_DC_DC = read_val_pin_PG_eF;
 
-		} else if(pwr_source == PAM_PWR_LDO){
+		} else if( pwr_source_num == PAM_PWR_LDO){
 
 			pam_ptr->PG_LDO = read_val_pin_PG_eF;
 		}
@@ -137,6 +136,18 @@ ErrorStatus PAM_Get_PG_PWR_CH( _PAM *pam_ptr, uint8_t pwr_source ){
 	}
 
 	return error_I2C;
+}
+
+/** @brief  Checking the state of the power supply of PAM. OK- If there is no difference between
+			the set value and the actual value set. ERROR - If there are differences between
+			the set value and the actual set.
+			actual value set - Get by reading the real value I2C GPIO Expander.
+	@param  *pam_ptr - pointer to struct which contain all information about PAM.
+	@param  pwr_source_num - number channel on/off
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PAM_Check_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ) {
+
 }
 
 /** @brief  Get temperature from TMP1075 sensor.
@@ -154,7 +165,7 @@ ErrorStatus PAM_Get_Temperature( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 	int8_t Error_I2C_MUX = ERROR_N;
 	int8_t error_I2C = ERROR_N;
 
-	// Switch MUX to PDM I2C bus on PMM
+	// Switch MUX to PAM I2C bus on PMM
 	SW_TMUX1209_I2C_main_PAM();
 
 	//Enable I2C MUX channel
@@ -363,7 +374,6 @@ ErrorStatus PAM_Get_PWR_CH_I_V_P( _PAM *pam_ptr, uint8_t num_pwr_ch){
 	pam_ptr->PWR_IN_Channel[num_pwr_ch].Voltage_val = val_bus_voltage;
 	pam_ptr->PWR_IN_Channel[num_pwr_ch].Current_val = val_current;
 	pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val = val_power;
-
 
 	return error_I2C;
 }
