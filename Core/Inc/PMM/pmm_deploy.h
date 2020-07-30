@@ -11,7 +11,8 @@ extern "C" {
 
 
 void PMM_Deploy( _EPS_Param eps_p);
-
+void PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint8_t burn_pwr_ch_num );
+ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num );
 
 
 
