@@ -100,13 +100,13 @@ _PAM_table PAM__Table(uint8_t number_pwr_channel) {
 
 	case PAM_PWR_DC_DC:
 		//Config I2C GPIO Expander TCA6424A for power DC_DC
-		pam_table.pin_State_ID = TCA6424A_IO_P20;			//Show State DC_DC (U15) //Была ошибка размерности
+		pam_table.pin_State_ID = TCA6424A_IO_P20;			//Show State DC_DC (U15)
 		pam_table.pin_Enable_eF = TCA6424A_IO_P00;			//Set State DC_DC (U15)
 		break;
 
 	case PAM_PWR_LDO:
 		//Config I2C GPIO Expander TCA6424A for power LDO
-		pam_table.pin_State_ID = TCA6424A_IO_P21;			//Show State LDO (U15)//Была ошибка размерности
+		pam_table.pin_State_ID = TCA6424A_IO_P21;			//Show State LDO (U15)
 		pam_table.pin_Enable_eF = TCA6424A_IO_P01;			//Set State LDO (U15)
 		break;
 

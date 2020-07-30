@@ -39,10 +39,10 @@ typedef struct{
 typedef struct{
 	
 	uint16_t Voltage_val;
-	int16_t Current_val;  //Ток может быть отрицательным!
+	int16_t Current_val;
 	uint16_t Power_val;
 
-	uint8_t State_ID_In  		:1; //0-Open, 1-Close. Show State power channel input ideal diode. //СДелать отдельную функцию ????
+	uint8_t State_ID_In  		:1; //0-Open, 1-Close. Show State power channel input ideal diode.
 	uint8_t Error_PWR_Mon 		:1;
 	uint8_t :6;
 
@@ -75,6 +75,9 @@ typedef struct{
 	uint8_t Error_temp_sensor_4		:1;
 	uint8_t :1;
 
+	uint8_t PAM_address_module;
+	uint8_t Alignment_structure; //Alignment
+
 	uint16_t reserved1;
 	uint16_t reserved2;
 
@@ -86,4 +89,4 @@ typedef struct{
 }
 #endif
 
-#endif /* INC_PDM_PDM_STRUCT_H_ */
+#endif /* INC_PAM_PAM_STRUCT_H_ */

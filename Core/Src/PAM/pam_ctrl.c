@@ -3,7 +3,7 @@
 #include "stm32l4xx_ll_gpio.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
-#include "TCA9539.h"
+#include "TCA6424A.h"
 #include "TMP1075.h"
 #include "TCA9548.h"
 #include "INA231.h"
@@ -54,13 +54,13 @@ ErrorStatus PAM_Set_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num, uin
 	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){
 
 		if( state_channel == ENABLE ){
-			if ( TCA9539_Set_output_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF) == SUCCESS ){
-				error_I2C = TCA9539_conf_IO_dir_output( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF);
+			if ( TCA6424A_Set_output_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF) == SUCCESS ){
+				error_I2C = TCA6424A_conf_IO_dir_output( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF);
 			}
 
 		}else{ //Disable power channel
-			if ( TCA9539_Reset_output_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF) == SUCCESS ){
-				error_I2C = TCA9539_conf_IO_dir_output( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF);
+			if ( TCA6424A_Reset_output_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF) == SUCCESS ){
+				error_I2C = TCA6424A_conf_IO_dir_output( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF);
 			}
 		}
 
@@ -73,6 +73,8 @@ ErrorStatus PAM_Set_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num, uin
     if( (state_channel == ENABLE) && (pam_ptr->PAM_save_conf_flag == 1) && (error_I2C == SUCCESS) ) {
         LL_mDelay(40); //Delay for startup power supply
     }
+
+    PAM_Check_state_PWR_Supply(pam_ptr, pwr_source_num);
 
 	if( error_I2C != SUCCESS ){
 		#ifdef DEBUGprintf
@@ -106,9 +108,9 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
 
-		if( TCA9539_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
+		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
 
-			error_I2C = TCA9539_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF );
+			error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF );
 		}
 
 		if( error_I2C != SUCCESS ){
@@ -119,13 +121,20 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
 	if( error_I2C == SUCCESS  ){
 
-		if( pwr_source_num == PAM_PWR_DC_DC){
+		if((pwr_source_num == PAM_PWR_DC_DC) && (pam_ptr->State_DC_DC == ENABLE)){
 
-			pam_ptr->PG_DC_DC = read_val_pin_PG_eF;
+			pam_ptr->PG_DC_DC = !read_val_pin_PG_eF;
+		} else {
 
-		} else if( pwr_source_num == PAM_PWR_LDO){
+			pam_ptr->PG_DC_DC = SUCCESS;
+		}
 
-			pam_ptr->PG_LDO = read_val_pin_PG_eF;
+		if(( pwr_source_num == PAM_PWR_LDO) && (pam_ptr->State_LDO == ENABLE)){
+
+			pam_ptr->PG_LDO = !read_val_pin_PG_eF;
+		} else {
+
+			pam_ptr->PG_LDO = SUCCESS;
 		}
 
 	}else{
@@ -138,6 +147,58 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 	return error_I2C;
 }
 
+/** @brief  Get State Ideal Diode power input PAM
+	@param  *pam_ptr - pointer to struct which contain all information about PAM.
+	@param  pwr_source_num - source (PAM_PWR_IN_Channel_1 - PAM_PWR_IN_Channel_6).
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PAM_Get_State_ID_PWR_In( _PAM *pam_ptr, uint8_t pwr_source_num ){
+
+	uint8_t i = 0;
+	uint8_t read_val_pin_State_ID = 0;
+	int8_t error_I2C = ERROR_N;
+	_PAM_table pam_table;
+
+	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
+
+	//Get real state value pins TCA6424A.
+	pam_table = PAM__Table(pwr_source_num);
+
+	i=0;
+ 	error_I2C = ERROR_N;
+
+	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
+
+		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
+
+			error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_State_ID );
+		}
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pam_i2c_delay_att_conn );
+		}
+	}
+
+	if( error_I2C == SUCCESS  ){
+
+//		if(((pam_ptr->Error_State_DC_DC == SUCCESS) && (pam_ptr->PG_DC_DC == SUCCESS)) ||
+//				((pam_ptr->Error_State_LDO == SUCCESS) && (pam_ptr->PG_LDO == SUCCESS))){
+//			pam_ptr->PWR_IN_Channel[pwr_source_num].State_ID_In = read_val_pin_State_ID;
+//		}
+		pam_ptr->PWR_IN_Channel[pwr_source_num].State_ID_In = read_val_pin_State_ID;
+		pam_ptr->Error_I2C_GPIO_Ext = SUCCESS;
+
+	}else{
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pam_ptr->Error_I2C_GPIO_Ext = ERROR;
+	}
+
+    return error_I2C;
+}
+
 /** @brief  Checking the state of the power supply of PAM. OK- If there is no difference between
 			the set value and the actual value set. ERROR - If there are differences between
 			the set value and the actual set.
@@ -148,6 +209,50 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 */
 ErrorStatus PAM_Check_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ) {
 
+	uint8_t i = 0;
+	int8_t error_I2C = ERROR_N;
+	uint8_t pin_state;
+	_PAM_table pam_table;
+
+	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
+
+	pam_table = PAM__Table(pwr_source_num);
+
+	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){
+
+		error_I2C = TCA6424A_read_input_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF, &pin_state);
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay(pam_i2c_delay_att_conn);
+		}
+	}
+
+	if(pwr_source_num == PAM_PWR_DC_DC) {
+		if(pam_ptr->State_DC_DC != pin_state){
+			pam_ptr->Error_State_DC_DC = ERROR;
+		} else {
+			pam_ptr->Error_State_DC_DC = SUCCESS;
+		}
+	}
+
+	if(pwr_source_num == PAM_PWR_LDO){
+		if(pam_ptr->State_LDO != pin_state){
+			pam_ptr->Error_State_LDO = ERROR;
+		} else {
+			pam_ptr->Error_State_LDO = SUCCESS;
+		}
+	}
+
+	if( error_I2C == ERROR  ){
+
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pam_ptr->Error_I2C_GPIO_Ext = ERROR;
+	}
+
+    return error_I2C;
 }
 
 /** @brief  Get temperature from TMP1075 sensor.

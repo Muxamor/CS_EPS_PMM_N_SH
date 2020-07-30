@@ -20,31 +20,22 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 	uint8_t num_pwr_ch;
 
 	//Restoring power channels.
-	//А проверить на ошибку ?
-    PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, pam_ptr->State_DC_DC);
-    PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, pam_ptr->State_LDO);
+	error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, pam_ptr->State_DC_DC);
+	error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, pam_ptr->State_LDO);
 
-    //??????????????????????????????????????? может убрать в Get telemetry ?
-    PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
-    PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
+	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
+	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 
-    //??????????????????????????????????????? может убрать в Get telemetry ?
-	if((pam_ptr->State_DC_DC == ENABLE) && (pam_ptr->State_DC_DC != pam_ptr->PG_DC_DC) && (pam_ptr->State_LDO == DISABLE)){
+	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
+	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
+
+    if((pam_ptr->State_DC_DC == ENABLE) && ((pam_ptr->PG_DC_DC == ERROR) || (pam_ptr->Error_State_DC_DC == ERROR)) && (pam_ptr->State_LDO == DISABLE)){
 
         PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, ENABLE);
-        //А проверить на ошибку ?
-		pam_ptr->State_LDO == ENABLE;
+        pam_ptr->State_LDO = ENABLE;
 		LL_mDelay(40); //Delay for startup power supply
         PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
-	}
-
-	if((pam_ptr->State_LDO == ENABLE) && (pam_ptr->State_LDO != pam_ptr->PG_LDO) && (pam_ptr->State_DC_DC == DISABLE)){
-
-        PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, ENABLE);
-        //А проверить на ошибку ?
-		pam_ptr->State_DC_DC == ENABLE;
-		LL_mDelay(40); //Delay for startup power supply
-        PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
+        PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 	}
 
 	//Disable all channels TCA9548 I2C MUX on PAM module.
