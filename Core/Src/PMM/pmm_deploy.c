@@ -1,7 +1,6 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
-#include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "PCA9534.h"
 #include "ADS1015.h"
@@ -9,6 +8,7 @@
 #include "PMM/pmm_init_IC.h"
 #include "PMM/pmm_ctrl.h"
 #include "PMM/eps_struct.h"
+#include "PDM/pdm_ctrl.h"
 #include "PMM/pmm_deploy.h"
 
 
@@ -79,7 +79,7 @@ void PMM_Deploy( _EPS_Param eps_p ){
     // Deploy stage 1 - Only one Limit switch = 1, waiting good generation level
     }else if( deploy_stage == 1 ){
         //TODO дописать проверку генерации как будет дописан PAM.
-        //TODO сделать проверку что нет ошибок PWR Mon и I2C EXT GPIO
+        //TODO сделать проверку что нет ошибок PWR Mon и I2C EXT GPIO и ошибки  PG
         eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
         Deploy_start_time_delay = SysTick_Counter;
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
@@ -100,46 +100,114 @@ void PMM_Deploy( _EPS_Param eps_p ){
             eps_p.eps_pmm_ptr->Deploy_stage = 3; // Next deploy stage 3 - low level energy, check and waiting for charge if battery low.
         }
 
+    // Deploy stage 4 -  burn channel 1.
     }else if( deploy_stage == 4 ){
 
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
+        LL_mDelay( 20 );
 
         PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch1);
 
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+        eps_p.eps_pmm_ptr->Deploy_stage = 5; // Next deploy stage 5 - deploy at channel 2
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+    // Deploy stage 5 -  burn channel 2.
+    }else if( deploy_stage == 5 ){
+
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
+
+        PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch2);
+
+        eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 5 - deploy at channel 3
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+    // Deploy stage 6 -  burn channel 3.
+    }else if( deploy_stage == 6 ){
+
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
+
+        PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch3);
+
+        eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 5 - deploy at channel 4
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+    // Deploy stage 7 -  burn channel 4.
+    }else if( deploy_stage == 7 ){
+
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
+
+        PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch4);
+
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE );
 
+        eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 6 - Enable BRK
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+    }else if( deploy_stage == 8 ){
+        //Enable BRC
+        PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
+        PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
+
+        //Disable Power deploy logic
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+
+        eps_p.eps_pmm_ptr->Deploy_stage = 9; // Next deploy stage 9 - Finis deploy
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
     }
 
-
-
-
+    return;
 }
 
+/** @brief  Deploy burn procedure. Burning threads for deploy elements of the CubeSat.
+ *  @param  eps_p - contain pointer to struct which contain all parameters EPS.
+   	@param  burn_pwr_ch_num - number of channel to burn:
+   	                                    PMM_PWR_Deploy_Ch1
+   	                                    PMM_PWR_Deploy_Ch2
+   	                                    PMM_PWR_Deploy_Ch3
+   	                                    PMM_PWR_Deploy_Ch4
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
 ErrorStatus PMM_Deploy_Burn_Procedure( _EPS_Param eps_p, uint8_t burn_pwr_ch_num ){
 
     int8_t error_status = SUCCESS;
     uint8_t get_state_limit_switch_1 = 0;
     uint8_t get_state_limit_switch_2 = 0;
 
+    //First attempt to deploy for a specific channel.
     error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_1, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
 
-    if( (get_state_limit_switch_1 == 0) || (get_state_limit_switch_2 == 0) ){
-        LL_mDelay(10);
+
+    if( (get_state_limit_switch_1 != 1) || (get_state_limit_switch_2 != 1) ){
+        //Second attempt to deploy for a specific channel.
+        LL_mDelay(900);
         error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_2, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
     }
 
-    if( (get_state_limit_switch_1 == 0) || (get_state_limit_switch_2 == 0) ){
-        LL_mDelay(10);
+    if( (get_state_limit_switch_1 != 1) || (get_state_limit_switch_2 != 1) ){
+        //Third attempt to deploy for a specific channel.
+        LL_mDelay(900);
         error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_3, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
     }
 
     return error_status;
 }
 
-
-ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint8_t burn_pwr_ch_num, uint8_t *ret_state_limit_switch_1,  uint8_t *ret_state_limit_switch_2){
+/** @brief  Deploy burn threads in burn power channel.
+ *  @param  eps_p - contain pointer to struct which contain all parameters EPS.
+ *  @param  attempt_burn - attempt to burn threads:
+                                        PMM_Deploy_Burn_Attempt_1
+                                        PMM_Deploy_Burn_Attempt_2
+                                        PMM_Deploy_Burn_Attempt_3
+   	@param  burn_pwr_ch_num - number of channel to burn:
+   	                                    PMM_PWR_Deploy_Ch1
+   	                                    PMM_PWR_Deploy_Ch2
+   	                                    PMM_PWR_Deploy_Ch3
+   	                                    PMM_PWR_Deploy_Ch4
+   	@param  ret_state_limit_switch_1 - pointer for return value state limit switch 1
+   	@param  ret_state_limit_switch_2 - pointer for return value state limit switch 2
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
+ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uint8_t burn_pwr_ch_num, uint8_t *ret_state_limit_switch_1, uint8_t *ret_state_limit_switch_2){
 
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
     uint8_t i = 0;
@@ -154,7 +222,6 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint
 //    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
 //    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
 //    LL_mDelay(20);
-
 
     start_burn_time = SysTick_Counter;
 
@@ -174,17 +241,17 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint
         }
     }
 
-    if( attepmt_burn == PMM_Deploy_Burn_Attempt_1 ){
-        //Whait Burn time 1
+    if( attempt_burn == PMM_Deploy_Burn_Attempt_1 ){
+        //Whit Burn time 1
         while((SysTick_Counter - start_burn_time) < PMM_Deploy_Burn_time_1 ){
 
         }
 
     }else{
-        if( attepmt_burn == PMM_Deploy_Burn_Attempt_2 ){
+        if( attempt_burn == PMM_Deploy_Burn_Attempt_2 ){
             deploy_burn_timeout = PMM_Deploy_Burn_time_2;
 
-        }else if( attepmt_burn == PMM_Deploy_Burn_Attempt_3 ){
+        }else if( attempt_burn == PMM_Deploy_Burn_Attempt_3 ){
             deploy_burn_timeout = PMM_Deploy_Burn_time_3;
         }
 
@@ -197,6 +264,9 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint
         }
     }
 
+
+    i = 0;
+    error_I2C = ERROR_N;
     //Disable burn
     while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
 
@@ -210,7 +280,7 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint
         }
     }
 
-    if(attepmt_burn == PMM_Deploy_Burn_Attempt_1){
+    if( attempt_burn == PMM_Deploy_Burn_Attempt_1){
         PMM_Deploy_check_Lim_SW( eps_p, burn_pwr_ch_num,  ret_state_limit_switch_1, ret_state_limit_switch_2 );
     }
 
@@ -226,6 +296,19 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint
     return error_I2C;
 }
 
+
+
+/** @brief  Deploy burn threads in burn power channel.
+ *  @param  eps_p - contain pointer to struct which contain all parameters EPS.
+   	@param  burn_pwr_ch_num - number of channel to burn:
+   	                                    PMM_PWR_Deploy_Ch1
+   	                                    PMM_PWR_Deploy_Ch2
+   	                                    PMM_PWR_Deploy_Ch3
+   	                                    PMM_PWR_Deploy_Ch4
+   	@param  ret_state_limit_switch_1 - pointer for return value state limit switch 1
+   	@param  ret_state_limit_switch_2 - pointer for return value state limit switch 2
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
 ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, uint8_t *ret_state_limit_switch_1,  uint8_t *ret_state_limit_switch_2){
 
     uint8_t i = 0;
@@ -237,6 +320,7 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
 
     SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
 
+    //Init. deploy ADC
     while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){
 
         error_I2C = ADS1015_init( eps_p.eps_pmm_ptr, PMM_I2Cx_DeployADC, PMM_I2CADDR_DeployADC );

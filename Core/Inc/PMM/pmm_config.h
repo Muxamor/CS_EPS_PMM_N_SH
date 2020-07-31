@@ -64,9 +64,9 @@ extern "C" {
 
 
 #define PMM_Deploy_Time_Delay       1800000 //in milliseconds 1800000 = 30 minuts
-#define PMM_Deploy_Burn_time_1      5000  // in milisecand
-#define PMM_Deploy_Burn_time_2      7000  // in milisecand
-#define PMM_Deploy_Burn_time_3      9000  // in milisecand
+#define PMM_Deploy_Burn_time_1      4000  // in milisecand
+#define PMM_Deploy_Burn_time_2      5000  // in milisecand
+#define PMM_Deploy_Burn_time_3      6000  // in milisecand
 
 #define PMM_Deploy_Burn_Attempt_1   0x00
 #define PMM_Deploy_Burn_Attempt_2   0x01

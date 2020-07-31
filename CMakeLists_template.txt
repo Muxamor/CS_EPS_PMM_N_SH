@@ -12,8 +12,19 @@ set(CMAKE_OBJDUMP arm-none-eabi-objdump)
 set(SIZE arm-none-eabi-size)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
+
+# version major update  0..255
+set(VERSION_FIRMWARE_MAJOR 0)
+
+# version mainor update 0..255
+set(VERSION_FIRMWARE_MINOR 1)
+
+
 # project settings
 project(${projectName} C CXX ASM)
+
+set( PROJECT_NAME ${PROJECT_NAME}_${VERSION_FIRMWARE_MAJOR}_${VERSION_FIRMWARE_MINOR})
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
