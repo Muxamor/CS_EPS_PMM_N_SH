@@ -4,6 +4,8 @@
       <option name="SPACE_WITHIN_FUNCTION_DECLARATION_PARENTHESES" value="true" />
     </Objective-C>
     <codeStyleSettings language="ObjectiveC">
+      <option name="RIGHT_MARGIN" value="500" />
+      <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
       <option name="SPACE_WITHIN_IF_PARENTHESES" value="true" />
       <option name="SPACE_WITHIN_WHILE_PARENTHESES" value="true" />
       <option name="SPACE_WITHIN_FOR_PARENTHESES" value="true" />

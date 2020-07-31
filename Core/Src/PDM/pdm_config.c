@@ -14,9 +14,9 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 
 	//Config Power monitor INA231, same for all power channels
 	pdm_table.PWR_Mon_Max_Current_int16 = 2000; 		//Max current in mA 
-	pdm_table.PWR_Mon_Max_Current_float = 2.0; 			//Max current in A 
+	pdm_table.PWR_Mon_Max_Current_float = (float)2.0; 			//Max current in A
 	pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm 
-	pdm_table.PWR_Mon_Rshunt_float = 0.015;				//Rshunt value in Ohm 
+	pdm_table.PWR_Mon_Rshunt_float = (float)0.015;				//Rshunt value in Ohm
 
 	pdm_table.PWR_Mon_aver_mode = INA231_AVERAGING_NUM_64; 		 // Average 64
 	pdm_table.PWR_Mon_bus_conv_time = INA231_CONVERSION_TIME_1100us; // Conversion time 1.1ms

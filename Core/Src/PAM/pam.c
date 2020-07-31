@@ -19,6 +19,7 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
 	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
 	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 
+    // Check state power supply
 	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
 	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 
