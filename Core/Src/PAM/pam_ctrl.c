@@ -258,12 +258,10 @@ ErrorStatus PAM_Get_State_ID_PWR_In( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
     if( error_I2C == SUCCESS  ){
 
-        //		if(((pam_ptr->Error_State_DC_DC == SUCCESS) && (pam_ptr->PG_DC_DC == SUCCESS)) ||
-        //				((pam_ptr->Error_State_LDO == SUCCESS) && (pam_ptr->PG_LDO == SUCCESS))){
-        //			pam_ptr->PWR_IN_Channel[pwr_source_num].State_ID_In = read_val_pin_State_ID;
-        //		}
+        if((pam_ptr->State_DC_DC == ENABLE) || (pam_ptr->State_LDO == ENABLE)){
+       		pam_ptr->PWR_IN_Channel[pwr_source_num].State_ID_In = read_val_pin_State_ID;
+       	}
         pam_ptr->Error_I2C_GPIO_Ext = SUCCESS;
-        pam_ptr->PWR_IN_Channel[pwr_source_num].State_ID_In = read_val_pin_State_ID;
 
     }else{
         #ifdef DEBUGprintf

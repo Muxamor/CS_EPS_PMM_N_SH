@@ -108,7 +108,7 @@ int main(void){
 	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записиво флеш.
 
 	pam_ptr->State_DC_DC = ENABLE;
-	pam_ptr->State_LDO = DISABLE;
+	pam_ptr->State_LDO = ENABLE;
 
     pbm_mas[0].Branch_1_ChgEnableBit = ENABLE;
     pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
