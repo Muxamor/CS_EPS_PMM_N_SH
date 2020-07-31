@@ -6,6 +6,8 @@
 extern "C" {
 #endif
 
+#include "PAM/pam_struct.h"
+
 ErrorStatus PAM_Set_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num, uint8_t state_channel);
 ErrorStatus PAM_Check_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num);
 ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num);

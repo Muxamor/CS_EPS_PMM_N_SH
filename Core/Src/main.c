@@ -184,7 +184,7 @@ int main(void){
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
 			PDM_Get_Telemetry( pdm_ptr );
 			PMM_Get_Telemetry( pmm_ptr );
-            PBM_GetTelemetry( pbm_mas );
+            PBM_Get_Telemetry( pbm_mas );
             PAM_Get_Telemetry( pam_ptr );
 
 	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param );

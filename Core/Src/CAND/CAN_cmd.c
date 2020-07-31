@@ -7,6 +7,8 @@
 #include "PMM/pmm_struct.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_ctrl.h"
+#include "PAM/pam_config.h"
+#include "PAM/pam_ctrl.h"
 #include "uart_eps_comm.h"
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
@@ -479,6 +481,36 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> DISABLE auto heat AB3 branch 2\n", CAN_AB3_Heat_Branch2_offset);
                         #endif
                         PBM_SetStateHeatBranch(PBM_I2C_PORT, eps_p.eps_pbm_ptr, 2, PBM_BRANCH_2, PBM_OFF_HEAT);
+                    }
+                    break;
+
+                case CAN_PAM_Power_DC_DC_offset: //Enable/Disable PAM Power DC_DC source // PAM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_PAM_Power_DC_DC == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE PAM Power DC_DC source \n", CAN_PAM_Power_DC_DC_offset);
+                        #endif
+                        PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE PAM Power DC_DC source \n", CAN_PAM_Power_DC_DC_offset);
+                        #endif
+                        PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_DC_DC, DISABLE);
+                    }
+                    break;
+
+                case CAN_PAM_Power_LDO_offset: //Enable/Disable PAM Power LDO source // PAM_data
+
+                    if (CAN_IVar4_RegCmd.CAN_PAM_Power_LDO == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE PAM Power LDO source \n", CAN_PAM_Power_LDO_offset);
+                        #endif
+                        PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_LDO, ENABLE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE PAM Power LDO source \n", CAN_PAM_Power_LDO_offset);
+                        #endif
+                        PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_LDO, DISABLE);
                     }
                     break;
 
