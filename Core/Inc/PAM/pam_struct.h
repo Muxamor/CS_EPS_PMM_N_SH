@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-#include "pam_config.h"
+#include "PAM/pam_config.h"
 
 //typedef struct{
 //

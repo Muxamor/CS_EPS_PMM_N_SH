@@ -11,7 +11,7 @@
     @param 	*Data - structure data for all PBM modules.
     @retval 	none
  */
-ErrorStatus PBM_GetTelemetry(_PBM pbm[]) {
+ErrorStatus PBM_Get_Telemetry(_PBM pbm[]) {
 
 	uint8_t i = 0;
 	int8_t Error = SUCCESS;
