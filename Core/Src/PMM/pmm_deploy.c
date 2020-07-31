@@ -79,6 +79,7 @@ void PMM_Deploy( _EPS_Param eps_p ){
     // Deploy stage 1 - Only one Limit switch = 1, waiting good generation level
     }else if( deploy_stage == 1 ){
         //TODO дописать проверку генерации как будет дописан PAM.
+        //TODO сделать проверку что нет ошибок PWR Mon и I2C EXT GPIO
         eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
         Deploy_start_time_delay = SysTick_Counter;
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
@@ -100,37 +101,63 @@ void PMM_Deploy( _EPS_Param eps_p ){
         }
 
     }else if( deploy_stage == 4 ){
-    //TODO проверить уровень батареи ??
 
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
+
+        PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch1);
+
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE );
 
     }
 
-    //TODO внутри ADS1015_init поправить выставление ошибки а мождет и совсем убрать отуда
-    //ADS1015_init(  eps_p.eps_pmm_ptr, PMM_I2Cx_DeployADC, PMM_I2CADDR_DeployADC );
+
+
 
 }
 
+ErrorStatus PMM_Deploy_Burn_Procedure( _EPS_Param eps_p, uint8_t burn_pwr_ch_num ){
+
+    int8_t error_status = SUCCESS;
+    uint8_t get_state_limit_switch_1 = 0;
+    uint8_t get_state_limit_switch_2 = 0;
+
+    error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_1, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
+
+    if( (get_state_limit_switch_1 == 0) || (get_state_limit_switch_2 == 0) ){
+        LL_mDelay(10);
+        error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_2, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
+    }
+
+    if( (get_state_limit_switch_1 == 0) || (get_state_limit_switch_2 == 0) ){
+        LL_mDelay(10);
+        error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_3, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
+    }
+
+    return error_status;
+}
 
 
-void PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint8_t burn_pwr_ch_num ){
+ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint8_t burn_pwr_ch_num, uint8_t *ret_state_limit_switch_1,  uint8_t *ret_state_limit_switch_2){
 
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
     uint8_t i = 0;
-    uint8_t state_limit_switch_1 = 0;
-    uint8_t state_limit_switch_2 = 0;
     uint32_t start_burn_time = 0;
+    uint32_t deploy_burn_timeout = 0;
     _PMM_table pmm_table;
 
     SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
 
     pmm_table = PMM__Table( burn_pwr_ch_num );
 
-    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
-    LL_mDelay(20);
+//    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+//    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
+//    LL_mDelay(20);
 
 
-//1. The first stage - burned out for a set time without checking the limit switch.
     start_burn_time = SysTick_Counter;
+
     i = 0;
     error_I2C = ERROR_N;
 
@@ -147,8 +174,27 @@ void PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint8_t bur
         }
     }
 
-    //Whait Burn time 1
-    while((SysTick_Counter - start_burn_time) < PMM_Deploy_Burn_time_1 ){
+    if( attepmt_burn == PMM_Deploy_Burn_Attempt_1 ){
+        //Whait Burn time 1
+        while((SysTick_Counter - start_burn_time) < PMM_Deploy_Burn_time_1 ){
+
+        }
+
+    }else{
+        if( attepmt_burn == PMM_Deploy_Burn_Attempt_2 ){
+            deploy_burn_timeout = PMM_Deploy_Burn_time_2;
+
+        }else if( attepmt_burn == PMM_Deploy_Burn_Attempt_3 ){
+            deploy_burn_timeout = PMM_Deploy_Burn_time_3;
+        }
+
+        while((SysTick_Counter - start_burn_time) < deploy_burn_timeout ){
+            PMM_Deploy_check_Lim_SW( eps_p,  burn_pwr_ch_num, ret_state_limit_switch_1, ret_state_limit_switch_2 );
+
+            if( (*ret_state_limit_switch_1 == 1) && ( *ret_state_limit_switch_2 == 1) ){
+                break;
+            }
+        }
     }
 
     //Disable burn
@@ -164,42 +210,34 @@ void PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attepmt_burn ,uint8_t bur
         }
     }
 
-    PMM_Deploy_check_Lim_SW( eps_p,  burn_pwr_ch_num );
-
-    if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-        state_limit_switch_1 = eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp;
-        state_limit_switch_2 = eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp;
-
-    }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-        state_limit_switch_1 = eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn;
-        state_limit_switch_2 = eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn;
-
-    }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-        state_limit_switch_1 = eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn;
-        state_limit_switch_2 = eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn;
-
-    }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-        state_limit_switch_1 = eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp;
-        state_limit_switch_2 = eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp;
+    if(attepmt_burn == PMM_Deploy_Burn_Attempt_1){
+        PMM_Deploy_check_Lim_SW( eps_p, burn_pwr_ch_num,  ret_state_limit_switch_1, ret_state_limit_switch_2 );
     }
 
+//    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+//    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE );
 
-    //eps_p.eps_pmm_ptr-> Error_I2C_Deploy_GPIO_Ext			:1;
+    if( error_I2C == SUCCESS ){
+        eps_p.eps_pmm_ptr-> Error_I2C_Deploy_GPIO_Ext = SUCCESS;
+    }else{
+        eps_p.eps_pmm_ptr-> Error_I2C_Deploy_GPIO_Ext = ERROR;
+    }
 
-
-
+    return error_I2C;
 }
 
-ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num ){
+ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, uint8_t *ret_state_limit_switch_1,  uint8_t *ret_state_limit_switch_2){
 
     uint8_t i = 0;
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
     float ADC_ch_meas = (float)0.0;
     uint8_t ADC_num_ch = 0;
 
+//    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+
     SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
 
-    while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
+    while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){
 
         error_I2C = ADS1015_init( eps_p.eps_pmm_ptr, PMM_I2Cx_DeployADC, PMM_I2CADDR_DeployADC );
 
@@ -234,12 +272,17 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num )
         }
     }
 
+    //PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+
     if( error_I2C == SUCCESS ){
 
         eps_p.eps_pmm_ptr-> Error_I2C_Deploy_ADC = SUCCESS;
         //Parsing the received data
         if( ADC_ch_meas < 0.4 ){
             //all Limit Switch close
+            *ret_state_limit_switch_1 = 0;
+            *ret_state_limit_switch_2 = 0;
+
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
                 eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
                 eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
@@ -253,12 +296,15 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num )
                 eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
             }
 
         }else if((ADC_ch_meas > 0.4) && (ADC_ch_meas < 0.7)){
             //2k open, 1k close Limit Switch
+            *ret_state_limit_switch_1 = 1;
+            *ret_state_limit_switch_2 = 0;
+
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
                 eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 1;
                 eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
@@ -272,12 +318,15 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num )
                 eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
             }
 
         }else if((ADC_ch_meas > 0.7) && (ADC_ch_meas < 1.1)){
             //2k close, 1k open Limit Switch
+            *ret_state_limit_switch_1 = 0;
+            *ret_state_limit_switch_2 = 1;
+
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
                 eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
                 eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 1;
@@ -291,12 +340,15 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num )
                 eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 1;
             }
 
         }else if( ADC_ch_meas > 1.1 ){
             //ALL open Limit Switch
+            *ret_state_limit_switch_1 = 1;
+            *ret_state_limit_switch_2 = 1;
+
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
                 eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 1;
                 eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 1;
@@ -310,13 +362,16 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num )
                 eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 1;
             }
         }
 
     }else{
         eps_p.eps_pmm_ptr-> Error_I2C_Deploy_ADC = ERROR;
+
+        *ret_state_limit_switch_1 = 0;
+        *ret_state_limit_switch_2 = 0;
 
         if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
             eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
@@ -331,8 +386,8 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num )
             eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
 
         }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
         }
     }
 
@@ -340,28 +395,5 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num )
 }
 
 
-//uint16_t Deploy_Ch4_Lim_SW_1_Yp     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 1// Need to save in flash.
-//uint16_t Deploy_Ch4_Lim_SW_2_Yp     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 2// Need to save in flash.
-//uint16_t Deploy_Ch3_Lim_SW_1_Yn     :1; //0 - не сработал 1 - сработал. Y- Limit switch 1// Need to save in flash.
-//uint16_t Deploy_Ch3_Lim_SW_2_Yn     :1; //0 - не сработал 1 - сработал. Y- Limit switch 2// Need to save in flash.
-//uint16_t Deploy_Ch1_Lim_SW_1_Zp     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 1// Need to save in flash.
-//uint16_t Deploy_Ch1_Lim_SW_2_Zp     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 2// Need to save in flash.
-//uint16_t Deploy_Ch2_Lim_SW_1_Zn     :1; //0 - не сработал 1 - сработал. Z- Limit switch 1// Need to save in flash.
-//uint16_t Deploy_Ch2_Lim_SW_2_Zn     :1; //0 - не сработал 1 - сработал. Z- Limit switch 2// Need to save in flash.
-
-//#define PMM_PWR_Deploy_Ch1          0x0C
-//#define PMM_PWR_Deploy_Ch2          0x0D
-//#define PMM_PWR_Deploy_Ch3          0x0E
-//#define PMM_PWR_Deploy_Ch4          0x0F
-//
-//
-//#define PMM_Deploy_Burn_time_1      5000  // in milisecand
-//#define PMM_Deploy_Burn_time_2      7000  // in milisecand
-//#define PMM_Deploy_Burn_time_3      7000  // in milisecand
-//
-//
-//
-//#define PMM_I2Cx_DeployGPIOExt			I2C4 //I2C GPIO extender PCA9534 in PMM Deploy block
-//#define PMM_I2CADDR_DeployGPIOExt 		0x38 //I2C GPIO extender PCA9534 in PMM Deploy block
 
 
