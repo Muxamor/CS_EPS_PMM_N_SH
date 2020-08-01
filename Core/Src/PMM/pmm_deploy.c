@@ -9,12 +9,15 @@
 #include "PMM/pmm_ctrl.h"
 #include "PMM/eps_struct.h"
 #include "PDM/pdm_ctrl.h"
+#include "PAM/pam_ctrl.h"
+#include "PAM/pam.h"
 #include "PMM/pmm_deploy.h"
 
 
 void PMM_Deploy( _EPS_Param eps_p ){
 
     //int8_t error_status = SUCCESS;
+    uint16_t  i = 0;
     uint8_t deploy_stage;
     static uint32_t  Deploy_start_time_delay = 0;
     static uint16_t  Counter_deploy_exit_LSW_1  = 0;
@@ -25,7 +28,7 @@ void PMM_Deploy( _EPS_Param eps_p ){
     //Enable power Deploy Logic
     if( eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic == DISABLE ){
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
-        LL_mDelay( 20 );
+        LL_mDelay( 5 );
     }else{
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
     }
@@ -78,11 +81,40 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 1 - Only one Limit switch = 1, waiting good generation level
     }else if( deploy_stage == 1 ){
-        //TODO дописать проверку генерации как будет дописан PAM.
-        //TODO сделать проверку что нет ошибок PWR Mon и I2C EXT GPIO и ошибки  PG
-        eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
-        Deploy_start_time_delay = SysTick_Counter;
-        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+        uint8_t total_error_pwr_mon_pam = 0;
+        uint16_t total_power_gen_pam = 0;
+
+        //Check Enbale state power supply PAM module and get telemetry PAM if PWR supply disable
+        if( (eps_p.eps_pam_ptr->State_DC_DC == DISABLE) && (eps_p.eps_pam_ptr->State_LDO == DISABLE) ){
+            PAM_Set_state_PWR_Supply(  eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE);
+            LL_mDelay( 20 );
+            PAM_Get_Telemetry( eps_p.eps_pam_ptr );
+        }
+
+        //Checking quantity error input power monitors on PAM
+        for( total_error_pwr_mon_pam = 0, i = 0; i < PAM_PWR_IN_Ch_quantity; i++){
+            total_error_pwr_mon_pam = total_error_pwr_mon_pam + eps_p.eps_pam_ptr->PWR_IN_Channel[i].Error_PWR_Mon;
+        }
+
+        //if all is errors it is mean PAM is broken and we go to next stage deploy
+        if( total_error_pwr_mon_pam == PAM_PWR_IN_Ch_quantity ){
+            eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
+            Deploy_start_time_delay = SysTick_Counter;
+            eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+        }else{
+            for ( total_power_gen_pam = 0, i = 0; i < PAM_PWR_IN_Ch_quantity; i++ ){
+                total_power_gen_pam = total_power_gen_pam + ( (eps_p.eps_pam_ptr->PWR_IN_Channel[i].Current_val * eps_p.eps_pam_ptr->PWR_IN_Channel[i].Voltage_val ) / 1000 );
+            }
+
+            if( total_power_gen_pam > PMM_Deploy_Power_Gen_EDGE ){
+                eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
+                Deploy_start_time_delay = SysTick_Counter;
+                eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+            }else{
+                eps_p.eps_pmm_ptr->Deploy_stage = 1;
+            };
+        }
 
     // Deploy stage 2 - waiting timeout before deploy
     }else if( deploy_stage == 2 ){
@@ -102,43 +134,31 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 4 -  burn channel 1.
     }else if( deploy_stage == 4 ){
-
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
-        LL_mDelay( 20 );
-
         PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch1);
-
         eps_p.eps_pmm_ptr->Deploy_stage = 5; // Next deploy stage 5 - deploy at channel 2
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     // Deploy stage 5 -  burn channel 2.
     }else if( deploy_stage == 5 ){
-
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
-
         PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch2);
-
         eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 5 - deploy at channel 3
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     // Deploy stage 6 -  burn channel 3.
     }else if( deploy_stage == 6 ){
-
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
-
-        PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch3);
-
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
         eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 5 - deploy at channel 4
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     // Deploy stage 7 -  burn channel 4.
     }else if( deploy_stage == 7 ){
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
 
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
-
-        PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch4);
-
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE );
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
 
         eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 6 - Enable BRK
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;

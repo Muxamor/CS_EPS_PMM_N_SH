@@ -62,7 +62,7 @@ extern "C" {
 #define pmm_uart_attempt_conn		3 	 // Quantity attempt to connection through UART
 #define pmm_uart_delay_att_conn		3 	 //ms Delay between attempts connection through UART in millisecond
 
-
+#define PMM_Deploy_Power_Gen_EDGE   3000 // EDGE power generation from solar panel 
 #define PMM_Deploy_Time_Delay       1800000 //in milliseconds 1800000 = 30 minuts
 #define PMM_Deploy_Burn_time_1      4000  // in milisecand
 #define PMM_Deploy_Burn_time_2      5000  // in milisecand
@@ -71,6 +71,7 @@ extern "C" {
 #define PMM_Deploy_Burn_Attempt_1   0x00
 #define PMM_Deploy_Burn_Attempt_2   0x01
 #define PMM_Deploy_Burn_Attempt_3   0x03
+
 
 
 #define CPUmain 					0
