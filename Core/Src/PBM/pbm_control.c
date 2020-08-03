@@ -773,11 +773,11 @@ ErrorStatus PBM_CheckCapacity(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number)
 
 	pbm_table = PBM_Table(PBM_number);
 	if (pbm[PBM_number].Error_DS2777_1 == 0) {
-		Capacity = ((float) (pbm[PBM_number].Branch_1_AbcoluteCapacity) / 3000.0 * 100.0); // (3000.0 * 100.0) convert to %
-		Voltage = ((float) (pbm[PBM_number].Branch_1_VoltageHi + pbm[PBM_number].Branch_1_VoltageLo)) / 2.0;
-		Voltage = (float) (Voltage - 2500.0) * 100.0 / 1650.0; // in %
+		Capacity = ((float) (pbm[PBM_number].Branch_1_AbcoluteCapacity) / 3000.0f * 100.0f); // (3000.0 * 100.0) convert to %
+		Voltage = ((float) (pbm[PBM_number].Branch_1_VoltageHi + pbm[PBM_number].Branch_1_VoltageLo)) / 2.0f;
+		Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
 		Error = (float) (Voltage / Capacity);
-		Error = (float) (Error - 1.0) * 100.0;  // in %
+		Error = (float) (Error - 1.0f) * 100.0f;  // in %
 		if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
 			AbsoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
 			DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_1_Addr, AbsoluteCapacity);
@@ -787,11 +787,11 @@ ErrorStatus PBM_CheckCapacity(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number)
 	}
 
 	if (pbm[PBM_number].Error_DS2777_2 == 0) {
-		Capacity = ((float) (pbm[PBM_number].Branch_2_AbcoluteCapacity) / 3000.0 * 100.0); // in %
-		Voltage = ((float) (pbm[PBM_number].Branch_2_VoltageHi + pbm[PBM_number].Branch_2_VoltageLo)) / 2.0;
-		Voltage = (float) (Voltage - 2500.0) * 100.0 / 1650.0; // in %
+		Capacity = ((float) (pbm[PBM_number].Branch_2_AbcoluteCapacity) / 3000.0f * 100.0f); // in %
+		Voltage = ((float) (pbm[PBM_number].Branch_2_VoltageHi + pbm[PBM_number].Branch_2_VoltageLo)) / 2.0f;
+		Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
 		Error = (float) (Voltage / Capacity);
-		Error = (float) (Error - 1.0) * 100.0;  // in %
+		Error = (float) (Error - 1.0f) * 100.0f;  // in %
 		if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
 			AbsoluteCapacity = (int16_t) ((Voltage * 3000) / 100);
 			DS2777_WriteAccmCharge(I2Cx, pbm_table.BRANCH_2_Addr, AbsoluteCapacity);

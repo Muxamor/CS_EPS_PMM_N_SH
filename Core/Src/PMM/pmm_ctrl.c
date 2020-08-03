@@ -661,8 +661,8 @@ ErrorStatus PMM_ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 	int8_t error_I2C = ERROR_N;
 	uint8_t conv_status = 0;
 	uint8_t timeout = 0;
-	float data = (float)0.0;
-	float total_data = (float)0.0;
+	float data = 0.0f;
+	float total_data = 0.0f;
 
 	i=0;
 	error_I2C = ERROR_N;
@@ -745,10 +745,10 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 
 	//uint8_t i = 0;
 	int8_t error_I2C = ERROR_N;
-	float ch0_meas = (float)0.0;
-	float ch1_meas = (float)0.0;
-	float ch2_meas = (float)0.0;
-	float ch3_meas = (float)0.0;
+	float ch0_meas = 0.0f;
+	float ch1_meas = 0.0f;
+	float ch2_meas = 0.0f;
+	float ch3_meas = 0.0f;
 	int16_t Backup_eF_in_Current_val = 0;
 	int16_t Backup_eF_out_Current_val = 0;
 	int16_t Diff_out_in_Current_Backup = 0;
@@ -771,12 +771,12 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 
 		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = SUCCESS;
 
-		Main_eF_in_Current_val = (int16_t)(( ch1_meas * 495.0 ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
-		Main_eF_out_Current_val = (int16_t)(( ch3_meas * 2778.0 ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
+		Main_eF_in_Current_val = (int16_t)(( ch1_meas * 495.0f ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
+		Main_eF_out_Current_val = (int16_t)(( ch3_meas * 2778.0f ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
 
 
-		Backup_eF_in_Current_val = (int16_t)(( ch0_meas * 495.0 ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
-		Backup_eF_out_Current_val = (int16_t)(( ch2_meas * 2778.0 ) /* - 13.0 */ ); //Current in mA. (-13) - correction coefficient
+		Backup_eF_in_Current_val = (int16_t)(( ch0_meas * 495.0f ) /*- 13.0 */); //Current in mA. (-13) - correction coefficient
+		Backup_eF_out_Current_val = (int16_t)(( ch2_meas * 2778.0f ) /* - 13.0 */ ); //Current in mA. (-13) - correction coefficient
 
 
 		Diff_out_in_Current_Main = Main_eF_out_Current_val - Main_eF_in_Current_val;

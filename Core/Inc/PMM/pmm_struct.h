@@ -105,8 +105,9 @@ typedef struct{
 
     uint8_t Deploy_stage;           //  0-In delivery containerr, 1-one Limit switch and whait generation, 2-waiting timeout before deploy, 3-low level energy (if low waiting generation),
     // Need to save in flash.       //  4- Deploy burn power channel 1  (Z+ side),  5- Deploy burn power channel 2  (Z- side)
-                                    //  6- Deploy burn power channel 3  (Y- side),  7- Deploy burn power channel 4  (Y+ side)
-                                    //  8 - Enable BRC, 9 - Finish Deploy at all.
+                                    //  6 - Enable BRC
+                                    //  7- Deploy burn power channel 3  (Y- side),  8- Deploy burn power channel 4  (Y+ side)
+                                    //  9 - Finish Deploy at all.
 
 	uint16_t Deploy_Lim_SW_Exit_1       :1; //0 - не сработал 1 - сработал. Deploy Limit switch 1 exit from container// Need to save in flash.
     uint16_t Deploy_Lim_SW_Exit_2       :1; //0 - не сработал 1 - сработал. Deploy Limit switch 2 exit from container// Need to save in flash.
