@@ -13,6 +13,10 @@
 #include "PAM/pam.h"
 #include "PMM/pmm_deploy.h"
 
+/** @brief  Deploy CubeSat Norbi.
+ *  @param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval None
+*/
 
 void PMM_Deploy( _EPS_Param eps_p ){
 
@@ -141,38 +145,46 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 5 -  burn channel 2.
     }else if( deploy_stage == 5 ){
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
-        PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch2);
-        eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 5 - deploy at channel 3
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch2);
+        eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 5 - Enable BRC
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-    // Deploy stage 6 -  burn channel 3.
+    //Enable BRC
     }else if( deploy_stage == 6 ){
-        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
-        eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 5 - deploy at channel 4
-        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
-
-    // Deploy stage 7 -  burn channel 4.
-    }else if( deploy_stage == 7 ){
-        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
-
-        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
-
-        eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 6 - Enable BRK
-        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
-
-    }else if( deploy_stage == 8 ){
         //Enable BRC
         PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
         PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
-
-        //Disable Power deploy logic
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
-
-        eps_p.eps_pmm_ptr->Deploy_stage = 9; // Next deploy stage 9 - Finis deploy
+        eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 6 - Enable BRC
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+    // Deploy stage 7 -  burn channel 3.
+    }else if( deploy_stage == 7 ){
+        if (eps_p.eps_pbm_ptr->Low_Energy_Flag == 0){
+            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+            PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
+            eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 5 - deploy at channel 4
+            eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+        }else{
+            eps_p.eps_pmm_ptr->Deploy_stage = 7;
+        }
+
+    // Deploy stage 8 -  burn channel 4.
+    }else if( deploy_stage == 8 ){
+        if (eps_p.eps_pbm_ptr->Low_Energy_Flag == 0){
+            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+            PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
+
+            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
+
+            eps_p.eps_pmm_ptr->Deploy_stage = 9; //  Next deploy stage 9 - Finis deploy
+            eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+            //Disable Power deploy logic
+            PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+        }else{
+            eps_p.eps_pmm_ptr->Deploy_stage = 8;
+        }
     }
 
     return;
