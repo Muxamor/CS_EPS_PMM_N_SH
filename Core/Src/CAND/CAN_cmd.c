@@ -607,17 +607,24 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 //	    CAN_IVar5_telemetry.CAN_Solar_panel_status[4]                       =  0x7E;
 //
 
-	CAN_IVar5_telemetry.CAN_Full_ABs_Energy_level_percent               = (uint8_t) ((eps_p.eps_pbm_ptr[0].TotalRelativeCapacity + eps_p.eps_pbm_ptr[1].TotalRelativeCapacity +
-                                                                                          eps_p.eps_pbm_ptr[2].TotalRelativeCapacity) / 3);// PBM_data
+    CAN_IVar5_telemetry.CAN_Full_ABs_Energy_level_percent 				= 0x0000;
+    for( num_pwr_ch = 0; num_pwr_ch < PBM_QUANTITY; num_pwr_ch++ ){
+    	CAN_IVar5_telemetry.CAN_Full_ABs_Energy_level_percent           = CAN_IVar5_telemetry.CAN_Full_ABs_Energy_level_percent + (uint8_t)(eps_p.eps_pbm_ptr[num_pwr_ch].TotalRelativeCapacity / 3);
+    }  // PBM_data
 
-	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB1_line1             = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_1_AbcoluteCapacity; // PBM_data
+    CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB1_line1             = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_1_AbcoluteCapacity; // PBM_data
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB1_line2             = (uint16_t) eps_p.eps_pbm_ptr[0].Branch_2_AbcoluteCapacity; // PBM_data
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB2_line1             = (uint16_t) eps_p.eps_pbm_ptr[1].Branch_1_AbcoluteCapacity; // PBM_data
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB2_line2             = (uint16_t) eps_p.eps_pbm_ptr[1].Branch_2_AbcoluteCapacity; // PBM_data
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB3_line1             = (uint16_t) eps_p.eps_pbm_ptr[2].Branch_1_AbcoluteCapacity; // PBM_data
 	CAN_IVar5_telemetry.CAN_Capacity_charge_level_AB3_line2             = (uint16_t) eps_p.eps_pbm_ptr[2].Branch_2_AbcoluteCapacity; // PBM_data
-	CAN_IVar5_telemetry.CAN_Full_capacity_charge_level                  = (uint16_t) (eps_p.eps_pbm_ptr[0].TotalAbcoluteCapacity + eps_p.eps_pbm_ptr[1].TotalAbcoluteCapacity +
-	                                                                        eps_p.eps_pbm_ptr[2].TotalAbcoluteCapacity);// PBM_data
+
+	CAN_IVar5_telemetry.CAN_Full_capacity_charge_level	 				= 0x0000;
+    for( num_pwr_ch = 0; num_pwr_ch < PBM_QUANTITY; num_pwr_ch++ ){
+    	CAN_IVar5_telemetry.CAN_Full_capacity_charge_level		        = CAN_IVar5_telemetry.CAN_Full_capacity_charge_level + (uint8_t)(eps_p.eps_pbm_ptr[num_pwr_ch].TotalAbcoluteCapacity);
+    }  // PBM_data
+
+
 	//***
 	int8_t temp_mas [2] = {0}; 																					// PBM_data
 
@@ -727,19 +734,21 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_SES_current_consumption                     = (uint16_t)(eps_p.eps_pmm_ptr->PWR_Supply_Backup_eF_out_Current_val + eps_p.eps_pmm_ptr->PWR_Supply_Main_eF_out_Current_val);
     CAN_IVar5_telemetry.CAN_SES_Voltage_power_supply                    = 3300; // TODO Позже придумать как мерить.
 
-    CAN_IVar5_telemetry.CAN_Full_charge_discharge_power                 = (uint16_t)(((eps_p.eps_pbm_ptr[0].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[0].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[0].Branch_1_Current) +
-                                                                            ((eps_p.eps_pbm_ptr[0].Branch_2_VoltageHi + eps_p.eps_pbm_ptr[0].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[0].Branch_2_Current) +
-                                                                            ((eps_p.eps_pbm_ptr[1].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[1].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[1].Branch_1_Current) +
-                                                                            ((eps_p.eps_pbm_ptr[1].Branch_2_VoltageHi + eps_p.eps_pbm_ptr[1].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[1].Branch_2_Current) +
-                                                                            ((eps_p.eps_pbm_ptr[2].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[2].Branch_1_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[2].Branch_1_Current) +
-                                                                            ((eps_p.eps_pbm_ptr[2].Branch_2_VoltageHi + eps_p.eps_pbm_ptr[2].Branch_2_VoltageLo) / 1000 * eps_p.eps_pbm_ptr[2].Branch_2_Current)); // PBM_data
+    CAN_IVar5_telemetry.CAN_Full_charge_discharge_power 				= 0x0000;
+    for( num_pwr_ch = 0; num_pwr_ch < PBM_QUANTITY; num_pwr_ch++ ){
+    	CAN_IVar5_telemetry.CAN_Full_charge_discharge_power             = CAN_IVar5_telemetry.CAN_Full_charge_discharge_power +
+    																		(uint16_t)(((eps_p.eps_pbm_ptr[num_pwr_ch].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[num_pwr_ch].Branch_1_VoltageLo) *
+    																		eps_p.eps_pbm_ptr[num_pwr_ch].Branch_1_Current / 1000) +
+                															((eps_p.eps_pbm_ptr[num_pwr_ch].Branch_2_VoltageHi + eps_p.eps_pbm_ptr[num_pwr_ch].Branch_2_VoltageLo) *
+                															eps_p.eps_pbm_ptr[num_pwr_ch].Branch_2_Current / 1000)) ;
+    }  // PBM_data
 
-    CAN_IVar5_telemetry.CAN_Total_Generate_Power_SP                     = (uint16_t) (((CAN_IVar5_telemetry.CAN_SP_current_pX * CAN_IVar5_telemetry.CAN_SP_voltage_pX) +
-                                                                            (CAN_IVar5_telemetry.CAN_SP_current_nX * CAN_IVar5_telemetry.CAN_SP_voltage_nX) +
-                                                                            (CAN_IVar5_telemetry.CAN_SP_current_pY * CAN_IVar5_telemetry.CAN_SP_voltage_pY) +
-                                                                            (CAN_IVar5_telemetry.CAN_SP_current_nY * CAN_IVar5_telemetry.CAN_SP_voltage_nY) +
-                                                                            (CAN_IVar5_telemetry.CAN_SPF_current_1 * CAN_IVar5_telemetry.CAN_SPF_voltage_1) +
-                                                                            (CAN_IVar5_telemetry.CAN_SPF_current_2 * CAN_IVar5_telemetry.CAN_SPF_voltage_2) ) / 1000 ); // PAM_data
+    CAN_IVar5_telemetry.CAN_Total_Generate_Power_SP 					= 0x0000;
+    for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
+    	CAN_IVar5_telemetry.CAN_Total_Generate_Power_SP             	= CAN_IVar5_telemetry.CAN_Total_Generate_Power_SP +
+    																		(uint16_t)((eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Current_val *
+    																		eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Voltage_val ) / 1000);
+    }  // PAM_data
 
     //***
 	CAN_IVar5_telemetry.CAN_Spacecraft_total_power                      =  0x0000;

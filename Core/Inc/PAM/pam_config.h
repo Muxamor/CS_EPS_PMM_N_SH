@@ -33,6 +33,8 @@ extern "C" {
 
 #define PAM_PWR_IN_Ch_quantity  	0x06 // Total quantity power channels on the PAM
 #define PAM_SP_quantity  			0x06 // Total quantity SP channels on the PAM
+#define PAM_SP_therm_sens_quantity	0x04 // Total quantity Temp. sensor on SP
+#define PAM_SP_ID_quantity			0x06 // Total quantity ID on SP
 
 #define PAM_PWR_IN_Channel_1 		0x00 //Panel Y+ (PAM 1.0 socket X1)
 #define PAM_PWR_IN_Channel_2 		0x01 //Panel X- (PAM 1.0 socket X2)

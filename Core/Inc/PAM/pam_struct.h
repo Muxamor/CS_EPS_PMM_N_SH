@@ -8,33 +8,22 @@ extern "C" {
 
 #include "PAM/pam_config.h"
 
-//typedef struct{
-//
-//	int8_t Temp_sensor[4]; 				//SP temperature
-//
-//	uint8_t State_ID_out_1			:1; //SP state ideal diode
-//	uint8_t State_ID_out_2			:1; //SP state ideal diode
-//	uint8_t State_ID_out_3			:1; //SP state ideal diode
-//	uint8_t State_ID_out_4			:1; //SP state ideal diode
-//	uint8_t State_ID_out_5			:1; //SP state ideal diode
-//	uint8_t State_ID_out_6			:1; //SP state ideal diode
-//    uint8_t :1;
-//
-//	uint8_t State_eF_out 			:1; //0-DISABLE, 1-ENABLE. State power channel output Efuse.
-//	uint8_t PG_eF_out				:1; //0-OK, 1-ERROR. Fault status channel output eFuse.
-//	uint8_t :2;
-//
-//	uint8_t Error_temp_sensor_1 	:1;
-//	uint8_t Error_temp_sensor_2 	:1;
-//	uint8_t Error_temp_sensor_3 	:1;
-//	uint8_t Error_temp_sensor_4		:1;
-//	uint8_t Error_I2C_GPIO_Ext	 	:1;
-//	uint8_t :3;
-//
-//    uint8_t Alignment_structure; //Alignment
-//
-//
-//}_PAM_SP;
+typedef struct{
+
+	uint8_t State_ID_out [PAM_SP_ID_quantity];		    		//SP state ideal diode
+
+	int8_t Temp_sensor [PAM_SP_therm_sens_quantity]; 			//SP temperature
+	uint8_t Error_temp_sensor [PAM_SP_therm_sens_quantity];
+
+	uint8_t PG_eF_out:1;										//0-OK, 1-ERROR. Fault status channel output eFuse.
+	uint8_t State_eF_out:1;										//0-DISABLE, 1-ENABLE. Set State power channel output Efuse. // Need to save in flash
+	uint8_t Error_State_eF_in:1; 								//0-OK, 1-ERROR.
+	uint8_t Error_I2C_GPIO_Ext:1;								//0-OK, 1-ERROR.
+	uint8_t :4;
+
+	uint8_t Alignment_structure; 	//Alignment
+
+}_PAM_SP;
 
 typedef struct{
 	
@@ -46,14 +35,14 @@ typedef struct{
 	uint8_t Error_PWR_Mon 		:1;
 	uint8_t :6;
 
-    uint8_t Alignment_structure; //Alignment
+    uint8_t Alignment_structure; 	//Alignment
 
 }_PAM_PWR_IN_CH;
 
 typedef struct{
 
 	_PAM_PWR_IN_CH PWR_IN_Channel[PAM_PWR_IN_Ch_quantity];
-	//_PAM_SP SP_Channel [PAM_SP_quantity];
+	_PAM_SP SP_Channel [PAM_SP_quantity];
 
 	int8_t Temp_sensor[4]; //PAM temperature
 
