@@ -102,7 +102,8 @@ int main(void){
 
 	SetupInterrupt();
 
-	//IWDG_Init();
+	//IWDG_Init(3000);
+    //LL_IWDG_ReloadCounter(IWDG);
 
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записиво флеш.
@@ -183,15 +184,15 @@ int main(void){
             PBM_Get_Telemetry( pbm_mas );
             PAM_Get_Telemetry( pam_ptr );
 
-//            if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
-//                //No start Deploy
-//            }else{
-//                //TODO Включение БРК если все БРК выключены
-//                //EPS_COMBAT_MODE
-//                if( pmm_ptr->Deploy_stage != 9 ){
-//                    PMM_Deploy( eps_param );
-//                }
-//            }
+            if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
+                //No start Deploy
+            }else{
+                //TODO Включение БРК если все БРК выключены
+                //EPS_COMBAT_MODE
+                if( pmm_ptr->Deploy_stage != 9 ){
+                    PMM_Deploy( eps_param );
+                }
+            }
 
 
             if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF

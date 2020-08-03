@@ -14,6 +14,7 @@
 ErrorStatus PBM_Get_Telemetry(_PBM pbm[]) {
 
 	uint8_t i = 0;
+	uint8_t Low_Energy_Flag_counter = 0;
 	int8_t Error = SUCCESS;
 
 	for (i = 0; i < PBM_QUANTITY; i++) {
@@ -28,7 +29,11 @@ ErrorStatus PBM_Get_Telemetry(_PBM pbm[]) {
         PBM_CheckLevelEnergy(pbm, i);
 	}
 
-	if((pbm[0].Low_Energy_Flag + pbm[1].Low_Energy_Flag + pbm[2].Low_Energy_Flag) >= 1){
+	for ( Low_Energy_Flag_counter = 0, i = 0; i < PBM_QUANTITY; i++) {
+		Low_Energy_Flag_counter = Low_Energy_Flag_counter + pbm[i].Low_Energy_Flag;
+	}
+
+	if(Low_Energy_Flag_counter >= 1){
 		PBM_Low_Energy_Set_pin();
 	} else {
 		PBM_Low_Energy_Reset_pin();

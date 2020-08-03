@@ -11,6 +11,7 @@
 #include "PDM/pdm_ctrl.h"
 #include "PAM/pam_ctrl.h"
 #include "PAM/pam.h"
+#include "PBM/pbm_config.h"
 #include "PMM/pmm_deploy.h"
 
 /** @brief  Deploy CubeSat Norbi.
@@ -22,11 +23,13 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
     //int8_t error_status = SUCCESS;
     uint16_t  i = 0;
+    int8_t error_status = SUCCESS;
     uint8_t deploy_stage;
     static uint32_t  Deploy_start_time_delay = 0;
+    static uint32_t  Exit_LSW_poll_time_delay  = 0;
     static uint16_t  Counter_deploy_exit_LSW_1  = 0;
     static uint16_t  Counter_deploy_exit_LSW_2  = 0;
-    static uint32_t  Exit_LSW_poll_time_delay  = 0;
+
     deploy_stage = eps_p.eps_pmm_ptr->Deploy_stage;
 
     //Enable power Deploy Logic
@@ -42,20 +45,22 @@ void PMM_Deploy( _EPS_Param eps_p ){
         uint8_t value_deploy_exit_LSW_1 = 1;
         uint8_t value_deploy_exit_LSW_2 = 1;
 
-        if( (SysTick_Counter - Exit_LSW_poll_time_delay) > 1000 ){
-            PCA9534_read_input_pin(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P05, &value_deploy_exit_LSW_1);
-            PCA9534_read_input_pin(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P06, &value_deploy_exit_LSW_2);
+        if( (SysTick_Counter - Exit_LSW_poll_time_delay) > ((uint32_t) 1000) ){
+            error_status = ERROR_N;
+            error_status = PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 );
 
-            if( value_deploy_exit_LSW_1 == 0){
-                Counter_deploy_exit_LSW_1  ++;
-            }else{
-                Counter_deploy_exit_LSW_1 = 0;
-            }
+            if(error_status == SUCCESS ){
+                if( value_deploy_exit_LSW_1 == 0){
+                    Counter_deploy_exit_LSW_1  ++;
+                }else{
+                    Counter_deploy_exit_LSW_1 = 0;
+                }
 
-            if( value_deploy_exit_LSW_2 == 0){
-                Counter_deploy_exit_LSW_2 ++;
-            }else{
-                Counter_deploy_exit_LSW_2 = 0;
+                if( value_deploy_exit_LSW_2 == 0){
+                    Counter_deploy_exit_LSW_2 ++;
+                }else{
+                    Counter_deploy_exit_LSW_2 = 0;
+                }
             }
 
             Exit_LSW_poll_time_delay = SysTick_Counter;// Renew counter for new loop
@@ -78,7 +83,8 @@ void PMM_Deploy( _EPS_Param eps_p ){
             Deploy_start_time_delay = SysTick_Counter;
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-        }else{
+        }else if( (( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( Counter_deploy_exit_LSW_2 == 0)) ||
+        		( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1 ) && ( Counter_deploy_exit_LSW_1 == 0) ) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 1; // Next deploy stage 1 - Only one Limit switch = 1, waiting good generation level
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }
@@ -88,7 +94,7 @@ void PMM_Deploy( _EPS_Param eps_p ){
         uint8_t total_error_pwr_mon_pam = 0;
         uint16_t total_power_gen_pam = 0;
 
-        //Check Enbale state power supply PAM module and get telemetry PAM if PWR supply disable
+        //Check Enable state power supply PAM module and get telemetry PAM if PWR supply disable
         if( (eps_p.eps_pam_ptr->State_DC_DC == DISABLE) && (eps_p.eps_pam_ptr->State_LDO == DISABLE) ){
             PAM_Set_state_PWR_Supply(  eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE);
             LL_mDelay( 20 );
@@ -122,19 +128,16 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 2 - waiting timeout before deploy
     }else if( deploy_stage == 2 ){
-        if( (SysTick_Counter - Deploy_start_time_delay) > PMM_Deploy_Time_Delay ){
+    	if( (SysTick_Counter - Deploy_start_time_delay) > ((uint32_t) PMM_Deploy_Time_Delay) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 3; // Next deploy stage 3 - low level energy, check and waiting for charge if battery low.
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
-        }
+    	}
 
     // Deploy stage 3 -  low level energy, check battery level and waiting for charge if battery low.
     }else if(deploy_stage == 3){
-        if( eps_p.eps_pbm_ptr->Low_Energy_Flag == 0 ){
-            eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
-            eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
-        }else{
-            eps_p.eps_pmm_ptr->Deploy_stage = 3; // Next deploy stage 3 - low level energy, check and waiting for charge if battery low.
-        }
+        //TODO only after the first fly decide how to check the energy level.
+        eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     // Deploy stage 4 -  burn channel 1.
     }else if( deploy_stage == 4 ){
@@ -160,31 +163,23 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 7 -  burn channel 3.
     }else if( deploy_stage == 7 ){
-        if (eps_p.eps_pbm_ptr->Low_Energy_Flag == 0){
-            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-            PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
-            eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 5 - deploy at channel 4
-            eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
-        }else{
-            eps_p.eps_pmm_ptr->Deploy_stage = 7;
-        }
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
+        eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 5 - deploy at channel 4
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     // Deploy stage 8 -  burn channel 4.
     }else if( deploy_stage == 8 ){
-        if (eps_p.eps_pbm_ptr->Low_Energy_Flag == 0){
-            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-            PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
 
-            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
 
-            eps_p.eps_pmm_ptr->Deploy_stage = 9; //  Next deploy stage 9 - Finis deploy
-            eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+        eps_p.eps_pmm_ptr->Deploy_stage = 9; //  Next deploy stage 9 - Finish deploy
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-            //Disable Power deploy logic
-            PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
-        }else{
-            eps_p.eps_pmm_ptr->Deploy_stage = 8;
-        }
+        //Disable Power deploy logic
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
     }
 
     return;
@@ -275,16 +270,16 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
 
     if( attempt_burn == PMM_Deploy_Burn_Attempt_1 ){
         //Whit Burn time 1
-        while((SysTick_Counter - start_burn_time) < PMM_Deploy_Burn_time_1 ){
+        while((SysTick_Counter - start_burn_time) < ((uint32_t)PMM_Deploy_Burn_time_1) ){
 
         }
 
     }else{
         if( attempt_burn == PMM_Deploy_Burn_Attempt_2 ){
-            deploy_burn_timeout = PMM_Deploy_Burn_time_2;
+            deploy_burn_timeout = (uint32_t)PMM_Deploy_Burn_time_2;
 
         }else if( attempt_burn == PMM_Deploy_Burn_Attempt_3 ){
-            deploy_burn_timeout = PMM_Deploy_Burn_time_3;
+            deploy_burn_timeout = (uint32_t)PMM_Deploy_Burn_time_3;
         }
 
         while((SysTick_Counter - start_burn_time) < deploy_burn_timeout ){
@@ -378,7 +373,7 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
     i = 0;
     error_I2C = ERROR_N;
 
-    while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
+    while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){
 
         error_I2C =  PMM_ADS1015_average_meas(PMM_I2Cx_DeployADC, PMM_I2CADDR_DeployADC,  ADC_num_ch, 16, &ADC_ch_meas );
 
@@ -511,5 +506,37 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
 }
 
 
+/** @brief  Get value of exit limit switch 1 and 2.
+ *  @param  eps_p - contain pointer to struct which contain all parameters EPS.
+   	@param  ret_exit_LSW_1 - pointer for return value state exit from comtainer limit switch 1
+   	@param  ret_exit_LSW_2 - pointer for return value state exit from comtainer switch 2
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
+ErrorStatus PMM_Deploy_Get_Exit_LSW( _EPS_Param eps_p, uint8_t *ret_exit_LSW_1, uint8_t *ret_exit_LSW_2 ){
 
+    uint8_t i = 0;
+    int8_t error_I2C = ERROR_N;
 
+    SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
+
+    //Enable burn
+    while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
+
+        if(PCA9534_read_input_pin(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P05, ret_exit_LSW_1) == SUCCESS ){
+            error_I2C = PCA9534_read_input_pin(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P06, ret_exit_LSW_2);
+        }
+
+        if( error_I2C != SUCCESS ){
+            i++;
+            LL_mDelay(pmm_i2c_delay_att_conn);
+        }
+    }
+
+    if( error_I2C == SUCCESS ){
+        eps_p.eps_pmm_ptr-> Error_I2C_Deploy_GPIO_Ext = SUCCESS;
+    }else{
+        eps_p.eps_pmm_ptr-> Error_I2C_Deploy_GPIO_Ext = ERROR;
+    }
+
+    return error_I2C;
+}
