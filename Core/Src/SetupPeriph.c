@@ -950,7 +950,6 @@ void IWDG_Init(uint16_t period) {
 	uint32_t down_counter = 500000;
 
 	if(period > 4095){
-
 		period = 4095;
 	}
 
@@ -963,7 +962,7 @@ void IWDG_Init(uint16_t period) {
 		down_counter--;
 	}
 
-	LL_IWDG_SetWindow(IWDG, 4095);
+	//LL_IWDG_SetWindow(IWDG, 4095);
 	LL_IWDG_ReloadCounter(IWDG);
 }
 

@@ -10,18 +10,17 @@ extern "C" {
 
 typedef struct{
 
-	uint8_t State_ID_out [PAM_SP_ID_quantity];		    		//SP state ideal diode
+	uint8_t State_ID [PAM_SP_ID_quantity];		    		//SP state ideal diode 0-Open, 1-Close.
+	int8_t Temp_sensor [PAM_SP_Temp_sensor_quantity]; 			//SP temperature
+	uint8_t Error_temp_sensor [PAM_SP_Temp_sensor_quantity];
 
-	int8_t Temp_sensor [PAM_SP_therm_sens_quantity]; 			//SP temperature
-	uint8_t Error_temp_sensor [PAM_SP_therm_sens_quantity];
-
-	uint8_t PG_eF_out:1;										//0-OK, 1-ERROR. Fault status channel output eFuse.
-	uint8_t State_eF_out:1;										//0-DISABLE, 1-ENABLE. Set State power channel output Efuse. // Need to save in flash
+	//uint8_t PG_eF_out:1;										//0-OK, 1-ERROR. Fault status channel output eFuse.
+	//uint8_t State_eF_out:1;										//0-DISABLE, 1-ENABLE. Set State power channel output Efuse. // Need to save in flash
 	uint8_t Error_State_eF_in:1; 								//0-OK, 1-ERROR.
 	uint8_t Error_I2C_GPIO_Ext:1;								//0-OK, 1-ERROR.
 	uint8_t :4;
 
-	uint8_t Alignment_structure; 	//Alignment
+	uint8_t PAM_ID_SP;
 
 }_PAM_SP;
 
@@ -46,23 +45,23 @@ typedef struct{
 
 	int8_t Temp_sensor[4]; //PAM temperature
 
-	uint8_t State_DC_DC 			:1; // Need to save in flash
-	uint8_t State_LDO 				:1; // Need to save in flash
-	uint8_t PG_DC_DC 				:1;
-	uint8_t PG_LDO 					:1;
-    uint8_t Error_State_DC_DC       :1;
-    uint8_t Error_State_LDO         :1;
-	uint8_t PAM_save_conf_flag		:1;
-	uint8_t :1;
+   // uint8_t State_eF_L_out_SP 			:1; // Need to save in flash ??????????????????????
 
-	uint8_t Error_I2C_GPIO_Ext	 	:1;
-	uint8_t Error_I2C_MUX_1		 	:1;
-	uint8_t Error_I2C_MUX_2		 	:1;
-	uint8_t Error_temp_sensor_1 	:1;
-	uint8_t Error_temp_sensor_2 	:1;
-	uint8_t Error_temp_sensor_3 	:1;
-	uint8_t Error_temp_sensor_4		:1;
-	uint8_t :1;
+	uint16_t State_DC_DC 			:1; // Need to save in flash
+	uint16_t State_LDO 				:1; // Need to save in flash
+	uint16_t PG_DC_DC 				:1;
+	uint16_t PG_LDO 				:1;
+    uint16_t Error_State_DC_DC      :1;
+    uint16_t Error_State_LDO        :1;
+	uint16_t Error_I2C_GPIO_Ext	 	:1;
+	uint16_t Error_I2C_MUX_1		:1;
+	uint16_t Error_I2C_MUX_2		:1;
+	uint16_t Error_temp_sensor_1 	:1;
+	uint16_t Error_temp_sensor_2 	:1;
+	uint16_t Error_temp_sensor_3 	:1;
+	uint16_t Error_temp_sensor_4	:1;
+    uint16_t PAM_save_conf_flag		:1;
+	uint16_t :2;
 
 	uint8_t PAM_ID_module;        //identifier of PAM
 	uint8_t Alignment_structure; //Alignment
