@@ -222,8 +222,6 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 }
 
 
-
-
 /** @brief  Get State Ideal Diode power input PAM
 	@param  *pam_ptr - pointer to struct which contain all information about PAM.
 	@param  pwr_source_num - source (PAM_PWR_IN_Channel_1 - PAM_PWR_IN_Channel_6).

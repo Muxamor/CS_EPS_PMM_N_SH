@@ -67,6 +67,7 @@ Core/Src/PMM/pmm_ctrl.c \
 Core/Src/PMM/pmm_savedata.c \
 Core/Src/PMM/pmm_sw_cpu.c \
 Core/Src/PMM/pmm.c \
+Core/Src/PMM/pmm_deploy.c \
 Core/Src/PBM/pbm_config.c \
 Core/Src/PBM/pbm_init_IC.c \
 Core/Src/PBM/pbm_init.c \

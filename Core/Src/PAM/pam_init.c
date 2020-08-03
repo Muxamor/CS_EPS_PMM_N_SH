@@ -32,9 +32,6 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 
         error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, ENABLE);
         pam_ptr->State_LDO = ENABLE;
-//		LL_mDelay(40); //Delay for startup power supply
-//        PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
-//        PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 	}
 
 	//Disable all channels TCA9548 I2C MUX on PAM module.

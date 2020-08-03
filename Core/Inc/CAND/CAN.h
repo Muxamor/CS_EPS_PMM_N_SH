@@ -56,6 +56,8 @@ extern "C" {
 
 #define CAN_Switch_active_CPU_offset    37
 
+#define CAN_Perform_Deploy_offset       39
+
 #define CAN_AB1_Heat_Branch1_offset     40
 #define CAN_AB1_Heat_Branch2_offset     41
 #define CAN_AB2_Heat_Branch1_offset     42
@@ -137,7 +139,7 @@ struct CAN_IVar4 {
     uint8_t CAN_EPS_Mode;                   //+36			Установить режим СЭС
     uint8_t CAN_Set_active_CPU;             //+37		    Переключатель основной/резервный
     uint8_t CAN_Reset_to_default;           //+38           Сброс параметров в состояние "по умолчанию"
-    uint8_t CAN_Perform_disclosure;         //+39           Выполнить раскрытие
+    uint8_t CAN_Perform_Deploy;             //+39           Выполнить раскрытие
     uint8_t CAN_AB1_Heat_Branch1;           //+40           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 1
     uint8_t CAN_AB1_Heat_Branch2;           //+41           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 1
     uint8_t CAN_AB2_Heat_Branch1;           //+42           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 2
@@ -201,7 +203,7 @@ struct CAN_IVar5{
     uint8_t  CAN_Solar_panel_status[5];                             //+59    |  const = 0x7A7B7C7D7E         |   Статус солнечных панелей, битовая маска (в т.ч. ФЭП)
 
     //Массив уровня заряда АБ в %                                        |                               |
-    uint8_t  CAN_Full_percent_charge_level;              			//+64    |  const = 0x7F                 |   Полный уровень заряда АБ в %
+    uint8_t  CAN_Full_ABs_Energy_level_percent;              			//+64    |  const = 0x7F                 |   Полный уровень заряда АБ в %
 
     //Массив уровня заряда АБ в mAh                                      |                               |
     uint16_t CAN_Capacity_charge_level_AB1_line1;                   //+65    |  const = 0x8081               |   Уровень заряда АБ1 ветвь 1
@@ -248,7 +250,7 @@ struct CAN_IVar5{
     uint16_t CAN_SES_current_consumption;                           //+114    |  const = 0xB1B2               |   Ток потребления модуля СЭС
     uint16_t CAN_SES_Voltage_power_supply;                          //+116    |  const = 0xB3B4               |   Напряжение питания модуля СЭС
     uint16_t CAN_Full_charge_discharge_power;                       //+118    |  const = 0xB5B6               |   Полная мощность зарядки/разрядки АБ
-    uint16_t CAN_Total_IN_Power_SP;                                 //+120    |  const = 0xB7B8               |   Полная вырабатываемая мощность СБ
+    uint16_t CAN_Total_Generate_Power_SP;                                 //+120    |  const = 0xB7B8               |   Полная вырабатываемая мощность СБ
     uint16_t CAN_Spacecraft_total_power;                            //+122    |  const = 0xB9BA               |   Полная мощность потребления КА
 
     //Массив медианных температур модуля СЭС                             |                               |

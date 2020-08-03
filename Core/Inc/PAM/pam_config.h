@@ -34,12 +34,12 @@ extern "C" {
 #define PAM_PWR_IN_Ch_quantity  	0x06 // Total quantity power channels on the PAM
 #define PAM_SP_quantity  			0x06 // Total quantity SP channels on the PAM
 
-#define PAM_PWR_IN_Channel_1 		0x00
-#define PAM_PWR_IN_Channel_2 		0x01
-#define PAM_PWR_IN_Channel_3 		0x02
-#define PAM_PWR_IN_Channel_4 		0x03
-#define PAM_PWR_IN_Channel_5 		0x04
-#define PAM_PWR_IN_Channel_6 		0x05
+#define PAM_PWR_IN_Channel_1 		0x00 //Panel Y+ (PAM 1.0 socket X1)
+#define PAM_PWR_IN_Channel_2 		0x01 //Panel X- (PAM 1.0 socket X2)
+#define PAM_PWR_IN_Channel_3 		0x02 //Panel Y- (PAM 1.0 socket X3)
+#define PAM_PWR_IN_Channel_4 		0x03 //Panel X+ (PAM 1.0 socket X2)
+#define PAM_PWR_IN_Channel_5 		0x04 //Folding Panel LT8490_1 (PAM 1.0 socket X5 and X6)
+#define PAM_PWR_IN_Channel_6 		0x05 //Folding Panel LT8490_1 (PAM 1.0 socket X7 and X8)
 
 #define PAM_PWR_DC_DC 				0x06
 #define PAM_PWR_LDO 				0x07
