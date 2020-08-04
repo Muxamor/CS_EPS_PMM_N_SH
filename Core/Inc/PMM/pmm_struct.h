@@ -60,13 +60,15 @@ typedef struct{
 	uint32_t Error_I2C_GPIO_Ext1 				:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
 	uint32_t Error_I2C_GPIO_Ext2 				:1;
 	uint32_t Error_PWR_Supply_m_b_Curr_Mon		:1; //=0 -OK, = 1-error I2C Current meas. ADC (U65).
+    uint32_t Error_I2C_Deploy_GPIO_Ext			:1;
+    uint32_t Error_I2C_Deploy_ADC   			:1;
 	uint32_t Error_FRAM1		 				:1; //=0 -OK, = 1-error FRAM1 no connection
 	uint32_t Error_FRAM2		 				:1; //=0 -OK, = 1-error FRAM2 no connection
 	uint32_t Error_UART_port_M					:1; //=0 -OK, = 1-error UART main (LPUART1) port
 	uint32_t Error_UART_port_B					:1; //=0 -OK, = 1-error UART backup (USART3) port
 	uint32_t Error_CAN_port_M					:1; //=0 -OK, = 1-error UART main (CAN1) port
 	uint32_t Error_CAN_port_B					:1; //=0 -OK, = 1-error UART backup (CAN2) port
-	uint32_t :6;
+	uint32_t :4;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up). // Need to save in flash.
 	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up). // Need to save in flash.
@@ -101,19 +103,22 @@ typedef struct{
 
     uint8_t EPS_Mode;               // Mode of operation EPS Service or Combat. 0xFF - Service mode. 0x00- Combat Mode // Need to save in flash.
 
-    uint8_t Deploy_stage;           //  0 - in container 1 - one Limit switch, whait generation 2 - low level energy  3 - whait time out 4- deployed Z+  5- deployed Z-
-                                    //  6 - deployed Y+ 7- deployed Y- Deploy stage  8 - Finish deploy // Need to save in flash.
+    uint8_t Deploy_stage;           //  0-In delivery containerr, 1-one Limit switch and whait generation, 2-waiting timeout before deploy, 3-low level energy (if low waiting generation),
+    // Need to save in flash.       //  4- Deploy burn power channel 1  (Z+ side),  5- Deploy burn power channel 2  (Z- side)
+                                    //  6 - Enable BRC
+                                    //  7- Deploy burn power channel 3  (Y- side),  8- Deploy burn power channel 4  (Y+ side)
+                                    //  9 - Finish Deploy at all.
 
-	uint16_t Deploy_Lim_SW_Exit_1   :1; //0 - не сработал 1 - сработал. Deploy Limit switch 1 exit from container// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Exit_2   :1; //0 - не сработал 1 - сработал. Deploy Limit switch 2 exit from container// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Y1_1     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Y1_2     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Y2_1     :1; //0 - не сработал 1 - сработал. Y- Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Y2_2     :1; //0 - не сработал 1 - сработал. Y- Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Z1_1     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Z1_2     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Z2_1     :1; //0 - не сработал 1 - сработал. Z- Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Lim_SW_Z2_2     :1; //0 - не сработал 1 - сработал. Z- Limit switch 2// Need to save in flash.
+	uint16_t Deploy_Lim_SW_Exit_1       :1; //0 - не сработал 1 - сработал. Deploy Limit switch 1 exit from container// Need to save in flash.
+    uint16_t Deploy_Lim_SW_Exit_2       :1; //0 - не сработал 1 - сработал. Deploy Limit switch 2 exit from container// Need to save in flash.
+    uint16_t Deploy_Ch4_Lim_SW_1_Yp     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Ch4_Lim_SW_2_Yp     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Ch3_Lim_SW_1_Yn     :1; //0 - не сработал 1 - сработал. Y- Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Ch3_Lim_SW_2_Yn     :1; //0 - не сработал 1 - сработал. Y- Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Ch1_Lim_SW_1_Zp     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Ch1_Lim_SW_2_Zp     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Ch2_Lim_SW_1_Zn     :1; //0 - не сработал 1 - сработал. Z- Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Ch2_Lim_SW_2_Zn     :1; //0 - не сработал 1 - сработал. Z- Limit switch 2// Need to save in flash.
     uint16_t :6;
 
 	uint16_t Version_FW;  // Version firmware HB.LB

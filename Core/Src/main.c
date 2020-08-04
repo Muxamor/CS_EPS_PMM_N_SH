@@ -10,18 +10,20 @@
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_sw_cpu.h"
 #include "PMM/pmm.h"
+#include "PMM/pmm_deploy.h"
 #include "PBM/pbm_config.h"
 #include "PBM/pbm_control.h"
 #include "PBM/pbm_init.h"
 #include "PBM/pbm.h"
+#include "PAM/pam_init.h"
+#include "PAM/pam.h"
 #include "uart_eps_comm.h"
 
 
 /*//TODO
-1. Need to think about delay 30 minutes.
 4. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ?
 7. Подумать над тем если CAN при инициализации выдает ошибку стоит ли переходить на резервный МК.
-8. Проводить дэинит для переферии МК в пассивном режиме
+
 **********************************************************/
 
 //extern uint32_t SysTick_Counter;
@@ -48,9 +50,6 @@ int main(void){
 	_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
 
-    pmm_ptr->Version_FW = VERSION_FW; //Firmware version
-
-
     _EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
 
 	_EPS_Param eps_param = {.eps_pmm_ptr = pmm_ptr, 
@@ -76,6 +75,9 @@ int main(void){
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
 //TODO read settings from FRAM.
+
+    pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
+
 	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
 
 	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
@@ -100,10 +102,15 @@ int main(void){
 
 	SetupInterrupt();
 
-	//IWDG_Init();
+	//IWDG_Init(3000);
+    //LL_IWDG_ReloadCounter(IWDG);
 
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записиво флеш.
+	pam_ptr->State_DC_DC = ENABLE;
+    pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+    pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+	//pam_ptr->State_LDO = ENABLE;
 
     pbm_mas[0].Branch_1_ChgEnableBit = ENABLE;
     pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
@@ -138,6 +145,7 @@ int main(void){
 		PDM_init( pdm_ptr );
 		//Add init PAM
         PBM_Init( pbm_mas );
+        PAM_init( pam_ptr );
         //TODO Call function Fill VarID4
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
@@ -146,20 +154,17 @@ int main(void){
 
     //Initialization CAN for passive CPU
 	}else{
+        PMM_Set_mode_Passive_CPU( eps_param );
         I2C4_DeInit();
 		CAN_DeInit_eps(CAN1);
 		CAN_DeInit_eps(CAN2);
 	}
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
-
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   // printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
-
 
 	while(1){
 
@@ -176,18 +181,23 @@ int main(void){
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
 			PDM_Get_Telemetry( pdm_ptr );
 			PMM_Get_Telemetry( pmm_ptr );
-            PBM_GetTelemetry( pbm_mas );
+            PBM_Get_Telemetry( pbm_mas );
+            PAM_Get_Telemetry( pam_ptr );
 
-	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param );
-	//		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
-	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-	//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-            if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
-                CAN_Var5_fill_telemetry(eps_param);
+            if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
+                //No start Deploy
+            }else{
+                //TODO Включение БРК если все БРК выключены
+                //EPS_COMBAT_MODE
+                if( pmm_ptr->Deploy_stage != 9 ){
+                    PMM_Deploy( eps_param );
+                }
             }
 
 
+            if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
+                CAN_Var5_fill_telemetry(eps_param);
+            }
 
 			if(CAN_cmd_mask_status != 0){
 				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
@@ -216,7 +226,14 @@ int main(void){
 }
 
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 
+//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param );
+//		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
+//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
+//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 
 //------------- FRAM test ---------------//
 

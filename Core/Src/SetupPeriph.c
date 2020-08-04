@@ -13,7 +13,7 @@
 #include "stm32l4xx_ll_tim.h"
 #include "stm32l4xx_ll_lpuart.h"
 #include "stm32l4xx_ll_usart.h"
-#include  "Error_Handler.h"
+#include "Error_Handler.h"
 #include "SetupPeriph.h"
 
 #include "canv.h"
@@ -339,7 +339,7 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 
 	uint16_t period = 0, i = 0, count = 0;
 
-	period = ( uint16_t )(( ((float)SystemCoreClock) * 5.0) / (1000000.0 * 10.5));
+	period = ( uint16_t )(( ((float)SystemCoreClock) * 5.0f) / (1000000.0f * 10.5f));
 	//period = 42;
 	count = period;
 
@@ -942,21 +942,28 @@ void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider) {
 }
 
 /** @brief IWDG Initialization Function
- * @param None
+ * @param  period - Set WDG period in ms (now max 4095 ms)
  * @retval None
  */
-void IWDG_Init(void) {
+void IWDG_Init(uint16_t period) {
+
+	uint32_t down_counter = 500000;
+
+	if(period > 4095){
+		period = 4095;
+	}
 
 	LL_IWDG_Enable(IWDG);
 	LL_IWDG_EnableWriteAccess(IWDG);
-	LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_32);
-	LL_IWDG_SetReloadCounter(IWDG, 4095);
-	while (LL_IWDG_IsReady(IWDG) != 1) {
+	LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_32); // (IWDG_PRESCALER/32000)=(time 1 tick) -> 32/32000=1ms
+	LL_IWDG_SetReloadCounter(IWDG, period); // 1.0*ReloadCounter = WDG_period ms
+
+	while ((LL_IWDG_IsReady(IWDG) != 1) && (down_counter != 0)) {
+		down_counter--;
 	}
 
-	LL_IWDG_SetWindow(IWDG, 4095);
+	//LL_IWDG_SetWindow(IWDG, 4095);
 	LL_IWDG_ReloadCounter(IWDG);
-
 }
 
 /** @brief Init CAN

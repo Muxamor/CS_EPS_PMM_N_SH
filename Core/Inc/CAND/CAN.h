@@ -56,12 +56,17 @@ extern "C" {
 
 #define CAN_Switch_active_CPU_offset    37
 
+#define CAN_Perform_Deploy_offset       39
+
 #define CAN_AB1_Heat_Branch1_offset     40
 #define CAN_AB1_Heat_Branch2_offset     41
 #define CAN_AB2_Heat_Branch1_offset     42
 #define CAN_AB2_Heat_Branch2_offset     43
 #define CAN_AB3_Heat_Branch1_offset     44
 #define CAN_AB3_Heat_Branch2_offset     45
+
+#define CAN_PAM_Power_DC_DC_offset      46
+#define CAN_PAM_Power_LDO_offset        47
 
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
@@ -134,13 +139,16 @@ struct CAN_IVar4 {
     uint8_t CAN_EPS_Mode;                   //+36			Установить режим СЭС
     uint8_t CAN_Set_active_CPU;             //+37		    Переключатель основной/резервный
     uint8_t CAN_Reset_to_default;           //+38           Сброс параметров в состояние "по умолчанию"
-    uint8_t CAN_Perform_disclosure;         //+39           Выполнить раскрытие
+    uint8_t CAN_Perform_Deploy;             //+39           Выполнить раскрытие
     uint8_t CAN_AB1_Heat_Branch1;           //+40           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 1
     uint8_t CAN_AB1_Heat_Branch2;           //+41           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 1
     uint8_t CAN_AB2_Heat_Branch1;           //+42           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 2
     uint8_t CAN_AB2_Heat_Branch2;           //+43           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 2
     uint8_t CAN_AB3_Heat_Branch1;           //+44           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 3
     uint8_t CAN_AB3_Heat_Branch2;           //+45           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 3
+    uint8_t CAN_PAM_Power_DC_DC;            //+46           Вкл/Выкл DC_DC источник питания PAM
+    uint8_t CAN_PAM_Power_LDO;           	//+47           Вкл/Выкл LDO источник питания PAM
+
 
 };
 
@@ -160,7 +168,7 @@ struct CAN_IVar5{
     uint16_t CAN_Beacon_charge_discharge_AB_key_status;             //+12     |  const = 0x9A9B               |   Статус ключей заряда и разряда АБ, битовая маска
     uint8_t  CAN_Beacon_subsystem_power_line_status;				//+14     |  const = 0xB0                 |   Статус линии пит. подсистем, битовая маска
     uint16_t CAN_Beacon_full_charge_discharge_power;				//+15     |  const = 0xB5B6               |   Полная мощность зарядки/разрядки АБ
-    uint16_t CAN_Beacon_total_power_SB;                             //+17     |  const = 0xB7B8               |   Полная вырабатываемая мощность СБ
+    uint16_t CAN_Beacon_Total_IN_Power_SP;                      	//+17     |  const = 0xB7B8               |   Полная вырабатываемая мощность СБ
     uint16_t CAN_Beacon_spacecraft_total_power;                     //+19     |  const = 0xB9BA               |   Полная мощность потребления КА
     uint8_t  CAN_Beacon_median_PMM_temp;							//+21     |  const = 0xBB                 |   Медианная температура PMM (один датчик)
     uint8_t  CAN_Beacon_median_PAM_temp;							//+22     |  const = 0xBC                 |   Медианная температура PAM
@@ -170,20 +178,20 @@ struct CAN_IVar5{
     // -------------------  ТМИ 4  ------------------ //
 
     //Массив CAN_токов солнечных панелей                                     |                               |
-    uint16_t CAN_Panal_current_pX;                                  //+29    |  const = 0x5C5D               |   Ток панели +X
-    uint16_t CAN_Panal_current_nX;                                  //+31    |  const = 0x5E5F               |   Ток панели -X
-    uint16_t CAN_Panal_current_pY;                                  //+33    |  const = 0x6061               |   Ток панели +Y
-    uint16_t CAN_Panal_current_nY;                                  //+35    |  const = 0x6263               |   Ток панели -Y
-    uint16_t CAN_Current_hinged_panels_satellite_1_plane;           //+37    |  const = 0x6465               |   Ток откидных панелей плоскость спутника 1  (LT8490)
-    uint16_t CAN_Current_hinged_panels_satellite_2_plane;           //+39    |  const = 0x6667               |   Ток откидных панелей плоскость спутника 2  (LT8490)
+    uint16_t CAN_SP_current_pX;                                  	//+29    |  const = 0x5C5D               |   Ток панели +X
+    uint16_t CAN_SP_current_nX;                                  	//+31    |  const = 0x5E5F               |   Ток панели -X
+    uint16_t CAN_SP_current_pY;                                 	//+33    |  const = 0x6061               |   Ток панели +Y
+    uint16_t CAN_SP_current_nY;                                  	//+35    |  const = 0x6263               |   Ток панели -Y
+    uint16_t CAN_SPF_current_1;           							//+37    |  const = 0x6465               |   Ток откидных панелей плоскость спутника 1  (LT8490)
+    uint16_t CAN_SPF_current_2;           							//+39    |  const = 0x6667               |   Ток откидных панелей плоскость спутника 2  (LT8490)
 
     //Массив напряжений солнечных панелей                                |                               |
-    uint16_t CAN_Panel_voltage_pX;                                  //+41    |  const = 0x6869               |   Напряжение панели +X
-    uint16_t CAN_Panel_voltage_nX;                                  //+43    |  const = 0x6A6B               |   Напряжение панели -X
-    uint16_t CAN_Panel_voltage_pY;                                  //+45    |  const = 0x6C6D               |   Напряжение панели +Y
-    uint16_t CAN_Panel_voltage_nY;                                  //+47    |  const = 0x6E6F               |   Напряжение панели -Y
-    uint16_t CAN_Voltage_hinged_panels_satellite_1_plane;           //+49    |  const = 0x7071               |   Напряжение откидных панелей плоскость спутника 1
-    uint16_t CAN_Voltage_hinged_panels_satellite_2_plane;           //+51    |  const = 0x7273               |   Напряжение откидных панелей плосуость спутника 2
+    uint16_t CAN_SP_voltage_pX;                                  	//+41    |  const = 0x6869               |   Напряжение панели +X
+    uint16_t CAN_SP_voltage_nX;                                  	//+43    |  const = 0x6A6B               |   Напряжение панели -X
+    uint16_t CAN_SP_voltage_pY;                                  	//+45    |  const = 0x6C6D               |   Напряжение панели +Y
+    uint16_t CAN_SP_voltage_nY;                                  	//+47    |  const = 0x6E6F               |   Напряжение панели -Y
+    uint16_t CAN_SPF_voltage_1;           							//+49    |  const = 0x7071               |   Напряжение откидных панелей плоскость спутника 1
+    uint16_t CAN_SPF_voltage_2;           							//+51    |  const = 0x7273               |   Напряжение откидных панелей плосуость спутника 2
 
     //Массив медианных температур солнечных панелей                      |                               |
     uint8_t  CAN_Panel_median_temperature_pX;                       //+53    |  const = 0x74                 |   Медианная температура панели +X
@@ -195,7 +203,7 @@ struct CAN_IVar5{
     uint8_t  CAN_Solar_panel_status[5];                             //+59    |  const = 0x7A7B7C7D7E         |   Статус солнечных панелей, битовая маска (в т.ч. ФЭП)
 
     //Массив уровня заряда АБ в %                                        |                               |
-    uint8_t  CAN_Full_percent_charge_level;              			//+64    |  const = 0x7F                 |   Полный уровень заряда АБ в %
+    uint8_t  CAN_Full_ABs_Energy_level_percent;              			//+64    |  const = 0x7F                 |   Полный уровень заряда АБ в %
 
     //Массив уровня заряда АБ в mAh                                      |                               |
     uint16_t CAN_Capacity_charge_level_AB1_line1;                   //+65    |  const = 0x8081               |   Уровень заряда АБ1 ветвь 1
@@ -242,7 +250,7 @@ struct CAN_IVar5{
     uint16_t CAN_SES_current_consumption;                           //+114    |  const = 0xB1B2               |   Ток потребления модуля СЭС
     uint16_t CAN_SES_Voltage_power_supply;                          //+116    |  const = 0xB3B4               |   Напряжение питания модуля СЭС
     uint16_t CAN_Full_charge_discharge_power;                       //+118    |  const = 0xB5B6               |   Полная мощность зарядки/разрядки АБ
-    uint16_t CAN_Total_power_SB;                                    //+120    |  const = 0xB7B8               |   Полная вырабатываемая мощность СБ
+    uint16_t CAN_Total_Generate_Power_SP;                                 //+120    |  const = 0xB7B8               |   Полная вырабатываемая мощность СБ
     uint16_t CAN_Spacecraft_total_power;                            //+122    |  const = 0xB9BA               |   Полная мощность потребления КА
 
     //Массив медианных температур модуля СЭС                             |                               |

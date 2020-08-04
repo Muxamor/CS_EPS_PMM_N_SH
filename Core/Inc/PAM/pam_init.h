@@ -7,7 +7,7 @@ extern "C" {
 #endif
 
 
-
+ErrorStatus PAM_init(_PAM *pam_ptr);
 
 #ifdef __cplusplus
 }

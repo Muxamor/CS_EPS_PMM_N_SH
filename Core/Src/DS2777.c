@@ -128,7 +128,7 @@ ErrorStatus DS2777_ReadActAbsCapacity(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uin
 	uint16_t Data = 0;
 
 	if (I2C_Read_word_u16_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x02, &Data) == 0) {
-		*RAAC = (uint16_t) (((float) Data) * 1.6);
+		*RAAC = (uint16_t) (((float) Data) * 1.6f);
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -166,7 +166,7 @@ ErrorStatus DS2777_ReadStbAbsCapacity(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uin
 	uint16_t Data = 0;
 
 	if (I2C_Read_word_u16_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x04, &Data) == 0) {
-		*RSAC = (uint16_t) (((float) Data) * 1.6);
+		*RSAC = (uint16_t) (((float) Data) * 1.6f);
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -206,7 +206,7 @@ ErrorStatus DS2777_ReadAverageCurrent(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, int
 
 	if (I2C_Read_word_u16_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x08, &Data) == 0) {
 		Datas = (int16_t) Data;
-		*AverCurrent = (int16_t) ((((float) Datas) * 1.5625 / 15));
+		*AverCurrent = (int16_t) ((((float) Datas) * 1.5625f / 15));
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -227,7 +227,7 @@ ErrorStatus DS2777_ReadCurrent(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, int16_t *C
 
 	if (I2C_Read_word_u16_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x0E, &Data) == 0) {
 		Datas = (int16_t) Data;
-		*Current = (int16_t) ((((float) Datas) * 1.5625 / 15));
+		*Current = (int16_t) ((((float) Datas) * 1.5625f / 15));
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -246,7 +246,7 @@ ErrorStatus DS2777_ReadTemperature(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, float 
 	uint16_t Data = 0;
 
 	if (I2C_Read_word_u16_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x0A, &Data) == 0) {
-		*Temp = (((float) Data) * 0.125 / 32);
+		*Temp = (((float) Data) * 0.125f / 32);
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -267,7 +267,7 @@ ErrorStatus DS2777_ReadVoltageHi(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, int16_t 
 
 	if (I2C_Read_word_u16_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x1C, &Data) == 0) {
 		Datas = (int16_t) Data;
-		*Volt1 = (int16_t) ((((float) Datas) * 4.883 / 32));
+		*Volt1 = (int16_t) ((((float) Datas) * 4.883f / 32));
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -288,7 +288,7 @@ ErrorStatus DS2777_ReadVoltageLo(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, int16_t 
 
 	if (I2C_Read_word_u16_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x0C, &Data) == 0) {
 		Datas = (int16_t) Data;
-		*Volt2 = (int16_t) ((((float) Datas) * 4.883 / 32));
+		*Volt2 = (int16_t) ((((float) Datas) * 4.883f / 32));
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -309,7 +309,7 @@ ErrorStatus DS2777_ReadAccmCharge(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, int16_t
 
 	if (I2C_Read_word_u16_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x10, &Data) == 0) {
 		Datas = (int16_t) Data;
-		*AccmCharge = (int16_t) ((((float) Datas) * 6.25 / 15.0));
+		*AccmCharge = (int16_t) ((((float) Datas) * 6.25f / 15.0f));
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -325,7 +325,7 @@ ErrorStatus DS2777_ReadAccmCharge(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, int16_t
  */
 ErrorStatus DS2777_WriteAccmCharge(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint16_t AccmCharge) {
 
-	AccmCharge = (uint16_t) (((float) AccmCharge) * 15.0 / 6.25);
+	AccmCharge = (uint16_t) (((float) AccmCharge) * 15.0f / 6.25f);
 	return I2C_Write_word_u16_St(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x10, AccmCharge);
 }
 
@@ -341,7 +341,7 @@ ErrorStatus DS2777_ReadAgeScalar(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint8_t 
 	uint8_t Data = 0;
 
 	if (I2C_Read_byte_St_ReSt(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x14, &Data) == 0) {
-		*AgeScalar = (uint8_t) (((float) Data) * 0.78);
+		*AgeScalar = (uint8_t) (((float) Data) * 0.78f);
 		return SUCCESS;
 	} else {
 		return ERROR_N;
@@ -357,7 +357,7 @@ ErrorStatus DS2777_ReadAgeScalar(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint8_t 
  */
 ErrorStatus DS2777_WriteAgeScalar(I2C_TypeDef *I2Cx, uint8_t AddrDS2777, uint8_t AgeScalar) {
 
-	AgeScalar = (uint8_t) (((float) AgeScalar) / 0.78);
+	AgeScalar = (uint8_t) (((float) AgeScalar) / 0.78f);
 	return I2C_Write_byte_St(I2Cx, AddrDS2777, I2C_SIZE_REG_ADDR_U8, 0x14, AgeScalar);
 }
 

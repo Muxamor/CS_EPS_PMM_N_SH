@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-ErrorStatus PBM_GetTelemetry(_PBM *pbm);
+ErrorStatus PBM_Get_Telemetry(_PBM *pbm);
 
 #ifdef __cplusplus
 }

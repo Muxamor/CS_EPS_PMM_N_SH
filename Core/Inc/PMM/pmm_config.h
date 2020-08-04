@@ -8,8 +8,12 @@ extern "C" {
 
 /*********************** Configuration for PMM module ***********************/
 
-#ifndef VERSION_FW
-  #define VERSION_FW    0000  /*!< Value of the External oscillator in Hz */
+#ifndef VERSION_FW_MAJOR
+  #define  VERSION_FW_MAJOR 0  // version major update  0..255
+#endif
+
+#ifndef VERSION_FW_MINOR
+#define  VERSION_FW_MINOR 0 // version minor update  0..255
 #endif
 
 
@@ -58,8 +62,16 @@ extern "C" {
 #define pmm_uart_attempt_conn		3 	 // Quantity attempt to connection through UART
 #define pmm_uart_delay_att_conn		3 	 //ms Delay between attempts connection through UART in millisecond
 
+#define PMM_Deploy_Power_Gen_EDGE   3000 // EDGE power generation from solar panel 
+#define PMM_Deploy_Time_Delay       1800000 //in milliseconds 1800000 = 30 minuts
+#define PMM_Deploy_Burn_time_1      4000  // in milisecand
+#define PMM_Deploy_Burn_time_2      5000  // in milisecand
+#define PMM_Deploy_Burn_time_3      6000  // in milisecand
 
-#define Service_Mode_EPS			0xFF
+#define PMM_Deploy_Burn_Attempt_1   0x00
+#define PMM_Deploy_Burn_Attempt_2   0x01
+#define PMM_Deploy_Burn_Attempt_3   0x03
+
 
 
 #define CPUmain 					0
@@ -70,7 +82,6 @@ extern "C" {
 
 #define EPS_COMBAT_MODE             0x00
 #define EPS_SERVICE_MODE            0xFF
-
 
 #define UART_EPS_CPUm_Addr 			0x01
 #define UART_EPS_CPUb_Addr 			0x02
@@ -85,9 +96,13 @@ extern "C" {
 #define PMM_PWR_Ch_Deploy_Logic		0x07
 #define PMM_PWR_Ch_Deploy_Power		0x08
 #define PMM_PWR_Ch_5V_Bus			0x09
-#define PMM_PWR_Ch_3_3V_Bus			0x10
-#define PMM_PWR_Ch_I2C_Bus			0x11
+#define PMM_PWR_Ch_3_3V_Bus			0x0A
+#define PMM_PWR_Ch_I2C_Bus			0x0B
 
+#define PMM_PWR_Deploy_Ch1          0x0C
+#define PMM_PWR_Deploy_Ch2          0x0D
+#define PMM_PWR_Deploy_Ch3          0x0E
+#define PMM_PWR_Deploy_Ch4          0x0F
 
 typedef struct{
 

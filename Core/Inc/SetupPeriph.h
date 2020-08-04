@@ -1,7 +1,3 @@
-/*
- * Setup peripheral of MC STM32L452
- */
-
 #ifndef __SETUPPERIPH_H
 #define __SETUPPERIPH_H
 
@@ -29,7 +25,7 @@ void GPIO_Init(void);
 void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider);
 int8_t CAN_init_eps(CAN_TypeDef *can_ref);
 int8_t CAN_DeInit_eps(CAN_TypeDef *can_ref);
-void IWDG_Init(void);
+void IWDG_Init(uint16_t period);
 
 /*For control multiplexor TMUX1209  need use: */
 #define ENABLE_TMUX1209_I2C();        LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_0);

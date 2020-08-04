@@ -82,7 +82,7 @@ typedef struct  // Structure for PBM data
 	uint16_t Error_Charge_2 :1; 			// Register error charge branch №2.
 	uint16_t Error_Discharge_1 :1; 			// Register error discharge branch №1.
 	uint16_t Error_Discharge_2 :1; 			// Register error discharge branch №2.
-	uint16_t Low_Energy_Flag :1; 		    // Indicates warning low energy PBM.
+	uint16_t Low_Energy_Flag :1; 		    // Indicates warning low energy PBM. 0 - ok 1 - low Energy
 	uint16_t Zero_Energy_Flag :1;		    // Indicates moment for off all load.
 	uint16_t PBM_save_conf_flag:1;			// Indicates that data have been modificate.
 
