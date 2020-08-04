@@ -10,6 +10,7 @@
 #include "PMM/eps_struct.h"
 #include "PDM/pdm_ctrl.h"
 #include "PAM/pam_ctrl.h"
+#include "PAM/pam_init.h"
 #include "PAM/pam.h"
 #include "PBM/pbm_config.h"
 #include "PMM/pmm_deploy.h"
@@ -96,8 +97,8 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
         //Check Enable state power supply PAM module and get telemetry PAM if PWR supply disable
         if( (eps_p.eps_pam_ptr->State_DC_DC == DISABLE) && (eps_p.eps_pam_ptr->State_LDO == DISABLE) ){
-            PAM_Set_state_PWR_Supply(  eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE);
-            LL_mDelay( 20 );
+            eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
+            PAM_init( eps_p.eps_pam_ptr );
             PAM_Get_Telemetry( eps_p.eps_pam_ptr );
         }
 
