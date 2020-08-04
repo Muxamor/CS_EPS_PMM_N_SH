@@ -35,6 +35,7 @@ extern "C" {
 #define PAM_SP_quantity  			0x06 // Total quantity SP channels on the PAM
 #define PAM_SP_Temp_sensor_quantity	0x04 // Total quantity Temp. sensor on one SP
 #define PAM_SP_ID_quantity			0x06 // Total quantity Ideal Diode on one SP
+#define PAM_PWR_Ch_TM_SP_quantity   0x06 // Total quantity power channel for get telemetry from solar panels
 
 #define PAM_PWR_IN_Channel_1 		0x00 //Panel Y+ (PAM 1.0 socket X1)
 #define PAM_PWR_IN_Channel_2 		0x01 //Panel X- (PAM 1.0 socket X2)
