@@ -109,6 +109,8 @@ int main(void){
 	pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
+    pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
+
 	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записиво флеш.
 	pam_ptr->State_DC_DC = ENABLE;
     pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
