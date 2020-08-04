@@ -568,6 +568,34 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                     }
                     break;
 
+                case CAN_PMM_Power_CAN_main_offset://Enable/Disable Power main CAN
+                    if (CAN_IVar4_RegCmd.CAN_PMM_Power_CAN_main == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE power main CAN \n", CAN_PMM_Power_CAN_main_offset);
+                        #endif
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE  power main CAN\n", CAN_PMM_Power_CAN_main_offset);
+                        #endif
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
+                    }
+                    break;
+
+			    case CAN_PMM_Power_CAN_backup_offset://Enable/Disable Power main CAN
+                    if (CAN_IVar4_RegCmd.CAN_PMM_Power_CAN_backup == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE power main CAN \n", CAN_PMM_Power_CAN_backup_offset);
+                        #endif
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE  power main CAN\n", CAN_PMM_Power_CAN_backup_offset);
+                        #endif
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,PMM_PWR_Ch_CANbackup, DISABLE);
+                    }
+                    break;
+
                 default:
 					break;
 			}
