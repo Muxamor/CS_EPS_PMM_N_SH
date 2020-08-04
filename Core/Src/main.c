@@ -113,7 +113,7 @@ int main(void){
 	pam_ptr->State_DC_DC = ENABLE;
     pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
     pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
-	//pam_ptr->State_LDO = ENABLE;
+
 
     pbm_mas[0].Branch_1_ChgEnableBit = ENABLE;
     pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
