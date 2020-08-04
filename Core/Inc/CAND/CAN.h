@@ -68,6 +68,8 @@ extern "C" {
 #define CAN_PAM_Power_DC_DC_offset      46
 #define CAN_PAM_Power_LDO_offset        47
 
+#define CAN_PMM_Power_PBM_Logic_offset  48
+
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
@@ -148,7 +150,7 @@ struct CAN_IVar4 {
     uint8_t CAN_AB3_Heat_Branch2;           //+45           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 3
     uint8_t CAN_PAM_Power_DC_DC;            //+46           Вкл/Выкл DC_DC источник питания PAM
     uint8_t CAN_PAM_Power_LDO;           	//+47           Вкл/Выкл LDO источник питания PAM
-
+    uint8_t CAN_PMM_Power_PBM_Logic;        //+48           Вкл/Выкл питания логики PBM
 
 };
 

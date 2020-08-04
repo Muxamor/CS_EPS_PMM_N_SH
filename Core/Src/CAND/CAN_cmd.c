@@ -554,7 +554,21 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                     }
                     break;
 
-				default:
+			    case CAN_PMM_Power_PBM_Logic_offset://Enable/Disable PMM Power PBM Logic
+                    if (CAN_IVar4_RegCmd.CAN_PMM_Power_PBM_Logic == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE PMM  power PBM Logic\n", CAN_PMM_Power_PBM_Logic_offset);
+                        #endif
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE PMM  power PBM Logic\n", CAN_PMM_Power_PBM_Logic_offset);
+                        #endif
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, DISABLE );
+                    }
+                    break;
+
+                default:
 					break;
 			}
 
