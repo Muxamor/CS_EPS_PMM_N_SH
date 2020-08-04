@@ -663,7 +663,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 	CAN_IVar5_telemetry.CAN_Full_capacity_charge_level	 				= 0x0000;
     for( num_pwr_ch = 0; num_pwr_ch < PBM_QUANTITY; num_pwr_ch++ ){
-    	CAN_IVar5_telemetry.CAN_Full_capacity_charge_level		        = CAN_IVar5_telemetry.CAN_Full_capacity_charge_level + (uint8_t)(eps_p.eps_pbm_ptr[num_pwr_ch].TotalAbcoluteCapacity);
+    	CAN_IVar5_telemetry.CAN_Full_capacity_charge_level		        = CAN_IVar5_telemetry.CAN_Full_capacity_charge_level + (uint16_t)(eps_p.eps_pbm_ptr[num_pwr_ch].TotalAbcoluteCapacity);
     }  // PBM_data
 
 
@@ -780,7 +780,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_Full_charge_discharge_power 				= 0x0000;
     for( num_pwr_ch = 0; num_pwr_ch < PBM_QUANTITY; num_pwr_ch++ ){
     	CAN_IVar5_telemetry.CAN_Full_charge_discharge_power             = CAN_IVar5_telemetry.CAN_Full_charge_discharge_power +
-    																		(uint16_t)( ( ((eps_p.eps_pbm_ptr[num_pwr_ch].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[num_pwr_ch].Branch_1_VoltageLo) *
+    																		(uint16_t)( ( ( (eps_p.eps_pbm_ptr[num_pwr_ch].Branch_1_VoltageHi + eps_p.eps_pbm_ptr[num_pwr_ch].Branch_1_VoltageLo) *
     																		eps_p.eps_pbm_ptr[num_pwr_ch].Branch_1_Current) / 1000 ) +
                 															( ((eps_p.eps_pbm_ptr[num_pwr_ch].Branch_2_VoltageHi + eps_p.eps_pbm_ptr[num_pwr_ch].Branch_2_VoltageLo) *
                 															eps_p.eps_pbm_ptr[num_pwr_ch].Branch_2_Current) / 1000 ) );
