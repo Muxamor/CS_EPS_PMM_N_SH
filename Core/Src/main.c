@@ -16,6 +16,7 @@
 #include "PBM/pbm_init.h"
 #include "PBM/pbm.h"
 #include "PAM/pam_init.h"
+#include "PAM/pam_ctrl.h"
 #include "PAM/pam.h"
 #include "uart_eps_comm.h"
 
@@ -109,11 +110,13 @@ int main(void){
 	pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
-	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записиво флеш.
+    pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
+
+	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записи во флеш.
 	pam_ptr->State_DC_DC = ENABLE;
     pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
     pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
-	//pam_ptr->State_LDO = ENABLE;
+
 
     pbm_mas[0].Branch_1_ChgEnableBit = ENABLE;
     pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
@@ -140,6 +143,8 @@ int main(void){
     //Check Active flag between active and passive CPU.
 	PMM_Check_Active_CPU( UART_M_eps_comm, UART_B_eps_comm, eps_param );
 
+	CAN_Var4_fill_telemetry( eps_param );
+
     //Initialization PMM (active and passive CPU)
 	PMM_init( pmm_ptr );
 
@@ -163,6 +168,7 @@ int main(void){
 		CAN_DeInit_eps(CAN2);
 	}
 
+	PAM_Set_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5, ENABLE);
 
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
@@ -186,6 +192,10 @@ int main(void){
 			PMM_Get_Telemetry( pmm_ptr );
             PBM_Get_Telemetry( pbm_mas );
             PAM_Get_Telemetry( pam_ptr );
+
+            PAM_Check_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
+            PAM_Get_PG_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
+
 
             if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
                 //No start Deploy

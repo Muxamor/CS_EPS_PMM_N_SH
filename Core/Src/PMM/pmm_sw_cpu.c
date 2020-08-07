@@ -192,6 +192,9 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
 		eps_p.eps_pmm_ptr->Active_CPU = CPUbackup_Active;
 	}
 
+    eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
+    eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
+
 	//TODO Call function Fill VarID4
     I2C4_Init();
 

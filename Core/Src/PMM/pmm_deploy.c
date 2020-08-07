@@ -9,18 +9,15 @@
 #include "PMM/pmm_ctrl.h"
 #include "PMM/eps_struct.h"
 #include "PDM/pdm_ctrl.h"
-#include "PAM/pam_ctrl.h"
 #include "PAM/pam_init.h"
 #include "PAM/pam.h"
-#include "PBM/pbm_config.h"
 #include "PMM/pmm_deploy.h"
 
 /** @brief  Deploy CubeSat Norbi.
  *  @param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None
 */
-
-void PMM_Deploy( _EPS_Param eps_p ){
+ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
     //int8_t error_status = SUCCESS;
     uint16_t  i = 0;
@@ -35,10 +32,10 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
     //Enable power Deploy Logic
     if( eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic == DISABLE ){
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
         LL_mDelay( 5 );
     }else{
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
     }
 
     //Deploy stage 0 - In delivery container
@@ -98,8 +95,8 @@ void PMM_Deploy( _EPS_Param eps_p ){
         //Check Enable state power supply PAM module and get telemetry PAM if PWR supply disable
         if( (eps_p.eps_pam_ptr->State_DC_DC == DISABLE) && (eps_p.eps_pam_ptr->State_LDO == DISABLE) ){
             eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
-            PAM_init( eps_p.eps_pam_ptr );
-            PAM_Get_Telemetry( eps_p.eps_pam_ptr );
+            error_status += PAM_init( eps_p.eps_pam_ptr );
+            error_status += PAM_Get_Telemetry( eps_p.eps_pam_ptr );
         }
 
         //Checking quantity error input power monitors on PAM
@@ -109,6 +106,7 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
         //if all is errors it is mean PAM is broken and we go to next stage deploy
         if( total_error_pwr_mon_pam == PAM_PWR_IN_Ch_quantity ){
+            error_status = ERROR_N;
             eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
             Deploy_start_time_delay = SysTick_Counter;
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
@@ -142,48 +140,51 @@ void PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 4 -  burn channel 1.
     }else if( deploy_stage == 4 ){
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
-        PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch1);
+        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
+        error_status += PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch1);
         eps_p.eps_pmm_ptr->Deploy_stage = 5; // Next deploy stage 5 - deploy at channel 2
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     // Deploy stage 5 -  burn channel 2.
     }else if( deploy_stage == 5 ){
-        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch2);
-        eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 5 - Enable BRC
+        error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch2);
+        eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 6 - Enable BRC
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     //Enable BRC
     }else if( deploy_stage == 6 ){
         //Enable BRC
-        PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
-        PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
-        eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 6 - Enable BRC
+        error_status += PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
+        error_status += PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
+        eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 7 - deploy at channel 3
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     // Deploy stage 7 -  burn channel 3.
     }else if( deploy_stage == 7 ){
-        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
-        eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 5 - deploy at channel 4
+        error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
+        eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 8 - deploy at channel 4
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
     // Deploy stage 8 -  burn channel 4.
     }else if( deploy_stage == 8 ){
-        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-        PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
+        error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
 
-        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
+        error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
 
         eps_p.eps_pmm_ptr->Deploy_stage = 9; //  Next deploy stage 9 - Finish deploy
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
         //Disable Power deploy logic
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
     }
 
-    return;
+    if( error_status != SUCCESS ){
+        return ERROR_N;
+    }
+    return SUCCESS;
 }
 
 /** @brief  Deploy burn procedure. Burning threads for deploy elements of the CubeSat.
@@ -204,7 +205,6 @@ ErrorStatus PMM_Deploy_Burn_Procedure( _EPS_Param eps_p, uint8_t burn_pwr_ch_num
     //First attempt to deploy for a specific channel.
     error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_1, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
 
-
     if( (get_state_limit_switch_1 != 1) || (get_state_limit_switch_2 != 1) ){
         //Second attempt to deploy for a specific channel.
         LL_mDelay(900);
@@ -217,6 +217,9 @@ ErrorStatus PMM_Deploy_Burn_Procedure( _EPS_Param eps_p, uint8_t burn_pwr_ch_num
         error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_3, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
     }
 
+    if( error_status != SUCCESS ){
+        error_status = ERROR_N;
+    }
     return error_status;
 }
 
@@ -238,6 +241,7 @@ ErrorStatus PMM_Deploy_Burn_Procedure( _EPS_Param eps_p, uint8_t burn_pwr_ch_num
 ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uint8_t burn_pwr_ch_num, uint8_t *ret_state_limit_switch_1, uint8_t *ret_state_limit_switch_2){
 
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+    int8_t error_status = ERROR_N;
     uint8_t i = 0;
     uint32_t start_burn_time = 0;
     uint32_t deploy_burn_timeout = 0;
@@ -269,10 +273,12 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
         }
     }
 
+    error_status = error_I2C;
+
     if( attempt_burn == PMM_Deploy_Burn_Attempt_1 ){
         //Whit Burn time 1
         while((SysTick_Counter - start_burn_time) < ((uint32_t)PMM_Deploy_Burn_time_1) ){
-
+            //Empty
         }
 
     }else{
@@ -284,14 +290,13 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
         }
 
         while((SysTick_Counter - start_burn_time) < deploy_burn_timeout ){
-            PMM_Deploy_check_Lim_SW( eps_p,  burn_pwr_ch_num, ret_state_limit_switch_1, ret_state_limit_switch_2 );
+            error_status += PMM_Deploy_check_Lim_SW( eps_p,  burn_pwr_ch_num, ret_state_limit_switch_1, ret_state_limit_switch_2 );
 
             if( (*ret_state_limit_switch_1 == 1) && ( *ret_state_limit_switch_2 == 1) ){
                 break;
             }
         }
     }
-
 
     i = 0;
     error_I2C = ERROR_N;
@@ -308,8 +313,10 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
         }
     }
 
+    error_status = error_status + error_I2C;
+
     if( attempt_burn == PMM_Deploy_Burn_Attempt_1){
-        PMM_Deploy_check_Lim_SW( eps_p, burn_pwr_ch_num,  ret_state_limit_switch_1, ret_state_limit_switch_2 );
+        error_status += PMM_Deploy_check_Lim_SW( eps_p, burn_pwr_ch_num, ret_state_limit_switch_1, ret_state_limit_switch_2 );
     }
 
 //    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
@@ -321,9 +328,12 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
         eps_p.eps_pmm_ptr-> Error_I2C_Deploy_GPIO_Ext = ERROR;
     }
 
-    return error_I2C;
-}
+    if( error_status != SUCCESS ){
+        error_status = ERROR_N;
+    }
 
+    return error_status;
+}
 
 
 /** @brief  Deploy burn threads in burn power channel.
@@ -341,7 +351,7 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
 
     uint8_t i = 0;
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
-    float ADC_ch_meas = (float)0.0;
+    float ADC_ch_meas = 0.0f;
     uint8_t ADC_num_ch = 0;
 
 //    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
@@ -390,7 +400,7 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
 
         eps_p.eps_pmm_ptr-> Error_I2C_Deploy_ADC = SUCCESS;
         //Parsing the received data
-        if( ADC_ch_meas < 0.4 ){
+        if( ADC_ch_meas < 0.35 ){
             //all Limit Switch close
             *ret_state_limit_switch_1 = 0;
             *ret_state_limit_switch_2 = 0;
@@ -412,7 +422,7 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
                 eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
             }
 
-        }else if((ADC_ch_meas > 0.4) && (ADC_ch_meas < 0.7)){
+        }else if((ADC_ch_meas > 0.35) && (ADC_ch_meas < 0.7)){
             //2k open, 1k close Limit Switch
             *ret_state_limit_switch_1 = 1;
             *ret_state_limit_switch_2 = 0;
@@ -509,8 +519,8 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
 
 /** @brief  Get value of exit limit switch 1 and 2.
  *  @param  eps_p - contain pointer to struct which contain all parameters EPS.
-   	@param  ret_exit_LSW_1 - pointer for return value state exit from comtainer limit switch 1
-   	@param  ret_exit_LSW_2 - pointer for return value state exit from comtainer switch 2
+   	@param  ret_exit_LSW_1 - pointer for return value state exit from container limit switch 1
+   	@param  ret_exit_LSW_2 - pointer for return value state exit from container switch 2
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
 ErrorStatus PMM_Deploy_Get_Exit_LSW( _EPS_Param eps_p, uint8_t *ret_exit_LSW_1, uint8_t *ret_exit_LSW_2 ){

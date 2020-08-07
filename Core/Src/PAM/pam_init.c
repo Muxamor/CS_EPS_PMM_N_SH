@@ -60,3 +60,39 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 	return SUCCESS;
 }
 
+/** @brief  Initialisation temperature sensors on chosen solar panel
+	@param  *pam_ptr - pointer to struct which contain all information about PAM.
+	@param  num_ch - number channel SP (PAM_SP_Channel_1 - PAM_SP_Channel_6).
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
+ErrorStatus PAM_init_SP_Temp_sensors(_PAM *pam_ptr, uint8_t num_ch){
+
+	int8_t error_status = SUCCESS;
+
+	_PAM_table pam_table;
+
+	pam_table = PAM__Table(num_ch);
+
+	error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
+
+//	if((num_ch != PAM_SP_1) || (num_ch != PAM_SP_3)){ // there is no sensor with this address on the panel on Y+ Y-
+//		error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
+//	}
+//
+//	if((num_ch != PAM_SP_1) || (num_ch != PAM_SP_3)){ // there is no sensor with this address on the panel on Y+ Y-
+//		error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_3, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
+//	}
+
+	error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_4, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
+
+	if(error_status != SUCCESS){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		return ERROR_N;
+	}
+
+	return SUCCESS;
+}
+
+
