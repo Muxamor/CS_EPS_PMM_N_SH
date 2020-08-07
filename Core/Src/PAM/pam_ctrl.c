@@ -525,11 +525,11 @@ ErrorStatus PAM_Set_state_SP_Supply( _PAM *pam_ptr, uint8_t num_pwr_ch, uint8_t 
 
 	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
 
-	if(pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].State_eF_out != state_channel){
+	if( pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].State_eF_out != state_channel){
 		pam_ptr->PAM_save_conf_flag = 1; //Need save configure in FRAM.
 	}
 
-	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].State_eF_out = state_channel;
+	pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].State_eF_out = state_channel;
 
 	//Write to I2C GPIO Extender.
 	i=0;
@@ -561,7 +561,7 @@ ErrorStatus PAM_Set_state_SP_Supply( _PAM *pam_ptr, uint8_t num_pwr_ch, uint8_t 
 		#endif
 		pam_ptr->Error_I2C_GPIO_Ext = ERROR;
 
-		pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].Error_State_eF_out = ERROR;
+		pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].Error_State_eF_out = ERROR;
 
         }
 
@@ -601,11 +601,11 @@ ErrorStatus PAM_Check_state_SP_Supply( _PAM *pam_ptr, uint8_t num_pwr_ch ) {
 
         pam_ptr->Error_I2C_GPIO_Ext = SUCCESS;
 
-        if( pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].State_eF_out != pin_state ){
-        	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].Error_State_eF_out = ERROR;
+        if( pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].State_eF_out != pin_state ){
+        	pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].Error_State_eF_out = ERROR;
 
         }else{
-        	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].Error_State_eF_out = SUCCESS;
+        	pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].Error_State_eF_out = SUCCESS;
         }
 
     }else{
@@ -615,7 +615,7 @@ ErrorStatus PAM_Check_state_SP_Supply( _PAM *pam_ptr, uint8_t num_pwr_ch ) {
 
         pam_ptr->Error_I2C_GPIO_Ext = ERROR;
 
-        pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].Error_State_eF_out = ERROR;
+        pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].Error_State_eF_out = ERROR;
     }
 
     return error_I2C;
@@ -658,10 +658,10 @@ ErrorStatus PAM_Get_PG_SP_Supply( _PAM *pam_ptr, uint8_t num_pwr_ch ){
 
         pam_ptr->Error_I2C_GPIO_Ext = SUCCESS;
 
-        if( pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].State_eF_out == ENABLE ){
-        	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].PG_eF_out = !read_val_pin_PG_eF;
+        if( pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].State_eF_out == ENABLE ){
+        	pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].PG_eF_out = !read_val_pin_PG_eF;
         }else{
-        	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].PG_eF_out = SUCCESS;
+        	pam_ptr->PWR_Channel_TM_SP[pam_table.PWR_TM_SP_ch].PG_eF_out = SUCCESS;
         }
 
 

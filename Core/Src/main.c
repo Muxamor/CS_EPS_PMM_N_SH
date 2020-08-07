@@ -167,8 +167,6 @@ int main(void){
 		CAN_DeInit_eps(CAN2);
 	}
 
-	PAM_Set_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5, ENABLE);
-
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
@@ -192,8 +190,9 @@ int main(void){
             PBM_Get_Telemetry( pbm_mas );
             PAM_Get_Telemetry( pam_ptr );
 
-            //PAM_Check_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
-            //PAM_Get_PG_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
+            //PAM_Set_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_Ch5, ENABLE);
+            //PAM_Check_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_Ch5);
+            //PAM_Get_PG_SP_Supply(pam_ptr, PAM_PWR_TM_SP_Ch5);
 
             if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
                 //No start Deploy
