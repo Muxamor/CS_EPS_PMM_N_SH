@@ -500,4 +500,177 @@ ErrorStatus PAM_Get_PWR_CH_I_V_P( _PAM *pam_ptr, uint8_t num_pwr_ch){
 	return error_I2C;
 }
 
+/** @brief  Set state (enable/disable) solar panel power supply.
+	@param  *pam_ptr - pointer to struct which contain all information about PAM.
+	@param  num_pwr_ch - number channel SP (PAM_SP_Channel_1 - PAM_SP_Channel_6).
+	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
+								ENABLE
+								DISABLE
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PAM_Set_state_SP_Supply( _PAM *pam_ptr, uint8_t num_pwr_ch, uint8_t state_channel ){
 
+	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+	uint8_t i=0;
+	_PAM_table pam_table;
+
+	if( (state_channel != ENABLE) && (state_channel != DISABLE) ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		return ERROR_N;
+	}
+
+	pam_table = PAM__Table(num_pwr_ch);
+
+	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
+
+	if(pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].State_eF_out != state_channel){
+		pam_ptr->PAM_save_conf_flag = 1; //Need save configure in FRAM.
+	}
+
+	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].State_eF_out = state_channel;
+
+	//Write to I2C GPIO Extender.
+	i=0;
+ 	error_I2C = ERROR_N;
+
+ 	//Enable/Disable Efuse power SP channel.
+	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){
+
+		if( state_channel == ENABLE ){
+			if ( TCA6424A_Set_output_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF) == SUCCESS ){
+				error_I2C = TCA6424A_conf_IO_dir_output( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF);
+			}
+
+		}else{ //Disable power channel
+			if ( TCA6424A_Reset_output_pin( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF) == SUCCESS ){
+				error_I2C = TCA6424A_conf_IO_dir_output( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF);
+			}
+		}
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay(pam_i2c_delay_att_conn);
+		}
+	}
+
+    if( error_I2C != SUCCESS ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pam_ptr->Error_I2C_GPIO_Ext = ERROR;
+
+		pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].Error_State_eF_out = ERROR;
+
+        }
+
+	return error_I2C;
+}
+
+/** @brief  Checking the state of the solar panel power supply in PAM. OK- If there is no difference between
+			the set value and the actual value set. ERROR - If there are differences between
+			the set value and the actual set.
+			actual value set - Get by reading the real value I2C GPIO Expander.
+	@param  *pam_ptr - pointer to struct which contain all information about PAM.
+	@param  num_pwr_ch - number channel on/off (PAM_SP_Channel_1 - PAM_SP_Channel_6).
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PAM_Check_state_SP_Supply( _PAM *pam_ptr, uint8_t num_pwr_ch ) {
+
+    uint8_t i = 0;
+    int8_t error_I2C = ERROR_N;
+    uint8_t pin_state = 0;
+    _PAM_table pam_table;
+
+    SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
+
+    pam_table = PAM__Table(num_pwr_ch);
+
+    while((error_I2C != SUCCESS) && (i < pam_i2c_attempt_conn)){
+
+        error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_Enable_eF, &pin_state);
+
+        if( error_I2C != SUCCESS ){
+            i++;
+            LL_mDelay(pam_i2c_delay_att_conn);
+        }
+    }
+
+    if( error_I2C == SUCCESS ){
+
+        pam_ptr->Error_I2C_GPIO_Ext = SUCCESS;
+
+        if( pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].State_eF_out != pin_state ){
+        	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].Error_State_eF_out = ERROR;
+
+        }else{
+        	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].Error_State_eF_out = SUCCESS;
+        }
+
+    }else{
+        #ifdef DEBUGprintf
+            Error_Handler();
+        #endif
+
+        pam_ptr->Error_I2C_GPIO_Ext = ERROR;
+
+        pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].Error_State_eF_out = ERROR;
+    }
+
+    return error_I2C;
+}
+
+/** @brief  Get Power Good solar panel power supply in PAM
+	@param  *pam_ptr - pointer to struct which contain all information about PAM.
+	@param  pwr_source_num - source (PWR_DC_DC, PWR_LDO).
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PAM_Get_PG_SP_Supply( _PAM *pam_ptr, uint8_t num_pwr_ch ){
+
+	uint8_t i = 0;
+	uint8_t read_val_pin_PG_eF = 0;
+	int8_t error_I2C = ERROR_N;
+	_PAM_table pam_table;
+
+	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
+
+	//Get real state value pins TCA9539.
+	pam_table = PAM__Table(num_pwr_ch);
+
+	i=0;
+ 	error_I2C = ERROR_N;
+
+	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
+
+		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
+
+			error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF );
+		}
+
+		if( error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( pam_i2c_delay_att_conn );
+		}
+	}
+
+	if( error_I2C == SUCCESS  ){
+
+        pam_ptr->Error_I2C_GPIO_Ext = SUCCESS;
+
+        if( pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].State_eF_out == ENABLE ){
+        	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].PG_eF_out = !read_val_pin_PG_eF;
+        }else{
+        	pam_ptr->PWR_Channel_TM_SP[pam_table.SP_PWR_ch].PG_eF_out = SUCCESS;
+        }
+
+
+	}else{
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pam_ptr->Error_I2C_GPIO_Ext = ERROR;
+	}
+
+	return error_I2C;
+}
