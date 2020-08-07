@@ -10,7 +10,7 @@ extern "C" {
 
 typedef struct{
 
-	uint8_t State_ID [PAM_SP_ID_quantity];		    		//SP state ideal diode 0-Open, 1-Close.
+	uint8_t State_ID [PAM_SP_ID_quantity];		    			//SP state ideal diode 0-Open, 1-Close.
 	int8_t Temp_sensor [PAM_SP_Temp_sensor_quantity]; 			//SP temperature
 	uint8_t Error_temp_sensor [PAM_SP_Temp_sensor_quantity];
 

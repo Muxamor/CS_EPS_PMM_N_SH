@@ -42,10 +42,17 @@ extern "C" {
 #define PAM_PWR_IN_Channel_3 		0x02 //Panel Y- (PAM 1.0 socket X3)
 #define PAM_PWR_IN_Channel_4 		0x03 //Panel X+ (PAM 1.0 socket X2)
 #define PAM_PWR_IN_Channel_5 		0x04 //Folding Panel LT8490_1 (PAM 1.0 socket X5 and X6)
-#define PAM_PWR_IN_Channel_6 		0x05 //Folding Panel LT8490_1 (PAM 1.0 socket X7 and X8)
+#define PAM_PWR_IN_Channel_6 		0x05 //Folding Panel LT8490_2 (PAM 1.0 socket X7 and X8)
 
 #define PAM_PWR_DC_DC 				0x06
 #define PAM_PWR_LDO 				0x07
+
+#define PAM_PWR_TM_SP_1				0x10 //Power telemetry Panel Y+ (PAM 1.0 socket X1)
+#define PAM_PWR_TM_SP_2 			0x11 //Power telemetry Panel X- (PAM 1.0 socket X2)
+#define PAM_PWR_TM_SP_3				0x12 //Power telemetry Panel Y- (PAM 1.0 socket X3)
+#define PAM_PWR_TM_SP_4				0x13 //Power telemetry Panel X+ (PAM 1.0 socket X2)
+#define PAM_PWR_TM_SP_5 			0x14 //Power telemetry Folding Panel LT8490_1 (PAM 1.0 socket X5 and X6)
+#define PAM_PWR_TM_SP_6				0x15 //Power telemetry Folding Panel LT8490_2 (PAM 1.0 socket X7 and X8)
 
 typedef struct{
 
@@ -53,6 +60,7 @@ typedef struct{
 	uint8_t I2C_addr_GPIO_Ext;
 	uint32_t pin_State_ID;
 	uint32_t pin_Enable_eF;
+	uint8_t SP_PWR_ch;
 
 	uint8_t I2C_addr_PWR_Mon;
 	uint16_t PWR_Mon_Max_Current_int16;
