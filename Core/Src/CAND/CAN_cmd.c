@@ -237,7 +237,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                 case CAN_PWR_CH1_offset: //Enable/Disable power channel 1 (SOP1)
 
-                    if( CAN_IVar4_RegCmd.CAN_PWR_CH1 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1 == 0x01 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 1\n", CAN_PWR_CH1_offset);
                         #endif
@@ -252,7 +252,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                 case CAN_PWR_CH2_offset: //Enable/Disable power channel 2 (SOP2)
 
-                    if( CAN_IVar4_RegCmd.CAN_PWR_CH2 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2 == 0x01 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 2\n", CAN_PWR_CH2_offset);
                         #endif
@@ -267,7 +267,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                 case CAN_PWR_CH3_offset: //Enable/Disable power channel 3 (BRK1)
 
-                    if( CAN_IVar4_RegCmd.CAN_PWR_CH3 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3 == 0x01 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 3\n", CAN_PWR_CH3_offset);
                         #endif
@@ -280,9 +280,9 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                     }
                     break;
 
-                case CAN_PWR_CH4_offset: //Enable/Disable power channel 4 (BRK2)  uint8_t CAN_PWR_CH4;
+                case CAN_PWR_CH4_offset: //Enable/Disable power channel 4 (BRK2)  uint8_t CAN_PDM_PWR_CH4;
 
-                    if( CAN_IVar4_RegCmd.CAN_PWR_CH4 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4 == 0x01 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 4\n", CAN_PWR_CH4_offset);
                         #endif
@@ -297,7 +297,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                 case CAN_PWR_CH5_offset: //Enable/Disable power channel 5
 
-                    if( CAN_IVar4_RegCmd.CAN_PWR_CH5 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH5 == 0x01 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 5\n", CAN_PWR_CH5_offset);
                         #endif
@@ -312,7 +312,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                 case CAN_PWR_CH6_offset: //Enable/Disable power channel 6
 
-                    if( CAN_IVar4_RegCmd.CAN_PWR_CH6 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH6 == 0x01 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 6\n", CAN_PWR_CH6_offset);
                         #endif
@@ -327,7 +327,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                  case CAN_PWR_VBAT1_offset: //Enable/Disable power channel VBAT1
 
-                    if( CAN_IVar4_RegCmd.CAN_PWR_VBAT1 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT1 == 0x01 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power VBAT1\n", CAN_PWR_VBAT1_offset);
                         #endif
@@ -344,7 +344,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 
                 case CAN_PWR_VBAT2_offset: //Enable/Disable power channel VBAT2
 
-                    if( CAN_IVar4_RegCmd.CAN_PWR_VBAT2 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT2 == 0x01 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power VBAT2\n", CAN_PWR_VBAT2_offset);
                         #endif
@@ -791,7 +791,6 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_Total_Generate_Power_SP 					= 0x0000;
     for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
     	CAN_IVar5_telemetry.CAN_Total_Generate_Power_SP             	= CAN_IVar5_telemetry.CAN_Total_Generate_Power_SP + eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val;
-    	                                                                 //   (uint16_t)( (eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Current_val * eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Voltage_val) / 1000);
     }  // PAM_data
     //---
 
@@ -980,14 +979,14 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_AB3_Discharge_key_branch_2                  = (uint8_t) CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_2; 	// PBM_data
 
 
-    CAN_IVar5_telemetry.CAN_Line1                                       =	CAN_IVar4_RegCmd.CAN_PWR_CH1;
-    CAN_IVar5_telemetry.CAN_Line2                                       =	CAN_IVar4_RegCmd.CAN_PWR_CH2;
-    CAN_IVar5_telemetry.CAN_Line3                                       =	CAN_IVar4_RegCmd.CAN_PWR_CH3;
-    CAN_IVar5_telemetry.CAN_Line4                                       =   CAN_IVar4_RegCmd.CAN_PWR_CH4;
-	CAN_IVar5_telemetry.CAN_Line5                                       =   CAN_IVar4_RegCmd.CAN_PWR_CH5;
-    CAN_IVar5_telemetry.CAN_Line6                                       =   CAN_IVar4_RegCmd.CAN_PWR_CH6;
-    CAN_IVar5_telemetry.CAN_Line_VBAT1                                  =   CAN_IVar4_RegCmd.CAN_PWR_VBAT1;
-    CAN_IVar5_telemetry.CAN_Line_VBAT2                                  =   CAN_IVar4_RegCmd.CAN_PWR_VBAT2;
+    CAN_IVar5_telemetry.CAN_Line1                                       =	CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1;
+    CAN_IVar5_telemetry.CAN_Line2                                       =	CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2;
+    CAN_IVar5_telemetry.CAN_Line3                                       =	CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3;
+    CAN_IVar5_telemetry.CAN_Line4                                       =   CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4;
+	CAN_IVar5_telemetry.CAN_Line5                                       =   CAN_IVar4_RegCmd.CAN_PDM_PWR_CH5;
+    CAN_IVar5_telemetry.CAN_Line6                                       =   CAN_IVar4_RegCmd.CAN_PDM_PWR_CH6;
+    CAN_IVar5_telemetry.CAN_Line_VBAT1                                  =   CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT1;
+    CAN_IVar5_telemetry.CAN_Line_VBAT2                                  =   CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT2;
 
     //***
     if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){  
@@ -1363,58 +1362,90 @@ void CAN_Var5_fill_telemetry_const(void){
 
 void CAN_Var4_fill_telemetry( _EPS_Param eps_p ){
 
-	CAN_IVar4_RegCmd.CAN_time_byte0                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_time_byte1                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_time_byte2                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_time_byte3                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Constant_mode                          		= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd0                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd1                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd2                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd3                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd4                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd5                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd6                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd7                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd8                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd9                           			= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Common_cmd10                           		= 0x0000;
+	CAN_IVar4_RegCmd.CAN_time_byte0                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_time_byte1                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_time_byte2                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_time_byte3                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Constant_mode                          		= eps_p.eps_pmm_ptr->CAN_constatnt_mode;
+	CAN_IVar4_RegCmd.CAN_Common_cmd0                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd1                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd2                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd3                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd4                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd5                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd6                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd7                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd8                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd9                           			= 0x00;
+	CAN_IVar4_RegCmd.CAN_Common_cmd10                           		= 0x00;
 
-	CAN_IVar4_RegCmd.CAN_AB1_Charge_key_branch_1                        = (uint8_t) eps_p.eps_pbm_ptr[0].Branch_1_ChgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB1_Discharge_key_branch_1                     = (uint8_t) eps_p.eps_pbm_ptr[0].Branch_1_DchgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB1_Charge_key_branch_2                        = (uint8_t) eps_p.eps_pbm_ptr[0].Branch_2_ChgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB1_Discharge_key_branch_2                     = (uint8_t) eps_p.eps_pbm_ptr[0].Branch_2_DchgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB2_Charge_key_branch_1                        = (uint8_t) eps_p.eps_pbm_ptr[1].Branch_1_ChgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB2_Discharge_key_branch_1                     = (uint8_t) eps_p.eps_pbm_ptr[1].Branch_1_DchgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB2_Charge_key_branch_2                        = (uint8_t) eps_p.eps_pbm_ptr[1].Branch_2_ChgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB2_Discharge_key_branch_2                     = (uint8_t) eps_p.eps_pbm_ptr[1].Branch_2_DchgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_1                        = (uint8_t) eps_p.eps_pbm_ptr[2].Branch_1_ChgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_1                     = (uint8_t) eps_p.eps_pbm_ptr[2].Branch_1_DchgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_2                        = (uint8_t) eps_p.eps_pbm_ptr[2].Branch_2_ChgEnableBit;
-	CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_2                     = (uint8_t) eps_p.eps_pbm_ptr[2].Branch_2_DchgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB1_Charge_key_branch_1                        = eps_p.eps_pbm_ptr[0].Branch_1_ChgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB1_Discharge_key_branch_1                     = eps_p.eps_pbm_ptr[0].Branch_1_DchgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB1_Charge_key_branch_2                        = eps_p.eps_pbm_ptr[0].Branch_2_ChgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB1_Discharge_key_branch_2                     = eps_p.eps_pbm_ptr[0].Branch_2_DchgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB2_Charge_key_branch_1                        = eps_p.eps_pbm_ptr[1].Branch_1_ChgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB2_Discharge_key_branch_1                     = eps_p.eps_pbm_ptr[1].Branch_1_DchgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB2_Charge_key_branch_2                        = eps_p.eps_pbm_ptr[1].Branch_2_ChgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB2_Discharge_key_branch_2                     = eps_p.eps_pbm_ptr[1].Branch_2_DchgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_1                        = eps_p.eps_pbm_ptr[2].Branch_1_ChgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_1                     = eps_p.eps_pbm_ptr[2].Branch_1_DchgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_2                        = eps_p.eps_pbm_ptr[2].Branch_2_ChgEnableBit;
+	CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_2                     = eps_p.eps_pbm_ptr[2].Branch_2_DchgEnableBit;
 
-	CAN_IVar4_RegCmd.CAN_PWR_CH1                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PWR_CH2                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PWR_CH3                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PWR_CH4                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PWR_CH5                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PWR_CH6                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PWR_VBAT1                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PWR_VBAT2                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_EPS_Mode                     					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Set_active_CPU               					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Reset_to_default              					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_Perform_Deploy                					= 0x0000;
-	CAN_IVar4_RegCmd.CAN_AB1_Heat_Branch1              					= (uint8_t) eps_p.eps_pbm_ptr[0].PCA9534_ON_Heat_1;
-	CAN_IVar4_RegCmd.CAN_AB1_Heat_Branch2              					= (uint8_t) eps_p.eps_pbm_ptr[0].PCA9534_ON_Heat_2;
-	CAN_IVar4_RegCmd.CAN_AB2_Heat_Branch1              					= (uint8_t) eps_p.eps_pbm_ptr[1].PCA9534_ON_Heat_1;
-	CAN_IVar4_RegCmd.CAN_AB2_Heat_Branch2              					= (uint8_t) eps_p.eps_pbm_ptr[1].PCA9534_ON_Heat_2;
-	CAN_IVar4_RegCmd.CAN_AB3_Heat_Branch1              					= (uint8_t) eps_p.eps_pbm_ptr[2].PCA9534_ON_Heat_1;
-	CAN_IVar4_RegCmd.CAN_AB3_Heat_Branch2              					= (uint8_t) eps_p.eps_pbm_ptr[2].PCA9534_ON_Heat_2;
-	CAN_IVar4_RegCmd.CAN_PAM_Power_DC_DC              					= (uint8_t) eps_p.eps_pam_ptr->State_DC_DC;
-	CAN_IVar4_RegCmd.CAN_PAM_Power_LDO              					= (uint8_t) eps_p.eps_pam_ptr->State_LDO;
-	CAN_IVar4_RegCmd.CAN_PMM_Power_PBM_Logic              				= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PMM_Power_CAN_main              				= 0x0000;
-	CAN_IVar4_RegCmd.CAN_PMM_Power_CAN_backup              				= 0x0000;
+
+    if( eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_out == ENABLE ){
+        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1                     				= 0x01;
+    }else{
+        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1                     				= 0x00;
+    }
+
+    if( eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF_out == ENABLE ){
+        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2                     				= 0x01;
+    }else{
+        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2                     				= 0x00;
+    }
+
+    if( eps_p.eps_pdm_ptr->PWR_Channel[2].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[2].State_eF_out == ENABLE ){
+        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3                     				= 0x01;
+    }else{
+        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3                     				= 0x00;
+    }
+
+    if( eps_p.eps_pdm_ptr->PWR_Channel[3].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[3].State_eF_out == ENABLE ){
+        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4                     				= 0x01;
+    }else{
+        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4                     				= 0x00;
+    }
+
+	CAN_IVar4_RegCmd.CAN_PDM_PWR_CH5                     					= 0x00;
+	CAN_IVar4_RegCmd.CAN_PDM_PWR_CH6                     					= 0x00;
+
+    if( eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1 == ENABLE || eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF2 == ENABLE ){
+        CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT1                     				= 0x01;
+    }else{
+        CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT1                     				= 0x00;
+    }
+
+    if( eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF1 == ENABLE || eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2 == ENABLE ){
+        CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT2                     				= 0x01;
+    }else{
+        CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT2                     				= 0x00;
+    }
+
+	CAN_IVar4_RegCmd.CAN_EPS_Mode                     					= eps_p.eps_pmm_ptr->EPS_Mode;
+	CAN_IVar4_RegCmd.CAN_Set_active_CPU               					= eps_p.eps_pmm_ptr->Active_CPU;
+	CAN_IVar4_RegCmd.CAN_Reset_to_default              					= 0x00;
+	CAN_IVar4_RegCmd.CAN_Perform_Deploy                					= 0x00;
+	CAN_IVar4_RegCmd.CAN_AB1_Heat_Branch1              					= eps_p.eps_pbm_ptr[0].PCA9534_ON_Heat_1;
+	CAN_IVar4_RegCmd.CAN_AB1_Heat_Branch2              					= eps_p.eps_pbm_ptr[0].PCA9534_ON_Heat_2;
+	CAN_IVar4_RegCmd.CAN_AB2_Heat_Branch1              					= eps_p.eps_pbm_ptr[1].PCA9534_ON_Heat_1;
+	CAN_IVar4_RegCmd.CAN_AB2_Heat_Branch2              					= eps_p.eps_pbm_ptr[1].PCA9534_ON_Heat_2;
+	CAN_IVar4_RegCmd.CAN_AB3_Heat_Branch1              					= eps_p.eps_pbm_ptr[2].PCA9534_ON_Heat_1;
+	CAN_IVar4_RegCmd.CAN_AB3_Heat_Branch2              					= eps_p.eps_pbm_ptr[2].PCA9534_ON_Heat_2;
+	CAN_IVar4_RegCmd.CAN_PAM_Power_DC_DC              					= eps_p.eps_pam_ptr->State_DC_DC;
+	CAN_IVar4_RegCmd.CAN_PAM_Power_LDO              					= eps_p.eps_pam_ptr->State_LDO;
+	CAN_IVar4_RegCmd.CAN_PMM_Power_PBM_Logic              				= eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic;
+	CAN_IVar4_RegCmd.CAN_PMM_Power_CAN_main              				= eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain;
+	CAN_IVar4_RegCmd.CAN_PMM_Power_CAN_backup              				= eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup;
 
 }

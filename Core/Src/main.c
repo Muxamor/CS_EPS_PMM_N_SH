@@ -151,10 +151,9 @@ int main(void){
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
 		PDM_init( pdm_ptr );
-		//Add init PAM
-        PBM_Init( pbm_mas );
+		PBM_Init( pbm_mas );
         PAM_init( pam_ptr );
-        //TODO Call function Fill VarID4
+
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
@@ -193,9 +192,8 @@ int main(void){
             PBM_Get_Telemetry( pbm_mas );
             PAM_Get_Telemetry( pam_ptr );
 
-            PAM_Check_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
-            PAM_Get_PG_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
-
+            //PAM_Check_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
+            //PAM_Get_PG_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
 
             if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
                 //No start Deploy
@@ -206,7 +204,6 @@ int main(void){
                     PMM_Deploy( eps_param );
                 }
             }
-
 
             if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
                 CAN_Var5_fill_telemetry(eps_param);
