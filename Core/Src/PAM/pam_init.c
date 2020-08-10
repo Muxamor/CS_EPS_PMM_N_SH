@@ -29,15 +29,13 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 
     if( (pam_ptr->State_DC_DC == ENABLE) && ( (pam_ptr->PG_DC_DC == ERROR) || (pam_ptr->Error_State_DC_DC == ERROR) ) && (pam_ptr->State_LDO == DISABLE) ){
-
         error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, ENABLE);
         pam_ptr->State_LDO = ENABLE;
 	}
 
-
-    //Restoring power channels.
+    //Init TM SP power channels.
     for( num_pwr_ch = 0;  num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity;  num_pwr_ch++ ){
-        error_status +=  PAM_Set_state_PWR_TM_SP_CH( pam_ptr, num_pwr_ch, pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out);
+        error_status += PAM_Set_state_PWR_TM_SP_CH( pam_ptr, num_pwr_ch, pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out );
     }
 
 	//Disable all channels TCA9548 I2C MUX on PAM module.
