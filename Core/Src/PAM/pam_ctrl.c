@@ -36,13 +36,16 @@ ErrorStatus PAM_Set_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num, uin
 
 	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PMM
 
-	if((pwr_source_num == PAM_PWR_DC_DC) && (pam_ptr->State_DC_DC != state_channel)){
-		pam_ptr->PAM_save_conf_flag = 1; //Need save configure in FRAM.
+	if( pwr_source_num == PAM_PWR_DC_DC ){
+        if( pam_ptr->State_DC_DC != state_channel){
+            pam_ptr->PAM_save_conf_flag = 1; //Need save configure in FRAM.
+        }
 		pam_ptr->State_DC_DC = state_channel;
-	}
 
-	if((pwr_source_num == PAM_PWR_LDO) && (pam_ptr->State_LDO != state_channel)){
-		pam_ptr->PAM_save_conf_flag = 1; //Need save configure in FRAM.
+	}else if( pwr_source_num == PAM_PWR_LDO ){
+	    if( pam_ptr->State_LDO != state_channel ){
+            pam_ptr->PAM_save_conf_flag = 1; //Need save configure in FRAM.
+        }
 		pam_ptr->State_LDO = state_channel;
 	}
 

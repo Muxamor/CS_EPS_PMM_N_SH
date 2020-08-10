@@ -58,9 +58,7 @@ typedef struct{
 
 	int8_t Temp_sensor[4]; //PAM temperature
 
-   // uint8_t State_eF_L_out_SP 			:1; // Need to save in flash ??????????????????????
-
-	uint16_t State_DC_DC 			:1; // Need to save in flash
+ 	uint16_t State_DC_DC 			:1; // Need to save in flash
 	uint16_t State_LDO 				:1; // Need to save in flash
 	uint16_t PG_DC_DC 				:1;
 	uint16_t PG_LDO 				:1;
@@ -76,7 +74,7 @@ typedef struct{
     uint16_t PAM_save_conf_flag		:1;
 	uint16_t :2;
 
-	uint8_t PAM_ID_module;        //identifier of PAM
+	uint8_t PAM_ID_module;        //identifier of PAM // Need to save in flash
 	uint8_t Alignment_structure; //Alignment
 
 	uint16_t reserved1;
