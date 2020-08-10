@@ -33,12 +33,12 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
         pam_ptr->State_LDO = ENABLE;
 	}
 
-    if( pam_ptr->State_DC_DC == ENABLE || pam_ptr->State_LDO == ENABLE ){
-        //Init TM SP power channels.
-        for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
-            error_status += PAM_Set_state_PWR_TM_SP_CH(pam_ptr, num_pwr_ch, pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out);
-        }
+    //Init TM SP power channels.
+    for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
+        error_status += PAM_Set_state_PWR_TM_SP_CH(pam_ptr, num_pwr_ch, pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out);
+    }
 
+    if( pam_ptr->State_DC_DC == ENABLE || pam_ptr->State_LDO == ENABLE ){
 
         //Disable all channels TCA9548 I2C MUX on PAM module.
         //Note: We don’t check return errors because in any case, trying to configure the chips behind the I2C MUX

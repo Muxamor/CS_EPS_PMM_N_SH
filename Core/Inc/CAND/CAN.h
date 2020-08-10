@@ -70,8 +70,14 @@ extern "C" {
 
 #define CAN_PMM_Power_PBM_Logic_offset  48
 #define CAN_PMM_Power_CAN_main_offset   49
-#define CAN_PMM_Power_CAN_backup_offset 50      //+50           Вкл/Выкл питания резервного CAN
+#define CAN_PMM_Power_CAN_backup_offset 50
 
+#define CAN_PAM_Power_TM_SP_CH1_offset  51
+#define CAN_PAM_Power_TM_SP_CH2_offset  52
+#define CAN_PAM_Power_TM_SP_CH3_offset  53
+#define CAN_PAM_Power_TM_SP_CH4_offset  54
+#define CAN_PAM_Power_TM_SP_CH5_offset  55
+#define CAN_PAM_Power_TM_SP_CH6_offset  56
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
@@ -155,7 +161,12 @@ struct CAN_IVar4 {
     uint8_t CAN_PMM_Power_PBM_Logic;        //+48           Вкл/Выкл питания логики PBM
     uint8_t CAN_PMM_Power_CAN_main;         //+49           Вкл/Выкл питания основного CAN
     uint8_t CAN_PMM_Power_CAN_backup;       //+50           Вкл/Выкл питания резервного CAN
-
+    uint8_t CAN_PAM_Power_TM_SP_CH1;        //+51           Вкл/Выкл питания телеметрии солнечных панелей канал №1
+    uint8_t CAN_PAM_Power_TM_SP_CH2;        //+52           Вкл/Выкл питания телеметрии солнечных панелей канал №2
+    uint8_t CAN_PAM_Power_TM_SP_CH3;        //+53           Вкл/Выкл питания телеметрии солнечных панелей канал №3
+    uint8_t CAN_PAM_Power_TM_SP_CH4;        //+54           Вкл/Выкл питания телеметрии солнечных панелей канал №4
+    uint8_t CAN_PAM_Power_TM_SP_CH5;        //+55           Вкл/Выкл питания телеметрии солнечных панелей канал №5
+    uint8_t CAN_PAM_Power_TM_SP_CH6;        //+56           Вкл/Выкл питания телеметрии солнечных панелей канал №6
 };
 
 

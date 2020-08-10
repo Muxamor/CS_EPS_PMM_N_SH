@@ -601,6 +601,96 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                     }
                     break;
 
+			    case CAN_PAM_Power_TM_SP_CH1_offset:
+                    if (CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE power TM SP Channel 1 \n", CAN_PAM_Power_TM_SP_CH1_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch1, ENABLE);
+                        //TODO Add initialisation Solar panel
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE power TM SP Channel 1\n", CAN_PAM_Power_TM_SP_CH1_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch1, DISABLE);
+                    }
+			        break;
+
+                case CAN_PAM_Power_TM_SP_CH2_offset:
+                    if (CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE power TM SP Channel 2 \n", CAN_PAM_Power_TM_SP_CH2_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch2, ENABLE);
+                        //TODO Add initialisation Solar panel
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE power TM SP Channel 2\n", CAN_PAM_Power_TM_SP_CH2_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch2, DISABLE);
+                    }
+                    break;
+
+                case CAN_PAM_Power_TM_SP_CH3_offset:
+                    if (CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH3 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE power TM SP Channel 3 \n", CAN_PAM_Power_TM_SP_CH3_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch3, ENABLE);
+                        //TODO Add initialisation Solar panel
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE power TM SP Channel 3\n", CAN_PAM_Power_TM_SP_CH3_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch3, DISABLE);
+                    }
+                    break;
+
+                case CAN_PAM_Power_TM_SP_CH4_offset:
+                    if (CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH4 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE power TM SP Channel 4\n", CAN_PAM_Power_TM_SP_CH4_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch4, ENABLE);
+                        //TODO Add initialisation Solar panel
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE power TM SP Channel 4\n", CAN_PAM_Power_TM_SP_CH4_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch4, DISABLE);
+                    }
+                    break;
+
+                case CAN_PAM_Power_TM_SP_CH5_offset:
+                    if (CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH5 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE power TM SP Channel 5\n", CAN_PAM_Power_TM_SP_CH5_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch5, ENABLE);
+                        //TODO Add initialisation Solar panel
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE power TM SP Channel 5\n", CAN_PAM_Power_TM_SP_CH5_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch5, DISABLE);
+                    }
+                    break;
+
+                case CAN_PAM_Power_TM_SP_CH6_offset:
+                    if (CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH6 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE power TM SP Channel 6\n", CAN_PAM_Power_TM_SP_CH6_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch6, ENABLE);
+                        //TODO Add initialisation Solar panel
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE power TM SP Channel 6\n", CAN_PAM_Power_TM_SP_CH6_offset);
+                        #endif
+                        PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch6, DISABLE);
+                    }
+                    break;
+
                 default:
 					break;
 			}
@@ -1452,5 +1542,11 @@ void CAN_Var4_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar4_RegCmd.CAN_PMM_Power_PBM_Logic              				= eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic;
 	CAN_IVar4_RegCmd.CAN_PMM_Power_CAN_main              				= eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain;
 	CAN_IVar4_RegCmd.CAN_PMM_Power_CAN_backup              				= eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup;
+    CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH1                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[0].State_eF_out;
+    CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH2                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[1].State_eF_out;
+    CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH3                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[2].State_eF_out;
+    CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH4                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[3].State_eF_out;
+    CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH5                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[4].State_eF_out;
+    CAN_IVar4_RegCmd.CAN_PAM_Power_TM_SP_CH6                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[5].State_eF_out;
 
 }
