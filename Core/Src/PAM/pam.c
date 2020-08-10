@@ -26,8 +26,8 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
    	//Get value Current, Voltage, Power, State ID
 	for(num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++){
 
-		error_status += PAM_Get_State_ID_PWR_In( pam_ptr, num_pwr_ch);
-		error_status += PAM_Get_PWR_CH_I_V_P( pam_ptr, num_pwr_ch);
+		error_status += PAM_Get_State_ID_PWR_Ch_In(pam_ptr, num_pwr_ch);
+		error_status += PAM_Get_PWR_CH_IN_I_V_P(pam_ptr, num_pwr_ch);
 	}
 
 	//Get temperature value.

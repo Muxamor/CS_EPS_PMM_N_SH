@@ -53,8 +53,8 @@ typedef struct{
 typedef struct{
 
 	_PAM_PWR_IN_CH PWR_IN_Channel[PAM_PWR_IN_Ch_quantity];
-	_PAM_SP SP_Channel [PAM_SP_quantity];
-    _PAM_PWR_CH_TM_SP PWR_Channel_TM_SP[PAM_PWR_Ch_TM_SP_quantity];
+	_PAM_SP Solar_Panel [PAM_SP_quantity];
+    _PAM_PWR_CH_TM_SP PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch_quantity];
 
 	int8_t Temp_sensor[4]; //PAM temperature
 

@@ -166,7 +166,7 @@ ErrorStatus PAM_init_PWR_Mon_INA231(_PAM *pam_ptr, uint8_t num_pwr_ch){
 	SW_TMUX1209_I2C_main_PAM(); // Switch MUX to PAM I2C bus on PAM
 
 	//Fill pam_table depends in number power channel.
-	pam_table = PAM__Table(num_pwr_ch);
+	pam_table = PAM__Table( num_pwr_ch, PAM_TYPE_PWR_CH_IN );
 
 	//Enable I2C MUX channel
 	i=0;

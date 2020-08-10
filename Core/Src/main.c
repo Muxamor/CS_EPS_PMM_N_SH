@@ -190,9 +190,9 @@ int main(void){
             PBM_Get_Telemetry( pbm_mas );
             PAM_Get_Telemetry( pam_ptr );
 
-            //PAM_Set_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_Ch5, ENABLE);
-            //PAM_Check_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_Ch5);
-            //PAM_Get_PG_SP_Supply(pam_ptr, PAM_PWR_TM_SP_Ch5);
+            //PAM_Set_state_PWR_TM_SP_CH(pam_ptr, PAM_PWR_TM_SP_Ch5, ENABLE);
+            //PAM_Check_state_PWR_TM_SP_CH(pam_ptr, PAM_PWR_TM_SP_Ch5);
+            //PAM_Get_PG_PWR_TM_SP_Ch(pam_ptr, PAM_PWR_TM_SP_Ch5);
 
             if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
                 //No start Deploy

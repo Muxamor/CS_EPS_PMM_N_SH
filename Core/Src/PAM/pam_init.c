@@ -34,6 +34,12 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
         pam_ptr->State_LDO = ENABLE;
 	}
 
+
+    //Restoring power channels.
+    for( num_pwr_ch = 0;  num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity;  num_pwr_ch++ ){
+        error_status +=  PAM_Set_state_PWR_TM_SP_CH( pam_ptr, num_pwr_ch, pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out);
+    }
+
 	//Disable all channels TCA9548 I2C MUX on PAM module.
 	//Note: We don’t check return errors because in any case, trying to configure the chips behind the I2C MUX
 	TCA9548_Disable_I2C_ch( PAM_I2C_PORT, PAM_I2CADDR_I2C_MUX_1, TCA9548_ALL_CHANNELS );
@@ -65,34 +71,34 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 	@param  num_ch - number channel SP (PAM_SP_Channel_1 - PAM_SP_Channel_6).
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-ErrorStatus PAM_init_SP_Temp_sensors(_PAM *pam_ptr, uint8_t num_ch){
-
-	int8_t error_status = SUCCESS;
-
-	_PAM_table pam_table;
-
-	pam_table = PAM__Table(num_ch);
-
-	error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
-
-//	if((num_ch != PAM_SP_1) || (num_ch != PAM_SP_3)){ // there is no sensor with this address on the panel on Y+ Y-
-//		error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
-//	}
+//ErrorStatus PAM_init_SP_Temp_sensors(_PAM *pam_ptr, uint8_t num_ch){
 //
-//	if((num_ch != PAM_SP_1) || (num_ch != PAM_SP_3)){ // there is no sensor with this address on the panel on Y+ Y-
-//		error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_3, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
-//	}
-
-	error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_4, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
-
-	if(error_status != SUCCESS){
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
-		return ERROR_N;
-	}
-
-	return SUCCESS;
-}
+//    int8_t error_status = SUCCESS;
+//
+//    _PAM_table pam_table;
+//
+//    pam_table = PAM__Table(num_ch);
+//
+//    error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
+//
+//    //	if((num_ch != PAM_SP_1) || (num_ch != PAM_SP_3)){ // there is no sensor with this address on the panel on Y+ Y-
+//    //		error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
+//    //	}
+//    //
+//    //	if((num_ch != PAM_SP_1) || (num_ch != PAM_SP_3)){ // there is no sensor with this address on the panel on Y+ Y-
+//    //		error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_3, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
+//    //	}
+//
+//    error_status += PAM_init_TMP1075( pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_4, PAM_I2CADDR_I2C_MUX_2, pam_table.I2C_MUX_Ch );
+//
+//    if(error_status != SUCCESS){
+//#ifdef DEBUGprintf
+//        Error_Handler();
+//#endif
+//        return ERROR_N;
+//    }
+//
+//    return SUCCESS;
+//}
 
 

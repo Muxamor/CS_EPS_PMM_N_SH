@@ -35,24 +35,27 @@ extern "C" {
 #define PAM_SP_quantity  			0x06 // Total quantity SP channels on the PAM
 #define PAM_SP_Temp_sensor_quantity	0x04 // Total quantity Temp. sensor on one SP
 #define PAM_SP_ID_quantity			0x06 // Total quantity Ideal Diode on one SP
-#define PAM_PWR_Ch_TM_SP_quantity   0x06 // Total quantity power channel for get telemetry from solar panels
+#define PAM_PWR_TM_SP_Ch_quantity   0x06 // Total quantity power channel for get telemetry from solar panels
 
-#define PAM_PWR_IN_Channel_1 		0x00 //Panel Y+ (PAM 1.0 socket X1)
-#define PAM_PWR_IN_Channel_2 		0x01 //Panel X- (PAM 1.0 socket X2)
-#define PAM_PWR_IN_Channel_3 		0x02 //Panel Y- (PAM 1.0 socket X3)
-#define PAM_PWR_IN_Channel_4 		0x03 //Panel X+ (PAM 1.0 socket X2)
-#define PAM_PWR_IN_Channel_5 		0x04 //Folding Panel LT8490_1 (PAM 1.0 socket X5 and X6)
-#define PAM_PWR_IN_Channel_6 		0x05 //Folding Panel LT8490_2 (PAM 1.0 socket X7 and X8)
+#define PAM_TYPE_PWR_CH_IN          0x00 //Type of power channel in PAM   0x00 - input power channel from SP
+#define PAM_PWR_IN_Ch1 		        0x00 //Panel Y+ (PAM 1.0 socket X1)
+#define PAM_PWR_IN_Ch2 		        0x01 //Panel X- (PAM 1.0 socket X2)
+#define PAM_PWR_IN_Ch3 		        0x02 //Panel Y- (PAM 1.0 socket X3)
+#define PAM_PWR_IN_Ch4 		        0x03 //Panel X+ (PAM 1.0 socket X2)
+#define PAM_PWR_IN_Ch5 		        0x04 //Folding Panel LT8490_1 (PAM 1.0 socket X5 and X6)
+#define PAM_PWR_IN_Ch6 		        0x05 //Folding Panel LT8490_2 (PAM 1.0 socket X7 and X8)
 
+#define PAM_TYPE_PWR_CH_Supply      0x01 //Type of power channel in PAM, 0x01 - Power supply at PAM
 #define PAM_PWR_DC_DC 				0x06
 #define PAM_PWR_LDO 				0x07
 
-#define PAM_PWR_TM_SP_Ch1			0x10 //Power channel telemetry Solar Panel Y+ (PAM 1.0 socket X1)
-#define PAM_PWR_TM_SP_Ch2 			0x11 //Power channel telemetry Solar Panel X- (PAM 1.0 socket X2)
-#define PAM_PWR_TM_SP_Ch3			0x12 //Power channel telemetry Solar Panel Y- (PAM 1.0 socket X3)
-#define PAM_PWR_TM_SP_Ch4			0x13 //Power channel telemetry Solar Panel X+ (PAM 1.0 socket X2)
-#define PAM_PWR_TM_SP_Ch5 			0x14 //Power channel telemetry Solar Panel LT8490_1 (PAM 1.0 socket X5 and X6)
-#define PAM_PWR_TM_SP_Ch6			0x15 //Power channel telemetry Solar Panel LT8490_2 (PAM 1.0 socket X7 and X8)
+#define PAM_TYPE_PWR_CH_TM_SP       0x02 //Type of power channel in PAM, 0x02 - power supply to turn on SP for get telemetry
+#define PAM_PWR_TM_SP_Ch1			0x00 //Power channel telemetry Solar Panel Y+ (PAM 1.0 socket X1)
+#define PAM_PWR_TM_SP_Ch2 			0x01 //Power channel telemetry Solar Panel X- (PAM 1.0 socket X2)
+#define PAM_PWR_TM_SP_Ch3			0x02 //Power channel telemetry Solar Panel Y- (PAM 1.0 socket X3)
+#define PAM_PWR_TM_SP_Ch4			0x03 //Power channel telemetry Solar Panel X+ (PAM 1.0 socket X2)
+#define PAM_PWR_TM_SP_Ch5 			0x04 //Power channel telemetry Solar Panel LT8490_1 (PAM 1.0 socket X5 and X6)
+#define PAM_PWR_TM_SP_Ch6			0x05 //Power channel telemetry Solar Panel LT8490_2 (PAM 1.0 socket X7 and X8)
 
 typedef struct{
 
@@ -60,7 +63,6 @@ typedef struct{
 	uint8_t I2C_addr_GPIO_Ext;
 	uint32_t pin_State_ID;
 	uint32_t pin_Enable_eF;
-	uint8_t PWR_TM_SP_ch;
 
 	uint8_t I2C_addr_PWR_Mon;
 	uint16_t PWR_Mon_Max_Current_int16;
@@ -78,7 +80,7 @@ typedef struct{
 
 } _PAM_table;
 
-_PAM_table PAM__Table(uint8_t number_pwr_channel);
+_PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch );
 
 #ifdef __cplusplus
 }
