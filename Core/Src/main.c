@@ -185,14 +185,12 @@ int main(void){
 
 		//Active CPU branch
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
-			PDM_Get_Telemetry( pdm_ptr );
-			PMM_Get_Telemetry( pmm_ptr );
-            PBM_Get_Telemetry( pbm_mas );
+            PMM_Get_Telemetry( pmm_ptr );
+		    PDM_Get_Telemetry( pdm_ptr );
             PAM_Get_Telemetry( pam_ptr );
-
-            //PAM_Set_state_PWR_TM_SP_CH(pam_ptr, PAM_PWR_TM_SP_Ch5, ENABLE);
-            //PAM_Check_state_PWR_TM_SP_CH(pam_ptr, PAM_PWR_TM_SP_Ch5);
-            //PAM_Get_PG_PWR_TM_SP_Ch(pam_ptr, PAM_PWR_TM_SP_Ch5);
+			if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE){
+                PBM_Get_Telemetry( pbm_mas );
+			}
 
             if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
                 //No start Deploy
