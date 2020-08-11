@@ -30,7 +30,6 @@ extern uint32_t SysTick_Counter;
 	@param  package_tag - package tag CMD, ACK or NFC.
 	@param  send_data[] - send data massive.
 	@param 	size_data -  size sending data.
-	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t source_addr, uint8_t package_tag, uint8_t send_data[], uint16_t size_data ){

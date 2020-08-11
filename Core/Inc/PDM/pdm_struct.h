@@ -47,7 +47,7 @@ typedef struct{
 	uint8_t PDM_save_conf_flag  	:1;// 0-Note need save, 1-Need save configure PDM to FRAM.
 	uint8_t :7;
 
-	uint8_t PDM_ID_module;
+	uint8_t PDM_ID_module;        //identifier of PDM // Need to save in flash
 	uint8_t Alignment_structure1; //Alignment
 
 	uint16_t Reserve_1;

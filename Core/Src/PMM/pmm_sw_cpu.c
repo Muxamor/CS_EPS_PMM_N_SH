@@ -6,6 +6,7 @@
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "CAND/CAN.h"
+#include "CAND/CAN_cmd.h"
 #include "PMM/eps_struct.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
@@ -195,7 +196,7 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
     eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
-	//TODO Call function Fill VarID4
+    CAN_Var4_fill_telemetry( eps_p );
     I2C4_Init();
 
 	PMM_init( eps_p.eps_pmm_ptr );
