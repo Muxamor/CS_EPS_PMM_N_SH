@@ -188,14 +188,12 @@ int main(void){
             PMM_Get_Telemetry( pmm_ptr );
 		    PDM_Get_Telemetry( pdm_ptr );
             PAM_Get_Telemetry( pam_ptr );
-			if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE){
-                PBM_Get_Telemetry( pbm_mas );
-			}
+			PBM_Get_Telemetry( pbm_mas );
 
             if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
                 //No start Deploy
             }else{
-                //TODO Включение БРК если все БРК выключены
+                //TODO Включение БРК если все БРК выключены при деплой статусе 9
                 //EPS_COMBAT_MODE
                 if( pmm_ptr->Deploy_stage != 9 ){
                     PMM_Deploy( eps_param );

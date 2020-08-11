@@ -3,6 +3,7 @@
 #include "median_filter.h"
 #include "PBM/pbm_config.h"
 #include "PBM/pbm_control.h"
+#include "PBM/pbm_init.h"
 #include "PDM/pdm_config.h"
 #include "PDM/pdm_ctrl.h"
 #include "PMM/pmm_struct.h"
@@ -565,6 +566,8 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE PMM  power PBM Logic\n", CAN_PMM_Power_PBM_Logic_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
+                        LL_mDelay(3);
+                        PBM_Init( eps_p.eps_pbm_ptr );
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE PMM  power PBM Logic\n", CAN_PMM_Power_PBM_Logic_offset);
