@@ -1,12 +1,14 @@
 
+#include <stddef.h>
 #include "stm32l4xx_ll_utils.h"
-#include "i2c_comm.h"
 #include "FRAM.h"
 #include "uart_eps_comm.h"
 #include "PMM/pmm_config.h"
-#include "PMM/eps_struct.h"
 #include "PBM/pbm_control.h"
 #include "PMM/pmm_savedata.h"
+
+extern _UART_EPS_COMM *UART_M_eps_comm;
+extern _UART_EPS_COMM *UART_B_eps_comm;
 
 
 /** @brief	Save data EPS to a FRAM
@@ -16,7 +18,7 @@
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus  FRAM_save_data(I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1,  uint8_t i2c_addr_fram2,  _EPS_Param eps_p ){
+ErrorStatus FRAM_save_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p ) {
 
 	int8_t error_status = SUCCESS;
     uint32_t i = 0;
@@ -85,7 +87,7 @@ ErrorStatus  FRAM_save_data(I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1,  uint8_t 
 
     fram_data_write_ptr = (uint8_t*)(&fram_data_write);
 
-	if(FRAM_triple_verif_write_data(I2Cx, i2c_addr_fram1, fram_data_write_ptr, sizeof(fram_data_write)) != SUCCESS){
+	if( FRAM_triple_verif_write_data(I2Cx_fram1, i2c_addr_fram1, fram_data_write_ptr, sizeof(fram_data_write)) != SUCCESS){
 		eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
         error_status = error_status + ERROR_N;
 	}else{
@@ -93,7 +95,7 @@ ErrorStatus  FRAM_save_data(I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1,  uint8_t 
         error_status = error_status + SUCCESS;
 	}
 
-	if(FRAM_triple_verif_write_data(I2Cx, i2c_addr_fram2, fram_data_write_ptr, sizeof(fram_data_write)) != SUCCESS){
+	if( FRAM_triple_verif_write_data(I2Cx_fram2, i2c_addr_fram2, fram_data_write_ptr, sizeof(fram_data_write)) != SUCCESS){
         eps_p.eps_pmm_ptr->Error_FRAM2 = ERROR;
         error_status = error_status + ERROR_N;
 	}else{
@@ -118,7 +120,7 @@ ErrorStatus  FRAM_save_data(I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1,  uint8_t 
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus FRAM_read_data( I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p ){
+ErrorStatus FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p ) {
 
 	int8_t error_status = SUCCESS;
     _FRAM_SAVE_DATA fram_data_read = {0};
@@ -127,16 +129,16 @@ ErrorStatus FRAM_read_data( I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1, uint8_t i
 
     fram_data_read_ptr = (uint8_t*)(&fram_data_read);
 
-	if( FRAM_majority_read_data(I2Cx, i2c_addr_fram1, fram_data_read_ptr, sizeof(fram_data_read)) != SUCCESS ){
-	//if( FRAM_majority_read_data_two_fram(I2Cx, i2c_addr_fram1, i2c_addr_fram2, (uint8_t*)(&fram_struct_read), sizeof(fram_struct_read)) != SUCCESS ){
+	if( FRAM_majority_read_data(I2Cx_fram1, i2c_addr_fram1, fram_data_read_ptr, sizeof(fram_data_read)) != SUCCESS ){
+	//if( FRAM_majority_read_data_two_fram(I2Cx_fram1, i2c_addr_fram1, i2c_addr_fram2, (uint8_t*)(&fram_struct_read), sizeof(fram_struct_read)) != SUCCESS ){
 
         eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
         error_status = error_status + ERROR_N;
 
 		LL_mDelay(50);
 
-		if( FRAM_majority_read_data(I2Cx, i2c_addr_fram2, fram_data_read_ptr, sizeof(fram_data_read)) != SUCCESS ){
-		//if( FRAM_majority_read_data_two_fram(I2Cx, i2c_addr_fram2, i2c_addr_fram1, (uint8_t*)(&fram_struct_read), sizeof(fram_struct_read)) != SUCCESS ){
+		if( FRAM_majority_read_data(I2Cx_fram2, i2c_addr_fram2, fram_data_read_ptr, sizeof(fram_data_read)) != SUCCESS ){
+		//if( FRAM_majority_read_data_two_fram(I2Cx_fram1, i2c_addr_fram2, i2c_addr_fram1, (uint8_t*)(&fram_struct_read), sizeof(fram_struct_read)) != SUCCESS ){
             eps_p.eps_pmm_ptr->Error_FRAM2 = ERROR;
             error_status = error_status + ERROR_N;
 		}else{
@@ -215,11 +217,15 @@ ErrorStatus FRAM_read_data( I2C_TypeDef *I2Cx, uint8_t i2c_addr_fram1, uint8_t i
     return SUCCESS;
 }
 
-extern _UART_EPS_COMM *UART_M_eps_comm;
-extern _UART_EPS_COMM *UART_B_eps_comm;
 
-//Save setting to FRAM for Active and Passive CPU and sync. settings Active->Passive CPU
-void PMM_Sync_and_Save_Settings( _EPS_Param eps_p ){
+
+/** @brief	Save of setting to FRAM for Active and Passive CPU and  Synchronization of settings from Active to Passive CPU.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
+
+    int8_t error_status = SUCCESS;
 
     //Check flag save settings for Active and Passive CPU
     if( (eps_p.eps_pmm_ptr->PMM_save_conf_flag == SET) || ( eps_p.eps_pdm_ptr->PDM_save_conf_flag == SET) || ( eps_p.eps_pam_ptr->PAM_save_conf_flag == SET) || (PBM_CheckSaveSetupFlag( eps_p.eps_pbm_ptr) == SET)){
@@ -227,31 +233,35 @@ void PMM_Sync_and_Save_Settings( _EPS_Param eps_p ){
         //Sending (sync) settings from Active to Passive CPU
         if( (eps_p.eps_pmm_ptr->Active_CPU == CPUmain_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) || ( eps_p.eps_pmm_ptr->Active_CPU == CPUbackup_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup)){
             if( eps_p.eps_pmm_ptr->PMM_save_conf_flag == SET ){
-                UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
             }
 
             if( eps_p.eps_pdm_ptr->PDM_save_conf_flag == SET ){
-                UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
             }
 
             if( eps_p.eps_pam_ptr->PAM_save_conf_flag == SET ){
-                UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
             }
 
             if( PBM_CheckSaveSetupFlag( eps_p.eps_pbm_ptr ) == SET ){
-                UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
             }
         }
 
         //Save setting to FRAM for Active and Passive CPU
-        FRAM_save_data(I2C3, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
+        error_status += FRAM_save_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
 
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = RESET;
         eps_p.eps_pdm_ptr->PDM_save_conf_flag = RESET;
         eps_p.eps_pam_ptr->PAM_save_conf_flag = RESET;
         PBM_ClearSaveSetupFlag( eps_p.eps_pbm_ptr );
     }
+
+    if( error_status != SUCCESS ){
+        return ERROR_N;
+    }
+
+    return SUCCESS;
 }
 
-
-//}

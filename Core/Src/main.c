@@ -12,12 +12,10 @@
 #include "PMM/pmm.h"
 #include "PMM/pmm_deploy.h"
 #include "PMM/pmm_savedata.h"
-#include "PBM/pbm_config.h"
 #include "PBM/pbm_control.h"
 #include "PBM/pbm_init.h"
 #include "PBM/pbm.h"
 #include "PAM/pam_init.h"
-#include "PAM/pam_ctrl.h"
 #include "PAM/pam.h"
 #include "uart_eps_comm.h"
 
@@ -63,7 +61,7 @@ int main(void){
 
 	CAN_cmd_mask_status = 0;
 
-	/** Initialization Periph STM32L496*/
+	/** Initialization Periph. STM32L496*/
 	LL_Init();
 	SystemClock_Config();
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
@@ -76,7 +74,7 @@ int main(void){
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
 //	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
 
-    FRAM_read_data( I2C3, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_param );
+    FRAM_read_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_param);
 
     pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
 
@@ -180,35 +178,9 @@ int main(void){
 	while(1){
 
         //Save setting to FRAM for Active and Passive CPU and sync. settings Active->Passive CPU
-        //void PMM_Sync_and_Save_Settings( _EPS_Param eps_p ){
         if((pmm_ptr->PMM_save_conf_flag == SET) || (pdm_ptr->PDM_save_conf_flag == SET) || (pam_ptr->PAM_save_conf_flag == SET) || (PBM_CheckSaveSetupFlag(pbm_mas) == SET)){
-
-            //Sending settings from Active  to Passive CPU
-            if((pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup)){
-                if( pmm_ptr->PMM_save_conf_flag == SET ){
-                    UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param);
-                }
-
-                if( pdm_ptr->PDM_save_conf_flag == SET ){
-                    UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param);
-                }
-
-                if( pam_ptr->PAM_save_conf_flag == SET ){
-                    UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param);
-                }
-
-                if( PBM_CheckSaveSetupFlag(pbm_mas) == SET ){
-                    UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param);
-                }
-            }
-
-            FRAM_save_data(I2C3, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_param);
-            pmm_ptr->PMM_save_conf_flag = RESET;
-            pdm_ptr->PDM_save_conf_flag = RESET;
-            pam_ptr->PAM_save_conf_flag = RESET;
-            PBM_ClearSaveSetupFlag(pbm_mas);
+            PMM_Sync_and_Save_Settings_A_P_CPU(eps_param);
         }
-        //}
 
 		//Active CPU branch
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
