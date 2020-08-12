@@ -1,11 +1,13 @@
 #include  <stdio.h>
 #include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
+#include "FRAM.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
 #include "PDM/pdm_init.h"
 #include "PDM/pdm.h"
+#include "PDM/pdm_ctrl.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_sw_cpu.h"
@@ -27,7 +29,6 @@
 **********************************************************/
 
 //extern uint32_t SysTick_Counter;
-
 //extern uint64_t CAN_cmd_mask_status;
 //extern uint8_t CAN1_exchange_timeout_flag;
 //extern uint8_t CAN2_exchange_timeout_flag;
@@ -41,6 +42,7 @@ _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_co
 int main(void){
 
     SysTick_Counter = 0;
+    CAN_cmd_mask_status = 0;
 
 	UART_M_eps_comm->USARTx = LPUART1;
 	UART_B_eps_comm->USARTx = USART3;
@@ -59,8 +61,6 @@ int main(void){
 							.eps_serv_ptr = eps_service_ptr
 						    };
 
-	CAN_cmd_mask_status = 0;
-
 	/** Initialization Periph. STM32L496*/
 	LL_Init();
 	SystemClock_Config();
@@ -70,11 +70,7 @@ int main(void){
 	UART5_Init();
 	
 //Think about power off CPU
-//	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-
-    FRAM_read_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_param);
+	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
 
     pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
 
@@ -87,6 +83,9 @@ int main(void){
 		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
 		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
 	}
+
+	//Restore settings EPS from FRAM
+    PMM_FRAM_Restore_Settings(eps_param);
 
 	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
 		pmm_ptr->reboot_counter_CPUm++;
@@ -106,41 +105,19 @@ int main(void){
     //LL_IWDG_ReloadCounter(IWDG);
 
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
-    pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
-
-    pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
-
-	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записи во флеш.
-	pam_ptr->State_DC_DC = ENABLE;
-    pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
-    pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
-
-
-    pbm_mas[0].Branch_1_ChgEnableBit = ENABLE;
-    pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
-    pbm_mas[0].Branch_2_ChgEnableBit = ENABLE;
-    pbm_mas[0].Branch_2_DchgEnableBit = ENABLE;
-    pbm_mas[0].PCA9534_ON_Heat_1 = ENABLE;
-    pbm_mas[0].PCA9534_ON_Heat_2 = ENABLE;
-
-    pbm_mas[1].Branch_1_ChgEnableBit = ENABLE;
-    pbm_mas[1].Branch_1_DchgEnableBit = ENABLE;
-    pbm_mas[1].Branch_2_ChgEnableBit = ENABLE;
-    pbm_mas[1].Branch_2_DchgEnableBit = ENABLE;
-    pbm_mas[1].PCA9534_ON_Heat_1 = ENABLE;
-    pbm_mas[1].PCA9534_ON_Heat_2 = ENABLE;
-
-    pbm_mas[2].Branch_1_ChgEnableBit = ENABLE;
-    pbm_mas[2].Branch_1_DchgEnableBit = ENABLE;
-    pbm_mas[2].Branch_2_ChgEnableBit = ENABLE;
-    pbm_mas[2].Branch_2_DchgEnableBit = ENABLE;
-    pbm_mas[2].PCA9534_ON_Heat_1 = ENABLE;
-    pbm_mas[2].PCA9534_ON_Heat_2 = ENABLE;
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//
+//    pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
+//
+//	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записи во флеш.
+//	pam_ptr->State_DC_DC = ENABLE;
+//    pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+//    pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Check Active flag between active and passive CPU.
-	PMM_Check_Active_CPU( UART_M_eps_comm, UART_B_eps_comm, eps_param );
+    if( pmm_ptr->PWR_OFF_Passive_CPU == DISABLE){
+        PMM_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+    }
 
 	CAN_Var4_fill_telemetry( eps_param );
 
@@ -189,13 +166,26 @@ int main(void){
             PAM_Get_Telemetry( pam_ptr );
 			PBM_Get_Telemetry( pbm_mas );
 
+            //TODO move to functin
+            if( pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
+                pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+                pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+            }
+
             if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
                 //No start Deploy
             }else{
-                //TODO Включение БРК если все БРК выключены при деплой статусе 9
+
                 //EPS_COMBAT_MODE
                 if( pmm_ptr->Deploy_stage != 9 ){
                     PMM_Deploy( eps_param );
+                }
+
+                //Protection for off all BRK //TODO move to functin
+                if( pmm_ptr->Deploy_stage == 9 && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE )
+                        && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)  ){
+                    PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
+                    PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
                 }
             }
 
@@ -212,8 +202,11 @@ int main(void){
 
 			//Switch active CPU 
 			if( eps_service_ptr->Req_SW_Active_CPU == 1 ){
-				PMM_Switch_Active_CPU( eps_service_ptr->Set_Active_CPU, UART_M_eps_comm, UART_B_eps_comm, eps_param ); // Need rewrite this function
-				 eps_service_ptr->Req_SW_Active_CPU = 0;
+                if( pmm_ptr->PWR_OFF_Passive_CPU == DISABLE ){
+                    PMM_Switch_Active_CPU(eps_service_ptr->Set_Active_CPU, UART_M_eps_comm, UART_B_eps_comm, eps_param); // Need rewrite this function
+                }
+                CAN_Var4_fill_telemetry( eps_param );
+				eps_service_ptr->Req_SW_Active_CPU = 0;
 			}
 
 		// Passive CPU branch

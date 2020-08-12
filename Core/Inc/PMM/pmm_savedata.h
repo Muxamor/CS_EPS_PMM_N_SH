@@ -60,6 +60,7 @@ typedef struct{
      uint32_t FRAM_PMM_PWR_Ch_State_5V_Bus 			:1;
      uint32_t FRAM_PMM_PWR_Ch_State_3_3V_Bus 		:1;
      uint32_t FRAM_PMM_PWR_Ch_State_I2C_Bus 		:1;
+     uint32_t FRAM_PMM_PWR_OFF_Passive_CPU          :1;
      uint32_t FRAM_PMM_Active_CPU		 		    :1;
      uint32_t FRAM_PMM_CAN_constatnt_mode		    :1;
      uint32_t FRAM_PMM_Deploy_Lim_SW_Exit_1         :1;
@@ -72,7 +73,7 @@ typedef struct{
      uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zp       :1;
      uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zn       :1;
      uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zn       :1;
-     uint32_t :8;
+     uint32_t :7;
 
      uint32_t FRAM_PMM_reboot_counter_CPUm;
      uint32_t FRAM_PMM_reboot_counter_CPUb;
@@ -91,6 +92,7 @@ typedef struct{
      //PBM
      FRAM_PBM FRAM_PBM_PBM[PBM_QUANTITY];
 
+     uint16_t FRAM_DATA_CRC;
 
  } _FRAM_SAVE_DATA;
 
@@ -98,9 +100,11 @@ typedef struct{
 
 
 
-ErrorStatus FRAM_save_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
-ErrorStatus FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
+ErrorStatus PMM_FRAM_save_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
+ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
+ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p );
 ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p );
+ErrorStatus FRAM_Check_Data_CRC( uint8_t *data, uint16_t data_size, uint16_t expected_crc );
 
 #ifdef __cplusplus
 }
