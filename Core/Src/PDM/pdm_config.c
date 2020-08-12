@@ -18,7 +18,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 	pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm 
 	pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
 
-	pdm_table.PWR_Mon_aver_mode = INA231_AVERAGING_NUM_64; 		 // Average 64
+	pdm_table.PWR_Mon_aver_mode = INA231_AVERAGING_NUM_16; 		 // Average 16
 	pdm_table.PWR_Mon_bus_conv_time = INA231_CONVERSION_TIME_1100us; // Conversion time 1.1ms
 	pdm_table.PWR_Mon_shunt_conv_time = INA231_CONVERSION_TIME_1100us; // Conversion time 1.1ms
 	pdm_table.PWR_Mon_work_mode = INA231_SHUNT_AND_BUS_CONTINUOUS; // Conversion time 1.1ms
