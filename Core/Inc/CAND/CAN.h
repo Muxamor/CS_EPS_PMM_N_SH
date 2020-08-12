@@ -55,6 +55,7 @@ extern "C" {
 #define CAN_EPS_Mode_offset             36
 
 #define CAN_Switch_active_CPU_offset    37
+#define CAN_Reset_to_default_offset     38
 
 #define CAN_Perform_Deploy_offset       39
 
@@ -65,19 +66,22 @@ extern "C" {
 #define CAN_AB3_Heat_Branch1_offset     44
 #define CAN_AB3_Heat_Branch2_offset     45
 
-#define CAN_PAM_Power_DC_DC_offset      46
-#define CAN_PAM_Power_LDO_offset        47
+#define CAN_PAM_PWR_DC_DC_offset      46
+#define CAN_PAM_PWR_LDO_offset        47
 
-#define CAN_PMM_Power_PBM_Logic_offset  48
-#define CAN_PMM_Power_CAN_main_offset   49
-#define CAN_PMM_Power_CAN_backup_offset 50
+#define CAN_PMM_PWR_PBM_Logic_offset  48
+#define CAN_PMM_PWR_CAN_main_offset   49
+#define CAN_PMM_PWR_CAN_backup_offset 50
 
-#define CAN_PAM_Power_TM_SP_CH1_offset  51
-#define CAN_PAM_Power_TM_SP_CH2_offset  52
-#define CAN_PAM_Power_TM_SP_CH3_offset  53
-#define CAN_PAM_Power_TM_SP_CH4_offset  54
-#define CAN_PAM_Power_TM_SP_CH5_offset  55
-#define CAN_PAM_Power_TM_SP_CH6_offset  56
+#define CAN_PAM_PWR_TM_SP_CH1_offset  51
+#define CAN_PAM_PWR_TM_SP_CH2_offset  52
+#define CAN_PAM_PWR_TM_SP_CH3_offset  53
+#define CAN_PAM_PWR_TM_SP_CH4_offset  54
+#define CAN_PAM_PWR_TM_SP_CH5_offset  55
+#define CAN_PAM_PWR_TM_SP_CH6_offset  56
+
+#define CAN_PMM_PWR_OFF_Passive_CPU_offset   57
+#define CAN_PMM_Reboot_Passive_CPU_offset    58
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
@@ -156,17 +160,19 @@ struct CAN_IVar4 {
     uint8_t CAN_AB2_Heat_Branch2;           //+43           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 2
     uint8_t CAN_AB3_Heat_Branch1;           //+44           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 3
     uint8_t CAN_AB3_Heat_Branch2;           //+45           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 3
-    uint8_t CAN_PAM_Power_DC_DC;            //+46           Вкл/Выкл DC_DC источник питания PAM
-    uint8_t CAN_PAM_Power_LDO;           	//+47           Вкл/Выкл LDO источник питания PAM
-    uint8_t CAN_PMM_Power_PBM_Logic;        //+48           Вкл/Выкл питания логики PBM
-    uint8_t CAN_PMM_Power_CAN_main;         //+49           Вкл/Выкл питания основного CAN
-    uint8_t CAN_PMM_Power_CAN_backup;       //+50           Вкл/Выкл питания резервного CAN
-    uint8_t CAN_PAM_Power_TM_SP_CH1;        //+51           Вкл/Выкл питания телеметрии солнечных панелей канал №1
-    uint8_t CAN_PAM_Power_TM_SP_CH2;        //+52           Вкл/Выкл питания телеметрии солнечных панелей канал №2
-    uint8_t CAN_PAM_Power_TM_SP_CH3;        //+53           Вкл/Выкл питания телеметрии солнечных панелей канал №3
-    uint8_t CAN_PAM_Power_TM_SP_CH4;        //+54           Вкл/Выкл питания телеметрии солнечных панелей канал №4
-    uint8_t CAN_PAM_Power_TM_SP_CH5;        //+55           Вкл/Выкл питания телеметрии солнечных панелей канал №5
-    uint8_t CAN_PAM_Power_TM_SP_CH6;        //+56           Вкл/Выкл питания телеметрии солнечных панелей канал №6
+    uint8_t CAN_PAM_PWR_DC_DC;            //+46           Вкл/Выкл DC_DC источник питания PAM
+    uint8_t CAN_PAM_PWR_LDO;           	//+47           Вкл/Выкл LDO источник питания PAM
+    uint8_t CAN_PMM_PWR_PBM_Logic;        //+48           Вкл/Выкл питания логики PBM
+    uint8_t CAN_PMM_PWR_CAN_main;         //+49           Вкл/Выкл питания основного CAN
+    uint8_t CAN_PMM_PWR_CAN_backup;       //+50           Вкл/Выкл питания резервного CAN
+    uint8_t CAN_PAM_PWR_TM_SP_CH1;        //+51           Вкл/Выкл питания телеметрии солнечных панелей канал №1
+    uint8_t CAN_PAM_PWR_TM_SP_CH2;        //+52           Вкл/Выкл питания телеметрии солнечных панелей канал №2
+    uint8_t CAN_PAM_PWR_TM_SP_CH3;        //+53           Вкл/Выкл питания телеметрии солнечных панелей канал №3
+    uint8_t CAN_PAM_PWR_TM_SP_CH4;        //+54           Вкл/Выкл питания телеметрии солнечных панелей канал №4
+    uint8_t CAN_PAM_PWR_TM_SP_CH5;        //+55           Вкл/Выкл питания телеметрии солнечных панелей канал №5
+    uint8_t CAN_PAM_PWR_TM_SP_CH6;        //+56           Вкл/Выкл питания телеметрии солнечных панелей канал №6
+    uint8_t CAN_PMM_PWR_OFF_Passive_CPU;  //+57           Вкл/Выкл посивный CPU
+    uint8_t CAN_PMM_Reboot_Passive_CPU;     //+58           Перезагрузить посивный CPU
 };
 
 
