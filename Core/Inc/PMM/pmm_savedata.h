@@ -36,6 +36,8 @@ typedef struct{
 typedef struct{
     uint8_t Branch_1_DchgEnableBit  :1;
     uint8_t Branch_1_ChgEnableBit   :1;
+    uint8_t Branch_2_DchgEnableBit  :1;
+    uint8_t Branch_2_ChgEnableBit   :1;
     uint8_t PCA9534_ON_Heat_1       :1;
     uint8_t PCA9534_ON_Heat_2       :1;
     uint8_t :4;
@@ -75,6 +77,11 @@ typedef struct{
      uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zn       :1;
      uint32_t :7;
 
+     uint32_t Reserved1;
+     uint32_t Reserved2;
+     uint32_t Reserved3;
+     uint32_t Reserved4;
+
      uint32_t FRAM_PMM_reboot_counter_CPUm;
      uint32_t FRAM_PMM_reboot_counter_CPUb;
 
@@ -86,6 +93,10 @@ typedef struct{
      FRAM_PDM_PWR_CH FRAM_PDM_PWR_Ch[PDM_PWR_Ch_quantity];
 
      //PAM
+     uint8_t FRAM_PAM_State_DC_DC 			    :1;
+     uint8_t FRAM_PAM_State_LDO 				:1;
+     uint8_t :6;
+
      uint8_t FRAM_PAM_PAM_ID_module;
      FRAM_PAM_PWR_CH_TM_SP FRAM_PAM_PWR_Ch_TM_SP[PAM_PWR_TM_SP_Ch_quantity];
 
@@ -100,7 +111,7 @@ typedef struct{
 
 
 
-ErrorStatus PMM_FRAM_save_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
+ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
 ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
 ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p );
 ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p );
