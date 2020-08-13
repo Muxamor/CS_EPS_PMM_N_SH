@@ -143,10 +143,7 @@ ErrorStatus FRAM_triple_verif_write_data(I2C_TypeDef *I2Cx, uint8_t I2C_fram_add
 	for( i = 0; i < data_size; i++ ){
 
 		if( FRAM_majority_read_byte(I2Cx, I2C_fram_addr, i, &ptr_read_byte ) != SUCCESS ){//first reading attempt
-
-			if( FRAM_majority_read_byte(I2Cx, I2C_fram_addr, i, &ptr_read_byte ) != SUCCESS ){ //second reading attempt
 				return ERROR_N;
-			}
 		}
 
 		if( *(ptr_data + i) != ptr_read_byte ){
