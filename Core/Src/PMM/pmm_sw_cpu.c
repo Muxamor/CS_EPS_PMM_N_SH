@@ -197,7 +197,13 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
     eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
     CAN_Var4_fill(eps_p);
+
+    if(eps_p.eps_pmm_ptr ->CAN_constatnt_mode == ENABLE ){
+        CAN_Var5_fill_telemetry_const();
+    }
+
     I2C4_Init();
+    PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
 
 	PMM_init( eps_p.eps_pmm_ptr );
 
@@ -224,6 +230,7 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
 	CAN_DeInit_eps(CAN2);
 
     I2C4_DeInit();
+    PWM_DeInit_Ch3_Ch4();
 
     PBM_Low_Energy_Reset_pin();
     PMM_RT_FL_EPS1_Reset_pin();
