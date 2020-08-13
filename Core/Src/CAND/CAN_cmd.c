@@ -57,6 +57,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         eps_p.eps_pmm_ptr->CAN_constatnt_mode = 0;
                         CAN_Var5_fill_telemetry( eps_p );
                     }
+                    eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
                     break;
 
                 case CAN_AB1_Charge_key_1_offset: //Enable/Disable Charge AB1 branch 1 // PBM_data
@@ -377,6 +378,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #endif
                         eps_p.eps_pmm_ptr->EPS_Mode = EPS_COMBAT_MODE;
                     }
+                    eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
                     break;
 
                 case CAN_Switch_active_CPU_offset: // Switch active CPU (CPUmain active or CPUbackup
@@ -713,6 +715,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
                         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
                     }
+                    eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 			        break;
 
                 case CAN_PMM_Reboot_Passive_CPU_offset:
@@ -1586,5 +1589,8 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PAM_PWR_TM_SP_CH4                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[3].State_eF_out;
     CAN_IVar4_RegCmd.CAN_PAM_PWR_TM_SP_CH5                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[4].State_eF_out;
     CAN_IVar4_RegCmd.CAN_PAM_PWR_TM_SP_CH6                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[5].State_eF_out;
+
+    CAN_IVar4_RegCmd.CAN_PMM_PWR_OFF_Passive_CPU                      = eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU;
+    CAN_IVar4_RegCmd.CAN_PMM_Reboot_Passive_CPU                       = 0x00;
 
 }
