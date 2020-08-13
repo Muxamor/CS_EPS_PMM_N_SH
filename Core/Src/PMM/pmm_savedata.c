@@ -17,7 +17,7 @@ extern _UART_EPS_COMM *UART_B_eps_comm;
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PMM_FRAM_save_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p ) {
+ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p ) {
 
 	int8_t error_status = SUCCESS;
     uint16_t crc_calc = 0;
@@ -29,10 +29,10 @@ ErrorStatus PMM_FRAM_save_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
 	//PMM
     fram_data_write.FRAM_PMM_PWR_Ch_State_CANmain       = eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain;
     fram_data_write.FRAM_PMM_PWR_Ch_State_CANbackup     = eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup;
-    fram_data_write.FRAM_PMM_PWR_Ch_State_Vbat1_eF1     = eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF1;
-    fram_data_write.FRAM_PMM_PWR_Ch_State_Vbat1_eF2	    = eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF2;
-    fram_data_write.FRAM_PMM_PWR_Ch_State_Vbat2_eF1     = eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF1;
-    fram_data_write.FRAM_PMM_PWR_Ch_State_Vbat2_eF2 	= eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF2;
+    fram_data_write.FRAM_PMM_PWR_Ch_State_Vbat1_eF1     = eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1;
+    fram_data_write.FRAM_PMM_PWR_Ch_State_Vbat1_eF2	    = eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF2;
+    fram_data_write.FRAM_PMM_PWR_Ch_State_Vbat2_eF1     = eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF1;
+    fram_data_write.FRAM_PMM_PWR_Ch_State_Vbat2_eF2 	= eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2;
     fram_data_write.FRAM_PMM_PWR_Ch_State_PBMs_Logic    = eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic;
     fram_data_write.FRAM_PMM_PWR_Ch_State_Deploy_Logic 	= eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic;
    // fram_data_write.FRAM_PMM_PWR_Ch_State_Deploy_Power 	= eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power;
@@ -68,6 +68,8 @@ ErrorStatus PMM_FRAM_save_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
     }
 
     //PAM
+    fram_data_write.FRAM_PAM_State_DC_DC = eps_p.eps_pam_ptr->State_DC_DC;
+    fram_data_write.FRAM_PAM_State_LDO = eps_p.eps_pam_ptr->State_LDO;
     fram_data_write.FRAM_PAM_PAM_ID_module              = eps_p.eps_pam_ptr->PAM_ID_module;
     for( i = 0; i < PAM_PWR_TM_SP_Ch_quantity; i++ ){
         fram_data_write.FRAM_PAM_PWR_Ch_TM_SP[i].State_eF_out = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[i].State_eF_out;
@@ -77,6 +79,8 @@ ErrorStatus PMM_FRAM_save_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
     for( i = 0; i < PBM_QUANTITY; i++  ){
         fram_data_write.FRAM_PBM_PBM[i].Branch_1_DchgEnableBit = eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit;
         fram_data_write.FRAM_PBM_PBM[i].Branch_1_ChgEnableBit = eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit;
+        fram_data_write.FRAM_PBM_PBM[i].Branch_2_DchgEnableBit = eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit;
+        fram_data_write.FRAM_PBM_PBM[i].Branch_2_ChgEnableBit = eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit;
         fram_data_write.FRAM_PBM_PBM[i].PCA9534_ON_Heat_1 = eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1;
         fram_data_write.FRAM_PBM_PBM[i].PCA9534_ON_Heat_2 = eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2;
     }
@@ -167,10 +171,10 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
         //PMM
         eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain = fram_data_read.FRAM_PMM_PWR_Ch_State_CANmain;
         eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup = fram_data_read.FRAM_PMM_PWR_Ch_State_CANbackup;
-        eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF1 = fram_data_read.FRAM_PMM_PWR_Ch_State_Vbat1_eF1;
-        eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF2 = fram_data_read.FRAM_PMM_PWR_Ch_State_Vbat1_eF2;
-        eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF1 = fram_data_read.FRAM_PMM_PWR_Ch_State_Vbat2_eF1;
-        eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF2 = fram_data_read.FRAM_PMM_PWR_Ch_State_Vbat2_eF2;
+        eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1 = fram_data_read.FRAM_PMM_PWR_Ch_State_Vbat1_eF1;
+        eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF2 = fram_data_read.FRAM_PMM_PWR_Ch_State_Vbat1_eF2;
+        eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF1 = fram_data_read.FRAM_PMM_PWR_Ch_State_Vbat2_eF1;
+        eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2 = fram_data_read.FRAM_PMM_PWR_Ch_State_Vbat2_eF2;
         eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic = fram_data_read.FRAM_PMM_PWR_Ch_State_PBMs_Logic;
         eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic = fram_data_read.FRAM_PMM_PWR_Ch_State_Deploy_Logic;
         // eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power    = fram_data_read.FRAM_PMM_PWR_Ch_State_Deploy_Power;
@@ -206,6 +210,8 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
         }
 
         //PAM
+        eps_p.eps_pam_ptr->State_DC_DC =  fram_data_read.FRAM_PAM_State_DC_DC;
+        eps_p.eps_pam_ptr->State_LDO =  fram_data_read.FRAM_PAM_State_LDO;
         eps_p.eps_pam_ptr->PAM_ID_module = fram_data_read.FRAM_PAM_PAM_ID_module;
         for( i = 0; i < PAM_PWR_TM_SP_Ch_quantity; i++ ){
             eps_p.eps_pam_ptr->PWR_Channel_TM_SP[i].State_eF_out = fram_data_read.FRAM_PAM_PWR_Ch_TM_SP[i].State_eF_out;
@@ -215,6 +221,8 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
         for( i = 0; i < PBM_QUANTITY; i++ ){
             eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = fram_data_read.FRAM_PBM_PBM[i].Branch_1_DchgEnableBit;
             eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = fram_data_read.FRAM_PBM_PBM[i].Branch_1_ChgEnableBit;
+            eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = fram_data_read.FRAM_PBM_PBM[i].Branch_2_DchgEnableBit;
+            eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = fram_data_read.FRAM_PBM_PBM[i].Branch_2_ChgEnableBit;
             eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = fram_data_read.FRAM_PBM_PBM[i].PCA9534_ON_Heat_1;
             eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = fram_data_read.FRAM_PBM_PBM[i].PCA9534_ON_Heat_2;
         }
@@ -262,10 +270,10 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
         eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
 
         //Enable All BRK
-        eps_p.eps_pdm_ptr->PWR_Channel[2].State_eF_in = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[2].State_eF_out = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[3].State_eF_in = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[3].State_eF_out = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out = ENABLE;
 
         for( i = 0; i < PBM_QUANTITY; i++ ){
             eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = ENABLE;
@@ -314,7 +322,7 @@ ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
         }
 
         //Save setting to FRAM for Active and Passive CPU
-        error_status += PMM_FRAM_save_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
+        error_status += PMM_FRAM_write_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
 
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = RESET;
         eps_p.eps_pdm_ptr->PDM_save_conf_flag = RESET;
