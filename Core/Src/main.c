@@ -12,6 +12,7 @@
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_sw_cpu.h"
 #include "PMM/pmm.h"
+#include "PMM/pmm_ctrl.h"
 #include "PMM/pmm_deploy.h"
 #include "PMM/pmm_savedata.h"
 #include "PBM/pbm_control.h"
@@ -61,41 +62,17 @@ int main(void){
 							.eps_serv_ptr = eps_service_ptr
 						    };
 
+    pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
+
 	/** Initialization Periph. STM32L496*/
 	LL_Init();
 	SystemClock_Config();
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
 	GPIO_Init();
 	I2C3_Init();
-	UART5_Init();
-	
-//Think about power off CPU
-	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+	//UART5_Init();
 
-    pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
-
-	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
-
-	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
-		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
-		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
-	}else{ // CPUbackup
-		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
-		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
-	}
-
-	//Restore settings EPS from FRAM
-    PMM_FRAM_Restore_Settings(eps_param);
-
-	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
-		pmm_ptr->reboot_counter_CPUm++;
-	}else{ // CPUbackup
-		pmm_ptr->reboot_counter_CPUb++;
-	}
-
-	pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
-
-	LPUART1_Init();
+   	LPUART1_Init();
 	USART3_Init();
 	I2C4_Init();
 
@@ -104,24 +81,42 @@ int main(void){
 	//IWDG_Init(3000);
     //LL_IWDG_ReloadCounter(IWDG);
 
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//
-//    pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
-//
-//	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записи во флеш.
-//	pam_ptr->State_DC_DC = ENABLE;
-//    pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
-//    pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+
+    if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
+        UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
+        UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
+    }else{ // CPUbackup
+        UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
+        UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
+    }
+
+    //Restore settings EPS from FRAM
+    PMM_FRAM_Restore_Settings(eps_param);
+
+    if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
+        pmm_ptr->reboot_counter_CPUm++;
+    }else{ // CPUbackup
+        pmm_ptr->reboot_counter_CPUb++;
+    }
+
+    pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
+
 
     //Check Active flag between active and passive CPU.
     PMM_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
+    //Turn off to avoid overheating of the resistor on reboot
+    pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
+    pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
 
     //Fill VarID4
     CAN_Var4_fill(eps_param);
+    if(pmm_ptr->CAN_constatnt_mode == ENABLE ){
+        CAN_Var5_fill_telemetry_const();
+    }
 
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
@@ -133,6 +128,8 @@ int main(void){
             CAN_Var5_fill_telemetry_const();
         }
 
+        PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
@@ -142,14 +139,11 @@ int main(void){
 	}else{
         PMM_Set_mode_Passive_CPU( eps_param );
         I2C4_DeInit();
+        PWM_DeInit_Ch3_Ch4();
 		CAN_DeInit_eps(CAN1);
 		CAN_DeInit_eps(CAN2);
 	}
 
-//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
-	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
-	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
-//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
 	while(1){
 
@@ -158,34 +152,38 @@ int main(void){
             PMM_Sync_and_Save_Settings_A_P_CPU(eps_param);
         }
 
-		//Active CPU branch
+        //ActiveCPU branch
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
-            PMM_Get_Telemetry( pmm_ptr );
-		    PDM_Get_Telemetry( pdm_ptr );
-            PAM_Get_Telemetry( pam_ptr );
-			PBM_Get_Telemetry( pbm_mas );
 
-            //TODO move to functin
+            PMM_Get_Telemetry(pmm_ptr);
+            PDM_Get_Telemetry(pdm_ptr);
+            PAM_Get_Telemetry(pam_ptr);
+            PBM_Get_Telemetry(pbm_mas);
+
+            //Protection for OFF all power of CAN//TODO move to functin
             if( pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
-                pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
-                pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+            	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
+            	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
             }
 
-            if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
-                //No start Deploy
-            }else{
+            if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
-                //EPS_COMBAT_MODE
                 if( pmm_ptr->Deploy_stage != 9 ){
                     PMM_Deploy( eps_param );
                 }
 
-                //Protection for off all BRK //TODO move to functin
+                //TODO сделать проверку уровня заряда батарей ( и дергать пин BAT_LOW) если свзи с PBMs нету. НАпряжение брать с VBAT1 или VBAT2
+                //TODO need oFF and on if we reached edge PBM_NORMAL_ENERGY_EDGE  PBM_LOW_ENERGY_EDGE  PBM_ZERO_ENERGY_EDGE (как сохронять если один из БРК выключен ? )
+
+                //Protection for off all BRK //TODO move to functin // Добавить проверку флага что батареи не разряжены
                 if( pmm_ptr->Deploy_stage == 9 && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE )
-                        && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)  ){
+                    && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)  ){
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
                 }
+
+            }else{// EPS_SERVICE_MODE
+                //No start Deploy
             }
 
             if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
@@ -221,6 +219,11 @@ int main(void){
 
 }
 
+//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
+//	FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
+//	FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
+//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
+
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
@@ -231,43 +234,6 @@ int main(void){
 //		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 //		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
 
-//------------- FRAM test ---------------//
-
-//#define I2C_FRAM1_addr 0x50
-//	uint8_t fram_array[128] = {0};
-//	uint8_t fram_write_array[128];
-//	int8_t error_status = 0;
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		fram_write_array[i] = 0xFF;
-//	}
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
-//	error_status += FRAM_triple_write_data(I2C3, I2C_FRAM1_addr, fram_write_array, 128);
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-////	error_status += FRAM_erase(I2C3, I2C_FRAM1_addr, FRAM_SIZE_64KB);
-//	error_status += FRAM_is_empty(I2C3, I2C_FRAM1_addr, I2C_FRAM1_addr, FRAM_SIZE_64KB);
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
-
-
 //==========================================//
-
-//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
-//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
-
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-
-	//	printf("test  \n");
 
 
