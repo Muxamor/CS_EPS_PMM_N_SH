@@ -243,14 +243,18 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
     state_FRAM1 = FRAM_Detect_Empty(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
     state_FRAM2 = FRAM_Detect_Empty(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 
-
-    if( state_FRAM1 != -1 || state_FRAM2 != -1 ){
-        error_status = PMM_FRAM_read_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
-
-    }else{
-        error_status = ERROR_N;
+    if( state_FRAM1 == -1){
         eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
+        error_status += ERROR_N;
+    }
+
+    if( state_FRAM2 == -1){
         eps_p.eps_pmm_ptr->Error_FRAM2 = ERROR;
+        error_status += ERROR_N;
+    }
+
+    if( state_FRAM1 == 1 || state_FRAM2 == 1 ){
+        error_status += PMM_FRAM_read_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
     }
 
     if( eps_p.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_p.eps_pmm_ptr->Error_FRAM2 == ERROR ){

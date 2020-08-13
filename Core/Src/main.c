@@ -115,14 +115,13 @@ int main(void){
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Check Active flag between active and passive CPU.
-    if( pmm_ptr->PWR_OFF_Passive_CPU == DISABLE){
-        PMM_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
-    }
-
-	CAN_Var4_fill_telemetry( eps_param );
+    PMM_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
     //Initialization PMM (active and passive CPU)
-	PMM_init( pmm_ptr );
+    PMM_init( pmm_ptr );
+
+    //Fill VarID4
+    CAN_Var4_fill(eps_param);
 
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
@@ -205,7 +204,7 @@ int main(void){
                 if( pmm_ptr->PWR_OFF_Passive_CPU == DISABLE ){
                     PMM_Switch_Active_CPU(eps_service_ptr->Set_Active_CPU, UART_M_eps_comm, UART_B_eps_comm, eps_param); // Need rewrite this function
                 }
-                CAN_Var4_fill_telemetry( eps_param );
+                CAN_Var4_fill(eps_param);
 				eps_service_ptr->Req_SW_Active_CPU = 0;
 			}
 

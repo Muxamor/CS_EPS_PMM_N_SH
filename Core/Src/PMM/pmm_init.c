@@ -2,6 +2,8 @@
 #include "stm32l4xx_ll_gpio.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
+#include "tim_pwm.h"
+#include "stm32l4xx_ll_tim.h"
 #include "PMM/pmm_struct.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init_IC.h"
@@ -28,6 +30,16 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
         //Set CAN mux at active CPU
 		PMM_Set_MUX_CAN_CPUm_CPUb( pmm_ptr );
 
+		//Powe oFF Passive CPU
+        if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
+            PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
+            PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
+        }else{
+            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+        }
+
+        //Set state power channel PMM
 		if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE){
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
 		}else{

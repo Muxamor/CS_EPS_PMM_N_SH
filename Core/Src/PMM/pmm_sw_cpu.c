@@ -31,9 +31,7 @@ void PMM_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *U
 	int8_t error_status = ERROR_N;
 	uint32_t i = 0;
 
-	if(  eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
-	    
-	}else if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain)  && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CPU
+	if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CPU
 
         while ((error_status != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
             error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, UART_port_Number, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
@@ -198,7 +196,7 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
     eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
-    CAN_Var4_fill_telemetry( eps_p );
+    CAN_Var4_fill(eps_p);
     I2C4_Init();
 
 	PMM_init( eps_p.eps_pmm_ptr );

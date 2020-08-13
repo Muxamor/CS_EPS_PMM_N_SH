@@ -1493,7 +1493,7 @@ void CAN_Var5_fill_telemetry_const(void){
     }
 }
 
-void CAN_Var4_fill_telemetry( _EPS_Param eps_p ){
+void CAN_Var4_fill( _EPS_Param eps_p ){
 
 	CAN_IVar4_RegCmd.CAN_time_byte0                           			= 0x00;
 	CAN_IVar4_RegCmd.CAN_time_byte1                           			= 0x00;
