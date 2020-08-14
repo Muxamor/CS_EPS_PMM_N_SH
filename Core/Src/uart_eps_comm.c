@@ -1,6 +1,7 @@
 
 #include <string.h>
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_utils.h"
 #include "Error_Handler.h"
 #include "Fn_CRC16.h"
 #include "uart_comm.h"
@@ -106,35 +107,74 @@ ErrorStatus UART_EPS_Check_CRC_Package( _UART_EPS_COMM *UART_eps_comm ){
 }
 
 
-/** @brief Set error EPS UART ports to pmm_ptr structure.
-	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  eps_p - contain pointer to struct which contain all parameters EPS.	
+/** @brief  Uart ports EPS damage control
+	@param  *UART_Main_eps_comm - pointer to Main UART port struct with get data.
+    @param  *UART_Backup_eps_comm - pointer to Backup UART port struct with get data.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
 */
-void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p ){
+ErrorStatus UART_ports_damage_check( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p ){
 
-	if( UART_eps_comm->error_port_counter == 0 ){ // Errors in UARTs
+    int8_t error_status = SUCCESS;
+    int8_t error_UART = ERROR_N; //0-OK -1-ERROR_N
+    uint32_t i = 0;
 
-		if( UART_eps_comm->USARTx == LPUART1 ){
-			eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
-			
-		}else if( UART_eps_comm->USARTx == USART3 ){
-			eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
-		}
-		 
-	}else{
-		
-		if(UART_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold ){ // If there are five errors in a row, then set the UART port error
+    uint32_t old_val_reboot_counter_CPUm = 0;
+    uint32_t old_val_reboot_counter_CPUb = 0;
 
-			if( UART_eps_comm->USARTx == LPUART1 ){
-				eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
+    old_val_reboot_counter_CPUb = eps_p.eps_pmm_ptr->reboot_counter_CPUb;
+    old_val_reboot_counter_CPUm = eps_p.eps_pmm_ptr->reboot_counter_CPUm;
 
-			}else if( UART_eps_comm->USARTx == USART3 ){
-				eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
-			}
-		}
-	}
-	
+    //Main port UART
+    while ((error_UART != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
+
+        error_UART = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_Reboot_count, 1, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p);
+
+        if (error_UART != SUCCESS) {
+            i++;
+            LL_mDelay(pmm_uart_delay_att_conn);
+        }
+    }
+
+    error_status += error_UART;
+
+    //Backup port UART
+    error_UART = ERROR_N;
+    while ((error_UART != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
+
+        error_UART = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_Reboot_count, 2, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p);
+
+        if (error_UART != SUCCESS) {
+            i++;
+            LL_mDelay(pmm_uart_delay_att_conn);
+        }
+    }
+
+    error_status += error_UART;
+
+    if( old_val_reboot_counter_CPUb != eps_p.eps_pmm_ptr->reboot_counter_CPUb || old_val_reboot_counter_CPUm != eps_p.eps_pmm_ptr->reboot_counter_CPUm ){
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+    }
+
+    if ( UART_Main_eps_comm->error_port_counter == 0 ){
+        eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
+    }else if( UART_Main_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold){
+        UART_Main_eps_comm->error_port_counter = UART_EPS_ERROR_Threshold;
+        eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
+    }
+
+    if ( UART_Backup_eps_comm->error_port_counter == 0 ){
+        eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
+    }else if( UART_Backup_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold){
+        UART_Backup_eps_comm->error_port_counter = UART_EPS_ERROR_Threshold;
+        eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
+    }
+
+    if(error_status != SUCCESS ){
+        return ERROR_N;
+    }
+
+    return SUCCESS;
 }
 
 
@@ -297,7 +337,7 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_
 		reboot_counter = *(uint32_t*)(&(UART_eps_comm->recv_pack_buf[7]));
 			//	(((uint32_t)UART_eps_comm->recv_pack_buf[7]) << 24) | (((uint32_t)UART_eps_comm->recv_pack_buf[8]) << 16)  (((uint32_t)UART_eps_comm->recv_pack_buf[9]) << 8) | ((uint32_t)UART_eps_comm->recv_pack_buf[10]);
 		
-		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
+		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
 			eps_p.eps_pmm_ptr->reboot_counter_CPUb = reboot_counter;
 		}else{
 			eps_p.eps_pmm_ptr->reboot_counter_CPUm = reboot_counter;
@@ -409,7 +449,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _EPS_Param 
 		UART_eps_comm->error_port_counter++;
 	}
 
-	//UART_EPS_Set_Error_ports( UART_eps_comm, pmm_ptr ); 
+	//UART_EPS_Set_Error_ports( UART_eps_comm, pmm_ptr );
 
 	return error_status;
 }

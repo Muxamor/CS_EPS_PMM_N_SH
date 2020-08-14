@@ -27,23 +27,21 @@ void PMM_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *U
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
     uint8_t read_val_CAN_MUX_pin14 = 2;
     uint8_t read_val_CAN_MUX_pin16 = 2;
-    uint8_t UART_port_Number = 0;
 	int8_t error_status = ERROR_N;
 	uint32_t i = 0;
 
 	if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CPU
 
         while ((error_status != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
-            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, UART_port_Number, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
+            if( UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 1, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param) != SUCCESS){
+                error_status =UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 2, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
+            }else{
+            	 error_status = SUCCESS;
+            }
 
             if (error_status != SUCCESS) {
                 i++;
                 LL_mDelay(pmm_uart_delay_att_conn);
-                if( i == 1 ){
-                    UART_port_Number = 1;
-                }else{
-                    UART_port_Number = 2;
-                }
             }
         }
 
@@ -82,22 +80,8 @@ void PMM_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *U
             }
         }
 
-	}//else{//Only for Backup CPU Wait request PMM struct. from Main CPU
-//
-//		timeout_counter = 0;
-//
-//		while( timeout_counter != 10000 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
-//
-//			timeout_counter++;
-//
-//			if( UART_Main_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-//				UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p );
-//			}
-//			if( UART_Backup_eps_comm->stop_recv_pack_flag == 1){ //Response processing
-//				UART_EPS_Pars_Get_Package( UART_Backup_eps_comm, eps_p );
-//			}
-//		}
-//	}
+	}
+
 }
 
 

@@ -1,7 +1,6 @@
 #include  <stdio.h>
 #include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
-#include "FRAM.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
@@ -181,21 +180,29 @@ int main(void){
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
                 }
-
             }else{// EPS_SERVICE_MODE
                 //No start Deploy
             }
 
+            //In case when Backup CPU is Active and Main CPU reboot and findout active CPU
+            if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
+                UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
+                UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
+            }
+
+
+            //Check Errors UART ports and get reboot counter passive CPU.
+            UART_ports_damage_check( UART_M_eps_comm, UART_B_eps_comm, eps_param );
+
+            //Check and parsing command from CAN
+            if(CAN_cmd_mask_status != 0){
+                CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
+            }
+
+            //Fill CAN Var5
             if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
                 CAN_Var5_fill_telemetry(eps_param);
             }
-
-			if(CAN_cmd_mask_status != 0){
-				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
-			}
-
-			//eps_service_ptr->Req_SW_Active_CPU =1;
-			//eps_service_ptr->Set_Active_CPU = 1;
 
 			//Switch active CPU 
 			if( eps_service_ptr->Req_SW_Active_CPU == 1 ){
@@ -211,7 +218,6 @@ int main(void){
 
 			UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
 			UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
-
 		}
 
 	}
