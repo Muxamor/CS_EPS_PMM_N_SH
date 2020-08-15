@@ -1,7 +1,6 @@
 
 #include <string.h>
 #include "stm32l4xx.h"
-#include "stm32l4xx_ll_utils.h"
 #include "Error_Handler.h"
 #include "Fn_CRC16.h"
 #include "uart_comm.h"
@@ -107,79 +106,6 @@ ErrorStatus UART_EPS_Check_CRC_Package( _UART_EPS_COMM *UART_eps_comm ){
 }
 
 
-/** @brief  Uart ports EPS damage control and get reboot counter passive CPU
-	@param  *UART_Main_eps_comm - pointer to Main UART port struct with get data.
-    @param  *UART_Backup_eps_comm - pointer to Backup UART port struct with get data.
-	@param  eps_p - contain pointer to struct which contain all parameters EPS.
-	@retval None.
-*/
-ErrorStatus UART_Ports_Damage_Check( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p ){
-
-    int8_t error_status = SUCCESS;
-    int8_t error_UART = ERROR_N; //0-OK -1-ERROR_N
-    uint32_t i = 0;
-
-    uint32_t old_val_reboot_counter_CPUm = 0;
-    uint32_t old_val_reboot_counter_CPUb = 0;
-
-    old_val_reboot_counter_CPUb = eps_p.eps_pmm_ptr->reboot_counter_CPUb;
-    old_val_reboot_counter_CPUm = eps_p.eps_pmm_ptr->reboot_counter_CPUm;
-
-    //Main port UART
-    error_UART = ERROR_N;
-    i = 0;
-    while ((error_UART != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
-
-        error_UART = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_Reboot_count, 1, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p);
-
-        if (error_UART != SUCCESS) {
-            i++;
-            LL_mDelay(pmm_uart_delay_att_conn);
-        }
-    }
-
-    error_status += error_UART;
-
-    //Backup port UART
-    error_UART = ERROR_N;
-    i = 0;
-    while((error_UART != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
-
-        error_UART = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_Reboot_count, 2, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p);
-
-        if (error_UART != SUCCESS) {
-            i++;
-            LL_mDelay(pmm_uart_delay_att_conn);
-        }
-    }
-
-    error_status += error_UART;
-
-    if( old_val_reboot_counter_CPUb != eps_p.eps_pmm_ptr->reboot_counter_CPUb || old_val_reboot_counter_CPUm != eps_p.eps_pmm_ptr->reboot_counter_CPUm ){
-        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
-    }
-
-    if ( UART_Main_eps_comm->error_port_counter == 0 ){
-        eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
-    }else if( UART_Main_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold){
-        UART_Main_eps_comm->error_port_counter = UART_EPS_ERROR_Threshold;
-        eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
-    }
-
-    if ( UART_Backup_eps_comm->error_port_counter == 0 ){
-        eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
-    }else if( UART_Backup_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold){
-        UART_Backup_eps_comm->error_port_counter = UART_EPS_ERROR_Threshold;
-        eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
-    }
-
-    if(error_status != SUCCESS ){
-        return ERROR_N;
-    }
-
-    return SUCCESS;
-}
-
 
 /** @brief  Parsing received CMD from UART EPS port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
@@ -211,6 +137,8 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 		memcpy( eps_p.eps_pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pmm_ptr) ) );
 		eps_p.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE; //just in case
+        eps_p.eps_pmm_ptr->Error_CAN_port_M = 0;
+        eps_p.eps_pmm_ptr->Error_CAN_port_B = 0;
 		eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
 
 		//Restore counter value.
