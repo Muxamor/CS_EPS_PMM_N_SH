@@ -7,45 +7,124 @@
 #include "SetupPeriph.h"
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
-#include "PMM/eps_struct.h"
+#include "PBM/pbm_config.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_ctrl.h"
 #include "uart_eps_comm.h"
 #include "PMM/pmm_sw_cpu.h"
 
-/** @brief Checking active CPU flag  (pmm_ptr->Active_CPU) between main and backup CPU.
+/** @brief CPU main checking active CPU flag  (pmm_ptr->Active_CPU) between main and backup CPU.
  * 			In case when (pmm_ptr->Active_CPU) the same value in the Main and Backup CPU
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-void PMM_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm,  _EPS_Param eps_p ){
+void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p ){
 
 	_PMM backup_CPU_pmm = {0};
-	_EPS_Param tmp_eps_param = {.eps_pmm_ptr = &backup_CPU_pmm };
+    _PAM backup_CPU_pam = {0};
+    _PDM backup_CPU_pdm = {0};
+    _PBM backup_CPU_pbm[PBM_QUANTITY] = {0};
+	_EPS_Param tmp_eps_param = {.eps_pmm_ptr = &backup_CPU_pmm,
+                                .eps_pam_ptr = &backup_CPU_pam,
+                                .eps_pdm_ptr = &backup_CPU_pdm,
+                                .eps_pbm_ptr = backup_CPU_pbm
+	                            };
 
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+    int8_t error_status = ERROR_N;
     uint8_t read_val_CAN_MUX_pin14 = 2;
     uint8_t read_val_CAN_MUX_pin16 = 2;
-	int8_t error_status = ERROR_N;
+	uint32_t UART_answer_add_timeout = 0;
 	uint32_t i = 0;
+
 
 	if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CPU
 
-        while ((error_status != SUCCESS) && (i < pmm_uart_attempt_conn)) {//Enable/Disable INPUT Efuse power channel.
-            if( UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 1, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param) != SUCCESS){
-                error_status =UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 2, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
-            }else{
-            	 error_status = SUCCESS;
+        error_status = ERROR_N;
+        i = 0;
+        while ((error_status != SUCCESS) && (i < 2)){
+
+            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 1, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
+
+            if( error_status != SUCCESS ){
+
+                UART_Main_eps_comm->waiting_answer_flag = 1;
+                UART_answer_add_timeout = SysTick_Counter;
+
+                while(  UART_Main_eps_comm->waiting_answer_flag != 0 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
+
+                    if ( ( (uint32_t)(SysTick_Counter - UART_answer_add_timeout) ) > 600 ){
+                        UART_Main_eps_comm->waiting_answer_flag = 0;
+                        UART_Main_eps_comm->error_port_counter++;
+                        error_status = ERROR_N;
+                        #ifdef DEBUGprintf
+                            Error_Handler();
+                        #endif
+                        break;
+                    }
+
+                    if(  UART_Main_eps_comm->stop_recv_pack_flag == 1){ //Response processing
+                        error_status = UART_EPS_Pars_Get_Package(  UART_Main_eps_comm, eps_p);
+                    }
+
+                    //For case when Backup CPU is active.
+                    if(  UART_Backup_eps_comm->stop_recv_pack_flag == 1){
+                        UART_EPS_Pars_Get_Package(UART_Backup_eps_comm, tmp_eps_param);
+                    }
+
+                }
             }
 
-            if (error_status != SUCCESS) {
+            if( error_status != SUCCESS ) {
                 i++;
-                LL_mDelay(pmm_uart_delay_att_conn);
             }
         }
 
-        if (error_status == SUCCESS) {
+
+        if( error_status != SUCCESS ){
+        	error_status = ERROR_N;
+        	i = 0;
+            while ((error_status != SUCCESS) && (i < 2)){
+
+                error_status =UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 2, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
+
+                if( error_status != SUCCESS ){
+
+                    UART_Backup_eps_comm->waiting_answer_flag = 1;
+                    UART_answer_add_timeout = SysTick_Counter;
+
+                    while( UART_Backup_eps_comm->waiting_answer_flag != 0 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
+
+                        if ( ( (uint32_t)(SysTick_Counter - UART_answer_add_timeout) ) > 600 ){
+                            UART_Backup_eps_comm->waiting_answer_flag = 0;
+                            UART_Backup_eps_comm->error_port_counter++;
+                            error_status = ERROR_N;
+                            #ifdef DEBUGprintf
+                                Error_Handler();
+                            #endif
+                            break;
+                        }
+
+                        if( UART_Backup_eps_comm->stop_recv_pack_flag == 1){ //Response processing
+                            error_status = UART_EPS_Pars_Get_Package( UART_Backup_eps_comm, eps_p);
+                        }
+
+                        //For case when Backup CPU is active.
+                        if(  UART_Main_eps_comm->stop_recv_pack_flag == 1){
+                            UART_EPS_Pars_Get_Package(UART_Main_eps_comm, tmp_eps_param);
+                        }
+
+                    }
+                }
+
+                if( error_status != SUCCESS ) {
+                    i++;
+                }
+            }
+        }
+
+        if( error_status == SUCCESS ){
 
             if (eps_p.eps_pmm_ptr->Active_CPU != tmp_eps_param.eps_pmm_ptr->Active_CPU) {
                 if (tmp_eps_param.eps_pmm_ptr->Active_CPU == 1) {
