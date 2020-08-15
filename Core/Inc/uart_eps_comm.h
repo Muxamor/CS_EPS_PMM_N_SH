@@ -15,7 +15,7 @@ extern "C" {
 #define UART_EPS_PACK_SIZE_BUFF  512
 #define UART_EPS_ERROR_Threshold 3
 
-#define UART_EPS_ACK_TIMEOUT 1000 //ms
+#define UART_EPS_ACK_TIMEOUT 300 //ms
 
 //Protocol UART EPS
 #define UART_EPS_ID_CMD_SAVE_PMM_struct 	0x01
@@ -70,7 +70,7 @@ typedef struct{
 
 ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t source_addr, uint8_t package_tag, uint8_t send_data[], uint16_t size_data );
 ErrorStatus UART_EPS_Check_CRC_Package( _UART_EPS_COMM *UART_eps_comm );
-ErrorStatus UART_ports_damage_check( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p );
+ErrorStatus UART_Ports_Damage_Check( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p );
 
 ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
 ErrorStatus UART_EPS_Pars_Get_ACK( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );

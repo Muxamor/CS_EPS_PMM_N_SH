@@ -51,7 +51,6 @@ int main(void){
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 	_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
-
     _EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
 
 	_EPS_Param eps_param = {.eps_pmm_ptr = pmm_ptr, 
@@ -103,7 +102,7 @@ int main(void){
 
 
     //Check Active flag between active and passive CPU.
-    PMM_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+    PMM_CPUm_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
     //Turn off to avoid overheating of the resistor on reboot
     pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
@@ -176,7 +175,7 @@ int main(void){
 
                 //Protection for off all BRK //TODO move to functin // Добавить проверку флага что батареи не разряжены
                 if( pmm_ptr->Deploy_stage == 9 && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE )
-                    && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)  ){
+                    && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)){
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
                 }
@@ -190,9 +189,8 @@ int main(void){
                 UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
             }
 
-
             //Check Errors UART ports and get reboot counter passive CPU.
-            UART_ports_damage_check( UART_M_eps_comm, UART_B_eps_comm, eps_param );
+            UART_Ports_Damage_Check(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
             //Check and parsing command from CAN
             if(CAN_cmd_mask_status != 0){
