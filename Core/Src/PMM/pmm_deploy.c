@@ -43,7 +43,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         uint8_t value_deploy_exit_LSW_1 = 1;
         uint8_t value_deploy_exit_LSW_2 = 1;
 
-        if( (SysTick_Counter - Exit_LSW_poll_time_delay) > ((uint32_t) 1000) ){
+        if( ((uint32_t)(SysTick_Counter - Exit_LSW_poll_time_delay)) > ((uint32_t) 1000) ){
             error_status = ERROR_N;
             error_status = PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 );
 
@@ -127,7 +127,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 2 - waiting timeout before deploy
     }else if( deploy_stage == 2 ){
-    	if( (SysTick_Counter - Deploy_start_time_delay) > ((uint32_t) PMM_Deploy_Time_Delay) ){
+    	if( ((uint32_t)(SysTick_Counter - Deploy_start_time_delay)) > ((uint32_t) PMM_Deploy_Time_Delay) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 3; // Next deploy stage 3 - low level energy, check and waiting for charge if battery low.
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
     	}
@@ -279,7 +279,7 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
 
     if( attempt_burn == PMM_Deploy_Burn_Attempt_1 ){
         //Whit Burn time 1
-        while((SysTick_Counter - start_burn_time) < ((uint32_t)PMM_Deploy_Burn_time_1) ){
+        while(((uint32_t)(SysTick_Counter - start_burn_time)) < ((uint32_t)PMM_Deploy_Burn_time_1) ){
             //Empty
         }
 
@@ -291,7 +291,7 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
             deploy_burn_timeout = (uint32_t)PMM_Deploy_Burn_time_3;
         }
 
-        while((SysTick_Counter - start_burn_time) < deploy_burn_timeout ){
+        while( ( (uint32_t)(SysTick_Counter - start_burn_time) ) < deploy_burn_timeout ){
             error_status += PMM_Deploy_check_Lim_SW( eps_p,  burn_pwr_ch_num, ret_state_limit_switch_1, ret_state_limit_switch_2 );
 
             if( (*ret_state_limit_switch_1 == 1) && ( *ret_state_limit_switch_2 == 1) ){
