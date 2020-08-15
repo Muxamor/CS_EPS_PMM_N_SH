@@ -303,6 +303,10 @@ ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
         //Sending (sync) settings from Active to Passive CPU
         if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE ){
             if((eps_p.eps_pmm_ptr->Active_CPU == CPUmain_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (eps_p.eps_pmm_ptr->Active_CPU == CPUbackup_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup)){
+
+                //Check Errors UART ports and get reboot counter passive CPU.
+                UART_Ports_Damage_Check(UART_M_eps_comm, UART_B_eps_comm, eps_p);
+
                 if( eps_p.eps_pmm_ptr->PMM_save_conf_flag == SET ){
                     error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
                 }
