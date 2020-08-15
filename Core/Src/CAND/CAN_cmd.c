@@ -442,6 +442,12 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform Deploy Channel 4\n", CAN_Perform_Deploy_offset );
                         #endif
                         PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch4);
+
+                    }else if( CAN_IVar4_RegCmd.CAN_Perform_Deploy == 0xFE ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset Deploy stage = 0\n", CAN_Perform_Deploy_offset );
+                        #endif
+                        eps_p.eps_pmm_ptr->Deploy_stage = 0;
                     }
 
                     CAN_IVar4_RegCmd.CAN_Perform_Deploy = 0x00;
