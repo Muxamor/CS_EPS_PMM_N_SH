@@ -210,9 +210,10 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 
 		memcpy( eps_p.eps_pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pmm_ptr) ) );
 		eps_p.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+        eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE; //just in case
 		eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
 
-		//Save restore counter value.
+		//Restore counter value.
 		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
 			eps_p.eps_pmm_ptr->reboot_counter_CPUm = reboot_counter;
 		}else{
