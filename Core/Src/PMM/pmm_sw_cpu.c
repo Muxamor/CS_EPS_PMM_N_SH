@@ -11,6 +11,7 @@
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_ctrl.h"
+#include "PMM/pmm_damage_ctrl.h"
 #include "uart_eps_comm.h"
 #include "PMM/pmm_sw_cpu.h"
 
@@ -274,6 +275,8 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
 	CAN_init_eps(CAN2);
 	CAN_RegisterAllVars();
 
+    PMM_Start_Time_Check_CAN = SysTick_Counter;
+
 	eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 }
 
@@ -300,7 +303,7 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
     PMM_RT_FL_EPS2_Reset_pin();
 
 	PMM_init( eps_p.eps_pmm_ptr );
-	eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+	//eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; // Wiil be command (SAVE PMM and ..... ) from active CPU   
 }
 
 

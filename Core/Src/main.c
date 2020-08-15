@@ -14,6 +14,7 @@
 #include "PMM/pmm_ctrl.h"
 #include "PMM/pmm_deploy.h"
 #include "PMM/pmm_savedata.h"
+#include "PMM/pmm_damage_ctrl.h"
 #include "PBM/pbm_control.h"
 #include "PBM/pbm_init.h"
 #include "PBM/pbm.h"
@@ -30,8 +31,8 @@
 
 //extern uint32_t SysTick_Counter;
 //extern uint64_t CAN_cmd_mask_status;
-//extern uint8_t CAN1_exchange_timeout_flag;
-//extern uint8_t CAN2_exchange_timeout_flag;
+extern uint8_t CAN1_exchange_data_flag;
+extern uint8_t CAN2_exchange_data_flag;
 
 _UART_EPS_COMM uart_m_eps_communication = {0}, *UART_M_eps_comm = &uart_m_eps_communication;  // Main EPS UART is LPUART1
 _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_communication;  // Backup EPS UART is USART3
@@ -43,6 +44,8 @@ int main(void){
 
     SysTick_Counter = 0;
     CAN_cmd_mask_status = 0;
+    CAN1_exchange_data_flag = 0;
+    CAN2_exchange_data_flag = 0;
 
 	UART_M_eps_comm->USARTx = LPUART1;
 	UART_B_eps_comm->USARTx = USART3;
@@ -131,6 +134,7 @@ int main(void){
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
+        PMM_Start_Time_Check_CAN = SysTick_Counter;
 		//LL_mDelay(20); //Delay for startup power supply
 
     //Initialization CAN for passive CPU
@@ -141,6 +145,17 @@ int main(void){
 		CAN_DeInit_eps(CAN1);
 		CAN_DeInit_eps(CAN2);
 	}
+
+
+
+
+
+
+	 //pmm_ptr->Deploy_stage = 7;// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
 
 
 	while(1){
@@ -164,10 +179,26 @@ int main(void){
             	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
             }
 
+            //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
                 if( pmm_ptr->Deploy_stage != 9 ){
                     PMM_Deploy( eps_param );
+                }
+
+                //Check CAN ports
+
+                PMM_CAN_Ports_Damage_Check( eps_param );
+
+                //Switch active CPU if CAN potrs is broken.
+                if( (pmm_ptr->Error_CAN_port_M == ERROR)  &&  (pmm_ptr->Error_CAN_port_B == ERROR) ){
+                    if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
+                        eps_param.eps_serv_ptr->Set_Active_CPU = CPUbackup;
+
+                    }else if( pmm_ptr->Main_Backup_mode_CPU == CPUbackup){
+                        eps_param.eps_serv_ptr->Set_Active_CPU = CPUmain;
+                    }
+                    eps_param.eps_serv_ptr->Req_SW_Active_CPU = 1;
                 }
 
                 //TODO сделать проверку уровня заряда батарей ( и дергать пин BAT_LOW) если свзи с PBMs нету. НАпряжение брать с VBAT1 или VBAT2
@@ -179,8 +210,10 @@ int main(void){
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
                 }
-            }else{// EPS_SERVICE_MODE
-                //No start Deploy
+
+            // EPS_SERVICE_MODE
+            }else{
+                PMM_Start_Time_Check_CAN = SysTick_Counter;
             }
 
             //In case when Backup CPU is Active and Main CPU reboot and findout active CPU
@@ -190,7 +223,7 @@ int main(void){
             }
 
             //Check Errors UART ports and get reboot counter passive CPU.
-            UART_Ports_Damage_Check(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+            PMM_UART_Ports_Damage_Check(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
             //Check and parsing command from CAN
             if(CAN_cmd_mask_status != 0){

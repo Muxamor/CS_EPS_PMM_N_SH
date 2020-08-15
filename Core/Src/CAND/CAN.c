@@ -9,8 +9,8 @@ struct CAN_IVar5 CAN_IVar5_telemetry;
 struct CAN_IVar4  CAN_IVar4_RegCmd;
 
 uint64_t CAN_cmd_mask_status;
-uint8_t CAN1_exchange_timeout_flag;
-uint8_t CAN2_exchange_timeout_flag;
+uint8_t CAN1_exchange_data_flag;
+uint8_t CAN2_exchange_data_flag;
 
 const CAN_typeRegistrationRec RegistrationRec[] = {
 /*{указатель на IVar, размер IVar, указатель на Callback, id_IVar, доступ}*/
@@ -30,9 +30,9 @@ void CAN_ProcCallbackCmds(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t len
 	}else if(state == 1){
 	
 		if(can_ref == CAN1){
-			CAN1_exchange_timeout_flag = 1;
+            CAN1_exchange_data_flag = 1;
 		}else if(can_ref == CAN2){
-			CAN2_exchange_timeout_flag = 1;
+            CAN2_exchange_data_flag = 1;
 		}
 	}
 
@@ -51,9 +51,9 @@ void CAN_ProcCallbackTelemetry(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_
 	}else{
 	
 		if(can_ref == CAN1){
-			CAN1_exchange_timeout_flag = 1;
+            CAN1_exchange_data_flag = 1;
 		}else if(can_ref == CAN2){
-			CAN2_exchange_timeout_flag = 1;
+            CAN2_exchange_data_flag = 1;
 		}
 	}
 }

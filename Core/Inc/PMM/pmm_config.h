@@ -55,6 +55,9 @@ extern "C" {
 
 #define FRAM_SIZE_64KB					0x2000
 
+#define PMM_CAN_Exch_Data_Check_Time_Gap    95000 // 1m35s in milliseconds
+#define PMM_UART_Exch_Data_Timeout   		45000 // 45s in milliseconds
+
 
 #define pmm_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
 #define pmm_i2c_delay_att_conn		3 	 //ms Delay between attempts connection through I2C in millisecond

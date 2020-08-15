@@ -87,8 +87,8 @@ extern struct CAN_IVar5 CAN_IVar5_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
 
 extern uint64_t CAN_cmd_mask_status;
-extern uint8_t CAN1_exchange_timeout_flag;
-extern uint8_t CAN2_exchange_timeout_flag;
+extern uint8_t CAN1_exchange_data_flag;  // 0 - no exchange   1 - was exchange
+extern uint8_t CAN2_exchange_data_flag;// 0 - no exchange  1 - was exchange
 
 typedef union {
   struct {
