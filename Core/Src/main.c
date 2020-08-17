@@ -42,6 +42,8 @@ _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_co
 
 int main(void){
 
+    uint32_t Passive_CPU_Start_time_UART_wait_data = 0 ;
+
     SysTick_Counter = 0;
     CAN_cmd_mask_status = 0;
     CAN1_exchange_data_flag = 0;
@@ -147,17 +149,6 @@ int main(void){
 	}
 
 
-
-
-
-
-	 //pmm_ptr->Deploy_stage = 7;// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-
-
-
 	while(1){
 
         //Save setting to FRAM for Active and Passive CPU and sync. settings Active->Passive CPU
@@ -247,8 +238,11 @@ int main(void){
 		// Passive CPU branch
 		}else{
 
-			UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
-			UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
+            Passive_CPU_Start_time_UART_wait_data = SysTick_Counter;
+		    while( ( (uint32_t)( SysTick_Counter - Passive_CPU_Start_time_UART_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
+                UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param);
+                UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param);
+            }
 		}
 
 	}
