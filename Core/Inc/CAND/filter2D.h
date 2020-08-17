@@ -23,6 +23,7 @@ typedef enum {
 
 #define MAX_FILTR_CHAN   12
 
+
 /*постоянная времени ~25 точек, для интервалов 0.5сек это 12сек */
 #define IIR_A2    1120
 #define IIR_A1    113154
@@ -33,7 +34,10 @@ typedef struct {
     int32_t a[2];
 }typeFiltrCoeff;
 
+extern typeFiltrCoeff FiltrCoeff[];
 
+
+int16_t Filtr2Step( typeEnumFiltrChan chan, int16_t  v );
 
 #ifdef __cplusplus
 }

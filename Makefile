@@ -76,6 +76,7 @@ Core/Src/PBM/pbm_control.c \
 Core/Src/PBM/pbm.c \
 Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
+Core/Src/CAND/filter2D.c \
 Core/Src/stm32l4xx_it.c \
 Core/Src/syscalls.c \
 Core/Src/uart_eps_terminal.c \

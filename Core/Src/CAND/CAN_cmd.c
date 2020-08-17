@@ -15,6 +15,7 @@
 #include "PAM/pam_ctrl.h"
 #include "PAM/pam_init.h"
 #include "uart_eps_comm.h"
+#include "CAND/filter2D.h"
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
 #include  <stdio.h>
@@ -1178,9 +1179,25 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 
 
-//	    for( i = 0, j = 0x71; i < 47; i++, j++ ){
+//	    for( i = 0, j = 0x71; i < 23; i++, j++ ){
 //	        CAN_IVar5_telemetry.CAN_data_array3[i] = j;
 //	    }
+//
+
+
+    CAN_IVar5_telemetry.CAN_Channel1_current_average_10s                =  (uint16_t)( Filtr2Step( CHF_I1, (int16_t)CAN_IVar5_telemetry.CAN_Channel1_current ) );
+    CAN_IVar5_telemetry.CAN_Channel2_current_average_10s                =  (uint16_t)( Filtr2Step( CHF_I2, (int16_t)CAN_IVar5_telemetry.CAN_Channel2_current ) );
+    CAN_IVar5_telemetry.CAN_Channel3_current_average_10s                =  (uint16_t)( Filtr2Step( CHF_I3, (int16_t)CAN_IVar5_telemetry.CAN_Channel3_current ) );
+    CAN_IVar5_telemetry.CAN_Channel4_current_average_10s                =  (uint16_t)( Filtr2Step( CHF_I4, (int16_t)CAN_IVar5_telemetry.CAN_Channel4_current ) );
+    CAN_IVar5_telemetry.CAN_VBAT1_current_average_10s                   =  (uint16_t)( Filtr2Step( CHF_I5, (int16_t)CAN_IVar5_telemetry.CAN_VBAT1_current ) );
+    CAN_IVar5_telemetry.CAN_VBAT2_current_average_10s                   =  (uint16_t)( Filtr2Step( CHF_I6, (int16_t)CAN_IVar5_telemetry.CAN_VBAT2_current ) );
+
+    CAN_IVar5_telemetry.CAN_Channel1_voltage_average_10s                =  (uint16_t)( Filtr2Step( CHF_U1, (int16_t)CAN_IVar5_telemetry.CAN_Channel1_voltage ) );
+    CAN_IVar5_telemetry.CAN_Channel2_voltage_average_10s                =  (uint16_t)( Filtr2Step( CHF_U2, (int16_t)CAN_IVar5_telemetry.CAN_Channel2_voltage ) );
+    CAN_IVar5_telemetry.CAN_Channel3_voltage_average_10s                =  (uint16_t)( Filtr2Step( CHF_U3, (int16_t)CAN_IVar5_telemetry.CAN_Channel3_voltage ) );
+    CAN_IVar5_telemetry.CAN_Channel4_voltage_average_10s                =  (uint16_t)( Filtr2Step( CHF_U4, (int16_t)CAN_IVar5_telemetry.CAN_Channel4_voltage ) );
+    CAN_IVar5_telemetry.CAN_VBAT1_voltage_average_10s                   =  (uint16_t)( Filtr2Step( CHF_U5, (int16_t)CAN_IVar5_telemetry.CAN_VBAT1_voltage ) );
+    CAN_IVar5_telemetry.CAN_VBAT2_voltage_average_10s                   =  (uint16_t)( Filtr2Step( CHF_U6, (int16_t)CAN_IVar5_telemetry.CAN_VBAT2_voltage ) );
 
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1497,9 +1514,24 @@ void CAN_Var5_fill_telemetry_const(void){
     CAN_IVar5_telemetry.CAN_PDM_sensor3                                 =	0x6F;
     CAN_IVar5_telemetry.CAN_PDM_sensor4                                 =	0x70;
 
-    for( i = 0, j = 0x71; i < 47; i++, j++ ){
+    for( i = 0, j = 0x71; i < 23; i++, j++ ){
         CAN_IVar5_telemetry.CAN_data_array3[i] = j;
     }
+
+    CAN_IVar5_telemetry.CAN_Channel1_current_average_10s                =   0x8889;
+    CAN_IVar5_telemetry.CAN_Channel2_current_average_10s                =   0x8A8B;
+    CAN_IVar5_telemetry.CAN_Channel3_current_average_10s                =   0x8C8D;
+    CAN_IVar5_telemetry.CAN_Channel4_current_average_10s                =   0x8E8F;
+    CAN_IVar5_telemetry.CAN_VBAT1_current_average_10s                   =   0x9091;
+    CAN_IVar5_telemetry.CAN_VBAT2_current_average_10s                   =   0x9293;
+
+    CAN_IVar5_telemetry.CAN_Channel1_voltage_average_10s                =   0x9495;
+    CAN_IVar5_telemetry.CAN_Channel2_voltage_average_10s                =   0x9697;
+    CAN_IVar5_telemetry.CAN_Channel3_voltage_average_10s                =   0x9899;
+    CAN_IVar5_telemetry.CAN_Channel4_voltage_average_10s                =   0x9A9B;
+    CAN_IVar5_telemetry.CAN_VBAT1_voltage_average_10s                   =   0x9C9D;
+    CAN_IVar5_telemetry.CAN_VBAT2_voltage_average_10s                   =   0x9E9F;
+
 }
 
 void CAN_Var4_fill( _EPS_Param eps_p ){

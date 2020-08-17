@@ -5,7 +5,7 @@
 typeFiltrCoeff FiltrCoeff[MAX_FILTR_CHAN];
 
 
-int16_t  Filtr2Step( typeEnumFiltrChan chan, int16_t  v ){
+int16_t Filtr2Step( typeEnumFiltrChan chan, int16_t  v ){
 
   int32_t y, x2, x1, x0;
 
