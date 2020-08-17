@@ -20,13 +20,13 @@ void PMM_CAN_Ports_Damage_Check( _EPS_Param eps_p ){
 
     	//Check time interval
         if( ((uint32_t)(SysTick_Counter - PMM_Start_Time_Check_CAN) ) > ((uint32_t)PMM_CAN_Exch_Data_Check_Time_Gap) ){
-            if ( CAN1_exchange_data_flag == 0){
+            if( (CAN1_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == ENABLE) ){
                 eps_p.eps_pmm_ptr->Error_CAN_port_M = ERROR;
             }else{
                 eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
             }
 
-            if ( CAN2_exchange_data_flag == 0){
+            if( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == ENABLE) ){
                 eps_p.eps_pmm_ptr->Error_CAN_port_B = ERROR;
             }else{
                 eps_p.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
