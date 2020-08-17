@@ -139,6 +139,8 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE; //just in case
         eps_p.eps_pmm_ptr->Error_CAN_port_M = 0;
         eps_p.eps_pmm_ptr->Error_CAN_port_B = 0;
+        eps_p.eps_pmm_ptr->Error_UART_port_M = 0;
+        eps_p.eps_pmm_ptr->Error_UART_port_B = 0;
 		eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
 
 		//Restore counter value.

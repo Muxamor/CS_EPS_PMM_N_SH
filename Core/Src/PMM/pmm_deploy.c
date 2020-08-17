@@ -2,6 +2,7 @@
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
 #include "stm32l4xx_ll_tim.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "SetupPeriph.h"
 #include "PCA9534.h"
 #include "ADS1015.h"
@@ -224,12 +225,14 @@ ErrorStatus PMM_Deploy_Burn_Procedure( _EPS_Param eps_p, uint8_t burn_pwr_ch_num
     if( (get_state_limit_switch_1 != 1) || (get_state_limit_switch_2 != 1) ){
         //Second attempt to deploy for a specific channel.
         LL_mDelay(900);
+        LL_IWDG_ReloadCounter(IWDG);
         error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_2, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
     }
 
     if( (get_state_limit_switch_1 != 1) || (get_state_limit_switch_2 != 1) ){
         //Third attempt to deploy for a specific channel.
         LL_mDelay(900);
+        LL_IWDG_ReloadCounter(IWDG);
         error_status += PMM_Deploy_Burn_PWR_Ch( eps_p, PMM_Deploy_Burn_Attempt_3, burn_pwr_ch_num, &get_state_limit_switch_1, &get_state_limit_switch_2 );
     }
 
@@ -294,7 +297,7 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
     if( attempt_burn == PMM_Deploy_Burn_Attempt_1 ){
         //Whit Burn time 1
         while(((uint32_t)(SysTick_Counter - start_burn_time)) < ((uint32_t)PMM_Deploy_Burn_time_1) ){
-            //Empty
+            LL_IWDG_ReloadCounter(IWDG);
         }
 
     }else{
@@ -307,7 +310,7 @@ ErrorStatus PMM_Deploy_Burn_PWR_Ch( _EPS_Param eps_p, uint8_t attempt_burn , uin
 
         while( ( (uint32_t)(SysTick_Counter - start_burn_time) ) < deploy_burn_timeout ){
             error_status += PMM_Deploy_check_Lim_SW( eps_p,  burn_pwr_ch_num, ret_state_limit_switch_1, ret_state_limit_switch_2 );
-
+            LL_IWDG_ReloadCounter(IWDG);
             if( (*ret_state_limit_switch_1 == 1) && ( *ret_state_limit_switch_2 == 1) ){
                 break;
             }

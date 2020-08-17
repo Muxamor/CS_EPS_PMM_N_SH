@@ -2,6 +2,7 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "TCA9539.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
@@ -44,6 +45,8 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
 
         error_status = ERROR_N;
         i = 0;
+        LL_IWDG_ReloadCounter(IWDG);
+
         while ((error_status != SUCCESS) && (i < 2)){
 
             error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 1, UART_Main_eps_comm, UART_Backup_eps_comm, tmp_eps_param);
@@ -82,6 +85,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             }
         }
 
+        LL_IWDG_ReloadCounter(IWDG);
 
         if( error_status != SUCCESS ){
         	error_status = ERROR_N;

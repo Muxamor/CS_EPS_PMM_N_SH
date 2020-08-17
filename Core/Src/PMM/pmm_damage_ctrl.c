@@ -3,6 +3,7 @@
 #include "SetupPeriph.h"
 #include "PMM/eps_struct.h"
 #include "PMM/pmm_config.h"
+#include "PMM/pmm_ctrl.h"
 #include "CAND/CAN.h"
 #include "uart_eps_comm.h"
 
@@ -14,7 +15,7 @@ uint32_t PMM_Start_Time_Check_CAN;
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
 */
-void PMM_CAN_Ports_Damage_Check( _EPS_Param eps_p ){
+void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
 
     if( (eps_p.eps_pmm_ptr->EPS_Mode == EPS_COMBAT_MODE) && ( eps_p.eps_pmm_ptr->Deploy_stage > 6) ){
 
@@ -32,6 +33,29 @@ void PMM_CAN_Ports_Damage_Check( _EPS_Param eps_p ){
                 eps_p.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
             }
 
+            //Reboot power CAN (try to repair)
+            if( eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR && eps_p.eps_pmm_ptr->Error_CAN_port_B == ERROR ){
+                PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE );
+                PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, DISABLE );
+                LL_mDelay(50);
+                if( eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == ENABLE ){
+                    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
+                }
+
+                if( eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == ENABLE ){
+                    PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
+                }
+
+                //Switch active CPU because CANm and CANb is ERROR
+                if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
+                    eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup;
+
+                }else if(eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup){
+                    eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain;
+                }
+                eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
+            }
+
             CAN1_exchange_data_flag = 0;
             CAN2_exchange_data_flag = 0;
             PMM_Start_Time_Check_CAN = SysTick_Counter;
@@ -40,6 +64,8 @@ void PMM_CAN_Ports_Damage_Check( _EPS_Param eps_p ){
     }else{ //EPS_Mode = EPS_COMBAT_MODE  bat Deploy_stage<6
         PMM_Start_Time_Check_CAN = SysTick_Counter;
     }
+
+
 
 }
 
@@ -51,7 +77,7 @@ void PMM_CAN_Ports_Damage_Check( _EPS_Param eps_p ){
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
 */
-ErrorStatus PMM_UART_Ports_Damage_Check( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p ){
+ErrorStatus PMM_Damage_Check_UART_m_b( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p ){
 
     int8_t error_status = SUCCESS;
     int8_t error_UART = ERROR_N; //0-OK -1-ERROR_N
@@ -117,4 +143,18 @@ ErrorStatus PMM_UART_Ports_Damage_Check( _UART_EPS_COMM *UART_Main_eps_comm, _UA
     }
 
     return SUCCESS;
+}
+
+
+/** @brief CANmain and CANbackup ports power off protection.
+           Enable power CANmain and CANbackup if all waspower off.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval None.
+*/
+void PMM_Portecion_PWR_OFF_CAN_m_b( _EPS_Param eps_p ) {
+
+    if( eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE && eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
+    }
 }

@@ -1,6 +1,7 @@
 #include  <stdio.h>
 #include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
@@ -11,7 +12,6 @@
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_sw_cpu.h"
 #include "PMM/pmm.h"
-#include "PMM/pmm_ctrl.h"
 #include "PMM/pmm_deploy.h"
 #include "PMM/pmm_savedata.h"
 #include "PMM/pmm_damage_ctrl.h"
@@ -25,7 +25,6 @@
 
 /*//TODO
 4. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ?
-7. Подумать над тем если CAN при инициализации выдает ошибку стоит ли переходить на резервный МК.
 
 **********************************************************/
 
@@ -42,7 +41,7 @@ _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_co
 
 int main(void){
 
-    uint32_t Passive_CPU_Start_time_UART_wait_data = 0 ;
+    uint32_t Passive_CPU_start_time_wait_data = 0 ;
 
     SysTick_Counter = 0;
     CAN_cmd_mask_status = 0;
@@ -81,8 +80,8 @@ int main(void){
 
 	SetupInterrupt();
 
-	//IWDG_Init(3000);
-    //LL_IWDG_ReloadCounter(IWDG);
+	IWDG_Init(4000);
+    LL_IWDG_ReloadCounter(IWDG);
 
     pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
 
@@ -105,7 +104,7 @@ int main(void){
 
     pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
 
-
+    LL_IWDG_ReloadCounter(IWDG);
     //Check Active flag between active and passive CPU.
     PMM_CPUm_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
@@ -151,52 +150,41 @@ int main(void){
 
 	while(1){
 
+        LL_IWDG_ReloadCounter(IWDG);
         //Save setting to FRAM for Active and Passive CPU and sync. settings Active->Passive CPU
         if((pmm_ptr->PMM_save_conf_flag == SET) || (pdm_ptr->PDM_save_conf_flag == SET) || (pam_ptr->PAM_save_conf_flag == SET) || (PBM_CheckSaveSetupFlag(pbm_mas) == SET)){
             PMM_Sync_and_Save_Settings_A_P_CPU(eps_param);
         }
 
+        LL_IWDG_ReloadCounter(IWDG);
         //ActiveCPU branch
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
+
+		    //TODO add Reinitialisation after time gap.
 
             PMM_Get_Telemetry(pmm_ptr);
             PDM_Get_Telemetry(pdm_ptr);
             PAM_Get_Telemetry(pam_ptr);
             PBM_Get_Telemetry(pbm_mas);
 
-            //Protection for OFF all power of CAN//TODO move to functin
-            if( pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
-            	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
-            	PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
-            }
+            PMM_Portecion_PWR_OFF_CAN_m_b( eps_param );
 
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
+                LL_IWDG_ReloadCounter(IWDG);
                 if( pmm_ptr->Deploy_stage != 9 ){
                     PMM_Deploy( eps_param );
                 }
 
                 //Check CAN ports
-
-                PMM_CAN_Ports_Damage_Check( eps_param );
-
-                //Switch active CPU if CAN potrs is broken.
-                if( (pmm_ptr->Error_CAN_port_M == ERROR)  &&  (pmm_ptr->Error_CAN_port_B == ERROR) ){
-                    if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
-                        eps_param.eps_serv_ptr->Set_Active_CPU = CPUbackup;
-
-                    }else if( pmm_ptr->Main_Backup_mode_CPU == CPUbackup){
-                        eps_param.eps_serv_ptr->Set_Active_CPU = CPUmain;
-                    }
-                    eps_param.eps_serv_ptr->Req_SW_Active_CPU = 1;
-                }
+                PMM_Damage_Check_CAN_m_b(eps_param);
 
                 //TODO сделать проверку уровня заряда батарей ( и дергать пин BAT_LOW) если свзи с PBMs нету. НАпряжение брать с VBAT1 или VBAT2
                 //TODO need oFF and on if we reached edge PBM_NORMAL_ENERGY_EDGE  PBM_LOW_ENERGY_EDGE  PBM_ZERO_ENERGY_EDGE (как сохронять если один из БРК выключен ? )
 
                 //Protection for off all BRK //TODO move to functin // Добавить проверку флага что батареи не разряжены
-                if( pmm_ptr->Deploy_stage == 9 && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE )
+                if( pmm_ptr->Deploy_stage > 6 && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE )
                     && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)){
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
@@ -214,7 +202,7 @@ int main(void){
             }
 
             //Check Errors UART ports and get reboot counter passive CPU.
-            PMM_UART_Ports_Damage_Check(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+            PMM_Damage_Check_UART_m_b(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
             //Check and parsing command from CAN
             if(CAN_cmd_mask_status != 0){
@@ -238,8 +226,8 @@ int main(void){
 		// Passive CPU branch
 		}else{
 
-            Passive_CPU_Start_time_UART_wait_data = SysTick_Counter;
-		    while( ( (uint32_t)( SysTick_Counter - Passive_CPU_Start_time_UART_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
+            Passive_CPU_start_time_wait_data = SysTick_Counter;
+		    while(( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
                 UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param);
                 UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param);
             }
@@ -248,7 +236,7 @@ int main(void){
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
             }else{
-                PMM_Start_Time_Check_CAN = SysTick_Counter;
+               // PMM_Start_Time_Check_CAN = SysTick_Counter;
             }
 
 
