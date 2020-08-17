@@ -1,9 +1,11 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
+#include "stm32l4xx_ll_tim.h"
 #include "SetupPeriph.h"
 #include "PCA9534.h"
 #include "ADS1015.h"
+#include "tim_pwm.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init_IC.h"
 #include "PMM/pmm_ctrl.h"
@@ -79,11 +81,23 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         }else if( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
             Deploy_start_time_delay = SysTick_Counter;
+            //Enable passive CPU if was disabled
+            if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
+                PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+                PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+            }
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
         }else if( (( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( Counter_deploy_exit_LSW_2 == 0)) ||
         		( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1 ) && ( Counter_deploy_exit_LSW_1 == 0) ) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 1; // Next deploy stage 1 - Only one Limit switch = 1, waiting good generation level
+            //Enable passive CPU if was disabled
+            if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
+                PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+                PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+            }
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }
 

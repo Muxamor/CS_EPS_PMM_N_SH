@@ -243,6 +243,15 @@ int main(void){
                 UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param);
                 UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param);
             }
+
+            //EPS_COMBAT_MODE
+            if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
+
+            }else{
+                PMM_Start_Time_Check_CAN = SysTick_Counter;
+            }
+
+
 		}
 
 	}
