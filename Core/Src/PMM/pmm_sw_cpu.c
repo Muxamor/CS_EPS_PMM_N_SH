@@ -270,8 +270,8 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
         CAN_Var5_fill_telemetry_const();
     }
 
-    I2C4_Init();
     PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+    I2C4_Init();
 
 	PMM_init( eps_p.eps_pmm_ptr );
 
