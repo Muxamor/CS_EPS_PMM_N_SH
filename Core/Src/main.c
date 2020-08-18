@@ -78,6 +78,8 @@ int main(void){
 	USART3_Init();
 	I2C4_Init();
 
+    PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+
 	SetupInterrupt();
 
 	//IWDG_Init(4000);
@@ -112,6 +114,7 @@ int main(void){
     pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
+
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
 
@@ -131,8 +134,7 @@ int main(void){
             CAN_Var5_fill_telemetry_const();
         }
 
-        PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
-
+        
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
@@ -169,7 +171,9 @@ int main(void){
             PAM_Get_Telemetry(pam_ptr);
             PBM_Get_Telemetry(pbm_mas);
 
-            PMM_Portecion_PWR_OFF_CAN_m_b( eps_param );
+           // if( pmm_ptr->Deploy_stage >=1 ){
+                PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
+           // }
 
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
