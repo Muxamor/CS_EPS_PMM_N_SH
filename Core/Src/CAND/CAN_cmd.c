@@ -408,6 +408,27 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> Reset to default settings\n",  CAN_Reset_to_default_offset);
                         #endif
+                        eps_p.eps_pmm_ptr->Deploy_stage = 0;
+                        //eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_in = DISABLE;
+                        //eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_out = DISABLE;
+                        //eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF_in = DISABLE;
+                        //eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF_out = DISABLE;
+                        eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1 = DISABLE;
+                        eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF2 = DISABLE;
+                        eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF1 = DISABLE;
+                        eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2 = DISABLE;
+                        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
+
+                        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
                         CAN_IVar4_RegCmd.CAN_Reset_to_default = 0x00;
                     }
                     break;
@@ -1179,11 +1200,12 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 
 
-//	    for( i = 0, j = 0x71; i < 23; i++, j++ ){
+//	    for( i = 0, j = 0x71; i < 21; i++, j++ ){
 //	        CAN_IVar5_telemetry.CAN_data_array3[i] = j;
 //	    }
 //
 
+    CAN_IVar5_telemetry.CAN_Version_FW                                  = eps_p.eps_pmm_ptr->Version_FW;
 
     CAN_IVar5_telemetry.CAN_Channel1_current_average_10s                =  (uint16_t)( Filtr2Step( CHF_I1, (int16_t)CAN_IVar5_telemetry.CAN_Channel1_current ) );
     CAN_IVar5_telemetry.CAN_Channel2_current_average_10s                =  (uint16_t)( Filtr2Step( CHF_I2, (int16_t)CAN_IVar5_telemetry.CAN_Channel2_current ) );
@@ -1514,9 +1536,11 @@ void CAN_Var5_fill_telemetry_const(void){
     CAN_IVar5_telemetry.CAN_PDM_sensor3                                 =	0x6F;
     CAN_IVar5_telemetry.CAN_PDM_sensor4                                 =	0x70;
 
-    for( i = 0, j = 0x71; i < 23; i++, j++ ){
+    for( i = 0, j = 0x71; i < 21; i++, j++ ){
         CAN_IVar5_telemetry.CAN_data_array3[i] = j;
     }
+
+    CAN_IVar5_telemetry.CAN_Version_FW                                  =   0x8687;
 
     CAN_IVar5_telemetry.CAN_Channel1_current_average_10s                =   0x8889;
     CAN_IVar5_telemetry.CAN_Channel2_current_average_10s                =   0x8A8B;

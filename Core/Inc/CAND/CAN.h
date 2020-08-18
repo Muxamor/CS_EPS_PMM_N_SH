@@ -419,28 +419,29 @@ struct CAN_IVar5{
     uint8_t  CAN_PDM_sensor2;                                       //+327     |  const = 0x6E               |   PDM датчик 2
     uint8_t  CAN_PDM_sensor3;                                       //+328     |  const = 0x6F               |   PDM датчик 3
     uint8_t  CAN_PDM_sensor4;                                       //+329     |  const = 0x70               |   PDM датчик 4
-    uint8_t  CAN_data_array3[23];                                   //+330     |  const = 0x717273747576     |   Массив 3 данных о работе СЭС
+    uint8_t  CAN_data_array3[21];                                   //+330     |  const = 0x717273747576     |   Массив 3 данных о работе СЭС
                                                                                //           7778797A7B7C
                                                                                //           7D7E7F808182
-                                                                               //           8384858687
+                                                                               //           838485
 
-    uint16_t CAN_Channel1_current_average_10s;                      //+366     |  const = 0x8889               |   Ток канал 1 усреднение 10s
-    uint16_t CAN_Channel2_current_average_10s;                      //+367     |  const = 0x8A8B               |   Ток канал 2 усреднение 10s
-    uint16_t CAN_Channel3_current_average_10s;                      //+368     |  const = 0x8C8D               |   Ток канал 3 усреднение 10s
-    uint16_t CAN_Channel4_current_average_10s;                      //+369     |  const = 0x8E8F               |   Ток канал 4 усреднение 10s
-    uint16_t CAN_VBAT1_current_average_10s;                         //+370     |  const = 0x9091               |   Ток VBAT1 усреднение 10s
-    uint16_t CAN_VBAT2_current_average_10s;                         //+371     |  const = 0x9293               |   Ток VBAT2 усреднение 10s
+    uint16_t CAN_Version_FW;                                        //+352     |  const = 8687                   /  Firmware version
+    uint16_t CAN_Channel1_current_average_10s;                      //+354     |  const = 0x8889               |   Ток канал 1 усреднение 10s
+    uint16_t CAN_Channel2_current_average_10s;                      //+356     |  const = 0x8A8B               |   Ток канал 2 усреднение 10s
+    uint16_t CAN_Channel3_current_average_10s;                      //+358     |  const = 0x8C8D               |   Ток канал 3 усреднение 10s
+    uint16_t CAN_Channel4_current_average_10s;                      //+360     |  const = 0x8E8F               |   Ток канал 4 усреднение 10s
+    uint16_t CAN_VBAT1_current_average_10s;                         //+362     |  const = 0x9091               |   Ток VBAT1 усреднение 10s
+    uint16_t CAN_VBAT2_current_average_10s;                         //+364     |  const = 0x9293               |   Ток VBAT2 усреднение 10s
 
-    uint16_t CAN_Channel1_voltage_average_10s;                      //+372     |  const = 0x9495               |  Напряжение канала 1 СОП1 усреднение 10s
-    uint16_t CAN_Channel2_voltage_average_10s;                      //+373     |  const = 0x9697               |  Напряжение канала 2 СОП2 усреднение 10s
-    uint16_t CAN_Channel3_voltage_average_10s;                      //+374     |  const = 0x9899               |  Напряжение канала 3 БРК1 усреднение 10s
-    uint16_t CAN_Channel4_voltage_average_10s;                      //+375     |  const = 0x9A9B               |  Напряжение канала 4 БРК2 усреднение 10s
-    uint16_t CAN_VBAT1_voltage_average_10s;                         //+376     |  const = 0x9C9D               |   Напряжение VBAT1 усреднение 10s
-    uint16_t CAN_VBAT2_voltage_average_10s;                         //+377     |  const = 0x9E9F               |   Напряжение VBAT2 усреднение 10s
+    uint16_t CAN_Channel1_voltage_average_10s;                      //+366     |  const = 0x9495               |  Напряжение канала 1 СОП1 усреднение 10s
+    uint16_t CAN_Channel2_voltage_average_10s;                      //+368     |  const = 0x9697               |  Напряжение канала 2 СОП2 усреднение 10s
+    uint16_t CAN_Channel3_voltage_average_10s;                      //+370     |  const = 0x9899               |  Напряжение канала 3 БРК1 усреднение 10s
+    uint16_t CAN_Channel4_voltage_average_10s;                      //+372     |  const = 0x9A9B               |  Напряжение канала 4 БРК2 усреднение 10s
+    uint16_t CAN_VBAT1_voltage_average_10s;                         //+374     |  const = 0x9C9D               |   Напряжение VBAT1 усреднение 10s
+    uint16_t CAN_VBAT2_voltage_average_10s;                         //+376     |  const = 0x9E9F               |   Напряжение VBAT2 усреднение 10s
 
     // size ТМИ0+ТМИ4+ТМИ7+ТМИ8 = 29 + 3 * 116 = 377
 
-} ;
+};
 
 #pragma pack(pop)
 

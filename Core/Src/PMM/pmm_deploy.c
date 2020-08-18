@@ -150,6 +150,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     // Deploy stage 3 -  low level energy, check battery level and waiting for charge if battery low.
     }else if(deploy_stage == 3){
         //TODO only after the first fly decide how to check the energy level.
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
         eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 

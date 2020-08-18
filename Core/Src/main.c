@@ -80,7 +80,7 @@ int main(void){
 
 	SetupInterrupt();
 
-	IWDG_Init(4000);
+	//IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
 
     pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
@@ -111,6 +111,7 @@ int main(void){
     //Turn off to avoid overheating of the resistor on reboot
     pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
+
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
 
@@ -147,6 +148,7 @@ int main(void){
 		CAN_DeInit_eps(CAN2);
 	}
 
+	printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 
 	while(1){
 
