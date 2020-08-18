@@ -424,20 +424,20 @@ struct CAN_IVar5{
                                                                                //           7D7E7F808182
                                                                                //           838485
 
-    uint16_t CAN_Version_FW;                                        //+352     |  const = 8687                   /  Firmware version
-    uint16_t CAN_Channel1_current_average_10s;                      //+354     |  const = 0x8889               |   Ток канал 1 усреднение 10s
-    uint16_t CAN_Channel2_current_average_10s;                      //+356     |  const = 0x8A8B               |   Ток канал 2 усреднение 10s
-    uint16_t CAN_Channel3_current_average_10s;                      //+358     |  const = 0x8C8D               |   Ток канал 3 усреднение 10s
-    uint16_t CAN_Channel4_current_average_10s;                      //+360     |  const = 0x8E8F               |   Ток канал 4 усреднение 10s
-    uint16_t CAN_VBAT1_current_average_10s;                         //+362     |  const = 0x9091               |   Ток VBAT1 усреднение 10s
-    uint16_t CAN_VBAT2_current_average_10s;                         //+364     |  const = 0x9293               |   Ток VBAT2 усреднение 10s
+    uint16_t CAN_Version_FW;                                        //+351     |  const = 0x8687               |   Firmware version
+    uint16_t CAN_Channel1_current_average_10s;                      //+353     |  const = 0x8889               |   Ток канал 1 усреднение 10s
+    uint16_t CAN_Channel2_current_average_10s;                      //+355     |  const = 0x8A8B               |   Ток канал 2 усреднение 10s
+    uint16_t CAN_Channel3_current_average_10s;                      //+357     |  const = 0x8C8D               |   Ток канал 3 усреднение 10s
+    uint16_t CAN_Channel4_current_average_10s;                      //+359     |  const = 0x8E8F               |   Ток канал 4 усреднение 10s
+    uint16_t CAN_VBAT1_current_average_10s;                         //+361     |  const = 0x9091               |   Ток VBAT1 усреднение 10s
+    uint16_t CAN_VBAT2_current_average_10s;                         //+363     |  const = 0x9293               |   Ток VBAT2 усреднение 10s
 
-    uint16_t CAN_Channel1_voltage_average_10s;                      //+366     |  const = 0x9495               |  Напряжение канала 1 СОП1 усреднение 10s
-    uint16_t CAN_Channel2_voltage_average_10s;                      //+368     |  const = 0x9697               |  Напряжение канала 2 СОП2 усреднение 10s
-    uint16_t CAN_Channel3_voltage_average_10s;                      //+370     |  const = 0x9899               |  Напряжение канала 3 БРК1 усреднение 10s
-    uint16_t CAN_Channel4_voltage_average_10s;                      //+372     |  const = 0x9A9B               |  Напряжение канала 4 БРК2 усреднение 10s
-    uint16_t CAN_VBAT1_voltage_average_10s;                         //+374     |  const = 0x9C9D               |   Напряжение VBAT1 усреднение 10s
-    uint16_t CAN_VBAT2_voltage_average_10s;                         //+376     |  const = 0x9E9F               |   Напряжение VBAT2 усреднение 10s
+    uint16_t CAN_Channel1_voltage_average_10s;                      //+365     |  const = 0x9495               |  Напряжение канала 1 СОП1 усреднение 10s
+    uint16_t CAN_Channel2_voltage_average_10s;                      //+367     |  const = 0x9697               |  Напряжение канала 2 СОП2 усреднение 10s
+    uint16_t CAN_Channel3_voltage_average_10s;                      //+369     |  const = 0x9899               |  Напряжение канала 3 БРК1 усреднение 10s
+    uint16_t CAN_Channel4_voltage_average_10s;                      //+371     |  const = 0x9A9B               |  Напряжение канала 4 БРК2 усреднение 10s
+    uint16_t CAN_VBAT1_voltage_average_10s;                         //+373     |  const = 0x9C9D               |   Напряжение VBAT1 усреднение 10s
+    uint16_t CAN_VBAT2_voltage_average_10s;                         //+375     |  const = 0x9E9F               |   Напряжение VBAT2 усреднение 10s
 
     // size ТМИ0+ТМИ4+ТМИ7+ТМИ8 = 29 + 3 * 116 = 377
 

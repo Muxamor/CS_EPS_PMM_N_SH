@@ -1641,10 +1641,10 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
 	CAN_IVar4_RegCmd.CAN_AB3_Heat_Branch1              					= eps_p.eps_pbm_ptr[2].PCA9534_ON_Heat_1;
 	CAN_IVar4_RegCmd.CAN_AB3_Heat_Branch2              					= eps_p.eps_pbm_ptr[2].PCA9534_ON_Heat_2;
 	CAN_IVar4_RegCmd.CAN_PAM_PWR_DC_DC              					= eps_p.eps_pam_ptr->State_DC_DC;
-	CAN_IVar4_RegCmd.CAN_PAM_PWR_LDO              					= eps_p.eps_pam_ptr->State_LDO;
+	CAN_IVar4_RegCmd.CAN_PAM_PWR_LDO              		    			= eps_p.eps_pam_ptr->State_LDO;
 	CAN_IVar4_RegCmd.CAN_PMM_PWR_PBM_Logic              				= eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic;
-	CAN_IVar4_RegCmd.CAN_PMM_PWR_CAN_main              				= eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain;
-	CAN_IVar4_RegCmd.CAN_PMM_PWR_CAN_backup              				= eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup;
+	CAN_IVar4_RegCmd.CAN_PMM_PWR_CAN_main                				= eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain;
+	CAN_IVar4_RegCmd.CAN_PMM_PWR_CAN_backup                				= eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup;
     CAN_IVar4_RegCmd.CAN_PAM_PWR_TM_SP_CH1                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[0].State_eF_out;
     CAN_IVar4_RegCmd.CAN_PAM_PWR_TM_SP_CH2                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[1].State_eF_out;
     CAN_IVar4_RegCmd.CAN_PAM_PWR_TM_SP_CH3                            = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[2].State_eF_out;
