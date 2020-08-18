@@ -134,7 +134,7 @@ int main(void){
             CAN_Var5_fill_telemetry_const();
         }
 
-        
+
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
