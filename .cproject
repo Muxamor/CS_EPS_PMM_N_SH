@@ -78,7 +78,6 @@
 									<listOptionValue builtIn="false" value="STM32L496xx"/>
 									<listOptionValue builtIn="false" value="VERSION_FW_MAJOR=${VERSION_FIRMWARE_MAJOR}"/>
 									<listOptionValue builtIn="false" value="VERSION_FW_MINOR=${VERSION_FIRMWARE_MINOR}"/>
-									<listOptionValue builtIn="false" value="DEBUGprintf"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.379536114" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
