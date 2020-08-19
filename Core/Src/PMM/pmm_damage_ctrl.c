@@ -48,10 +48,10 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
 
                 //Switch active CPU because CANm and CANb is ERROR
                 if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
-                    eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup;
+                    eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup_Active;
 
                 }else if(eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup){
-                    eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain;
+                    eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
                 }
                 eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
             }
