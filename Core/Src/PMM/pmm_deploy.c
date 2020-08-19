@@ -7,14 +7,15 @@
 #include "PCA9534.h"
 #include "ADS1015.h"
 #include "tim_pwm.h"
+#include "CAND/CAN_cmd.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init_IC.h"
 #include "PMM/pmm_ctrl.h"
-#include "PMM/eps_struct.h"
 #include "PDM/pdm_ctrl.h"
-#include "PAM/pam_ctrl.h"
 #include "PAM/pam_init.h"
 #include "PAM/pam.h"
+#include "PBM/pbm_config.h"
+#include "PBM/pbm_init.h"
 #include "PMM/pmm_deploy.h"
 
 /** @brief  Deploy CubeSat Norbi.
@@ -152,6 +153,22 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     }else if(deploy_stage == 3){
         //TODO only after the first fly decide how to check the energy level.
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
+
+        for( i = 0 ; i < PBM_QUANTITY; i++ ){
+            eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = ENABLE;
+            eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = ENABLE;
+            eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = ENABLE;
+            eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = ENABLE;
+
+            eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = ENABLE;
+            eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = ENABLE;
+        }
+
+        PBM_Init( eps_p.eps_pbm_ptr );
+
+        //Fill Var4
+        CAN_Var4_fill(eps_p);
+
         eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
@@ -169,14 +186,21 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 6 - Enable BRC
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-    //Enable BRC
+    // Deploy stage 6 - Enable BRK1, BRK2, CANm, CANb, PAM DC-DC.
     }else if( deploy_stage == 6 ){
-        //Enable BRC
+        //Enable CAN
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
-        PAM_Set_state_PWR_Supply( eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE);
+        //Enable PAM DC-DC
+        eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
+        PAM_init( eps_p.eps_pam_ptr );
+        //Enable BRC
         error_status += PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
         error_status += PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
+
+        //Fill Var4
+        CAN_Var4_fill(eps_p);
+
         eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 7 - deploy at channel 3
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
@@ -199,6 +223,9 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
         //Disable Power deploy logic
         error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+
+        //Fill Var4
+        CAN_Var4_fill(eps_p);
     }
 
     if( error_status != SUCCESS ){
