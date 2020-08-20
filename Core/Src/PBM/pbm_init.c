@@ -84,12 +84,12 @@ ErrorStatus PBM_Init(_PBM pbm[]) {
         Error += PBM_SetStateDischargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, pbm[i].Branch_1_DchgEnableBit);
         Error += PBM_SetStateDischargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, pbm[i].Branch_2_DchgEnableBit);
 
-		if (pbm[i].PCA9534_ON_Heat_1 == 1) {
+		if (pbm[i].PCA9534_ON_Heat_1 == ENABLE) {
             Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_ON_HEAT);
 		} else {
             Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_OFF_HEAT);
 		}
-		if (pbm[i].PCA9534_ON_Heat_2 == 1) {
+		if (pbm[i].PCA9534_ON_Heat_2 == ENABLE) {
             Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, PBM_ON_HEAT);
 		} else {
             Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, PBM_OFF_HEAT);
