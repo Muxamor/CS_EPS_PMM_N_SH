@@ -566,11 +566,11 @@ void SetupInterrupt(void) {
 	/**********************************************/
 
 	/* UART5 interrupt Init */
-	NVIC_SetPriority(UART5_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 14, 0)); //Set priority №14 from 0..15
-	LL_USART_EnableIT_RXNE(UART5); //Enable Interrupt RX buff no empty 
+	//For Norbi not need yat NVIC_SetPriority(UART5_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 14, 0)); //Set priority №14 from 0..15
+    //For Norbi not need yat LL_USART_EnableIT_RXNE(UART5); //Enable Interrupt RX buff no empty
 	//LL_USART_DisableIT_RXNE(UART5);
 	//LL_USART_DisableIT_ERROR(USART5);
-	NVIC_EnableIRQ(UART5_IRQn);
+    //For Norbi not need yat NVIC_EnableIRQ(UART5_IRQn);
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
 
