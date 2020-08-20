@@ -150,8 +150,9 @@ int main(void){
 		CAN_DeInit_eps(CAN2);
 	}
 
-	printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 
+
+	//Infinity Loop
 	while(1){
 
         LL_IWDG_ReloadCounter(IWDG);
@@ -160,20 +161,17 @@ int main(void){
             PMM_Sync_and_Save_Settings_A_P_CPU(eps_param);
         }
 
+        //ReInit EPS
+        PMM_ReInit_EPS( eps_param );
+
         LL_IWDG_ReloadCounter(IWDG);
         //ActiveCPU branch
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
-
-		    //TODO add Reinitialisation after time gap.
 
             PMM_Get_Telemetry(pmm_ptr);
             PDM_Get_Telemetry(pdm_ptr);
             PAM_Get_Telemetry(pam_ptr);
             PBM_Get_Telemetry(pbm_mas);
-
-           // if( pmm_ptr->Deploy_stage >=1 ){
-                PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
-           // }
 
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
@@ -183,22 +181,26 @@ int main(void){
                     PMM_Deploy( eps_param );
                 }
 
-                //Check CAN ports
-                PMM_Damage_Check_CAN_m_b(eps_param);
+                //CAN ports power off protection. ( In combat mode start protection only out from the container )
+                if( pmm_ptr->Deploy_stage >=1 ){
+                	PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
+                }
 
                 //TODO сделать проверку уровня заряда батарей ( и дергать пин BAT_LOW) если свзи с PBMs нету. НАпряжение брать с VBAT1 или VBAT2
                 //TODO need oFF and on if we reached edge PBM_NORMAL_ENERGY_EDGE  PBM_LOW_ENERGY_EDGE  PBM_ZERO_ENERGY_EDGE (как сохронять если один из БРК выключен ? )
-
                 //Protection for off all BRK //TODO move to functin // Добавить проверку флага что батареи не разряжены
                 if( pmm_ptr->Deploy_stage > 6 && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE )
                     && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)){
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
                     PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
+                    CAN_Var4_fill(eps_param);
                 }
 
             // EPS_SERVICE_MODE
             }else{
-                PMM_Start_Time_Check_CAN = SysTick_Counter;
+
+                //All CAN ports power off protection.
+                PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
             }
 
             //In case when Backup CPU is Active and Main CPU reboot and findout active CPU
@@ -207,10 +209,13 @@ int main(void){
                 UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
             }
 
+            //Check CAN ports
+            PMM_Damage_Check_CAN_m_b(eps_param);
+
             //Check Errors UART ports and get reboot counter passive CPU.
             PMM_Damage_Check_UART_m_b(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
-            //Check and parsing command from CAN
+            //Parsing command from CAN
             if(CAN_cmd_mask_status != 0){
                 CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
             }
@@ -242,15 +247,10 @@ int main(void){
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
             }else{
-               // PMM_Start_Time_Check_CAN = SysTick_Counter;
+
             }
-
-
 		}
-
 	}
-
-
 }
 
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
@@ -258,6 +258,7 @@ int main(void){
 //	FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
+//printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
