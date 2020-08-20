@@ -139,7 +139,7 @@ int main(void){
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
         PMM_Start_Time_Check_CAN = SysTick_Counter;
-		//LL_mDelay(20); //Delay for startup power supply
+
 
     //Initialization CAN for passive CPU
 	}else{
@@ -165,6 +165,7 @@ int main(void){
         PMM_ReInit_EPS( eps_param );
 
         LL_IWDG_ReloadCounter(IWDG);
+
         //ActiveCPU branch
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
 
@@ -186,19 +187,16 @@ int main(void){
                 	PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
                 }
 
-                //TODO сделать проверку уровня заряда батарей ( и дергать пин BAT_LOW) если свзи с PBMs нету. НАпряжение брать с VBAT1 или VBAT2
-                //TODO need oFF and on if we reached edge PBM_NORMAL_ENERGY_EDGE  PBM_LOW_ENERGY_EDGE  PBM_ZERO_ENERGY_EDGE (как сохронять если один из БРК выключен ? )
-                //Protection for off all BRK //TODO move to functin // Добавить проверку флага что батареи не разряжены
-                if( pmm_ptr->Deploy_stage > 6 && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE )
-                    && ( pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)){
-                    PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
-                    PDM_Set_state_PWR_CH( pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
-                    CAN_Var4_fill(eps_param);
+
+                if( pmm_ptr->Deploy_stage > 6){
+                    //Disable PWR SubSystem if reach Zero energy level
+                    PMM_ZERO_Energy_PWR_OFF_SubSystem( eps_param );
+                    //Protection for off all BRC
+                    PMM_Portecion_PWR_OFF_BRC_m_b( eps_param );
                 }
 
             // EPS_SERVICE_MODE
             }else{
-
                 //All CAN ports power off protection.
                 PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
             }

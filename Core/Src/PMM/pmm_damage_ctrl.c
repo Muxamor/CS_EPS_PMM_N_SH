@@ -6,7 +6,10 @@
 #include "PMM/pmm_ctrl.h"
 #include "PMM/pmm_init.h"
 #include "PDM/pdm_init.h"
+#include "PDM/pdm_ctrl.h"
 #include "PAM/pam_init.h"
+#include "PAM/pam_ctrl.h"
+#include "PBM/pbm_config.h"
 #include "PBM/pbm_init.h"
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
@@ -161,17 +164,34 @@ ErrorStatus PMM_Damage_Check_UART_m_b( _UART_EPS_COMM *UART_Main_eps_comm, _UART
 
 
 /** @brief CANmain and CANbackup ports power off protection.
-           Enable power CANmain and CANbackup if all waspower off.
+           Enable power CANmain and CANbackup if all is power off.
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
 */
-void PMM_Portecion_PWR_OFF_CAN_m_b( _EPS_Param eps_p ) {
+void PMM_Portecion_PWR_OFF_CAN_m_b( _EPS_Param eps_p ){
 
     if( eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE && eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
         PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
         PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
         CAN_Var4_fill(eps_p);
     }
+}
+
+
+/** @brief BRC main  and backup ports power off protection.
+           Enable power BRCmain and BRCbackup if all is power off.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval None.
+*/
+void PMM_Portecion_PWR_OFF_BRC_m_b( _EPS_Param eps_p ){
+    //TODO Добавить проверку флага что батареи не заряжены в будущем (после первого полета).
+    if( ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE ) &&
+            ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)){
+        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
+        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
+        CAN_Var4_fill(eps_p);
+    }
+
 }
 
 /** @brief ReInit EPS (PMM, PAM, PDM, PBM)
@@ -205,4 +225,33 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
 
         start_time = SysTick_Counter;
     }
+}
+
+
+
+/** @brief  Disable power subsystem if we reached ZERO Energy level.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval None.
+*/
+void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
+
+    uint8_t num_pwr_ch;
+
+    if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_ZERO_ENERGY_EDGE )  &&  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_ZERO_ENERGY_EDGE ){
+
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, DISABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
+
+        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+
+        //Disable TM SP power channels.
+        for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
+            PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, num_pwr_ch, DISABLE);
+        }
+
+    }
+
 }
