@@ -252,6 +252,7 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
             PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, num_pwr_ch, DISABLE);
         }
 
+        CAN_Var4_fill(eps_p);
     }
 
 }
