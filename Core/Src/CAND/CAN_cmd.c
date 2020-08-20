@@ -409,10 +409,6 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset to default settings\n",  CAN_Reset_to_default_offset);
                         #endif
                         eps_p.eps_pmm_ptr->Deploy_stage = 0;
-                        //eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_in = DISABLE;
-                        //eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_out = DISABLE;
-                        //eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF_in = DISABLE;
-                        //eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF_out = DISABLE;
                         eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1 = DISABLE;
                         eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF2 = DISABLE;
                         eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF1 = DISABLE;
