@@ -18,7 +18,6 @@
 #include "uart_eps_comm.h"
 
 
-
 uint32_t PMM_Start_Time_Check_CAN;
 uint32_t PMM_Start_Time_Check_UART_PassiveCPU;
 /** @brief  Check Damage CAN port ( Time interval check = PMM_CAN_Exch_Data_Check_Time_Gap )
@@ -49,11 +48,19 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
                         ( (eps_p.eps_pmm_ptr->Error_CAN_port_B == ERROR) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE) ) ){
 
             if( eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN == 0 ){
+                CAN_DeInit_eps(CAN1);
+                CAN_DeInit_eps(CAN2);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, DISABLE);
-                LL_mDelay(50);
+                PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, DISABLE);
+                PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, DISABLE);
+                LL_mDelay(80);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
+                PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
+                PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
+                CAN_init_eps(CAN1);
+                CAN_init_eps(CAN2);
                 eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 1;
 
             }else{
@@ -83,7 +90,6 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
     }
 
 }
-
 
 
 
@@ -168,6 +174,7 @@ ErrorStatus PMM_Damage_Check_UART_m_b_ActiveCPU( _UART_EPS_COMM *UART_Main_eps_c
     return SUCCESS;
 }
 
+
 /** @brief  Uart ports EPS damage control for Passive CPU
 	@param  *UART_Main_eps_comm - pointer to Main UART port struct with get data.
     @param  *UART_Backup_eps_comm - pointer to Backup UART port struct with get data.
@@ -176,7 +183,7 @@ ErrorStatus PMM_Damage_Check_UART_m_b_ActiveCPU( _UART_EPS_COMM *UART_Main_eps_c
 */
 void PMM_Damage_Check_UART_m_b_PassiveCPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p ){
 
-    if( (( uint32_t ) (SysTick_Counter - PMM_Start_Time_Check_UART_PassiveCPU)) > PMM_UART_Exch_Data_Gap ){
+    if( ( (uint32_t)(SysTick_Counter - PMM_Start_Time_Check_UART_PassiveCPU) ) > (uint32_t)PMM_UART_Exch_Data_Gap ){
 
         if( UART_Main_eps_comm->data_exchange_flag == 0 ){
             eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
@@ -190,9 +197,13 @@ void PMM_Damage_Check_UART_m_b_PassiveCPU( _UART_EPS_COMM *UART_Main_eps_comm, _
             eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
         }
 
+        UART_Main_eps_comm->data_exchange_flag = 0;
+        UART_Backup_eps_comm->data_exchange_flag = 0;
+
         PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
     }
 }
+
 
 /** @brief CANmain and CANbackup ports power off protection.
            Enable power CANmain and CANbackup if all is power off.
@@ -225,6 +236,7 @@ void PMM_Portecion_PWR_OFF_BRC_m_b( _EPS_Param eps_p ){
 
 }
 
+
 /** @brief ReInit EPS (PMM, PAM, PDM, PBM)
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
@@ -243,7 +255,7 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
 
             PDM_init(eps_p.eps_pdm_ptr);
             PAM_init(eps_p.eps_pam_ptr);
-            PBM_Init(eps_p.eps_pbm_ptr);
+            PBM_Re_Init(eps_p.eps_pbm_ptr);
 
         //Branch for Passive CPU
         }else{
@@ -258,7 +270,6 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
         start_time = SysTick_Counter;
     }
 }
-
 
 
 /** @brief  Disable power subsystem if we reached ZERO Energy level.

@@ -119,7 +119,7 @@ void LPUART1_IRQHandler(void){
 				
 				UART_M_eps_comm->size_recv_pack++;
 
-			}else{ // if the address did not match finish get parsel.
+			}else{ // if the address did not match finish get a parcel.
 				UART_M_eps_comm->permit_recv_pack_flag = 0;
 				UART_M_eps_comm->size_recv_pack = 0;
 			}
