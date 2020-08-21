@@ -1196,10 +1196,11 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 
 
-//	    for( i = 0, j = 0x71; i < 21; i++, j++ ){
+//	    for( i = 0, j = 0x71; i < 20; i++, j++ ){
 //	        CAN_IVar5_telemetry.CAN_data_array3[i] = j;
 //	    }
 //
+    CAN_IVar5_telemetry.CAN_EPS__Mode                                   = eps_p.eps_pmm_ptr->EPS_Mode;
 
     CAN_IVar5_telemetry.CAN_Version_FW                                  = eps_p.eps_pmm_ptr->Version_FW;
 
@@ -1532,9 +1533,11 @@ void CAN_Var5_fill_telemetry_const(void){
     CAN_IVar5_telemetry.CAN_PDM_sensor3                                 =	0x6F;
     CAN_IVar5_telemetry.CAN_PDM_sensor4                                 =	0x70;
 
-    for( i = 0, j = 0x71; i < 21; i++, j++ ){
+    for( i = 0, j = 0x71; i < 20; i++, j++ ){
         CAN_IVar5_telemetry.CAN_data_array3[i] = j;
     }
+
+    CAN_IVar5_telemetry.CAN_EPS__Mode                                   =   0x85;
 
     CAN_IVar5_telemetry.CAN_Version_FW                                  =   0x8687;
 

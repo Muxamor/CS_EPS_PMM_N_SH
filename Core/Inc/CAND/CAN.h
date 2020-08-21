@@ -419,11 +419,12 @@ struct CAN_IVar5{
     uint8_t  CAN_PDM_sensor2;                                       //+327     |  const = 0x6E               |   PDM датчик 2
     uint8_t  CAN_PDM_sensor3;                                       //+328     |  const = 0x6F               |   PDM датчик 3
     uint8_t  CAN_PDM_sensor4;                                       //+329     |  const = 0x70               |   PDM датчик 4
-    uint8_t  CAN_data_array3[21];                                   //+330     |  const = 0x717273747576     |   Массив 3 данных о работе СЭС
+    uint8_t  CAN_data_array3[20];                                   //+330     |  const = 0x717273747576     |   Массив 3 данных о работе СЭС
                                                                                //           7778797A7B7C
                                                                                //           7D7E7F808182
-                                                                               //           838485
+                                                                               //           8384
 
+    uint8_t  CAN_EPS__Mode;                                         //+350     |  const = 0x85                 |   Режим работы EPS
     uint16_t CAN_Version_FW;                                        //+351     |  const = 0x8687               |   Firmware version
     uint16_t CAN_Channel1_current_average_10s;                      //+353     |  const = 0x8889               |   Ток канал 1 усреднение 10s
     uint16_t CAN_Channel2_current_average_10s;                      //+355     |  const = 0x8A8B               |   Ток канал 2 усреднение 10s
