@@ -146,6 +146,7 @@ void LPUART1_IRQHandler(void){
 			//We received the package
 			if( UART_M_eps_comm->size_recv_pack >= UART_M_eps_comm->expected_size_recv_pack ){
 				//NVIC_DisableIRQ(LPUART1_IRQn);
+                UART_M_eps_comm->data_exchange_flag = 1;
 				UART_M_eps_comm->stop_recv_pack_flag = 1;
 			}
 
@@ -229,6 +230,7 @@ void USART3_IRQHandler(void){
 			//We received the package
 			if( UART_B_eps_comm->size_recv_pack >= UART_B_eps_comm->expected_size_recv_pack ){
 				//NVIC_DisableIRQ( USART3_IRQn );
+                UART_B_eps_comm->data_exchange_flag = 1;
 				UART_B_eps_comm->stop_recv_pack_flag = 1;
 			}
 

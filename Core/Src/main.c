@@ -148,6 +148,7 @@ int main(void){
         PWM_DeInit_Ch3_Ch4();
 		CAN_DeInit_eps(CAN1);
 		CAN_DeInit_eps(CAN2);
+        PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 	}
 
 
@@ -197,6 +198,7 @@ int main(void){
 
             // EPS_SERVICE_MODE
             }else{
+                //PMM_Start_Time_Check_CAN = SysTick_Counter;
                 //All CAN ports power off protection.
                 PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
             }
@@ -211,7 +213,7 @@ int main(void){
             PMM_Damage_Check_CAN_m_b(eps_param);
 
             //Check Errors UART ports and get reboot counter passive CPU.
-            PMM_Damage_Check_UART_m_b(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+            PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
             //Parsing command from CAN
             if(CAN_cmd_mask_status != 0){
@@ -241,10 +243,19 @@ int main(void){
                 UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param);
             }
 
+
+
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
+                PMM_Damage_Check_UART_m_b_PassiveCPU( UART_M_eps_comm, UART_B_eps_comm, eps_param );
+
+                if( pmm_ptr->Error_UART_port_M == ERROR && pmm_ptr->Error_UART_port_B == ERROR  ){
+                    void PMM_Take_Control_EPS_PassiveCPU( _EPS_Param eps_p );
+                }
+
             }else{
+                PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 
             }
 		}

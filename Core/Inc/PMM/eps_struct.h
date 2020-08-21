@@ -15,6 +15,7 @@ extern "C" {
 typedef struct{
 
 	uint8_t Req_SW_Active_CPU :1; // 0 - no request, 1 - Received a request to switch the active CPU
+	uint8_t Was_Reboot_PWR_CAN:1;
 	uint8_t :7;
 
 	uint8_t Set_Active_CPU; // Need set active  0x00-Main CPU, 0x01- Backup CPU 

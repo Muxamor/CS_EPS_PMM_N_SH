@@ -60,7 +60,8 @@ typedef struct{
 	uint8_t stop_recv_pack_flag 	  :1;
 	uint8_t recv_pack_timeout_flag 	  :1;
 	uint8_t waiting_answer_flag 	  :1; 
-	uint8_t :5;
+	uint8_t data_exchange_flag        :1;
+	uint8_t :4;
 
 	uint8_t error_port_counter;
 	uint8_t Alignment_structure1; //Alignment

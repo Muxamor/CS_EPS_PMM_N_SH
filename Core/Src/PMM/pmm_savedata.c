@@ -307,7 +307,7 @@ ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
             if((eps_p.eps_pmm_ptr->Active_CPU == CPUmain_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (eps_p.eps_pmm_ptr->Active_CPU == CPUbackup_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup)){
 
                 //Check Errors UART ports and get reboot counter passive CPU.
-                PMM_Damage_Check_UART_m_b(UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_p);
 
                 if( eps_p.eps_pmm_ptr->PMM_save_conf_flag == SET ){
                     error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);

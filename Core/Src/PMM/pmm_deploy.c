@@ -54,13 +54,13 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
             if(error_status == SUCCESS ){
                 if( value_deploy_exit_LSW_1 == 0){
-                    Counter_deploy_exit_LSW_1  ++;
+                    Counter_deploy_exit_LSW_1++;
                 }else{
                     Counter_deploy_exit_LSW_1 = 0;
                 }
 
                 if( value_deploy_exit_LSW_2 == 0){
-                    Counter_deploy_exit_LSW_2 ++;
+                    Counter_deploy_exit_LSW_2++;
                 }else{
                     Counter_deploy_exit_LSW_2 = 0;
                 }
@@ -89,6 +89,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
                 eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+                //Fill Var4
+                CAN_Var4_fill(eps_p);
             }
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
@@ -100,6 +102,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
                 eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+                //Fill Var4
+                CAN_Var4_fill(eps_p);
             }
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }
@@ -114,6 +118,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
             error_status += PAM_init( eps_p.eps_pam_ptr );
             error_status += PAM_Get_Telemetry( eps_p.eps_pam_ptr );
+            CAN_Var4_fill(eps_p);
         }
 
         //Checking quantity error input power monitors on PAM
@@ -137,9 +142,10 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
                 eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
                 Deploy_start_time_delay = SysTick_Counter;
                 eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
             }else{
                 eps_p.eps_pmm_ptr->Deploy_stage = 1;
-            };
+            }
         }
 
     // Deploy stage 2 - waiting timeout before deploy

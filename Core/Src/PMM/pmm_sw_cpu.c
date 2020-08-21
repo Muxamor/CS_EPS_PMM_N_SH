@@ -3,7 +3,9 @@
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
 #include "stm32l4xx_ll_iwdg.h"
+#include "stm32l4xx_ll_tim.h"
 #include "TCA9539.h"
+#include "tim_pwm.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "CAND/CAN.h"
@@ -249,6 +251,23 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 	return error_status;
 }
 
+
+/** @brief  Take control passive CPU.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
+void PMM_Take_Control_EPS_PassiveCPU( _EPS_Param eps_p ){
+
+    //Take control.
+    PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
+    PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
+    eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = ENABLE;
+
+    PMM_Set_mode_Active_CPU( eps_p );
+
+}
+
+
 /** @brief  Set Active CPU mode if we get or sent request from/to another CPU
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N
@@ -263,6 +282,11 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
 
     eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
+
+    //eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
+    //eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
+    eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
+    eps_p.eps_pmm_ptr->Error_CAN_port_B  = SUCCESS;
 
     CAN_Var4_fill(eps_p);
 
@@ -296,7 +320,13 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
 		eps_p.eps_pmm_ptr->Active_CPU = CPUmain_Active;
 	}
 
-	CAN_DeInit_eps(CAN1);
+    eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
+    eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
+    eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
+    eps_p.eps_pmm_ptr->Error_CAN_port_B  = SUCCESS;
+
+
+    CAN_DeInit_eps(CAN1);
 	CAN_DeInit_eps(CAN2);
 
     I2C4_DeInit();
@@ -307,6 +337,9 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
     PMM_RT_FL_EPS2_Reset_pin();
 
 	PMM_init( eps_p.eps_pmm_ptr );
+
+    PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
+
 	//eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; // Wiil be command (SAVE PMM and ..... ) from active CPU   
 }
 
