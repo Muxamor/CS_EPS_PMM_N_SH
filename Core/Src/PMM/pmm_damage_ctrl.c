@@ -27,66 +27,61 @@ uint32_t PMM_Start_Time_Check_UART_PassiveCPU;
 */
 void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
 
-    if( (eps_p.eps_pmm_ptr->EPS_Mode == EPS_COMBAT_MODE) && ( eps_p.eps_pmm_ptr->Deploy_stage > 6) ){
+    //Check time interval
+    if( ((uint32_t)(SysTick_Counter - PMM_Start_Time_Check_CAN) ) > ((uint32_t)PMM_CAN_Exch_Data_Check_Time_Gap) ){
 
-    	//Check time interval
-        if( ((uint32_t)(SysTick_Counter - PMM_Start_Time_Check_CAN) ) > ((uint32_t)PMM_CAN_Exch_Data_Check_Time_Gap) ){
+        if( (CAN1_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == ENABLE) ){
+            eps_p.eps_pmm_ptr->Error_CAN_port_M = ERROR;
+        }else{
+            eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
+        }
 
-            if( (CAN1_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == ENABLE) ){
-                eps_p.eps_pmm_ptr->Error_CAN_port_M = ERROR;
-            }else{
-                eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
-            }
+        if( ( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == ENABLE) ) ||
+                ( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE) ) ){
+            eps_p.eps_pmm_ptr->Error_CAN_port_B = ERROR;
+        }else{
+            eps_p.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
+        }
 
-            if( ( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == ENABLE) ) ||
-                    ( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE) ) ){
-                eps_p.eps_pmm_ptr->Error_CAN_port_B = ERROR;
-            }else{
-                eps_p.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
-            }
-
-            //Reboot power CAN (try to repair) and switch Active CPU
-            if( ( (eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR) && (eps_p.eps_pmm_ptr->Error_CAN_port_B == ERROR) ) ||
+        //Reboot power CAN (try to repair) and switch Active CPU
+        if( ( (eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR) && (eps_p.eps_pmm_ptr->Error_CAN_port_B == ERROR) ) ||
                     ( (eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == DISABLE) ) ||
                         ( (eps_p.eps_pmm_ptr->Error_CAN_port_B == ERROR) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE) ) ){
 
-                if( eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN == 0 ){
-                    PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
-                    PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, DISABLE);
-                    LL_mDelay(50);
-                    PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
-                    PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
-                    eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 1;
+            if( eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN == 0 ){
+                PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
+                PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, DISABLE);
+                LL_mDelay(50);
+                PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
+                PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
+                eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 1;
 
-                }else{
-                    //Enable passive CPU if disabled
-                    if (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
-                        PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-                        PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-                        eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
-                    }
-
-                    //Switch active CPU because CANm and CANb is ERROR
-                    if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
-                        eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup_Active;
-
-                    }else if(eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup){
-                        eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
-                    }
-                    eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
-
-                    eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 0;
+            }else{
+                //Enable passive CPU if disabled
+                if (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
+                    PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+                    PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                    eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
                 }
-            }
 
-            CAN1_exchange_data_flag = 0;
-            CAN2_exchange_data_flag = 0;
-            PMM_Start_Time_Check_CAN = SysTick_Counter;
+                //Switch active CPU because CANm and CANb is ERROR
+                if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
+                    eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup_Active;
+
+                }else if(eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup){
+                    eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
+                }
+                eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
+
+                eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 0;
+            }
         }
 
-    }else{
+        CAN1_exchange_data_flag = 0;
+        CAN2_exchange_data_flag = 0;
         PMM_Start_Time_Check_CAN = SysTick_Counter;
     }
+
 }
 
 
