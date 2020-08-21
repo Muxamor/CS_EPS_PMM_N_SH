@@ -7,7 +7,6 @@
 #include "CAND/CAN.h"
 #include "PDM/pdm_init.h"
 #include "PDM/pdm.h"
-#include "PDM/pdm_ctrl.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_sw_cpu.h"
@@ -245,20 +244,20 @@ int main(void){
                 UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param);
             }
 
-
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
                 PMM_Damage_Check_UART_m_b_PassiveCPU( UART_M_eps_comm, UART_B_eps_comm, eps_param );
 
                 if( (pmm_ptr->Error_UART_port_M == ERROR) && (pmm_ptr->Error_UART_port_B == ERROR) ){
-                    void PMM_Take_Control_EPS_PassiveCPU( _EPS_Param eps_p );
+                    PMM_Take_Control_EPS_PassiveCPU( eps_param );
                 }
 
             }else{
                 PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 
             }
+
 		}
 	}
 }

@@ -258,11 +258,12 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 */
 void PMM_Take_Control_EPS_PassiveCPU( _EPS_Param eps_p ){
 
-    //Take control.
+    //Disabel power fo real active CPU
     PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
     PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
     eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = ENABLE;
 
+    // Take control.
     PMM_Set_mode_Active_CPU( eps_p );
 
 }
@@ -294,8 +295,8 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
         CAN_Var5_fill_telemetry_const();
     }
 
-    PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
     I2C4_Init();
+    PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
 
 	PMM_init( eps_p.eps_pmm_ptr );
 
