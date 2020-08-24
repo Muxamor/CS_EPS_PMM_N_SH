@@ -366,9 +366,11 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 
 	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)){
 
-		if(pbm[PBM_number].PCA9534_ON_Heat_1 != State){
+		if( pbm[PBM_number].PCA9534_ON_Heat_1 != State ){
 			pbm[PBM_number].PBM_save_conf_flag = 1;
 		}
+
+        pbm[PBM_number].PCA9534_ON_Heat_1 = State;
 
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 
@@ -383,7 +385,7 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
             }
 
             if (Error == SUCCESS) {
-                Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+                Error =  PCA9534_read_input_pin(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00, &data8);
             }
 
 			if (Error != SUCCESS) {
@@ -393,8 +395,8 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 		}
 
 		if (Error == SUCCESS) {
-			pbm[PBM_number].PCA9534_ON_Heat_1 = (uint8_t) (data8 & PCA9534_IO_P00);
-			if (pbm[PBM_number].PCA9534_ON_Heat_1 == State) {
+
+			if (pbm[PBM_number].PCA9534_ON_Heat_1 == data8 ) {
 				pbm[PBM_number].Error_Heat_1 = SUCCESS;
 			} else {
 				Error_count = Error_count + 1;
@@ -419,6 +421,8 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 			pbm[PBM_number].PBM_save_conf_flag = 1;
 		}
 
+        pbm[PBM_number].PCA9534_ON_Heat_2 = State;
+
 		while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 			if (State == PBM_ON_HEAT) {
 				Error = PCA9534_Set_output_pin(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05);
@@ -431,7 +435,7 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
             }
 
             if (Error == SUCCESS) {
-				Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+                Error =  PCA9534_read_input_pin(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P05, &data8);
 			}
 
 			if (Error != 0) {
@@ -441,8 +445,7 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 		}
 
 		if (Error == SUCCESS) {
-			pbm[PBM_number].PCA9534_ON_Heat_2 = (uint8_t) ((data8 & PCA9534_IO_P05) >> 5);
-			if (pbm[PBM_number].PCA9534_ON_Heat_2 == State) {
+			if (pbm[PBM_number].PCA9534_ON_Heat_2 == data8) {
 				pbm[PBM_number].Error_Heat_2 = SUCCESS;
 			} else {
 				Error_count = Error_count + 1;
