@@ -82,6 +82,8 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
 
                 eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 0;
             }
+        }else{
+            eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 0;
         }
 
         CAN1_exchange_data_flag = 0;
