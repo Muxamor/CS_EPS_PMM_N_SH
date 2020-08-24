@@ -187,17 +187,14 @@ int main(void){
                 	PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
                 }
 
-
                 if( pmm_ptr->Deploy_stage > 6){
+                    //Check CAN ports
+                    PMM_Damage_Check_CAN_m_b(eps_param);
+
                     //Disable PWR SubSystem if reach Zero energy level
                     PMM_ZERO_Energy_PWR_OFF_SubSystem( eps_param );
                     //Protection for off all BRC
                     PMM_Portecion_PWR_OFF_BRC_m_b( eps_param );
-                }
-
-                if( pmm_ptr->Deploy_stage > 6 ){
-                    //Check CAN ports
-                    PMM_Damage_Check_CAN_m_b(eps_param);
                 }
 
             // EPS_SERVICE_MODE
@@ -249,7 +246,9 @@ int main(void){
 
                 PMM_Damage_Check_UART_m_b_PassiveCPU( UART_M_eps_comm, UART_B_eps_comm, eps_param );
 
-                if( (pmm_ptr->Error_UART_port_M == ERROR) && (pmm_ptr->Error_UART_port_B == ERROR) ){
+                // Take control Only for BackupCPU.
+                if( (pmm_ptr->Error_UART_port_M == ERROR) && (pmm_ptr->Error_UART_port_B == ERROR) && ( pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
+                    LL_IWDG_ReloadCounter(IWDG);
                     PMM_Take_Control_EPS_PassiveCPU( eps_param );
                 }
 

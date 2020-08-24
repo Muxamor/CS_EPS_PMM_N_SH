@@ -258,14 +258,17 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 */
 void PMM_Take_Control_EPS_PassiveCPU( _EPS_Param eps_p ){
 
-    //Disabel power fo real active CPU
+    //Disable power fo real active CPU
+    PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
     PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
     PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
     eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = ENABLE;
 
+    //Delay fo disable power at Active CPU
+    LL_mDelay(750);
+
     // Take control.
     PMM_Set_mode_Active_CPU( eps_p );
-
 }
 
 
@@ -289,12 +292,6 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
     eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
     eps_p.eps_pmm_ptr->Error_CAN_port_B  = SUCCESS;
 
-    CAN_Var4_fill(eps_p);
-
-    if(eps_p.eps_pmm_ptr ->CAN_constatnt_mode == ENABLE ){
-        CAN_Var5_fill_telemetry_const();
-    }
-
     I2C4_Init();
     PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
 
@@ -303,6 +300,12 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
 	CAN_init_eps(CAN1);
 	CAN_init_eps(CAN2);
 	CAN_RegisterAllVars();
+
+	if(eps_p.eps_pmm_ptr ->CAN_constatnt_mode == ENABLE ){
+		CAN_Var5_fill_telemetry_const();
+    }
+
+    CAN_Var4_fill(eps_p);
 
     PMM_Start_Time_Check_CAN = SysTick_Counter;
 
@@ -341,7 +344,7 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
 
     PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 
-	//eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; // Wiil be command (SAVE PMM and ..... ) from active CPU   
+	//eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; // Will be command (SAVE PMM and ..... ) from active CPU
 }
 
 

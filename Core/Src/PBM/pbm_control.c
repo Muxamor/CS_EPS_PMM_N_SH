@@ -395,7 +395,6 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 		}
 
 		if (Error == SUCCESS) {
-
 			if (pbm[PBM_number].PCA9534_ON_Heat_1 == data8 ) {
 				pbm[PBM_number].Error_Heat_1 = SUCCESS;
 			} else {
