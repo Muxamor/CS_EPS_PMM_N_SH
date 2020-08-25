@@ -7,12 +7,13 @@ extern "C" {
 #endif
 
 #include "PBM/pbm_struct.h"
+#include "PMM/pmm_struct.h"
 
-ErrorStatus PBM_Init(_PBM pbm[]);
+ErrorStatus PBM_Init( _PBM pbm[] );
 
-ErrorStatus PBM_Re_Init(_PBM pbm[]);
+ErrorStatus PBM_Re_Init( _PBM pbm[], _PMM *pmm_ptr );
 
-ErrorStatus PBM_TempSensorInit(_PBM pbm[], uint8_t PBM_number);
+ErrorStatus PBM_TempSensorInit( _PBM pbm[], uint8_t PBM_number );
 
 #ifdef __cplusplus
 }

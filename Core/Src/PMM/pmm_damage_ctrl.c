@@ -257,7 +257,7 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
 
             PDM_init(eps_p.eps_pdm_ptr);
             PAM_init(eps_p.eps_pam_ptr);
-            PBM_Re_Init(eps_p.eps_pbm_ptr);
+            PBM_Re_Init(eps_p.eps_pbm_ptr, eps_p.eps_pmm_ptr);
 
         //Branch for Passive CPU
         }else{

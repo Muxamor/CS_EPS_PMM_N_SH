@@ -4,6 +4,7 @@
 #include "PBM/pbm_init_IC.h"
 #include "PBM/pbm_init.h"
 #include "PBM/pbm_control.h"
+#include "PMM/pmm_struct.h"
 #include "Error_Handler.h"
 
 /** @brief	Initialize TMP1075 sensor for selected PBM.
@@ -72,7 +73,7 @@ ErrorStatus PBM_TempSensorInit(_PBM pbm[], uint8_t PBM_number) {
     @param 	pbm - structure data for all PBM modules.
     @retval 	none
  */
-ErrorStatus PBM_Init(_PBM pbm[]) {
+ErrorStatus PBM_Init( _PBM pbm[] ) {
 
 	uint8_t i = 0;
 	uint8_t Error = SUCCESS;
@@ -95,6 +96,7 @@ ErrorStatus PBM_Init(_PBM pbm[]) {
             Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, PBM_OFF_HEAT);
 		}
         Error += PBM_TempSensorInit(pbm, i);
+
 	}
 
     if( Error != SUCCESS){
@@ -111,7 +113,7 @@ ErrorStatus PBM_Init(_PBM pbm[]) {
     @param 	pbm - structure data for all PBM modules.
     @retval none
  */
-ErrorStatus PBM_Re_Init(_PBM pbm[]) {
+ErrorStatus PBM_Re_Init(_PBM pbm[], _PMM *pmm_ptr) {
 
 	uint8_t i = 0;
 	int8_t Error = SUCCESS;
@@ -123,19 +125,22 @@ ErrorStatus PBM_Re_Init(_PBM pbm[]) {
         Error += PBM_SetStateDischargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, pbm[i].Branch_1_DchgEnableBit);
         Error += PBM_SetStateDischargeBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, pbm[i].Branch_2_DchgEnableBit);
 
-		if (pbm[i].PCA9534_ON_Heat_1 == 1) {
-		    Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_ON_HEAT);
-		} else {
-		    Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_OFF_HEAT);
-		}
-		if (pbm[i].PCA9534_ON_Heat_2 == 1) {
-		    Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, PBM_ON_HEAT);
-		} else {
-		    Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, PBM_OFF_HEAT);
-		}
-		if (pbm[i].PCA9534_TempSens_State_1 == 0 && pbm[i].PCA9534_TempSens_State_2 == 0) {
-		    Error += PBM_TempSensorInit(pbm, i);
-		}
+        if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
+
+            if( pbm[i].PCA9534_ON_Heat_1 == 1 ){
+                Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_ON_HEAT);
+            }else{
+                Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_1, PBM_OFF_HEAT);
+            }
+            if( pbm[i].PCA9534_ON_Heat_2 == 1 ){
+                Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, PBM_ON_HEAT);
+            }else{
+                Error += PBM_SetStateHeatBranch(PBM_I2C_PORT, pbm, i, PBM_BRANCH_2, PBM_OFF_HEAT);
+            }
+            if( pbm[i].PCA9534_TempSens_State_1 == 0 && pbm[i].PCA9534_TempSens_State_2 == 0 ){
+                Error += PBM_TempSensorInit(pbm, i);
+            }
+        }
 	}
 
     if( Error != SUCCESS){
