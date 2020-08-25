@@ -23,8 +23,7 @@
 
 
 /*//TODO
-4. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ?
-
+1. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ?
 **********************************************************/
 
 //extern uint32_t SysTick_Counter;
@@ -113,7 +112,6 @@ int main(void){
     pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
-
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
 
@@ -133,12 +131,10 @@ int main(void){
             CAN_Var5_fill_telemetry_const();
         }
 
-
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
         PMM_Start_Time_Check_CAN = SysTick_Counter;
-
 
     //Initialization CAN for passive CPU
 	}else{
