@@ -107,6 +107,7 @@ void LPUART1_IRQHandler(void){
 
 			UART_M_eps_comm->stop_recv_pack_flag = 0;
 			UART_M_eps_comm->permit_recv_pack_flag = 1;
+            UART_M_eps_comm->get_pack_timer = SysTick_Counter;
 			UART_M_eps_comm->expected_size_recv_pack = 8; // 1(preabmle)+1(destination address)+1(source address)+1(package tag)+2(data size)+2(crc)
 			UART_M_eps_comm->size_recv_pack++;
 
@@ -191,6 +192,7 @@ void USART3_IRQHandler(void){
 
 			UART_B_eps_comm->stop_recv_pack_flag = 0;
 			UART_B_eps_comm->permit_recv_pack_flag = 1;
+            UART_B_eps_comm->get_pack_timer = SysTick_Counter;
 			UART_B_eps_comm->expected_size_recv_pack = 8; // 1(preabmle)+1(destination address)+1(source address)+1(package tag)+2(data size)+2(crc)
 			UART_B_eps_comm->size_recv_pack++;
 

@@ -46,6 +46,8 @@ extern "C" {
 
 #define UART_EPS_ID_NFS_Prep_Take_CTRL 		0x01
 
+#define UART_EPS_GET_PACK_TIMEOUT 		    10 // in milliseconds
+
 typedef struct{
 
 	USART_TypeDef* USARTx;
@@ -66,6 +68,8 @@ typedef struct{
 	uint8_t error_port_counter;
 	uint8_t Alignment_structure1; //Alignment
 
+	uint32_t get_pack_timer;
+
 }_UART_EPS_COMM;
 
 
@@ -80,6 +84,7 @@ ErrorStatus UART_EPS_Pars_Get_Package( _UART_EPS_COMM *UART_eps_comm, _EPS_Param
 ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p );
 ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p );
 ErrorStatus UART_EPS_Send_ACK ( _UART_EPS_COMM *UART_eps_comm , uint8_t send_data[], uint16_t size_data );
+ErrorStatus UART_EPS_Check_TimeOut_Receive( _UART_EPS_COMM *UART_eps_comm );
 
 #ifdef __cplusplus
 }

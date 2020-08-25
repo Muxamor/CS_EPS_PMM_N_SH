@@ -206,6 +206,8 @@ int main(void){
 
             //In case when Backup CPU is Active and Main CPU reboot and findout active CPU
             if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
+                UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
+                UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
                 UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
                 UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
             }
@@ -237,6 +239,8 @@ int main(void){
 
             Passive_CPU_start_time_wait_data = SysTick_Counter;
 		    while(( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
+                UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
+                UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
                 UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param);
                 UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param);
             }

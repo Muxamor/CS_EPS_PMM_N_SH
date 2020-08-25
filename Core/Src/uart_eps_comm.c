@@ -595,3 +595,22 @@ ErrorStatus UART_EPS_Send_ACK ( _UART_EPS_COMM *UART_eps_comm , uint8_t send_dat
 }
 
 
+/** @brief Reset receive package. If the waiting time for receiving a packet is exceeded, the reception is dropped.
+	@param  *UART_eps_comm - pointer to UART port struct with get data.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus UART_EPS_Check_TimeOut_Receive( _UART_EPS_COMM *UART_eps_comm ){
+
+    int8_t error_status = SUCCESS;
+
+    if( UART_eps_comm->permit_recv_pack_flag == 1 && UART_eps_comm->stop_recv_pack_flag == 0 ){
+
+        if( ((uint32_t)( SysTick_Counter - UART_eps_comm->get_pack_timer )) > ((uint32_t)UART_EPS_GET_PACK_TIMEOUT) ){
+            UART_eps_comm->permit_recv_pack_flag = 0;
+            UART_eps_comm->stop_recv_pack_flag = 0;
+            error_status = ERROR_N;
+        }
+    }
+
+    return error_status;
+}
