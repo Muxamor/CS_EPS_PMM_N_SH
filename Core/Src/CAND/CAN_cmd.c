@@ -970,11 +970,86 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_Median_PMM_temp                             =  (uint8_t) eps_p.eps_pmm_ptr->Temp_sensor;
     CAN_IVar5_telemetry.CAN_Median_PAM_temp                             =  (uint8_t) GetMedian( eps_p.eps_pam_ptr->Temp_sensor, 4 ); // PAM_data
 	CAN_IVar5_telemetry.CAN_Median_PDM_temp                             =  (uint8_t) GetMedian( eps_p.eps_pdm_ptr->Temp_sensor, 4 );
-    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[0]        =  eps_p.eps_pmm_ptr->Main_Backup_mode_CPU; //TODO добавить битовую маску
-//	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1]        =  0xBF;
-//	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]        =  0xC0;
-//	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[3]        =  0xC1;
-//	    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[4]        =  0xC2;
+
+    //*** EPS status
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[0]        =  (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU) | (eps_p.eps_pmm_ptr->Active_CPU<<1) |
+                                                                           (eps_p.eps_pmm_ptr->Error_UART_port_M<<2) | (eps_p.eps_pmm_ptr->Error_UART_port_B<<3) |
+                                                                           (eps_p.eps_pmm_ptr->Error_CAN_port_M<<4) | (eps_p.eps_pmm_ptr->Error_CAN_port_M<<5) |
+                                                                           (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_CANmain<<6) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_CANbackup<<7);
+
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] = 0;
+
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1]        =  eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU;
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1]        =  CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] | (eps_p.eps_pmm_ptr->PWR_Supply_Main_PG<<1);
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1]        =  CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] | (eps_p.eps_pmm_ptr->PWR_Supply_Backup_PG<<2);
+
+    //PMM Some Error
+    if( (eps_p.eps_pmm_ptr->Error_TMP1075_sensor == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_CANmain == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_CANbackup == 1) ||
+        (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF1 == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF2 == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF1 == 1) ||
+        (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_PBMs_Logic == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Deploy_Logic == 1) ||
+        (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Deploy_Power == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_5V_Bus == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_3_3V_Bus == 1) ||
+        (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_I2C_Bus == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF1 == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF2 == 1) ||
+        (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF1 == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2 == 1) || (eps_p.eps_pmm_ptr->Error_I2C_GPIO_Ext1 == 1) ||
+        (eps_p.eps_pmm_ptr->Error_I2C_GPIO_Ext2 == 1) || (eps_p.eps_pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon == 1) ||(eps_p.eps_pmm_ptr->Error_I2C_Deploy_GPIO_Ext == 1) ||
+        (eps_p.eps_pmm_ptr->Error_I2C_Deploy_ADC == 1) || (eps_p.eps_pmm_ptr->Error_FRAM1 == 1) || (eps_p.eps_pmm_ptr->Error_FRAM2 == 1) || (eps_p.eps_pmm_ptr->Error_UART_port_M == 1) ||
+        (eps_p.eps_pmm_ptr->Error_UART_port_B == 1) || (eps_p.eps_pmm_ptr->Error_CAN_port_M == 1) || (eps_p.eps_pmm_ptr->Error_CAN_port_B == 1) ){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] | (1<<3);
+    }
+
+    //PDM Some Error
+    if( (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1 == 1) || (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 == 1) || (eps_p.eps_pdm_ptr->Error_I2C_MUX == 1) || (eps_p.eps_pdm_ptr->Error_temp_sensor_1 == 1) ||
+        (eps_p.eps_pdm_ptr->Error_temp_sensor_2 == 1) || (eps_p.eps_pdm_ptr->Error_temp_sensor_3 == 1) || (eps_p.eps_pdm_ptr->Error_temp_sensor_4 == 1) ){
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] | (1<<4);
+    }
+
+    if( (eps_p.eps_pbm_ptr[0].Error_DS2777_1 == 1) || (eps_p.eps_pbm_ptr[0].Error_DS2777_2 == 1) || (eps_p.eps_pbm_ptr[0].Error_TMP1075_1 == 1) || (eps_p.eps_pbm_ptr[0].Error_TMP1075_2 == 1) ||
+        (eps_p.eps_pbm_ptr[0].Error_TMP1075_3 == 1) || (eps_p.eps_pbm_ptr[0].Error_TMP1075_4 == 1) || (eps_p.eps_pbm_ptr[0].Error_PCA9534 == 1) || (eps_p.eps_pbm_ptr[0].Error_Heat_1 == 1) ||
+        (eps_p.eps_pbm_ptr[0].Error_Heat_2 == 1) || (eps_p.eps_pbm_ptr[0].Error_Charge_1 == 1) || (eps_p.eps_pbm_ptr[0].Error_Charge_2 == 1) || (eps_p.eps_pbm_ptr[0].Error_Discharge_1 == 1) ||
+        (eps_p.eps_pbm_ptr[0].Error_Discharge_2 == 1) || (eps_p.eps_pbm_ptr[0].Low_Energy_Flag == 1) || (eps_p.eps_pbm_ptr[0].Zero_Energy_Flag == 1) ){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] | (1<<5);
+    }
+
+    if( (eps_p.eps_pbm_ptr[1].Error_DS2777_1 == 1) || (eps_p.eps_pbm_ptr[1].Error_DS2777_2 == 1) || (eps_p.eps_pbm_ptr[1].Error_TMP1075_1 == 1) || (eps_p.eps_pbm_ptr[1].Error_TMP1075_2 == 1) ||
+        (eps_p.eps_pbm_ptr[1].Error_TMP1075_3 == 1) || (eps_p.eps_pbm_ptr[1].Error_TMP1075_4 == 1) || (eps_p.eps_pbm_ptr[1].Error_PCA9534 == 1) || (eps_p.eps_pbm_ptr[1].Error_Heat_1 == 1) ||
+        (eps_p.eps_pbm_ptr[1].Error_Heat_2 == 1) || (eps_p.eps_pbm_ptr[1].Error_Charge_1 == 1) || (eps_p.eps_pbm_ptr[1].Error_Charge_2 == 1) || (eps_p.eps_pbm_ptr[1].Error_Discharge_1 == 1) ||
+        (eps_p.eps_pbm_ptr[1].Error_Discharge_2 == 1) || (eps_p.eps_pbm_ptr[1].Low_Energy_Flag == 1) || (eps_p.eps_pbm_ptr[1].Zero_Energy_Flag == 1) ){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] | (1<<6);
+    }
+
+    if( (eps_p.eps_pbm_ptr[2].Error_DS2777_1 == 1) || (eps_p.eps_pbm_ptr[2].Error_DS2777_2 == 1) || (eps_p.eps_pbm_ptr[2].Error_TMP1075_1 == 1) || (eps_p.eps_pbm_ptr[2].Error_TMP1075_2 == 1) ||
+        (eps_p.eps_pbm_ptr[2].Error_TMP1075_3 == 1) || (eps_p.eps_pbm_ptr[2].Error_TMP1075_4 == 1) || (eps_p.eps_pbm_ptr[2].Error_PCA9534 == 1) || (eps_p.eps_pbm_ptr[2].Error_Heat_1 == 1) ||
+        (eps_p.eps_pbm_ptr[2].Error_Heat_2 == 1) || (eps_p.eps_pbm_ptr[2].Error_Charge_1 == 1) || (eps_p.eps_pbm_ptr[2].Error_Charge_2 == 1) || (eps_p.eps_pbm_ptr[2].Error_Discharge_1 == 1) ||
+        (eps_p.eps_pbm_ptr[2].Error_Discharge_2 == 1) || (eps_p.eps_pbm_ptr[2].Low_Energy_Flag == 1) || (eps_p.eps_pbm_ptr[2].Zero_Energy_Flag == 1) ){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1] | (1<<7);
+    }
+
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]        =  0x00;
+
+    if( (eps_p.eps_pam_ptr->PG_DC_DC == 1) || (eps_p.eps_pam_ptr->PG_LDO == 1) || (eps_p.eps_pam_ptr->Error_State_DC_DC == 1) || (eps_p.eps_pam_ptr->Error_State_LDO == 1) ||
+        (eps_p.eps_pam_ptr->Error_I2C_GPIO_Ext == 1) || (eps_p.eps_pam_ptr->Error_I2C_MUX_1 == 1) || (eps_p.eps_pam_ptr->Error_I2C_MUX_2 == 1) || (eps_p.eps_pam_ptr->Error_temp_sensor_1 == 1) ||
+        (eps_p.eps_pam_ptr->Error_temp_sensor_2 == 1) || (eps_p.eps_pam_ptr->Error_temp_sensor_3 == 1) || (eps_p.eps_pam_ptr->Error_temp_sensor_4 == 1)  ){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]    =  1;
+    }
+    //TODO  заполнить CAN_SES_module_system_elements_status[2] согласно доке когда реализуется опрос солн. панелей. биты  1 2 3 4 5 6 7
+
+    //---
+
+
+    uint16_t  tmp_voltage;
+    if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){
+        tmp_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
+    }else{
+        tmp_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;
+    }
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[3]        =  (uint8_t)tmp_voltage;
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[4]        =  (uint8_t)(tmp_voltage<<8);
+    //---
+
     CAN_IVar5_telemetry.CAN_Number_of_restarts_of_the_SES_module        =  eps_p.eps_pmm_ptr->reboot_counter_CPUm;
     CAN_IVar5_telemetry.CAN_Number_of_restarts_of_the_reserve_SES_module=  eps_p.eps_pmm_ptr->reboot_counter_CPUb;
 //	    CAN_IVar5_telemetry.CAN_SES_module_data_array1                  	 =  0xCBCCCDCE;
@@ -1022,17 +1097,36 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	                                                                      (eps_p.eps_pmm_ptr->Deploy_stage << 12);
 
 
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[0]                   =	0xF0;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[1]                   =  0xF1;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[2]                   =  0xF2;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[3]                   =  0xF3;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[4]                   =  0xF4;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[5]                   =  0xF5;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[6]                   =  0xF6;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[7]                   =  0xF7;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[8]                   =  0xF8;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[9]                   =  0xF9;
-//	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[10]                  =  0xFA;
+	//PMM
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[0]                   = (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain) | (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1 << 2) |
+                                                                          (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF2 << 3) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF1 << 4) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2 << 5) |
+                                                                          (eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic << 6) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic << 7);
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[1]                   = (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power) | (eps_p.eps_pmm_ptr->PWR_Ch_State_5V_Bus << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_State_3_3V_Bus << 2) |
+                                                                          (eps_p.eps_pmm_ptr->PWR_Ch_State_I2C_Bus << 3) | (eps_p.eps_pmm_ptr->PWR_Supply_Main_PG << 4) | (eps_p.eps_pmm_ptr->PWR_Supply_Backup_PG << 5) |
+                                                                          (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU << 6) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_CANmain << 7);
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[2]                   = (eps_p.eps_pmm_ptr->PWR_Ch_PG_CANbackup) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF1 << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF2 << 2) |
+                                                                          (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF1 << 3) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF2 << 4) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_PBMs_Logic << 5) |
+                                                                          (eps_p.eps_pmm_ptr->PWR_Ch_PG_Deploy_LP << 6) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_5V_Bus << 7);
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[3]                   = (eps_p.eps_pmm_ptr->PWR_Ch_PG_3_3V_Bus) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_I2C_Bus << 1) | (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU << 2) |
+                                                                          (eps_p.eps_pmm_ptr->Active_CPU << 3) | (eps_p.eps_pmm_ptr-> Deploy_stage  << 4);
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[4]                   = eps_p.eps_pmm_ptr->EPS_Mode;
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[5]                   = (eps_p.eps_pmm_ptr->Error_TMP1075_sensor) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_CANmain << 1) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_CANbackup << 2) |
+                                                                          (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF1 << 3) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF2 << 4) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF1 << 5) |
+                                                                          (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 << 6) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_PBMs_Logic << 7);
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[6]                   = (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Deploy_Logic) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Deploy_Power << 1) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_5V_Bus << 2) |
+                                                                          (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_3_3V_Bus << 3) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_I2C_Bus << 4) | (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF1 << 5) |
+                                                                          (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF2 << 6) | (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF1 << 7);
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[7]                   = (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2) | (eps_p.eps_pmm_ptr->Error_I2C_GPIO_Ext1 << 1) | (eps_p.eps_pmm_ptr->Error_I2C_GPIO_Ext2 << 2) |
+                                                                          (eps_p.eps_pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon << 3) | (eps_p.eps_pmm_ptr->Error_I2C_Deploy_GPIO_Ext << 4) | (eps_p.eps_pmm_ptr->Error_I2C_Deploy_ADC << 5) |
+                                                                          (eps_p.eps_pmm_ptr->Error_FRAM1 << 6) | (eps_p.eps_pmm_ptr->Error_FRAM2 << 7);
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[8]                   = (eps_p.eps_pmm_ptr->Error_UART_port_M) | (eps_p.eps_pmm_ptr->Error_UART_port_B << 1) | (eps_p.eps_pmm_ptr->Error_CAN_port_M << 2) |
+                                                                          (eps_p.eps_pmm_ptr->Error_CAN_port_B << 3) | (eps_p.eps_pmm_ptr->CAN_constatnt_mode << 4);
+	CAN_IVar5_telemetry.CAN_SES_module_data_array2[9]                   = 0x00;
+
+	//PDM
+    CAN_IVar5_telemetry.CAN_SES_module_data_array2[10]                  = (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1) | (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 << 1) | (eps_p.eps_pdm_ptr->Error_I2C_MUX << 2) |
+                                                                          (eps_p.eps_pdm_ptr->Error_temp_sensor_1 << 3) | (eps_p.eps_pdm_ptr->Error_temp_sensor_2 << 4) | (eps_p.eps_pdm_ptr->Error_temp_sensor_3 << 5) |
+                                                                          (eps_p.eps_pdm_ptr->Error_temp_sensor_4 << 6);
 //	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[11]                  =  0xFB;
 //	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[12]                  =  0xFC;
 //	    CAN_IVar5_telemetry.CAN_SES_module_data_array2[13]                  =  0xFD;
@@ -1188,12 +1282,11 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_Beacon_median_PMM_temp					    =  CAN_IVar5_telemetry.CAN_Median_PMM_temp;
 	CAN_IVar5_telemetry.CAN_Beacon_median_PAM_temp					    =  CAN_IVar5_telemetry.CAN_Median_PAM_temp;
 	CAN_IVar5_telemetry.CAN_Beacon_median_PDM_temp					    =  CAN_IVar5_telemetry.CAN_Median_PDM_temp;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[0] =  0xBE;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[1] =  0xBF;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[2] =  0xC0;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[3] =  0xC1;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[4] =  0xC2;
-
+	CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[0] =  CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[0];
+    CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[1] =  CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[1];
+    CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[2] =  CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2];
+	CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[3] =  CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[3];
+	CAN_IVar5_telemetry.CAN_Beacon_SES_module_system_elements_status[4] =  CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[4];
 
 
 //	    for( i = 0, j = 0x71; i < 20; i++, j++ ){
