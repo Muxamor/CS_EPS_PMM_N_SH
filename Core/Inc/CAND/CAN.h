@@ -421,9 +421,9 @@ struct CAN_IVar5{
     uint8_t  CAN_PDM_sensor2;                                       //+327     |  const = 0x6E               |   PDM датчик 2
     uint8_t  CAN_PDM_sensor3;                                       //+328     |  const = 0x6F               |   PDM датчик 3
     uint8_t  CAN_PDM_sensor4;                                       //+329     |  const = 0x70               |   PDM датчик 4
-    uint8_t  CAN_data_array3[11];                                   //+330     |  const = 0x717273747576     |   Массив 3 данных о работе СЭС
-                                                                               //           7778797A7B7
-
+    uint8_t  CAN_data_array3[10];                                   //+330     |  const = 0x717273747576     |   Массив 3 данных о работе СЭС
+                                                                               //           7778797A7
+    uint8_t  CAN_PMM_PBM_Termostat_bit_mask;                        //+340     |  const = 0x7B                 |  Термостаты модулей PBMs битовая маска
     uint8_t  CAN_PMM_PWR_PBM_Logic;                                 //+341     |  const = 0x7C                 |   Питание логики PBMs
     uint8_t  CAN_PAM_PWR_DC_DC;                                     //+342     |  const = 0x7D                 |   Источник PAM DC-DC
     uint8_t  CAN_PAM_PWR_LDO;                                       //+343     |  const = 0x7E                 |   Источник PAM LDO

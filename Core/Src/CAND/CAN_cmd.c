@@ -1379,6 +1379,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_data_array3[8]                              =  0x00;
     CAN_IVar5_telemetry.CAN_data_array3[9]                              =  0x00;
 
+    CAN_IVar5_telemetry.CAN_PMM_PBM_Termostat_bit_mask                  =  (eps_p.eps_pbm_ptr[0].PCA9534_ON_Heat_1) | ( eps_p.eps_pbm_ptr[0].PCA9534_ON_Heat_2 << 1) | (eps_p.eps_pbm_ptr[1].PCA9534_ON_Heat_1 << 2) |
+                                                                           (eps_p.eps_pbm_ptr[1].PCA9534_ON_Heat_2 << 3) | ( eps_p.eps_pbm_ptr[2].PCA9534_ON_Heat_1 << 4) | ( eps_p.eps_pbm_ptr[2].PCA9534_ON_Heat_2 << 5);
 
     CAN_IVar5_telemetry.CAN_PMM_PWR_PBM_Logic                           =  eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic;
 
@@ -1731,10 +1733,11 @@ void CAN_Var5_fill_telemetry_const(void){
     CAN_IVar5_telemetry.CAN_PDM_sensor3                                 =	0x6F;
     CAN_IVar5_telemetry.CAN_PDM_sensor4                                 =	0x70;
 
-    for( i = 0, j = 0x71; i < 11; i++, j++ ){
+    for( i = 0, j = 0x71; i < 10; i++, j++ ){
         CAN_IVar5_telemetry.CAN_data_array3[i] = j;
     }
 
+    CAN_IVar5_telemetry.CAN_PMM_PBM_Termostat_bit_mask                  =   0x7B;
     CAN_IVar5_telemetry.CAN_PMM_PWR_PBM_Logic                           =   0x7C;
 
     CAN_IVar5_telemetry.CAN_PAM_PWR_DC_DC                               =   0x7D;
