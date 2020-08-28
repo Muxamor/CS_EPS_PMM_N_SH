@@ -11,7 +11,6 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 	//Config I2C MUX, same for all power channels
 	pam_table.I2Cx_PORT = PAM_I2C_PORT;
 	pam_table.I2C_addr_I2C_MUX_PWR = PAM_I2CADDR_I2C_MUX_1;
-	pam_table.I2C_addr_I2C_MUX_SP = PAM_I2CADDR_I2C_MUX_2;
 	pam_table.I2C_addr_GPIO_Ext = PAM_I2CADDR_GPIO_Ext;
 
 	//Config Power monitor INA231, same for all power channels
@@ -121,54 +120,36 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
                 //Config I2C GPIO Expander TCA6424A for power SP channel 1 in PAM
                 pam_table.pin_State_ID = TCA6424A_IO_P22;            //Show PAM State_eF_out_ch1 (U15)
                 pam_table.pin_Enable_eF = TCA6424A_IO_P02;            //Set State PAM PG_eF_out_ch1 (U15)
-
-                //Config I2C MUX for power SP channel 1 in PAM
-                pam_table.I2C_MUX_Ch = TCA9548_CH1;
                 break;
 
             case PAM_PWR_TM_SP_Ch2:
                 //Config I2C GPIO Expander TCA6424A for power SP channel 2 in PAM
                 pam_table.pin_State_ID = TCA6424A_IO_P23;            //Show PAM State_eF_out_ch2 (U15)
                 pam_table.pin_Enable_eF = TCA6424A_IO_P03;            //Set State PAM PG_eF_out_ch2 (U15)
-
-                //Config I2C MUX for power SP channel 2 in PAM
-                pam_table.I2C_MUX_Ch = TCA9548_CH0;
                 break;
 
             case PAM_PWR_TM_SP_Ch3:
                 //Config I2C GPIO Expander TCA6424A for power SP channel 3 in PAM
                 pam_table.pin_State_ID = TCA6424A_IO_P24;            //Show PAM State_eF_out_ch3 (U15)
                 pam_table.pin_Enable_eF = TCA6424A_IO_P04;            //Set State PAM PG_eF_out_ch3 (U15)
-
-                //Config I2C MUX for power SP channel 3 in PAM
-                pam_table.I2C_MUX_Ch = TCA9548_CH4;
                 break;
 
             case PAM_PWR_TM_SP_Ch4:
                 //Config I2C GPIO Expander TCA6424A for power SP channel 4 in PAM
                 pam_table.pin_State_ID = TCA6424A_IO_P25;            //Show PAM State_eF_out_ch4 (U15)
                 pam_table.pin_Enable_eF = TCA6424A_IO_P05;            //Set State PAM PG_eF_out_ch4 (U15)
-
-                //Config I2C MUX for power SP channel 4 in PAM
-                pam_table.I2C_MUX_Ch = TCA9548_CH3;
                 break;
 
             case PAM_PWR_TM_SP_Ch5:
                 //Config I2C GPIO Expander TCA6424A for power SP channel 5 in PAM
                 pam_table.pin_State_ID = TCA6424A_IO_P26;            //Show PAM State_eF_out_ch5 (U15)
                 pam_table.pin_Enable_eF = TCA6424A_IO_P06;            //Set State PAM PG_eF_out_ch5 (U15)
-
-                //Config I2C MUX for power SP channel 5 in PAM
-                pam_table.I2C_MUX_Ch = TCA9548_CH2;
                 break;
 
             case PAM_PWR_TM_SP_Ch6:
                 //Config I2C GPIO Expander TCA6424A for power SP channel 6 in PAM
                 pam_table.pin_State_ID = TCA6424A_IO_P27;            //Show PAM State_eF_out_ch6 (U15)
                 pam_table.pin_Enable_eF = TCA6424A_IO_P07;            //Set State PAM PG_eF_out_ch6 (U15)
-
-                //Config I2C MUX for power SP channel 6 in PAM
-                pam_table.I2C_MUX_Ch = TCA9548_CH5;
                 break;
 
             default:

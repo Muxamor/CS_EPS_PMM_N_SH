@@ -3,6 +3,7 @@
 #include "PAM/pam_config.h"
 #include "PAM/pam_struct.h"
 #include "PAM/pam_ctrl.h"
+#include "PAM/pam_sp.h"
 #include "PAM/pam.h"
 
 
@@ -14,6 +15,7 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
 
 	int8_t error_status = SUCCESS;
 	uint8_t num_pwr_ch = 0;
+    uint8_t num_sp = 0;
 
     // Get state power supply
     error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
@@ -32,6 +34,10 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
 
         for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
           error_status += PAM_Get_PG_PWR_TM_SP_Ch( pam_ptr, num_pwr_ch );
+        }
+
+        for( num_sp= 0; num_sp < PAM_SP_quantity; num_sp++ ){
+            error_status += PAM_SP_Get_Telemetry( pam_ptr, num_sp);
         }
 
         //Get value Current, Voltage, Power, State ID

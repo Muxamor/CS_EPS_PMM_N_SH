@@ -6,13 +6,15 @@
 extern "C" {
 #endif
 
+
 #include "PAM/pam_config.h"
+#include "PAM/pam_sp_config.h"
 
 typedef struct{
 
-	uint8_t State_ID [PAM_SP_ID_quantity];		    			//SP state ideal diode 0-Open, 1-Close.
-	int8_t Temp_sensor [PAM_SP_Temp_sensor_quantity]; 			//SP temperature
-	uint8_t Error_temp_sensor [PAM_SP_Temp_sensor_quantity];
+	uint8_t State_ID [PAM_SP_ID_max_quantity];		    			//SP state ideal diode 0-Open, 1-Close.
+	int8_t Temp_value [PAM_SP_temp_sens_max_quantity]; 			//SP temperature
+	uint8_t Error_temp_sensor [PAM_SP_temp_sens_max_quantity];
 
 
 	uint8_t Error_I2C_GPIO_Ext1:1;								//0-OK, 1-ERROR.

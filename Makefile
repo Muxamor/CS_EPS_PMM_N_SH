@@ -60,6 +60,11 @@ Core/Src/PAM/pam_init_IC.c \
 Core/Src/PAM/pam_init.c \
 Core/Src/PAM/pam_ctrl.c \
 Core/Src/PAM/pam.c \
+Core/Src/PAM/pam_sp_config.c \
+Core/Src/PAM/pam_sp_init_IC.c \
+Core/Src/PAM/pam_sp_init.c \
+Core/Src/PAM/pam_sp_ctrl.c \
+Core/Src/PAM/pam_sp.c \
 Core/Src/PMM/pmm_config.c \
 Core/Src/PMM/pmm_init_IC.c \
 Core/Src/PMM/pmm_init.c \

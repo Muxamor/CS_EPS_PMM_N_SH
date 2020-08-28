@@ -31,10 +31,7 @@ extern "C" {
 #define pam_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
 #define pam_i2c_delay_att_conn		3 	 //ms Delay between attempts connection through I2C in millisecond
 
-#define PAM_PWR_IN_Ch_quantity  	0x06 // Total quantity power channels on the PAM
-#define PAM_SP_quantity  			0x06 // Total quantity SP channels on the PAM
-#define PAM_SP_Temp_sensor_quantity	0x04 // Total quantity Temp. sensor on one SP
-#define PAM_SP_ID_quantity			0x06 // Total quantity Ideal Diode on one SP
+#define PAM_PWR_IN_Ch_quantity  	0x06 // Total quantity input power channels on the PAM
 #define PAM_PWR_TM_SP_Ch_quantity   0x06 // Total quantity power channel for get telemetry from solar panels
 
 #define PAM_TYPE_PWR_CH_IN          0x00 //Type of power channel in PAM   0x00 - input power channel from SP
@@ -75,7 +72,6 @@ typedef struct{
 	uint8_t PWR_Mon_work_mode;
 
 	uint8_t I2C_addr_I2C_MUX_PWR;
-	uint8_t I2C_addr_I2C_MUX_SP;
 	uint8_t I2C_MUX_Ch;
 
 } _PAM_table;
