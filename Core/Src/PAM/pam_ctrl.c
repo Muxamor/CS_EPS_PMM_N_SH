@@ -185,8 +185,9 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
 
 		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
-
-			error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF );
+            if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS){
+                error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF);
+            }
 		}
 
 		if( error_I2C != SUCCESS ){
@@ -247,8 +248,10 @@ ErrorStatus PAM_Get_State_ID_PWR_Ch_In( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
     while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
 
-        if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
-            error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_State_ID );
+        if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS){
+           if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS){
+               error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_State_ID);
+           }
         }
 
         if( error_I2C != SUCCESS ){
@@ -644,8 +647,9 @@ ErrorStatus PAM_Get_PG_PWR_TM_SP_Ch( _PAM *pam_ptr, uint8_t num_pwr_ch ){
 	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
 
 		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
-
-			error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF );
+            if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS){
+                error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF);
+            }
 		}
 
 		if( error_I2C != SUCCESS ){
