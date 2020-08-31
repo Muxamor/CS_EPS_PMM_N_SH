@@ -56,7 +56,7 @@ extern "C" {
 #define FRAM_SIZE_64KB					0x2000
 
 #define PMM_CAN_Exch_Data_Check_Time_Gap    150000 // 1m 15s in milliseconds (real 5m 00s after first 2m 30s reboot power CAN)
-#define PMM_ReInit_Time_Gap  		        180000 // 3m00s in milliseconds
+#define PMM_ReInit_Time_Gap  		        300000 // 5m00s in milliseconds
 #define PMM_UART_Exch_Data_Gap      		45000 // 45s in milliseconds
 
 
