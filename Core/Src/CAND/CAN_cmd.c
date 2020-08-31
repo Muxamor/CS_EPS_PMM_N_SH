@@ -8,12 +8,12 @@
 #include "PBM/pbm_init.h"
 #include "PDM/pdm_config.h"
 #include "PDM/pdm_ctrl.h"
-#include "PMM/pmm_struct.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_ctrl.h"
 #include "PMM/pmm_deploy.h"
 #include "PAM/pam_ctrl.h"
 #include "PAM/pam_init.h"
+#include "PAM/pam_sp_init.h"
 #include "uart_eps_comm.h"
 #include "CAND/filter2D.h"
 #include "CAND/CAN.h"
@@ -639,7 +639,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power TM SP Channel 1 \n", CAN_PAM_PWR_TM_SP_CH1_offset);
                         #endif
                         PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch1, ENABLE);
-                        //TODO Add initialisation Solar panel
+                        PAM_SP_init( eps_p.eps_pam_ptr, PAM_SP1);
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power TM SP Channel 1\n", CAN_PAM_PWR_TM_SP_CH1_offset);
@@ -654,7 +654,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power TM SP Channel 2 \n", CAN_PAM_PWR_TM_SP_CH2_offset);
                         #endif
                         PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch2, ENABLE);
-                        //TODO Add initialisation Solar panel
+                        PAM_SP_init( eps_p.eps_pam_ptr, PAM_SP2);
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power TM SP Channel 2\n", CAN_PAM_PWR_TM_SP_CH2_offset);
@@ -669,7 +669,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power TM SP Channel 3 \n", CAN_PAM_PWR_TM_SP_CH3_offset);
                         #endif
                         PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch3, ENABLE);
-                        //TODO Add initialisation Solar panel
+                        PAM_SP_init( eps_p.eps_pam_ptr, PAM_SP3);
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power TM SP Channel 3\n", CAN_PAM_PWR_TM_SP_CH3_offset);
@@ -684,7 +684,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power TM SP Channel 4\n", CAN_PAM_PWR_TM_SP_CH4_offset);
                         #endif
                         PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch4, ENABLE);
-                        //TODO Add initialisation Solar panel
+                        PAM_SP_init( eps_p.eps_pam_ptr, PAM_SP4);
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power TM SP Channel 4\n", CAN_PAM_PWR_TM_SP_CH4_offset);
@@ -699,7 +699,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power TM SP Channel 5\n", CAN_PAM_PWR_TM_SP_CH5_offset);
                         #endif
                         PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch5, ENABLE);
-                        //TODO Add initialisation Solar panel
+                        PAM_SP_init( eps_p.eps_pam_ptr, PAM_SP5);
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power TM SP Channel 5\n", CAN_PAM_PWR_TM_SP_CH5_offset);
@@ -714,7 +714,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power TM SP Channel 6\n", CAN_PAM_PWR_TM_SP_CH6_offset);
                         #endif
                         PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, PAM_PWR_TM_SP_Ch6, ENABLE);
-                        //TODO Add initialisation Solar panel
+                        PAM_SP_init( eps_p.eps_pam_ptr, PAM_SP6);
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE power TM SP Channel 6\n", CAN_PAM_PWR_TM_SP_CH6_offset);
@@ -775,39 +775,71 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 	uint8_t num_pwr_ch = 0;
-	/*for(uint16_t i = 0; i < sizeof(CAN_IVar5_telemetry); i++){
-		*((uint8_t *)(&CAN_IVar5_telemetry) + i) = 0;
-	}*/
 
-//	    // -------------------  ТМИ 4  ------------------ //
-    CAN_IVar5_telemetry.CAN_SP_current_pX                           		= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[3].Current_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SP_current_nX                           		= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[1].Current_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SP_current_pY                           		= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[0].Current_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SP_current_nY                           		= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[2].Current_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SPF_current_1    								= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[4].Current_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SPF_current_2								    = (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[5].Current_val; // PAM_data
+	// -------------------  ТМИ 4  ------------------ //
+    CAN_IVar5_telemetry.CAN_SP_current_pX                           	= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[3].Current_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SP_current_nX                           	= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[1].Current_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SP_current_pY                           	= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[0].Current_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SP_current_nY                           	= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[2].Current_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SPF_current_1    							= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[4].Current_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SPF_current_2								= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[5].Current_val; // PAM_data
 
 
-    CAN_IVar5_telemetry.CAN_SP_voltage_pX                           		= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[3].Voltage_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SP_voltage_nX                           		= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[1].Voltage_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SP_voltage_pY                           		= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[0].Voltage_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SP_voltage_nY                           		= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[2].Voltage_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SPF_voltage_1    								= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[4].Voltage_val; // PAM_data
-    CAN_IVar5_telemetry.CAN_SPF_voltage_2								    = (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[5].Voltage_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SP_voltage_pX                           	= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[3].Voltage_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SP_voltage_nX                           	= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[1].Voltage_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SP_voltage_pY                           	= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[0].Voltage_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SP_voltage_nY                           	= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[2].Voltage_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SPF_voltage_1    							= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[4].Voltage_val; // PAM_data
+    CAN_IVar5_telemetry.CAN_SPF_voltage_2								= (uint16_t) eps_p.eps_pam_ptr->PWR_IN_Channel[5].Voltage_val; // PAM_data
 
 
-//	    CAN_IVar5_telemetry.CAN_Panel_median_temperature_pX                 =  0x74;
-//	    CAN_IVar5_telemetry.CAN_Panel_median_temperature_nX                 =  0x75;
-//	    CAN_IVar5_telemetry.CAN_Panel_median_temperature_pY                 =  0x76;
-//	    CAN_IVar5_telemetry.CAN_Panel_median_temperature_nY                 =  0x77;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_median_temperature_pY          =  0x78;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_median_temperature_nY          =  0x79;
-//	    CAN_IVar5_telemetry.CAN_Solar_panel_status[0]                       =  0x7A;
-//	    CAN_IVar5_telemetry.CAN_Solar_panel_status[1]                       =  0x7B;
-//	    CAN_IVar5_telemetry.CAN_Solar_panel_status[2]                       =  0x7C;
-//	    CAN_IVar5_telemetry.CAN_Solar_panel_status[3]                       =  0x7D;
-//	    CAN_IVar5_telemetry.CAN_Solar_panel_status[4]                       =  0x7E;
-//
+    CAN_IVar5_telemetry.CAN_Panel_median_temperature_pX                 = (uint8_t) GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value, PAM_SP4_temp_sens_quantity );
+    CAN_IVar5_telemetry.CAN_Panel_median_temperature_nX                 = (uint8_t) GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value, PAM_SP2_temp_sens_quantity );
+    CAN_IVar5_telemetry.CAN_Panel_median_temperature_pY                 = (uint8_t) GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value, PAM_SP5_temp_sens_quantity );
+    CAN_IVar5_telemetry.CAN_Panel_median_temperature_nY                 = (uint8_t) GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value, PAM_SP6_temp_sens_quantity );
+    CAN_IVar5_telemetry.CAN_Hinged_panel_median_temperature_pY          = (uint8_t) GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value, PAM_SP1_temp_sens_quantity );
+    CAN_IVar5_telemetry.CAN_Hinged_panel_median_temperature_nY          = (uint8_t) GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Temp_value, PAM_SP3_temp_sens_quantity );
+
+    CAN_IVar5_telemetry.CAN_Solar_panel_status[0]                       = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].State_ID[0] & 0x01) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].State_ID[1] & 0x01) << 1) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].State_ID[2] & 0x01) << 2) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].State_ID[3] & 0x01) << 3) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].State_ID[4] & 0x01) << 4) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].State_ID[5] & 0x01) << 5) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_I2C_GPIO_Ext1) << 6) | (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch2].State_ID_In << 7);
+
+    CAN_IVar5_telemetry.CAN_Solar_panel_status[1]                       = (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch2].Error_PWR_Mon) | (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch2].PG_eF_out << 1 ) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].State_ID[0] & 0x01) << 2) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].State_ID[1] & 0x01) << 3) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].State_ID[2] & 0x01) << 4) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].State_ID[3] & 0x01) << 5) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].State_ID[4] & 0x01) << 6) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].State_ID[5] & 0x01) << 7);
+
+
+    CAN_IVar5_telemetry.CAN_Solar_panel_status[2]                       = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_I2C_GPIO_Ext1) | (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch4].State_ID_In << 1) |
+                                                                          (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch4].Error_PWR_Mon << 2 ) | (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch4].PG_eF_out << 3 ) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].State_ID[0] & 0x01) << 4) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].State_ID[1] & 0x01) << 5) |
+                                                                          (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_I2C_GPIO_Ext1 << 6 ) | (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch1].State_ID_In << 7);
+
+    CAN_IVar5_telemetry.CAN_Solar_panel_status[3]                       = (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch1].Error_PWR_Mon) | (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch5].PG_eF_out << 1 ) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].State_ID[0] & 0x01) << 2) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].State_ID[1] & 0x01) << 3) |
+                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].State_ID[2] & 0x01) << 4) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_I2C_GPIO_Ext1) << 5) |
+                                                                          (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch3].State_ID_In << 6) | (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch3].Error_PWR_Mon << 7);
+
+    CAN_IVar5_telemetry.CAN_Solar_panel_status[4]                       = (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch6].PG_eF_out) | (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch5].State_ID_In << 1) |
+                                                                          (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch5].Error_PWR_Mon << 2) | (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch6].State_ID_In << 3) |
+                                                                          (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch6].Error_PWR_Mon << 4) | (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch1].PG_eF_out << 5 ) |
+                                                                          (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch3].PG_eF_out << 6 );
+
+
+
+//            (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_temp_sensor[1] & 0x01) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[0] & 0x01) << 1) |
+//                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[1] & 0x01) << 2) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[2] & 0x01) << 3) |
+//                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[3] & 0x01) << 4) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[0] & 0x01) << 5) |
+//                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[0] & 0x01) << 6) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[1] & 0x01) << 7) ;
+
+   //((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[0] & 0x01) << 2) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[1] & 0x01) << 3) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_temp_sensor[1] & 0x01) << 2) |
+   // ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[2] & 0x01) << 4) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[3] & 0x01)
+    //= (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[1] & 0x01) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[2] & 0x01) << 1) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[3] & 0x01) << 2) |
+    //((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[0] & 0x01) << 7)
+   // (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch2].Error_State_eF_out << 1 ) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_temp_sensor[0] & 0x01) << 1) | |  |
+    //                                                                          |  ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_temp_sensor[0] & 0x01) << 7);
+
 
     CAN_IVar5_telemetry.CAN_Full_ABs_Energy_level_percent 				= 0x0000;
     for( num_pwr_ch = 0; num_pwr_ch < PBM_QUANTITY; num_pwr_ch++ ){
@@ -1251,27 +1283,27 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 
 //	    // ----------------------- ТМИ 8 -------------------
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_1                      =	0x2C;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_2                      =	0x2D;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_3                      =	0x2E;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_4                      =	0x2F;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_1                      =	0x30;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_2                      =	0x31;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_3                      =	0x32;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_4                      =	0x33;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_pY_sensor_1                      =	0x34;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_pY_sensor_2                      =	0x35;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_nY_sensor_1                      =	0x36;
-//	    CAN_IVar5_telemetry.CAN_Panal_temp_nY_sensor_2                      =	0x37;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_1               =  0x38;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_2               =  0x39;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_3               =  0x3A;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_4               =  0x3B;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_temp_nY_sensor_1               =  0x3C;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_temp_nY_sensor_2               =  0x3D;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_temp_nY_sensor_3               =  0x3E;
-//	    CAN_IVar5_telemetry.CAN_Hinged_panel_temp_nY_sensor_4               =  0x3F;
-//
+	CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_3                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[2];
+	CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_4                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[3];
+	CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_3                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[2];
+	CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_4                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[3];
+	CAN_IVar5_telemetry.CAN_Panal_temp_pY_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_Panal_temp_pY_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_Panal_temp_nY_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_Panal_temp_nY_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_1               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_2               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_3               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[2];
+	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_4               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[3];
+	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_nY_sensor_1               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_nY_sensor_2               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_nY_sensor_3               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Temp_value[2];
+	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_nY_sensor_4               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Temp_value[3];
+
 	CAN_IVar5_telemetry.CAN_AB1_controller_1_sensor                     = (uint8_t) eps_p.eps_pbm_ptr[0].Branch_1_Temperature; 			// PBM_data
 	CAN_IVar5_telemetry.CAN_AB1_controller_2_sensor                     = (uint8_t) eps_p.eps_pbm_ptr[0].Branch_2_Temperature; 			// PBM_data
 	CAN_IVar5_telemetry.CAN_AB1_sensor_on_board1                        = (uint8_t) eps_p.eps_pbm_ptr[0].TMP1075_temp_1; 	   			// PBM_data
@@ -1323,26 +1355,25 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     }
     //---
 
-
     CAN_IVar5_telemetry.CAN_PMM_sensor1                                 = (uint8_t) eps_p.eps_pmm_ptr->Temp_sensor;
     CAN_IVar5_telemetry.CAN_PAM_sensor1                                 = (uint8_t) (eps_p.eps_pam_ptr->Temp_sensor[0]); // PAM_data
     CAN_IVar5_telemetry.CAN_PAM_sensor2                                 = (uint8_t) (eps_p.eps_pam_ptr->Temp_sensor[1]); // PAM_data
     CAN_IVar5_telemetry.CAN_PAM_sensor3                                 = (uint8_t) (eps_p.eps_pam_ptr->Temp_sensor[2]); // PAM_data
     CAN_IVar5_telemetry.CAN_PAM_sensor4                                 = (uint8_t) (eps_p.eps_pam_ptr->Temp_sensor[3]); // PAM_data
 
-	CAN_IVar5_telemetry.CAN_PDM_sensor1                                 =	(uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[0]);
-	CAN_IVar5_telemetry.CAN_PDM_sensor2                                 =	(uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[1]);
-	CAN_IVar5_telemetry.CAN_PDM_sensor3                                 =	(uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[2]);
-	CAN_IVar5_telemetry.CAN_PDM_sensor4                                 =	(uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[3]);
+	CAN_IVar5_telemetry.CAN_PDM_sensor1                                 = (uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[0]);
+	CAN_IVar5_telemetry.CAN_PDM_sensor2                                 = (uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[1]);
+	CAN_IVar5_telemetry.CAN_PDM_sensor3                                 = (uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[2]);
+	CAN_IVar5_telemetry.CAN_PDM_sensor4                                 = (uint8_t)(eps_p.eps_pdm_ptr->Temp_sensor[3]);
 
 	    // -------------------  ТМИ 0  ------------------ //
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_pX		    =  0x74;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_nX		    =  0x75;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[0]				=  0x7A;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[1]				=  0x7B;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[2]				=  0xC7;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[3]				=  0x7D;
-	  //	    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[4]				=  0x7E;
+	CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_pX		    =  CAN_IVar5_telemetry.CAN_Panel_median_temperature_pX;
+	CAN_IVar5_telemetry.CAN_Beacon_panel_median_temperature_nX		    =  CAN_IVar5_telemetry.CAN_Panel_median_temperature_nX;
+    CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[0]				=  CAN_IVar5_telemetry.CAN_Solar_panel_status[0];
+	CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[1]				=  CAN_IVar5_telemetry.CAN_Solar_panel_status[1];
+	CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[2]				=  CAN_IVar5_telemetry.CAN_Solar_panel_status[2];
+	CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[3]				=  CAN_IVar5_telemetry.CAN_Solar_panel_status[3];
+	CAN_IVar5_telemetry.CAN_Beacon_solar_panel_status[4]				=  CAN_IVar5_telemetry.CAN_Solar_panel_status[4];
 	CAN_IVar5_telemetry.CAN_Beacon_full_capacity_charge_level			=  CAN_IVar5_telemetry.CAN_Full_capacity_charge_level;
 	CAN_IVar5_telemetry.CAN_Beacon_AB_status[0]							=  CAN_IVar5_telemetry.CAN_AB_status[0];
 	CAN_IVar5_telemetry.CAN_Beacon_AB_status[1]						 	=  CAN_IVar5_telemetry.CAN_AB_status[1];
@@ -1411,26 +1442,6 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_VBAT1_voltage_average_10s                   =  (uint16_t)( Filtr2Step( CHF_U5, (int16_t)CAN_IVar5_telemetry.CAN_VBAT1_voltage ) );
     CAN_IVar5_telemetry.CAN_VBAT2_voltage_average_10s                   =  (uint16_t)( Filtr2Step( CHF_U6, (int16_t)CAN_IVar5_telemetry.CAN_VBAT2_voltage ) );
 
-
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//!!!!!! Need  add to array 2 or array3 :
-//	    eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon
-//	    eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in
-//		eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out
-//		eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in
-//		eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out
-//		eps_p.eps_pdm_ptr->Error_temp_sensor_1
-//		eps_p.eps_pdm_ptr->Error_temp_sensor_2
-//		eps_p.eps_pdm_ptr->Error_temp_sensor_3
-//		eps_p.eps_pdm_ptr->Error_temp_sensor_4
-//      Add errors PMM
-//
-//		Add PBM error GPIO
-//		Add PBM GPIO data byte (heat data 4 bit per PBM)
-//		Add PBM DS2777 control byte
-//      Add Low Energy flag
-//      Add zero Energy flag
-//      Add value hate from IDVar 4
 }
 
 void CAN_Var5_fill_telemetry_const(void){

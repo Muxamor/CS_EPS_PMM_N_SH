@@ -1,6 +1,5 @@
 #include "stm32l4xx.h"
 #include "Error_Handler.h"
-
 #include "PAM/pam_struct.h"
 #include "PAM/pam_sp_init_IC.h"
 #include "PAM/pam_sp_init.h"
