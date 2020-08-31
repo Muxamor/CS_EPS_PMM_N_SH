@@ -12,7 +12,7 @@ extern "C" {
 
 typedef struct{
 
-	uint8_t State_ID [PAM_SP_ID_max_quantity];		    			//SP state ideal diode 0-Open, 1-Close.
+	uint8_t State_ID [PAM_SP_ID_max_quantity];		    			//SP state ideal diode 0-Open, 1-Close. (primary  MOSSFET open, close )
 	int8_t Temp_value [PAM_SP_temp_sens_max_quantity]; 			//SP temperature
 	uint8_t Error_temp_sensor [PAM_SP_temp_sens_max_quantity];
 

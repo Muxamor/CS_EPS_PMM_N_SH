@@ -37,32 +37,44 @@ extern "C" {
 #define PAM_SP1_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP1_I2CADDR_TEMP_SENS_3 	0x4A
 #define PAM_SP1_I2CADDR_TEMP_SENS_4 	0x4B
+//I2C address GPIO I2C extander on the solar panel namber 1 is Folding Y+ for Norbi
+//#define PAM_SP1_I2CADDR_GPIO_EXT_1     0x
 
 //I2C address temp senos on the solar panel namber 2 is X- for Norbi
 #define PAM_SP2_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP2_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP2_I2CADDR_TEMP_SENS_3 	0x4A
 #define PAM_SP2_I2CADDR_TEMP_SENS_4 	0x4B
+//I2C address GPIO I2C extander on the solar panel namber 2 is X- for Norbi
+#define PAM_SP2_I2CADDR_GPIO_Ext_1      0x38
 
 //I2C address temp senos on the solar panel namber 3 is Folding Y- for Norbi
 #define PAM_SP3_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP3_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP3_I2CADDR_TEMP_SENS_3 	0x4A
 #define PAM_SP3_I2CADDR_TEMP_SENS_4 	0x4B
+//I2C address GPIO I2C extander on the solar panel namber 3 is Folding Y- for Norbi
+//#define PAM_SP3_I2CADDR_GPIO_EXT_1     0x
 
 //I2C address temp senos on the solar panel namber 4 is X+ for Norbi
 #define PAM_SP4_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP4_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP4_I2CADDR_TEMP_SENS_3 	0x4A
 #define PAM_SP4_I2CADDR_TEMP_SENS_4 	0x4B
+//I2C address GPIO I2C extander on the solar panel namber 4 is X+ for Norbi
+#define PAM_SP4_I2CADDR_GPIO_Ext_1      0x38
 
 //I2C address temp senos on the solar panel namber 5 is Y+ (SRD) for Norbi
 #define PAM_SP5_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP5_I2CADDR_TEMP_SENS_2 	0x4B
+//I2C address GPIO I2C extander on the solar panel namber 5 is Y+ (SRD) for Norbi
+#define PAM_SP5_I2CADDR_GPIO_Ext_1      0x38
 
 //I2C address temp senos on the solar panel namber 5 is Y- for Norbi
 #define PAM_SP6_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP6_I2CADDR_TEMP_SENS_2 	0x4B
+//I2C address temp senos on the solar panel namber 5 is Y- for Norbi
+#define PAM_SP6_I2CADDR_GPIO_Ext_1      0x38
 
 typedef struct{
 
@@ -72,6 +84,8 @@ typedef struct{
 
     uint8_t SP_I2C_addr_temp_senor[PAM_SP_temp_sens_max_quantity];
     uint8_t SP_I2C_addr_GPIO_Ext;
+
+    uint8_t Num_pin_GPIO_Ext_ID[PAM_SP_ID_max_quantity];
 
     uint8_t temp_sensor_quantity;
     uint8_t ID_quantity;

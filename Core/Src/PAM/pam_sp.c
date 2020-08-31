@@ -14,6 +14,7 @@ ErrorStatus PAM_SP_Get_Telemetry(_PAM *pam_ptr, uint8_t number_sp){
     int8_t error_status = SUCCESS;
 
     error_status = PAM_SP_Get_Temperature( pam_ptr, number_sp);
+    error_status += PAM_SP_Get_State_ID( pam_ptr, number_sp);
 
     if(error_status != SUCCESS){
         return ERROR_N;
