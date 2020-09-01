@@ -826,21 +826,6 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
                                                                           (eps_p.eps_pam_ptr->PWR_IN_Channel[PAM_PWR_IN_Ch6].Error_PWR_Mon << 4) | (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch1].PG_eF_out << 5 ) |
                                                                           (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch3].PG_eF_out << 6 );
 
-
-
-//            (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_temp_sensor[1] & 0x01) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[0] & 0x01) << 1) |
-//                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[1] & 0x01) << 2) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[2] & 0x01) << 3) |
-//                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[3] & 0x01) << 4) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[0] & 0x01) << 5) |
-//                                                                          ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[0] & 0x01) << 6) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[1] & 0x01) << 7) ;
-
-   //((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[0] & 0x01) << 2) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[1] & 0x01) << 3) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_temp_sensor[1] & 0x01) << 2) |
-   // ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[2] & 0x01) << 4) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[3] & 0x01)
-    //= (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[1] & 0x01) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[2] & 0x01) << 1) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[3] & 0x01) << 2) |
-    //((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[0] & 0x01) << 7)
-   // (eps_p.eps_pam_ptr->PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch2].Error_State_eF_out << 1 ) | ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_temp_sensor[0] & 0x01) << 1) | |  |
-    //                                                                          |  ((eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_temp_sensor[0] & 0x01) << 7);
-
-
     CAN_IVar5_telemetry.CAN_Full_ABs_Energy_level_percent 				= 0x0000;
     for( num_pwr_ch = 0; num_pwr_ch < PBM_QUANTITY; num_pwr_ch++ ){
     	CAN_IVar5_telemetry.CAN_Full_ABs_Energy_level_percent           = CAN_IVar5_telemetry.CAN_Full_ABs_Energy_level_percent + (uint8_t)(eps_p.eps_pbm_ptr[num_pwr_ch].TotalRelativeCapacity / 3);
@@ -1061,14 +1046,48 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]        =  0x00;
 
-    if( (eps_p.eps_pam_ptr->PG_DC_DC == 1) || (eps_p.eps_pam_ptr->PG_LDO == 1) || (eps_p.eps_pam_ptr->Error_State_DC_DC == 1) || (eps_p.eps_pam_ptr->Error_State_LDO == 1) ||
-        (eps_p.eps_pam_ptr->Error_I2C_GPIO_Ext == 1) || (eps_p.eps_pam_ptr->Error_I2C_MUX_1 == 1) || (eps_p.eps_pam_ptr->Error_I2C_MUX_2 == 1) || (eps_p.eps_pam_ptr->Error_temp_sensor_1 == 1) ||
-        (eps_p.eps_pam_ptr->Error_temp_sensor_2 == 1) || (eps_p.eps_pam_ptr->Error_temp_sensor_3 == 1) || (eps_p.eps_pam_ptr->Error_temp_sensor_4 == 1)  ){
+    if( (eps_p.eps_pam_ptr->PG_DC_DC == ERROR) || (eps_p.eps_pam_ptr->PG_LDO == ERROR) || (eps_p.eps_pam_ptr->Error_State_DC_DC == ERROR) || (eps_p.eps_pam_ptr->Error_State_LDO == ERROR) ||
+        (eps_p.eps_pam_ptr->Error_I2C_GPIO_Ext == ERROR) || (eps_p.eps_pam_ptr->Error_I2C_MUX_1 == ERROR) || (eps_p.eps_pam_ptr->Error_I2C_MUX_2 == ERROR) || (eps_p.eps_pam_ptr->Error_temp_sensor_1 == ERROR) ||
+        (eps_p.eps_pam_ptr->Error_temp_sensor_2 == ERROR) || (eps_p.eps_pam_ptr->Error_temp_sensor_3 == ERROR) || (eps_p.eps_pam_ptr->Error_temp_sensor_4 == ERROR) ){
 
         CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]    =  1;
     }
-    //TODO  заполнить CAN_SES_module_system_elements_status[2] согласно доке когда реализуется опрос солн. панелей. биты  1 2 3 4 5 6 7
 
+    if( (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[0] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[1] == ERROR) ||
+        (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[2] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_temp_sensor[3] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_I2C_GPIO_Ext1 == ERROR)){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]    = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2] | (1<<1);
+    }
+
+    if( (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[0] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[1] == ERROR) ||
+        (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[2] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_temp_sensor[3] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_I2C_GPIO_Ext1 == ERROR)){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]    = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2] | (1<<2);
+    }
+
+    if( (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_temp_sensor[0] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_temp_sensor[1] == ERROR) ||
+       (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_I2C_GPIO_Ext1 == ERROR)){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]    = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2] | (1<<3);
+    }
+
+    if( (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_temp_sensor[0] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_temp_sensor[1] == ERROR) ||
+        (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_I2C_GPIO_Ext1 == ERROR)){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]    = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2] | (1<<4);
+    }
+
+    if( (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[0] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[1] == ERROR) ||
+        (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[2] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_temp_sensor[3] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_I2C_GPIO_Ext1 == ERROR)){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]    = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2] | (1<<5);
+    }
+
+    if( (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[0] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[1] == ERROR) ||
+        (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[2] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_temp_sensor[3] == ERROR) || (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_I2C_GPIO_Ext1 == ERROR)){
+
+        CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2]    = CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[2] | (1<<6);
+    }
     //---
 
 
