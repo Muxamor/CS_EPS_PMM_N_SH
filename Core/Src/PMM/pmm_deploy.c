@@ -84,6 +84,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         }else if( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
             Deploy_start_time_delay = SysTick_Counter;
+            //Enable main CAN
+            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
             //Enable passive CPU if was disabled
             if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
@@ -97,6 +99,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         }else if( (( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( Counter_deploy_exit_LSW_2 == 0)) ||
         		( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1 ) && ( Counter_deploy_exit_LSW_1 == 0) ) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 1; // Next deploy stage 1 - Only one Limit switch = 1, waiting good generation level
+            //Enable main CAN
+            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
             //Enable passive CPU if was disabled
             if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
@@ -224,11 +228,11 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
         error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
 
-        eps_p.eps_pmm_ptr->Deploy_stage = 9; //  Next deploy stage 9 - Finish deploy
-        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
-
         //Disable Power deploy logic
         error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+
+        eps_p.eps_pmm_ptr->Deploy_stage = 9; //  Next deploy stage 9 - Finish deploy
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
         //Fill Var4
         CAN_Var4_fill(eps_p);
