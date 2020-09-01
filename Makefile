@@ -216,7 +216,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 LDSCRIPT = STM32L496QGIX_FLASH.ld
 
 # libraries
-LIBS = -lc -lm -lnosys -lcanv_lib -lFlash_lib
+LIBS = -lc -lm -lnosys -lcanv_lib -lflash_lib
 LIBDIR = -L./Core/Src/LIB
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET)_$(VERSION_FIRMWARE_MAJOR)_$(VERSION_FIRMWARE_MINOR).map,--cref -Wl,--gc-sections
 

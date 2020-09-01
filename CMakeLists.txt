@@ -65,7 +65,7 @@ file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*")
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32L496QGIX_FLASH.ld)
 
 add_library(Flash_lib STATIC IMPORTED GLOBAL)
-set_target_properties( Flash_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libFlash_lib.a )
+set_target_properties( Flash_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libflash_lib.a )
 
 add_library(canv_lib STATIC IMPORTED GLOABAL)
 set_target_properties( canv_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libcanv_lib.a )
