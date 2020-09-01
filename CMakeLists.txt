@@ -14,10 +14,10 @@ set(SIZE arm-none-eabi-size)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # version major update  0..255
-set(VERSION_FIRMWARE_MAJOR 0)
+set(VERSION_FIRMWARE_MAJOR 1)
 
 # version mainor update 0..255
-set(VERSION_FIRMWARE_MINOR 2)
+set(VERSION_FIRMWARE_MINOR 0)
 
 # project settings
 project(CS_EPS_PMM_N_SH_v C CXX ASM)
