@@ -82,37 +82,19 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             eps_p.eps_pmm_ptr->Deploy_stage = 0; // Next deploy stage 0 - In delivery container
 
         }else if( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1) ){
-            //Enable main CAN
-            PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
-
-            //Enable PBM logic power and thermostat.
-            PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
-            for( i = 0 ; i < PBM_QUANTITY; i++ ){
-                eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = ENABLE;
-                eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = ENABLE;
-                eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = ENABLE;
-                eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = ENABLE;
-                eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = ENABLE;
-                eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = ENABLE;
-            }
-            PBM_Init( eps_p.eps_pbm_ptr );
-
-            //Enable passive CPU if was disabled
-            if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
-                PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-                PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-                eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
-            }
-
-            //Fill Var4
-            CAN_Var4_fill(eps_p);
             //Set next deploy stage
-            eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
+            eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge battery if enegy lavel is low
             Deploy_start_time_delay = SysTick_Counter;
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
         }else if( (( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( Counter_deploy_exit_LSW_2 == 0)) ||
         		        (( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1 ) && ( Counter_deploy_exit_LSW_1 == 0)) ){
+            //Set next deploy stage
+            eps_p.eps_pmm_ptr->Deploy_stage = 1; // Next deploy stage 1 - Only one Limit switch = 1, waiting good generation level
+            eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+        }
+
+        if( (eps_p.eps_pmm_ptr->Deploy_stage == 1) || (eps_p.eps_pmm_ptr->Deploy_stage == 2) ){
             //Enable main CAN
             PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
 
@@ -137,8 +119,6 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
             //Fill Var4
             CAN_Var4_fill(eps_p);
-            //Set next deploy stage
-            eps_p.eps_pmm_ptr->Deploy_stage = 1; // Next deploy stage 1 - Only one Limit switch = 1, waiting good generation level
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }
 
@@ -192,10 +172,12 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     // Deploy stage 3 -  low level energy, check battery level and waiting for charge if battery low.
     }else if(deploy_stage == 3){
 
-        if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val > PBM_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE)
-        || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ){
+        if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val > PBM_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ||
+                (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+        }else{
+            eps_p.eps_pmm_ptr->Deploy_stage = 3; // waiting for the batteries to charge
         }
 
     // Deploy stage 4 -  burn channel 1. ( antenna Z side)
