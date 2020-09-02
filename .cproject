@@ -76,6 +76,7 @@
 									<listOptionValue builtIn="false" value="EXTERNALSAI1_CLOCK_VALUE=2097000"/>
 									<listOptionValue builtIn="false" value="PREFETCH_ENABLE=0"/>
 									<listOptionValue builtIn="false" value="STM32L496xx"/>
+									<listOptionValue builtIn="false" value="DEBUGprintf"/>
 									<listOptionValue builtIn="false" value="VERSION_FW_MAJOR=${VERSION_FIRMWARE_MAJOR}"/>
 									<listOptionValue builtIn="false" value="VERSION_FW_MINOR=${VERSION_FIRMWARE_MINOR}"/>
 								</option>
