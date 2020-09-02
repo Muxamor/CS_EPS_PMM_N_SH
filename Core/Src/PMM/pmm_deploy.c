@@ -82,33 +82,63 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             eps_p.eps_pmm_ptr->Deploy_stage = 0; // Next deploy stage 0 - In delivery container
 
         }else if( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1) ){
-            eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
-            Deploy_start_time_delay = SysTick_Counter;
             //Enable main CAN
             PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
+
+            //Enable PBM logic power and thermostat.
+            PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
+            for( i = 0 ; i < PBM_QUANTITY; i++ ){
+                eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = ENABLE;
+                eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = ENABLE;
+            }
+            PBM_Init( eps_p.eps_pbm_ptr );
+
             //Enable passive CPU if was disabled
             if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
                 eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
-                //Fill Var4
-                CAN_Var4_fill(eps_p);
             }
+
+            //Fill Var4
+            CAN_Var4_fill(eps_p);
+            //Set next deploy stage
+            eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
+            Deploy_start_time_delay = SysTick_Counter;
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
         }else if( (( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( Counter_deploy_exit_LSW_2 == 0)) ||
-        		( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1 ) && ( Counter_deploy_exit_LSW_1 == 0) ) ){
-            eps_p.eps_pmm_ptr->Deploy_stage = 1; // Next deploy stage 1 - Only one Limit switch = 1, waiting good generation level
+        		        (( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1 ) && ( Counter_deploy_exit_LSW_1 == 0)) ){
             //Enable main CAN
             PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
+
+            //Enable PBM logic power and thermostat.
+            PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
+            for( i = 0 ; i < PBM_QUANTITY; i++ ){
+                eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = ENABLE;
+                eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = ENABLE;
+            }
+            PBM_Init( eps_p.eps_pbm_ptr );
+
             //Enable passive CPU if was disabled
             if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                 PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
                 eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
-                //Fill Var4
-                CAN_Var4_fill(eps_p);
             }
+
+            //Fill Var4
+            CAN_Var4_fill(eps_p);
+            //Set next deploy stage
+            eps_p.eps_pmm_ptr->Deploy_stage = 1; // Next deploy stage 1 - Only one Limit switch = 1, waiting good generation level
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }
 
@@ -161,35 +191,21 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 3 -  low level energy, check battery level and waiting for charge if battery low.
     }else if(deploy_stage == 3){
-        //TODO only after the first fly decide how to check the energy level.
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
 
-        for( i = 0 ; i < PBM_QUANTITY; i++ ){
-            eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = ENABLE;
-            eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = ENABLE;
-            eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = ENABLE;
-            eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = ENABLE;
-
-            eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = ENABLE;
-            eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = ENABLE;
+        if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val > PBM_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE)
+        || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ){
+            eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
+            eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }
 
-        PBM_Init( eps_p.eps_pbm_ptr );
-
-        //Fill Var4
-        CAN_Var4_fill(eps_p);
-
-        eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
-        eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
-
-    // Deploy stage 4 -  burn channel 1.
+    // Deploy stage 4 -  burn channel 1. ( antenna Z side)
     }else if( deploy_stage == 4 ){
         error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE );
         error_status += PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch1);
         eps_p.eps_pmm_ptr->Deploy_stage = 5; // Next deploy stage 5 - deploy at channel 2
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-    // Deploy stage 5 -  burn channel 2.
+    // Deploy stage 5 -  burn channel 2. ( antenna Z side)
     }else if( deploy_stage == 5 ){
         error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
         error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch2);
@@ -214,14 +230,14 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 7 - deploy at channel 3
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-    // Deploy stage 7 -  burn channel 3.
+    // Deploy stage 7 -  burn channel 3. (SP Y)
     }else if( deploy_stage == 7 ){
         error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
         error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
         eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 8 - deploy at channel 4
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-    // Deploy stage 8 -  burn channel 4.
+    // Deploy stage 8 -  burn channel 4. (SP Y)
     }else if( deploy_stage == 8 ){
         error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
         error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
