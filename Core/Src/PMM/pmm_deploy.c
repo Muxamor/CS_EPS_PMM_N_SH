@@ -171,9 +171,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 3 -  low level energy, check battery level and waiting for charge if battery low.
     }else if(deploy_stage == 3){
-
         if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val > PBM_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ||
-                (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ){
+                (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val > PBM_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }else{
