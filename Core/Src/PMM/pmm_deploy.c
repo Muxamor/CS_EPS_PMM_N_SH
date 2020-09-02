@@ -586,11 +586,30 @@ ErrorStatus PMM_Deploy_Get_Exit_LSW( _EPS_Param eps_p, uint8_t *ret_exit_LSW_1, 
 
     SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
 
-    //Enable burn
+    i = 0;
+    error_I2C = ERROR_N;
     while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
 
-        if(PCA9534_read_input_pin(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P05, ret_exit_LSW_1) == SUCCESS ){
-            error_I2C = PCA9534_read_input_pin(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P06, ret_exit_LSW_2);
+        if( PCA9534_conf_IO_dir_input(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P05) == SUCCESS){
+            if(PCA9534_conf_IO_pol_normal(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P05) == SUCCESS){
+                error_I2C = PCA9534_read_input_pin(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P05, ret_exit_LSW_1);
+            }
+        }
+
+        if( error_I2C != SUCCESS ){
+            i++;
+            LL_mDelay(pmm_i2c_delay_att_conn);
+        }
+    }
+
+    i = 0;
+    error_I2C = ERROR_N;
+    while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
+
+        if( PCA9534_conf_IO_dir_input(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P06) == SUCCESS){
+            if(PCA9534_conf_IO_pol_normal(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P06) == SUCCESS){
+                error_I2C = PCA9534_read_input_pin(PMM_I2Cx_DeployGPIOExt, PMM_I2CADDR_DeployGPIOExt, PCA9534_IO_P06, ret_exit_LSW_2);
+            }
         }
 
         if( error_I2C != SUCCESS ){
