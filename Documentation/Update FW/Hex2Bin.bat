@@ -1,1 +1,1 @@
-Hex2Bin_wCRC.exe CS_EPS_PMM_N_SH_v_0_2.hex
+Hex2Bin_wCRC.exe CS_EPS_PMM_N_SH_v_1_2.hex

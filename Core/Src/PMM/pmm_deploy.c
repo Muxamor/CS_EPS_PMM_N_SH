@@ -110,15 +110,14 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             }
             PBM_Init( eps_p.eps_pbm_ptr );
 
-            //Enable passive CPU if was disabled
-            if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
-                PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-                PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-                eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
-            }
+            //Enable passive CPU
+            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+            eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
 
             //Fill Var4
             CAN_Var4_fill(eps_p);
+
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }
 
