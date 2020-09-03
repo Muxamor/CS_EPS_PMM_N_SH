@@ -1093,12 +1093,12 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     uint16_t  tmp_voltage;
     if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){
-        tmp_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
-    }else{
         tmp_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;
+    }else{
+        tmp_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
     }
     CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[3]        =  (uint8_t)tmp_voltage;
-    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[4]        =  (uint8_t)(tmp_voltage<<8);
+    CAN_IVar5_telemetry.CAN_SES_module_system_elements_status[4]        =  (uint8_t)(tmp_voltage>>8);
     //---
 
     CAN_IVar5_telemetry.CAN_Number_of_restarts_of_the_SES_module        =  eps_p.eps_pmm_ptr->reboot_counter_CPUm;
@@ -1368,9 +1368,9 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     //***
     if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < 4000 ){  
-        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
-    }else{
         CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val;
+    }else{
+        CAN_IVar5_telemetry.CAN_SES_internal_bus_voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
     }
     //---
 
