@@ -1,6 +1,7 @@
 #include  <stdio.h>
 #include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
@@ -11,27 +12,24 @@
 #include "PMM/pmm_sw_cpu.h"
 #include "PMM/pmm.h"
 #include "PMM/pmm_deploy.h"
-#include "PBM/pbm_config.h"
+#include "PMM/pmm_savedata.h"
+#include "PMM/pmm_damage_ctrl.h"
 #include "PBM/pbm_control.h"
 #include "PBM/pbm_init.h"
 #include "PBM/pbm.h"
 #include "PAM/pam_init.h"
-#include "PAM/pam_ctrl.h"
 #include "PAM/pam.h"
 #include "uart_eps_comm.h"
 
 
 /*//TODO
-4. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ?
-7. Подумать над тем если CAN при инициализации выдает ошибку стоит ли переходить на резервный МК.
-
+1. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ?
 **********************************************************/
 
 //extern uint32_t SysTick_Counter;
-
 //extern uint64_t CAN_cmd_mask_status;
-//extern uint8_t CAN1_exchange_timeout_flag;
-//extern uint8_t CAN2_exchange_timeout_flag;
+extern uint8_t CAN1_exchange_data_flag;
+extern uint8_t CAN2_exchange_data_flag;
 
 _UART_EPS_COMM uart_m_eps_communication = {0}, *UART_M_eps_comm = &uart_m_eps_communication;  // Main EPS UART is LPUART1
 _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_communication;  // Backup EPS UART is USART3
@@ -41,7 +39,12 @@ _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_co
 
 int main(void){
 
+    uint32_t Passive_CPU_start_time_wait_data = 0 ;
+
     SysTick_Counter = 0;
+    CAN_cmd_mask_status = 0;
+    CAN1_exchange_data_flag = 0;
+    CAN2_exchange_data_flag = 0;
 
 	UART_M_eps_comm->USARTx = LPUART1;
 	UART_B_eps_comm->USARTx = USART3;
@@ -50,7 +53,6 @@ int main(void){
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 	_PAM pam = {0}, *pam_ptr = &pam;
 	_PBM pbm_mas[PBM_QUANTITY] = {0};
-
     _EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
 
 	_EPS_Param eps_param = {.eps_pmm_ptr = pmm_ptr, 
@@ -60,231 +62,210 @@ int main(void){
 							.eps_serv_ptr = eps_service_ptr
 						    };
 
-	CAN_cmd_mask_status = 0;
+    pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
 
-	/** Initialization Periph STM32L496*/
+	/** Initialization Periph. STM32L496*/
 	LL_Init();
 	SystemClock_Config();
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
 	GPIO_Init();
 	I2C3_Init();
-	UART5_Init();
-	
-//Think about power off CPU
-//	PWM_init(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+	//UART5_Init();
 
-//TODO read settings from FRAM.
-
-    pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
-
-	pmm_ptr->Main_Backup_mode_CPU =  PMM_Detect_MasterBackupCPU();
-
-	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
-		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
-		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
-	}else{ // CPUbackup
-		UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
-		UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
-	}
-
-	if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
-		pmm_ptr->reboot_counter_CPUm++;
-	}else{ // CPUbackup
-		pmm_ptr->reboot_counter_CPUb++;
-	}
-
-	pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
-
-	LPUART1_Init();
+   	LPUART1_Init();
 	USART3_Init();
 	I2C4_Init();
 
+    PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+
 	SetupInterrupt();
 
-	//IWDG_Init(3000);
-    //LL_IWDG_ReloadCounter(IWDG);
+	IWDG_Init(4000);
+    LL_IWDG_ReloadCounter(IWDG);
 
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
+    pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+
+    if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
+        UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
+        UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
+    }else{ // CPUbackup
+        UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
+        UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
+    }
+
+    //Restore settings EPS from FRAM
+    PMM_FRAM_Restore_Settings(eps_param);
+
+    if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
+        pmm_ptr->reboot_counter_CPUm++;
+    }else{ // CPUbackup
+        pmm_ptr->reboot_counter_CPUb++;
+    }
+
+    pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
+
+    LL_IWDG_ReloadCounter(IWDG);
+    //Check Active flag between active and passive CPU.
+    PMM_CPUm_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+
+    //Turn off to avoid overheating of the resistor on reboot
+    pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
-    pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
-
-	pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE; // Удалить после добавления команды управления и записи во флеш.
-	pam_ptr->State_DC_DC = ENABLE;
-    pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
-    pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
-
-
-    pbm_mas[0].Branch_1_ChgEnableBit = ENABLE;
-    pbm_mas[0].Branch_1_DchgEnableBit = ENABLE;
-    pbm_mas[0].Branch_2_ChgEnableBit = ENABLE;
-    pbm_mas[0].Branch_2_DchgEnableBit = ENABLE;
-    pbm_mas[0].PCA9534_ON_Heat_1 = ENABLE;
-    pbm_mas[0].PCA9534_ON_Heat_2 = ENABLE;
-
-    pbm_mas[1].Branch_1_ChgEnableBit = ENABLE;
-    pbm_mas[1].Branch_1_DchgEnableBit = ENABLE;
-    pbm_mas[1].Branch_2_ChgEnableBit = ENABLE;
-    pbm_mas[1].Branch_2_DchgEnableBit = ENABLE;
-    pbm_mas[1].PCA9534_ON_Heat_1 = ENABLE;
-    pbm_mas[1].PCA9534_ON_Heat_2 = ENABLE;
-
-    pbm_mas[2].Branch_1_ChgEnableBit = ENABLE;
-    pbm_mas[2].Branch_1_DchgEnableBit = ENABLE;
-    pbm_mas[2].Branch_2_ChgEnableBit = ENABLE;
-    pbm_mas[2].Branch_2_DchgEnableBit = ENABLE;
-    pbm_mas[2].PCA9534_ON_Heat_1 = ENABLE;
-    pbm_mas[2].PCA9534_ON_Heat_2 = ENABLE;
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    //Check Active flag between active and passive CPU.
-	PMM_Check_Active_CPU( UART_M_eps_comm, UART_B_eps_comm, eps_param );
-
-	CAN_Var4_fill_telemetry( eps_param );
-
     //Initialization PMM (active and passive CPU)
-	PMM_init( pmm_ptr );
+    PMM_init( pmm_ptr );
+
+    //Fill VarID4
+    CAN_Var4_fill(eps_param);
+    if(pmm_ptr->CAN_constatnt_mode == ENABLE ){
+        CAN_Var5_fill_telemetry_const();
+    }
 
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
 		PDM_init( pdm_ptr );
-		//Add init PAM
-        PBM_Init( pbm_mas );
+		PBM_Init( pbm_mas );
         PAM_init( pam_ptr );
-        //TODO Call function Fill VarID4
+
+        if( pmm_ptr->CAN_constatnt_mode == ENABLE){
+            CAN_Var5_fill_telemetry_const();
+        }
+
         CAN_init_eps(CAN1);
 		CAN_init_eps(CAN2);
 		CAN_RegisterAllVars();
-		//LL_mDelay(20); //Delay for startup power supply
+        PMM_Start_Time_Check_CAN = SysTick_Counter;
 
     //Initialization CAN for passive CPU
 	}else{
         PMM_Set_mode_Passive_CPU( eps_param );
         I2C4_DeInit();
+        PWM_DeInit_Ch3_Ch4();
 		CAN_DeInit_eps(CAN1);
 		CAN_DeInit_eps(CAN2);
+        PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 	}
 
-	PAM_Set_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5, ENABLE);
 
-//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
-	//FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
-	//FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
-//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
+	//Infinity Loop
 	while(1){
 
-		//Save setting to FRAM for Active and Passive  CPU 
-		if( (pmm_ptr->PMM_save_conf_flag == SET ) || (pdm_ptr->PDM_save_conf_flag == SET ) || (pam_ptr->PAM_save_conf_flag == SET ) || (PBM_CheckSaveSetupFlag( pbm_mas ) == SET ) ){
-            pmm_ptr->PMM_save_conf_flag = RESET;
-            pdm_ptr->PDM_save_conf_flag = RESET;
-            pam_ptr->PAM_save_conf_flag = RESET;
-            PBM_ClearSaveSetupFlag( pbm_mas );
-				//Add save settings to FRAM.
-		}
+        LL_IWDG_ReloadCounter(IWDG);
+        //Save setting to FRAM for Active and Passive CPU and sync. settings Active->Passive CPU
+        if((pmm_ptr->PMM_save_conf_flag == SET) || (pdm_ptr->PDM_save_conf_flag == SET) || (pam_ptr->PAM_save_conf_flag == SET) || (PBM_CheckSaveSetupFlag(pbm_mas) == SET)){
+            PMM_Sync_and_Save_Settings_A_P_CPU(eps_param);
+        }
 
-		//Active CPU branch
+        //ReInit EPS
+        PMM_ReInit_EPS( eps_param );
+
+        LL_IWDG_ReloadCounter(IWDG);
+
+        //ActiveCPU branch
 		if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
-			PDM_Get_Telemetry( pdm_ptr );
-			PMM_Get_Telemetry( pmm_ptr );
-            PBM_Get_Telemetry( pbm_mas );
-            PAM_Get_Telemetry( pam_ptr );
 
-            PAM_Check_state_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
-            PAM_Get_PG_SP_Supply(pam_ptr, PAM_PWR_TM_SP_5);
+            PMM_Get_Telemetry(pmm_ptr);
+            PDM_Get_Telemetry(pdm_ptr);
+            PAM_Get_Telemetry(pam_ptr);
+            PBM_Get_Telemetry(pbm_mas);
 
+            //EPS_COMBAT_MODE
+            if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
-            if( pmm_ptr->EPS_Mode == EPS_SERVICE_MODE ){
-                //No start Deploy
-            }else{
-                //TODO Включение БРК если все БРК выключены
-                //EPS_COMBAT_MODE
+                LL_IWDG_ReloadCounter(IWDG);
                 if( pmm_ptr->Deploy_stage != 9 ){
                     PMM_Deploy( eps_param );
                 }
+
+                //CAN ports power off protection. ( In combat mode start protection only out from the container )
+                if( pmm_ptr->Deploy_stage >=1 ){
+                	PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
+                }
+
+                if( pmm_ptr->Deploy_stage > 6){
+                    //Check CAN ports
+                    PMM_Damage_Check_CAN_m_b(eps_param);
+
+                    //Disable PWR SubSystem if reach Zero energy level
+                    PMM_ZERO_Energy_PWR_OFF_SubSystem( eps_param );
+                    //Protection for off all BRC
+                    PMM_Portecion_PWR_OFF_BRC_m_b( eps_param );
+                }
+
+            // EPS_SERVICE_MODE
+            }else{
+                PMM_Start_Time_Check_CAN = SysTick_Counter;
+                //All CAN ports power off protection.
+                PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
             }
 
+            //In case when Backup CPU is Active and Main CPU reboot and findout active CPU
+            if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
+                UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
+                UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
+                UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
+                UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
+            }
 
+            //Check Errors UART ports and get reboot counter passive CPU.
+            PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+
+            //Parsing command from CAN
+            if(CAN_cmd_mask_status != 0){
+                CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
+            }
+
+            //Fill CAN Var5
             if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
                 CAN_Var5_fill_telemetry(eps_param);
             }
 
-			if(CAN_cmd_mask_status != 0){
-				CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
-			}
-
-			//eps_service_ptr->Req_SW_Active_CPU =1;
-			//eps_service_ptr->Set_Active_CPU = 1;
-
 			//Switch active CPU 
 			if( eps_service_ptr->Req_SW_Active_CPU == 1 ){
-				PMM_Switch_Active_CPU( eps_service_ptr->Set_Active_CPU, UART_M_eps_comm, UART_B_eps_comm, eps_param ); // Need rewrite this function
-				 eps_service_ptr->Req_SW_Active_CPU = 0;
+                if( pmm_ptr->PWR_OFF_Passive_CPU == DISABLE ){
+                    PMM_Switch_Active_CPU(eps_service_ptr->Set_Active_CPU, UART_M_eps_comm, UART_B_eps_comm, eps_param); // Need rewrite this function
+                }
+                CAN_Var4_fill(eps_param);
+				eps_service_ptr->Req_SW_Active_CPU = 0;
 			}
 
 		// Passive CPU branch
 		}else{
 
-			UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
-			UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
+            Passive_CPU_start_time_wait_data = SysTick_Counter;
+		    while(( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
+                UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
+                UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
+                UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param);
+                UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param);
+            }
+
+            //EPS_COMBAT_MODE
+            if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
+
+                PMM_Damage_Check_UART_m_b_PassiveCPU( UART_M_eps_comm, UART_B_eps_comm, eps_param );
+
+                // Take control Only for BackupCPU.
+                if( (pmm_ptr->Error_UART_port_M == ERROR) && (pmm_ptr->Error_UART_port_B == ERROR) && ( pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
+                    LL_IWDG_ReloadCounter(IWDG);
+                    PMM_Take_Control_EPS_PassiveCPU( eps_param );
+                }
+
+            }else{
+                PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
+
+            }
 
 		}
-
 	}
-
-
 }
 
+//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
+//	FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
+//	FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
+//!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
-
-//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_param );
-//		UART_EPS_Send_NFC( UART_EPS_ID_NFS_Prep_Take_CTRL, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr );
-//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 1, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-//		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Get_Reboot_count, 0, UART_M_eps_comm, UART_B_eps_comm, pmm_ptr, pdm_ptr );
-
-//------------- FRAM test ---------------//
-
-//#define I2C_FRAM1_addr 0x50
-//	uint8_t fram_array[128] = {0};
-//	uint8_t fram_write_array[128];
-//	int8_t error_status = 0;
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		fram_write_array[i] = 0xFF;
-//	}
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
-//	error_status += FRAM_triple_write_data(I2C3, I2C_FRAM1_addr, fram_write_array, 128);
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-////	error_status += FRAM_erase(I2C3, I2C_FRAM1_addr, FRAM_SIZE_64KB);
-//	error_status += FRAM_is_empty(I2C3, I2C_FRAM1_addr, I2C_FRAM1_addr, FRAM_SIZE_64KB);
-//
-//	for(uint8_t i = 0; i < 128; i++){
-//		error_status += FRAM_majority_read_byte(I2C3, I2C_FRAM1_addr, i, fram_array + i);
-//	}
-//	error_status += FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
-
-
-//==========================================//
-
-//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
-//	PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
-
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-//	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-
-	//	printf("test  \n");
+//printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 
 

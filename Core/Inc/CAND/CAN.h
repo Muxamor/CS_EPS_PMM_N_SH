@@ -55,6 +55,7 @@ extern "C" {
 #define CAN_EPS_Mode_offset             36
 
 #define CAN_Switch_active_CPU_offset    37
+#define CAN_Reset_to_default_offset     38
 
 #define CAN_Perform_Deploy_offset       39
 
@@ -65,20 +66,29 @@ extern "C" {
 #define CAN_AB3_Heat_Branch1_offset     44
 #define CAN_AB3_Heat_Branch2_offset     45
 
-#define CAN_PAM_Power_DC_DC_offset      46
-#define CAN_PAM_Power_LDO_offset        47
+#define CAN_PAM_PWR_DC_DC_offset      46
+#define CAN_PAM_PWR_LDO_offset        47
 
-#define CAN_PMM_Power_PBM_Logic_offset  48
-#define CAN_PMM_Power_CAN_main_offset   49
-#define CAN_PMM_Power_CAN_backup_offset 50      //+50           Вкл/Выкл питания резервного CAN
+#define CAN_PMM_PWR_PBM_Logic_offset  48
+#define CAN_PMM_PWR_CAN_main_offset   49
+#define CAN_PMM_PWR_CAN_backup_offset 50
 
+#define CAN_PAM_PWR_TM_SP_CH1_offset  51
+#define CAN_PAM_PWR_TM_SP_CH2_offset  52
+#define CAN_PAM_PWR_TM_SP_CH3_offset  53
+#define CAN_PAM_PWR_TM_SP_CH4_offset  54
+#define CAN_PAM_PWR_TM_SP_CH5_offset  55
+#define CAN_PAM_PWR_TM_SP_CH6_offset  56
+
+#define CAN_PMM_PWR_OFF_Passive_CPU_offset   57
+#define CAN_PMM_Reboot_Passive_CPU_offset    58
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
 
 extern uint64_t CAN_cmd_mask_status;
-extern uint8_t CAN1_exchange_timeout_flag;
-extern uint8_t CAN2_exchange_timeout_flag;
+extern uint8_t CAN1_exchange_data_flag;  // 0 - no exchange   1 - was exchange
+extern uint8_t CAN2_exchange_data_flag;// 0 - no exchange  1 - was exchange
 
 typedef union {
   struct {
@@ -132,14 +142,14 @@ struct CAN_IVar4 {
     uint8_t CAN_AB3_Discharge_key_branch_2;   	//+27            Командный регистр ключа разряда ветви 2 АБ3
 
     // Массив командных регистров линий питания
-    uint8_t CAN_PWR_CH1;                    //+28           Командный регистр канал питаня 1 (СОП1)
-    uint8_t CAN_PWR_CH2;                    //+29           Командный регистр канал питаня 2 (СОП2)
-    uint8_t CAN_PWR_CH3;                    //+30           Командный регистр канал питаня 3 (БРК1)
-    uint8_t CAN_PWR_CH4;                    //+31           Командный регистр канал питаня 4 (БРК2)
-    uint8_t CAN_PWR_CH5;                    //+32           Командный регистр канал питаня 5 ( - )
-    uint8_t CAN_PWR_CH6;                    //+33           Командный регистр канал питаня 6 ( - )
-    uint8_t CAN_PWR_VBAT1;                  //+34           Командный регистр линии VBAT1 (МС)
-    uint8_t CAN_PWR_VBAT2;                  //+35           Командный регистр линии VBAT2 (МС)
+    uint8_t CAN_PDM_PWR_CH1;                    //+28           Командный регистр канал питаня 1 (СОП1)
+    uint8_t CAN_PDM_PWR_CH2;                    //+29           Командный регистр канал питаня 2 (СОП2)
+    uint8_t CAN_PDM_PWR_CH3;                    //+30           Командный регистр канал питаня 3 (БРК1)
+    uint8_t CAN_PDM_PWR_CH4;                    //+31           Командный регистр канал питаня 4 (БРК2)
+    uint8_t CAN_PDM_PWR_CH5;                    //+32           Командный регистр канал питаня 5 ( - )
+    uint8_t CAN_PDM_PWR_CH6;                    //+33           Командный регистр канал питаня 6 ( - )
+    uint8_t CAN_PMM_PWR_VBAT1;                  //+34           Командный регистр линии VBAT1 (МС)
+    uint8_t CAN_PMM_PWR_VBAT2;                  //+35           Командный регистр линии VBAT2 (МС)
     uint8_t CAN_EPS_Mode;                   //+36			Установить режим СЭС
     uint8_t CAN_Set_active_CPU;             //+37		    Переключатель основной/резервный
     uint8_t CAN_Reset_to_default;           //+38           Сброс параметров в состояние "по умолчанию"
@@ -150,12 +160,19 @@ struct CAN_IVar4 {
     uint8_t CAN_AB2_Heat_Branch2;           //+43           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 2
     uint8_t CAN_AB3_Heat_Branch1;           //+44           Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 3
     uint8_t CAN_AB3_Heat_Branch2;           //+45           Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 3
-    uint8_t CAN_PAM_Power_DC_DC;            //+46           Вкл/Выкл DC_DC источник питания PAM
-    uint8_t CAN_PAM_Power_LDO;           	//+47           Вкл/Выкл LDO источник питания PAM
-    uint8_t CAN_PMM_Power_PBM_Logic;        //+48           Вкл/Выкл питания логики PBM
-    uint8_t CAN_PMM_Power_CAN_main;         //+49           Вкл/Выкл питания основного CAN
-    uint8_t CAN_PMM_Power_CAN_backup;       //+50           Вкл/Выкл питания резервного CAN
-
+    uint8_t CAN_PAM_PWR_DC_DC;            //+46           Вкл/Выкл DC_DC источник питания PAM
+    uint8_t CAN_PAM_PWR_LDO;           	//+47           Вкл/Выкл LDO источник питания PAM
+    uint8_t CAN_PMM_PWR_PBM_Logic;        //+48           Вкл/Выкл питания логики PBM
+    uint8_t CAN_PMM_PWR_CAN_main;         //+49           Вкл/Выкл питания основного CAN
+    uint8_t CAN_PMM_PWR_CAN_backup;       //+50           Вкл/Выкл питания резервного CAN
+    uint8_t CAN_PAM_PWR_TM_SP_CH1;        //+51           Вкл/Выкл питания телеметрии солнечных панелей канал №1
+    uint8_t CAN_PAM_PWR_TM_SP_CH2;        //+52           Вкл/Выкл питания телеметрии солнечных панелей канал №2
+    uint8_t CAN_PAM_PWR_TM_SP_CH3;        //+53           Вкл/Выкл питания телеметрии солнечных панелей канал №3
+    uint8_t CAN_PAM_PWR_TM_SP_CH4;        //+54           Вкл/Выкл питания телеметрии солнечных панелей канал №4
+    uint8_t CAN_PAM_PWR_TM_SP_CH5;        //+55           Вкл/Выкл питания телеметрии солнечных панелей канал №5
+    uint8_t CAN_PAM_PWR_TM_SP_CH6;        //+56           Вкл/Выкл питания телеметрии солнечных панелей канал №6
+    uint8_t CAN_PMM_PWR_OFF_Passive_CPU;  //+57           Вкл/Выкл посивный CPU
+    uint8_t CAN_PMM_Reboot_Passive_CPU;     //+58           Перезагрузить посивный CPU
 };
 
 
@@ -266,7 +283,10 @@ struct CAN_IVar5{
     uint8_t  CAN_SES_module_system_elements_status[5];              //+127   |  const = 0xBEBFC0C1C2         |   Статус элементов системы модуля СЭС, битовая маска
     uint32_t CAN_Number_of_restarts_of_the_SES_module;              //+132   |  const = 0xC3C4C5C6           |   Количество перезапусков основного модуля СЭС
     uint32_t CAN_Number_of_restarts_of_the_reserve_SES_module;      //+136   |  const = 0xC7C8C9CA           |   Количество перезапусков резервного модуля СЭС
-    uint32_t CAN_SES_module_data_array1;                            //+140   |  const = 0xCBCCCDCE           |   Массив 1 данных о работе СЭС
+    uint8_t  CAN_State_PWR_CANmain;                                 //+140   |  const = 0xCB                 |   Состояние ключа питаня CAN main
+    uint8_t  CAN_State_PWR_CANbackup;                               //+141   |  const = 0xCC                 |   Состояние ключа питаня CAN backup
+    uint8_t  CAN_OFF_PWR_Passive_CPU;                               //+142   |  const = 0xCD                 |   Упарвление питанием пассивного CPU
+    uint8_t  CAN_EPS_Const_Mode;                                    //+142   |  const = 0xCE                 |   Режим констант
     uint8_t  CAN_Primary_standby_switch;                            //+144   |  const = 0xCF                 |   Переключатель основной/резервный
 
     // ------------  ТМИ 7 --------------------//
@@ -311,16 +331,15 @@ struct CAN_IVar5{
 
     //Массив медианных температур модуля СЭС                               |                               |
     uint16_t CAN_Opening_elements_state;                            //+199     |  const = 0xEEEF               |  Состояние концевиков раскрыв. элементов, битовая маска
-    uint8_t  CAN_SES_module_data_array2[57];                        //+201     |  const = 0xF0F1F2F3F4F5F6F7F8 |  Массив 2 данных о работе СЭС
+    uint8_t  CAN_SES_module_data_array2[60];                        //+201     |  const = 0xF0F1F2F3F4F5F6F7F8 |  Массив 2 данных о работе СЭС
                                                                     //                      F9FAFBFCFDFEFF00   |
                                                                     //                      0102030405060708   |
                                                                     //                      090A0B0C0D0E0F10   |
                                                                     //                      1112131415161718   |
                                                                     //                      191A1B1C1D1E1F20   |
                                                                     //                      2122232425262728   |
-    uint8_t  CAN_Reset_to_default;                                  //+258     |  const = 0x29                 |  Сброс параметров в состояние "по умолчанию"
-    uint8_t  CAN_Reset_counter_to_default_state;                    //+259     |  const = 0x2A                 |  Счетчик сбросов параметров в состояние "по умолчанию"
-    uint8_t  CAN_Perform_disclosure;                                //+260     |  const = 0x2B                 |  Выполнить раскрытие
+                                                                    //                      292A2B             |
+
 
     // ----------------------- ТМИ 8 -------------------        --------  	   |
     //Массив температур солнечных панелей                                      |
@@ -402,19 +421,37 @@ struct CAN_IVar5{
     uint8_t  CAN_PDM_sensor2;                                       //+327     |  const = 0x6E               |   PDM датчик 2
     uint8_t  CAN_PDM_sensor3;                                       //+328     |  const = 0x6F               |   PDM датчик 3
     uint8_t  CAN_PDM_sensor4;                                       //+329     |  const = 0x70               |   PDM датчик 4
-    uint8_t  CAN_data_array3[47];                                   //+330     |  const = 0x717273747576     |   Массив 3 данных о работе СЭС
-                                                                           //           7778797A7B7C
-                                                                           //           7D7E7F808182
-                                                                           //           838485868788
-                                                                           //           898A8B8C8D8E
-                                                                           //           8F9091929394
-                                                                           //           95969798999A
-                                                                           //           9B9C9D9E9F
-                                                                //+377
+    uint8_t  CAN_data_array3[10];                                   //+330     |  const = 0x717273747576     |   Массив 3 данных о работе СЭС
+                                                                               //           7778797A7
+    uint8_t  CAN_PMM_PBM_Termostat_bit_mask;                        //+340     |  const = 0x7B                 |  Термостаты модулей PBMs битовая маска
+    uint8_t  CAN_PMM_PWR_PBM_Logic;                                 //+341     |  const = 0x7C                 |   Питание логики PBMs
+    uint8_t  CAN_PAM_PWR_DC_DC;                                     //+342     |  const = 0x7D                 |   Источник PAM DC-DC
+    uint8_t  CAN_PAM_PWR_LDO;                                       //+343     |  const = 0x7E                 |   Источник PAM LDO
+    uint8_t  CAN_PAM_SP_PWR_CH1;                                    //+344     |  const = 0x7F                 |   Питание телеметрии SP канал 1
+    uint8_t  CAN_PAM_SP_PWR_CH2;                                    //+345     |  const = 0x80                 |   Питание телеметрии SP канал 2
+    uint8_t  CAN_PAM_SP_PWR_CH3;                                    //+346     |  const = 0x81                 |   Питание телеметрии SP канал 3
+    uint8_t  CAN_PAM_SP_PWR_CH4;                                    //+347     |  const = 0x82                 |   Питание телеметрии SP канал 4
+    uint8_t  CAN_PAM_SP_PWR_CH5;                                    //+348     |  const = 0x83                 |   Питание телеметрии SP канал 5
+    uint8_t  CAN_PAM_SP_PWR_CH6;                                    //+349     |  const = 0x84                 |   Питание телеметрии SP канал 6
+    uint8_t  CAN_EPS__Mode;                                         //+350     |  const = 0x85                 |   Режим работы EPS
+    uint16_t CAN_Version_FW;                                        //+351     |  const = 0x8687               |   Firmware version
+    uint16_t CAN_Channel1_current_average_10s;                      //+353     |  const = 0x8889               |   Ток канал 1 усреднение 10s
+    uint16_t CAN_Channel2_current_average_10s;                      //+355     |  const = 0x8A8B               |   Ток канал 2 усреднение 10s
+    uint16_t CAN_Channel3_current_average_10s;                      //+357     |  const = 0x8C8D               |   Ток канал 3 усреднение 10s
+    uint16_t CAN_Channel4_current_average_10s;                      //+359     |  const = 0x8E8F               |   Ток канал 4 усреднение 10s
+    uint16_t CAN_VBAT1_current_average_10s;                         //+361     |  const = 0x9091               |   Ток VBAT1 усреднение 10s
+    uint16_t CAN_VBAT2_current_average_10s;                         //+363     |  const = 0x9293               |   Ток VBAT2 усреднение 10s
+
+    uint16_t CAN_Channel1_voltage_average_10s;                      //+365     |  const = 0x9495               |  Напряжение канала 1 СОП1 усреднение 10s
+    uint16_t CAN_Channel2_voltage_average_10s;                      //+367     |  const = 0x9697               |  Напряжение канала 2 СОП2 усреднение 10s
+    uint16_t CAN_Channel3_voltage_average_10s;                      //+369     |  const = 0x9899               |  Напряжение канала 3 БРК1 усреднение 10s
+    uint16_t CAN_Channel4_voltage_average_10s;                      //+371     |  const = 0x9A9B               |  Напряжение канала 4 БРК2 усреднение 10s
+    uint16_t CAN_VBAT1_voltage_average_10s;                         //+373     |  const = 0x9C9D               |   Напряжение VBAT1 усреднение 10s
+    uint16_t CAN_VBAT2_voltage_average_10s;                         //+375     |  const = 0x9E9F               |   Напряжение VBAT2 усреднение 10s
 
     // size ТМИ0+ТМИ4+ТМИ7+ТМИ8 = 29 + 3 * 116 = 377
 
-} ;
+};
 
 #pragma pack(pop)
 

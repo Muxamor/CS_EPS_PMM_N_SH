@@ -1,10 +1,10 @@
-
+#include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
 #include "i2c_comm.h"
 #include "FRAM.h"
 
 
-/** @brief	Erasing all FRAM's cells.
+/** @brief	Erasing all FRAM's cells. (write 0x00)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_fram_addr - I2C address FRAM
 	@param 	fram_size - size of FRAM in bytes.
@@ -40,38 +40,39 @@ ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_s
 			FRAM_SIZE_64KB : 0x2000
 	@retval 0 - FRAM is empty,
 			1 - FRAM is not empty,
-		   -1 - ERROR
+		   -1 - ERROR_N
 */
-int8_t FRAM_Detect_Empty(I2C_TypeDef *I2Cx, uint8_t I2C_addr_fram_main, uint8_t I2C_addr_fram_backup, uint32_t fram_size){
+int8_t FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, uint32_t fram_size ) {
 
-	ErrorStatus error_status = 0;
+	ErrorStatus error_status = SUCCESS;
 	uint32_t i = 0;
 	uint8_t read_byte;
 	uint16_t read_sum = 0;
 
-	for( i = 0; i < 128; i++){
-		error_status += FRAM_majority_read_byte(I2Cx, I2C_addr_fram_main, i, &read_byte);
+	for( i = 0; i < 128; i++  ){
+		error_status = FRAM_majority_read_byte(I2Cx_fram, I2C_addr_fram, i, &read_byte);
 		read_sum += read_byte;
-		if(error_status != 0){
-			return ERROR_N;
-		}
+		if( error_status != SUCCESS){
+            return ERROR_N;  // FRAM ERROR_N
+        }
 	}
-	if(read_sum == 0){
-		return SUCCESS;  // empty
+
+	if( read_sum == 0 ){
+        return 0;  // FRAM is empty
+
+	}else if( read_sum == (0xFF * 128) ){ // FRAM is empty bat all 0xFF
+
+        error_status = FRAM_erase(I2Cx_fram, I2C_addr_fram, fram_size); // ckear FRAM write 0x00
+        if(error_status != SUCCESS){
+            return ERROR_N;
+        }else{
+            return 0;  // FRAM empty
+        }
+
+    }else{
+        return 1;  // FRAM not empty
 	}
-	else if(read_sum == (0xFF * 128)){
-		error_status += FRAM_erase(I2Cx, I2C_addr_fram_main, fram_size);
-		error_status += FRAM_erase(I2Cx, I2C_addr_fram_backup, fram_size);
-		if(error_status != 0){
-			return ERROR_N;
-		}
-		else{
-			return SUCCESS;  // empty
-		}
-	}
-	else{
-		return 1;  // not empty
-	}
+
 }
 
 
@@ -142,10 +143,7 @@ ErrorStatus FRAM_triple_verif_write_data(I2C_TypeDef *I2Cx, uint8_t I2C_fram_add
 	for( i = 0; i < data_size; i++ ){
 
 		if( FRAM_majority_read_byte(I2Cx, I2C_fram_addr, i, &ptr_read_byte ) != SUCCESS ){//first reading attempt
-
-			if( FRAM_majority_read_byte(I2Cx, I2C_fram_addr, i, &ptr_read_byte ) != SUCCESS ){ //second reading attempt
 				return ERROR_N;
-			}
 		}
 
 		if( *(ptr_data + i) != ptr_read_byte ){
@@ -169,10 +167,7 @@ ErrorStatus FRAM_majority_read_data(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, ui
 
 	for( i = 0; i < data_size; i++ ){
 		if( FRAM_majority_read_byte(I2Cx, I2C_fram_addr, i, ptr_data + i) != SUCCESS ){//first reading attempt
-			
-			if( FRAM_majority_read_byte(I2Cx, I2C_fram_addr, i, ptr_data + i) != SUCCESS ){ //second reading attempt
-				return ERROR_N;
-			}
+			return ERROR_N;
 		}
 	}
 
@@ -216,26 +211,72 @@ ErrorStatus FRAM_majority_read_data_two_fram(I2C_TypeDef *I2Cx, uint8_t I2C_addr
 */
 ErrorStatus FRAM_majority_read_byte(I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, uint32_t offset, uint8_t *read_byte){
 
-	uint8_t seg1_byte;
-	uint8_t seg2_byte;
-	uint8_t seg3_byte;
+	uint8_t seg1_byte = 114;
+	uint8_t seg2_byte = 15;
+	uint8_t seg3_byte = 65;
 
-	I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_1) + offset), &seg1_byte);
-	I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_2) + offset), &seg2_byte);
-	I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_3) + offset), &seg3_byte);
+    int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+    int8_t error_status = SUCCESS;
+    uint8_t i = 0;
 
-	if(seg1_byte == seg2_byte){
-		*read_byte = seg1_byte;
 
-	}else if (seg1_byte == seg3_byte){
-		*read_byte = seg1_byte;
+    error_I2C = ERROR_N;
+    while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-	}else if(seg2_byte == seg3_byte){
-		*read_byte = seg2_byte;
+        error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_1) + offset), &seg1_byte);
 
-	}else{
-		return ERROR_N;
-	}
+        if( error_I2C != SUCCESS ){
+            i++;
+            LL_mDelay( fram_i2c_delay_att_conn );
+        }
+    }
+
+    error_status = error_I2C;
+
+    error_I2C = ERROR_N;
+    while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+        error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_2) + offset), &seg2_byte);
+
+        if( error_I2C != SUCCESS ){
+            i++;
+            LL_mDelay( fram_i2c_delay_att_conn );
+        }
+    }
+
+    error_status = error_status + error_I2C;
+
+    error_I2C = ERROR_N;
+    while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+        error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_3) + offset), &seg3_byte);
+
+        if( error_I2C != SUCCESS ){
+            i++;
+            LL_mDelay( fram_i2c_delay_att_conn );
+        }
+    }
+
+    error_status = error_status + error_I2C;
+
+    if( error_status != -3 ){
+
+        if( seg1_byte == seg2_byte ){
+            *read_byte = seg1_byte;
+
+        }else if( seg1_byte == seg3_byte ){
+            *read_byte = seg1_byte;
+
+        }else if( seg2_byte == seg3_byte ){
+            *read_byte = seg2_byte;
+
+        }else{
+            return ERROR_N;
+        }
+
+    }else{
+        return ERROR_N;
+    }
 
 	return SUCCESS;
 }

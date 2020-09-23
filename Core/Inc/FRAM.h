@@ -5,9 +5,13 @@
 extern "C" {
 #endif
 
+#define fram_i2c_attempt_conn 3
+#define fram_i2c_delay_att_conn	 3 	 //ms Delay between attempts connection through I2C in millisecond
+
 #define FRAM_Addr_segment_1		0x0000
 #define FRAM_Addr_segment_2		0x5555
 #define FRAM_Addr_segment_3		0xAAAA
+#define FRAM_SIZE_64KB  0x2000
 
 
 #define FRAM_WRITE_PROTECTION_ENABLE	1
@@ -21,7 +25,7 @@ typedef enum {
 } ErrorStatus; */
 
 ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_size);
-int8_t FRAM_Detect_Empty(I2C_TypeDef *I2Cx, uint8_t I2C_addr_fram_main, uint8_t I2C_addr_fram_backup, uint32_t fram_size);
+int8_t FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, uint32_t fram_size );
 
 ErrorStatus FRAM_set_write_access(uint8_t access_flag);
 

@@ -566,11 +566,11 @@ void SetupInterrupt(void) {
 	/**********************************************/
 
 	/* UART5 interrupt Init */
-	NVIC_SetPriority(UART5_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 14, 0)); //Set priority №14 from 0..15
-	LL_USART_EnableIT_RXNE(UART5); //Enable Interrupt RX buff no empty 
+	//For Norbi not need yat NVIC_SetPriority(UART5_IRQn,NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 14, 0)); //Set priority №14 from 0..15
+    //For Norbi not need yat LL_USART_EnableIT_RXNE(UART5); //Enable Interrupt RX buff no empty
 	//LL_USART_DisableIT_RXNE(UART5);
 	//LL_USART_DisableIT_ERROR(USART5);
-	NVIC_EnableIRQ(UART5_IRQn);
+    //For Norbi not need yat NVIC_EnableIRQ(UART5_IRQn);
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
 
@@ -863,13 +863,13 @@ void GPIO_Init(void) {
 
 }
 
-/** @rief  This function setup interrupts for all ports and inside event .
+/** @rief  Init PWM TIM 3 Ch3 and Ch4
  * @param  freq - Frequency  PWM in Hz
  * @param  duty_cycle - PWM in %
  * @param  tim_divider - divider Timer
  * @retval None
  */
-void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider) {
+void PWM_Init_Ch3_Ch4( uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider) {
 
 	uint32_t pwm_freq = 0;
 
@@ -940,6 +940,29 @@ void PWM_init(uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider) {
 	//LL_TIM_EnableAllOutputs(TIM3); //???
 	LL_TIM_EnableCounter(TIM3);
 }
+
+
+
+/** @rief  DeInit PWM TIM 3 Ch3 and Ch4
+ * @param  None
+ * @retval None
+ */
+void PWM_DeInit_Ch3_Ch4( void ){
+
+	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+	LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH3);
+	LL_TIM_CC_DisableChannel(TIM3, LL_TIM_CHANNEL_CH4);
+	LL_TIM_DisableCounter(TIM3);
+	LL_TIM_DeInit(TIM3);
+	LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_TIM3);
+
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+}
+
 
 /** @brief IWDG Initialization Function
  * @param  period - Set WDG period in ms (now max 4095 ms)

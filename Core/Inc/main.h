@@ -34,7 +34,7 @@ extern _UART_EPS_COMM *UART_B_eps_comm;
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx.h"
-#include "stm32l4xx_ll_iwdg.h"
+
 #include "stm32l4xx_ll_crs.h"
 #include "stm32l4xx_ll_rcc.h"
 #include "stm32l4xx_ll_bus.h"

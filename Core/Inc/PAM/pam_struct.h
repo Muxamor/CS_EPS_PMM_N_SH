@@ -6,13 +6,15 @@
 extern "C" {
 #endif
 
+
 #include "PAM/pam_config.h"
+#include "PAM/pam_sp_config.h"
 
 typedef struct{
 
-	uint8_t State_ID [PAM_SP_ID_quantity];		    			//SP state ideal diode 0-Open, 1-Close.
-	int8_t Temp_sensor [PAM_SP_Temp_sensor_quantity]; 			//SP temperature
-	uint8_t Error_temp_sensor [PAM_SP_Temp_sensor_quantity];
+	uint8_t State_ID [PAM_SP_ID_max_quantity];		    			//SP state ideal diode 0-Open, 1-Close. (primary  MOSSFET open, close )
+	int8_t Temp_value [PAM_SP_temp_sens_max_quantity]; 			//SP temperature
+	uint8_t Error_temp_sensor [PAM_SP_temp_sens_max_quantity];
 
 
 	uint8_t Error_I2C_GPIO_Ext1:1;								//0-OK, 1-ERROR.
@@ -53,14 +55,12 @@ typedef struct{
 typedef struct{
 
 	_PAM_PWR_IN_CH PWR_IN_Channel[PAM_PWR_IN_Ch_quantity];
-	_PAM_SP SP_Channel [PAM_SP_quantity];
-    _PAM_PWR_CH_TM_SP PWR_Channel_TM_SP[PAM_PWR_Ch_TM_SP_quantity];
+	_PAM_SP Solar_Panel [PAM_SP_quantity];
+    _PAM_PWR_CH_TM_SP PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch_quantity];
 
 	int8_t Temp_sensor[4]; //PAM temperature
 
-   // uint8_t State_eF_L_out_SP 			:1; // Need to save in flash ??????????????????????
-
-	uint16_t State_DC_DC 			:1; // Need to save in flash
+ 	uint16_t State_DC_DC 			:1; // Need to save in flash
 	uint16_t State_LDO 				:1; // Need to save in flash
 	uint16_t PG_DC_DC 				:1;
 	uint16_t PG_LDO 				:1;
@@ -76,7 +76,7 @@ typedef struct{
     uint16_t PAM_save_conf_flag		:1;
 	uint16_t :2;
 
-	uint8_t PAM_ID_module;        //identifier of PAM
+	uint8_t PAM_ID_module;        //identifier of PAM // Need to save in flash
 	uint8_t Alignment_structure; //Alignment
 
 	uint16_t reserved1;

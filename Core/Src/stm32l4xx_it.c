@@ -107,6 +107,7 @@ void LPUART1_IRQHandler(void){
 
 			UART_M_eps_comm->stop_recv_pack_flag = 0;
 			UART_M_eps_comm->permit_recv_pack_flag = 1;
+            UART_M_eps_comm->get_pack_timer = SysTick_Counter;
 			UART_M_eps_comm->expected_size_recv_pack = 8; // 1(preabmle)+1(destination address)+1(source address)+1(package tag)+2(data size)+2(crc)
 			UART_M_eps_comm->size_recv_pack++;
 
@@ -119,7 +120,7 @@ void LPUART1_IRQHandler(void){
 				
 				UART_M_eps_comm->size_recv_pack++;
 
-			}else{ // if the address did not match finish get parsel.
+			}else{ // if the address did not match finish get a parcel.
 				UART_M_eps_comm->permit_recv_pack_flag = 0;
 				UART_M_eps_comm->size_recv_pack = 0;
 			}
@@ -146,6 +147,7 @@ void LPUART1_IRQHandler(void){
 			//We received the package
 			if( UART_M_eps_comm->size_recv_pack >= UART_M_eps_comm->expected_size_recv_pack ){
 				//NVIC_DisableIRQ(LPUART1_IRQn);
+                UART_M_eps_comm->data_exchange_flag = 1;
 				UART_M_eps_comm->stop_recv_pack_flag = 1;
 			}
 
@@ -190,6 +192,7 @@ void USART3_IRQHandler(void){
 
 			UART_B_eps_comm->stop_recv_pack_flag = 0;
 			UART_B_eps_comm->permit_recv_pack_flag = 1;
+            UART_B_eps_comm->get_pack_timer = SysTick_Counter;
 			UART_B_eps_comm->expected_size_recv_pack = 8; // 1(preabmle)+1(destination address)+1(source address)+1(package tag)+2(data size)+2(crc)
 			UART_B_eps_comm->size_recv_pack++;
 
@@ -229,6 +232,7 @@ void USART3_IRQHandler(void){
 			//We received the package
 			if( UART_B_eps_comm->size_recv_pack >= UART_B_eps_comm->expected_size_recv_pack ){
 				//NVIC_DisableIRQ( USART3_IRQn );
+                UART_B_eps_comm->data_exchange_flag = 1;
 				UART_B_eps_comm->stop_recv_pack_flag = 1;
 			}
 

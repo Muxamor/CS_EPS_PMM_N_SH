@@ -30,8 +30,8 @@ typedef struct  // Structure for PBM data
 	int16_t Branch_1_VoltageLo;				// Register voltage of lower battery (on GND) in mV.
 	
 	int8_t Branch_1_Temperature;			// Register temperature of DS2777 in °C.
-	uint8_t Branch_2_DchgEnableBit :1; 		// Discharge Enable Bit must be set to allow the ON state
-	uint8_t Branch_2_ChgEnableBit :1; 		// Charge Enable Bit must be set to allow the ON state.
+	uint8_t Branch_2_DchgEnableBit :1; 		// Discharge Enable Bit must be set to allow the ON state// Need to save in flash.
+	uint8_t Branch_2_ChgEnableBit :1; 		// Charge Enable Bit must be set to allow the ON state.// Need to save in flash.
 	uint8_t Branch_2_DchgControlFlag :1; 	// Discharge Control Flag indicates the real logic state of the DC pin driver.
 	uint8_t Branch_2_ChgControlFlag :1; 	// Charge Control Flag indicates the logic state of the CC pin driver.
 	uint8_t Branch_2_LrnFlag :1; 			// LEARN Flag indicates that the current-charge cycle can use to learn batt.

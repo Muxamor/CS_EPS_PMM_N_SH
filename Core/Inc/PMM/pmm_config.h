@@ -55,6 +55,10 @@ extern "C" {
 
 #define FRAM_SIZE_64KB					0x2000
 
+#define PMM_CAN_Exch_Data_Check_Time_Gap    150000 // 2m 30s in milliseconds (real 5m 00s after first 2m 30s reboot power CAN)
+#define PMM_ReInit_Time_Gap  		        300000 // 5m00s in milliseconds
+#define PMM_UART_Exch_Data_Gap      		45000 // 45s in milliseconds
+
 
 #define pmm_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
 #define pmm_i2c_delay_att_conn		3 	 //ms Delay between attempts connection through I2C in millisecond
@@ -66,7 +70,7 @@ extern "C" {
 #define PMM_Deploy_Time_Delay       1800000 //in milliseconds 1800000 = 30 minuts
 #define PMM_Deploy_Burn_time_1      3500  // in milisecand
 #define PMM_Deploy_Burn_time_2      4500  // in milisecand
-#define PMM_Deploy_Burn_time_3      5000  // in milisecand
+#define PMM_Deploy_Burn_time_3      5500  // in milisecand
 
 #define PMM_Deploy_Burn_Attempt_1   0x00
 #define PMM_Deploy_Burn_Attempt_2   0x01

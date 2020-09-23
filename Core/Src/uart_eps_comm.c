@@ -30,7 +30,6 @@ extern uint32_t SysTick_Counter;
 	@param  package_tag - package tag CMD, ACK or NFC.
 	@param  send_data[] - send data massive.
 	@param 	size_data -  size sending data.
-	@param  *pdm_ptr - pointer to struct which contain all information about PDM.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t source_addr, uint8_t package_tag, uint8_t send_data[], uint16_t size_data ){
@@ -107,37 +106,6 @@ ErrorStatus UART_EPS_Check_CRC_Package( _UART_EPS_COMM *UART_eps_comm ){
 }
 
 
-/** @brief Set error EPS UART ports to pmm_ptr structure.
-	@param  *UART_eps_comm - pointer to UART port struct with get data.
-	@param  eps_p - contain pointer to struct which contain all parameters EPS.	
-	@retval None.
-*/
-void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p ){
-
-	if( UART_eps_comm->error_port_counter == 0 ){ // Errors in UARTs
-
-		if( UART_eps_comm->USARTx == LPUART1 ){
-			eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
-			
-		}else if( UART_eps_comm->USARTx == USART3 ){
-			eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
-		}
-		 
-	}else{
-		
-		if(UART_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold ){ // If there are five errors in a row, then set the UART port error
-
-			if( UART_eps_comm->USARTx == LPUART1 ){
-				eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
-
-			}else if( UART_eps_comm->USARTx == USART3 ){
-				eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
-			}
-		}
-	}
-	
-}
-
 
 /** @brief  Parsing received CMD from UART EPS port. (Internal exchange between main and backup CPU).
 	@param  *UART_eps_comm - pointer to UART port struct with get data.
@@ -168,9 +136,14 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 
 		memcpy( eps_p.eps_pmm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pmm_ptr) ) );
 		eps_p.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+        eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE; //just in case
+        eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
+        eps_p.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
+        eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
+        eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
 		eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1; //Save received settings in FRAM 
 
-		//Save restore counter value.
+		//Restore counter value.
 		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
 			eps_p.eps_pmm_ptr->reboot_counter_CPUm = reboot_counter;
 		}else{
@@ -298,7 +271,7 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_
 		reboot_counter = *(uint32_t*)(&(UART_eps_comm->recv_pack_buf[7]));
 			//	(((uint32_t)UART_eps_comm->recv_pack_buf[7]) << 24) | (((uint32_t)UART_eps_comm->recv_pack_buf[8]) << 16)  (((uint32_t)UART_eps_comm->recv_pack_buf[9]) << 8) | ((uint32_t)UART_eps_comm->recv_pack_buf[10]);
 		
-		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == 0 ){
+		if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
 			eps_p.eps_pmm_ptr->reboot_counter_CPUb = reboot_counter;
 		}else{
 			eps_p.eps_pmm_ptr->reboot_counter_CPUm = reboot_counter;
@@ -410,7 +383,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _EPS_Param 
 		UART_eps_comm->error_port_counter++;
 	}
 
-	//UART_EPS_Set_Error_ports( UART_eps_comm, pmm_ptr ); 
+	//UART_EPS_Set_Error_ports( UART_eps_comm, pmm_ptr );
 
 	return error_status;
 }
@@ -522,9 +495,10 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 
 		while( UART_X_eps_comm->waiting_answer_flag != 0 ){ //waiting_answer_flag - The flag should be reset in the function UART_EPS_Pars_Get_Package when a response is received.
 
-			if ( (SysTick_Counter - timeout_counter) > UART_EPS_ACK_TIMEOUT ){
+			if ( ( (uint32_t)(SysTick_Counter - timeout_counter) ) > UART_EPS_ACK_TIMEOUT ){
 				UART_X_eps_comm->waiting_answer_flag = 0;
 				UART_X_eps_comm->error_port_counter++;
+                error_status = ERROR_N;
                 #ifdef DEBUGprintf
 				    Error_Handler();
                 #endif
@@ -621,3 +595,22 @@ ErrorStatus UART_EPS_Send_ACK ( _UART_EPS_COMM *UART_eps_comm , uint8_t send_dat
 }
 
 
+/** @brief Reset receive package. If the waiting time for receiving a packet is exceeded, the reception is dropped.
+	@param  *UART_eps_comm - pointer to UART port struct with get data.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus UART_EPS_Check_TimeOut_Receive( _UART_EPS_COMM *UART_eps_comm ){
+
+    int8_t error_status = SUCCESS;
+
+    if( UART_eps_comm->permit_recv_pack_flag == 1 && UART_eps_comm->stop_recv_pack_flag == 0 ){
+
+        if( ((uint32_t)( SysTick_Counter - UART_eps_comm->get_pack_timer )) > ((uint32_t)UART_EPS_GET_PACK_TIMEOUT) ){
+            UART_eps_comm->permit_recv_pack_flag = 0;
+            UART_eps_comm->stop_recv_pack_flag = 0;
+            error_status = ERROR_N;
+        }
+    }
+
+    return error_status;
+}

@@ -26,6 +26,7 @@ typedef struct{
 	uint32_t PWR_Ch_State_I2C_Bus 				:1; //0-DISABLE, 1-ENABLE. State power I2C bus.(Norbi not use) // Need to save in flash.
 	uint32_t PWR_Supply_Main_PG 				:1; //0-OK, 1-ERROR. Power good Main power supply 3.3V
 	uint32_t PWR_Supply_Backup_PG 				:1; //0-OK, 1-ERROR. Power good Backup power supply 3.3V
+    uint32_t PWR_OFF_Passive_CPU	    		:1; //0-Enable, 1- disable power passive CPU
 	uint32_t PWR_Ch_PG_CANmain					:1; //0-OK, 1-ERROR. Power good main CAN power ch.
 	uint32_t PWR_Ch_PG_CANbackup				:1; //0-OK, 1-ERROR. Power good backup CAN power ch.
 	uint32_t PWR_Ch_PG_Vbat1_eF1 				:1; //0-OK, 1-ERROR. Power good VBAT1 eF1 channel status.
@@ -37,7 +38,7 @@ typedef struct{
 	uint32_t PWR_Ch_PG_5V_Bus 					:1; //0-OK, 1-ERROR. Power good 5V power. (Norbi not use)
 	uint32_t PWR_Ch_PG_3_3V_Bus 				:1; //0-OK, 1-ERROR. Power good 3.3V power. (Norbi not use)
 	uint32_t PWR_Ch_PG_I2C_Bus 					:1; //0-OK, 1-ERROR. Power good I2C power. (Norbi not use)
-	uint32_t :7;
+	uint32_t :6;
 
 
 	uint32_t Error_TMP1075_sensor				:1;	//=0 -OK, = 1-error temp. sensor TMP1075

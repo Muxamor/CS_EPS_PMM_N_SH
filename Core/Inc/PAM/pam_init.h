@@ -9,7 +9,7 @@ extern "C" {
 
 ErrorStatus PAM_init(_PAM *pam_ptr);
 
-ErrorStatus PAM_init_SP_Temp_sensors(_PAM *pam_ptr, uint8_t num_ch);
+//ErrorStatus PAM_init_SP_Temp_sensors(_PAM *pam_ptr, uint8_t num_ch);
 
 #ifdef __cplusplus
 }

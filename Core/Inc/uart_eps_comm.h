@@ -13,7 +13,7 @@ extern "C" {
 #define UART_EPS_NFC 0x03
 
 #define UART_EPS_PACK_SIZE_BUFF  512
-#define UART_EPS_ERROR_Threshold 6
+#define UART_EPS_ERROR_Threshold 3
 
 #define UART_EPS_ACK_TIMEOUT 250 //ms
 
@@ -46,6 +46,8 @@ extern "C" {
 
 #define UART_EPS_ID_NFS_Prep_Take_CTRL 		0x01
 
+#define UART_EPS_GET_PACK_TIMEOUT 		    10 // in milliseconds
+
 typedef struct{
 
 	USART_TypeDef* USARTx;
@@ -60,17 +62,19 @@ typedef struct{
 	uint8_t stop_recv_pack_flag 	  :1;
 	uint8_t recv_pack_timeout_flag 	  :1;
 	uint8_t waiting_answer_flag 	  :1; 
-	uint8_t :5;
+	uint8_t data_exchange_flag        :1;
+	uint8_t :4;
 
 	uint8_t error_port_counter;
 	uint8_t Alignment_structure1; //Alignment
+
+	uint32_t get_pack_timer;
 
 }_UART_EPS_COMM;
 
 
 ErrorStatus UART_EPS_Send_Package( USART_TypeDef* USARTx, uint8_t destination_addr, uint8_t source_addr, uint8_t package_tag, uint8_t send_data[], uint16_t size_data );
 ErrorStatus UART_EPS_Check_CRC_Package( _UART_EPS_COMM *UART_eps_comm );
-void UART_EPS_Set_Error_ports( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
 
 ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
 ErrorStatus UART_EPS_Pars_Get_ACK( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
@@ -80,6 +84,7 @@ ErrorStatus UART_EPS_Pars_Get_Package( _UART_EPS_COMM *UART_eps_comm, _EPS_Param
 ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p );
 ErrorStatus UART_EPS_Send_NFC( uint8_t nfc_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p );
 ErrorStatus UART_EPS_Send_ACK ( _UART_EPS_COMM *UART_eps_comm , uint8_t send_data[], uint16_t size_data );
+ErrorStatus UART_EPS_Check_TimeOut_Receive( _UART_EPS_COMM *UART_eps_comm );
 
 #ifdef __cplusplus
 }

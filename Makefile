@@ -5,9 +5,9 @@
 TARGET = CS_EPS_PMM_N_SH_v
 
 # version major update  0..255
-VERSION_FIRMWARE_MAJOR = 0
+VERSION_FIRMWARE_MAJOR = 1
 # version mainor update 0..255
-VERSION_FIRMWARE_MINOR = 1
+VERSION_FIRMWARE_MINOR = 3
 
 # Set the FLAG OS_SYSTEM - LINUX or MAC_OS or WINDOWS it depends which system are you use to build.
 BUILD_OS_SYSTEM = WINDOWS
@@ -60,6 +60,11 @@ Core/Src/PAM/pam_init_IC.c \
 Core/Src/PAM/pam_init.c \
 Core/Src/PAM/pam_ctrl.c \
 Core/Src/PAM/pam.c \
+Core/Src/PAM/pam_sp_config.c \
+Core/Src/PAM/pam_sp_init_IC.c \
+Core/Src/PAM/pam_sp_init.c \
+Core/Src/PAM/pam_sp_ctrl.c \
+Core/Src/PAM/pam_sp.c \
 Core/Src/PMM/pmm_config.c \
 Core/Src/PMM/pmm_init_IC.c \
 Core/Src/PMM/pmm_init.c \
@@ -68,6 +73,7 @@ Core/Src/PMM/pmm_savedata.c \
 Core/Src/PMM/pmm_sw_cpu.c \
 Core/Src/PMM/pmm.c \
 Core/Src/PMM/pmm_deploy.c \
+Core/Src/PMM/pmm_damage_ctrl.c\
 Core/Src/PBM/pbm_config.c \
 Core/Src/PBM/pbm_init_IC.c \
 Core/Src/PBM/pbm_init.c \
@@ -75,6 +81,7 @@ Core/Src/PBM/pbm_control.c \
 Core/Src/PBM/pbm.c \
 Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
+Core/Src/CAND/filter2D.c \
 Core/Src/stm32l4xx_it.c \
 Core/Src/syscalls.c \
 Core/Src/uart_eps_terminal.c \
@@ -209,7 +216,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 LDSCRIPT = STM32L496QGIX_FLASH.ld
 
 # libraries
-LIBS = -lc -lm -lnosys -lcanv_lib -lFlash_lib
+LIBS = -lc -lm -lnosys -lcanv_lib -lflash_lib
 LIBDIR = -L./Core/Src/LIB
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET)_$(VERSION_FIRMWARE_MAJOR)_$(VERSION_FIRMWARE_MINOR).map,--cref -Wl,--gc-sections
 

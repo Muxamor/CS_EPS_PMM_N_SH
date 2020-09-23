@@ -14,10 +14,10 @@ set(SIZE arm-none-eabi-size)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # version major update  0..255
-set(VERSION_FIRMWARE_MAJOR 0)
+set(VERSION_FIRMWARE_MAJOR 1)
 
 # version mainor update 0..255
-set(VERSION_FIRMWARE_MINOR 1)
+set(VERSION_FIRMWARE_MINOR 3)
 
 # project settings
 project(CS_EPS_PMM_N_SH_v C CXX ASM)
@@ -65,7 +65,7 @@ file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*")
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32L496QGIX_FLASH.ld)
 
 add_library(Flash_lib STATIC IMPORTED GLOBAL)
-set_target_properties( Flash_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libFlash_lib.a )
+set_target_properties( Flash_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libflash_lib.a )
 
 add_library(canv_lib STATIC IMPORTED GLOABAL)
 set_target_properties( canv_lib PROPERTIES IMPORTED_LOCATION  ${CMAKE_SOURCE_DIR}/Core/Src/LIB/libcanv_lib.a )
