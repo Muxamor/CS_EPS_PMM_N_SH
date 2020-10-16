@@ -221,8 +221,15 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Take_CTRL ){
-		PMM_Set_mode_Active_CPU( eps_p );
-		ACK_Attribute = 1;
+        PMM_Set_mode_Active_CPU(eps_p);
+        ACK_Attribute = 1;
+
+    }else if( cmd_id ==  UART_EPS_ID_CMD_Get_Active_status){
+        ACK_buf[0] = UART_EPS_ID_ACK_Get_Active_status;
+        ACK_buf[1] = eps_p.eps_pmm_ptr->Active_CPU;
+
+        size_ACK = 2;
+        ACK_Attribute = 2;
 
 	}else{
 		ACK_Attribute = 0;
@@ -287,8 +294,11 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_
 		memcpy( eps_p.eps_pam_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pam_ptr) ) );
 
 	}else if( cmd_id == UART_EPS_ID_ACK_Get_PBM_struct	 ){
-		memcpy( eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), ( sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_QUANTITY ) );
-		
+        memcpy(eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), (sizeof(eps_p.eps_pbm_ptr[0]) * PBM_QUANTITY));
+
+    }else if(cmd_id == UART_EPS_ID_ACK_Get_Active_status ){
+        eps_p.eps_pmm_ptr->Active_CPU = UART_eps_comm->recv_pack_buf[7];
+
 	}else{ 
 		
 		if (UART_eps_comm->recv_pack_buf[7] == 0x00 ) { // In answer Error
@@ -360,18 +370,21 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _EPS_Param 
 		if( package_tag == UART_EPS_CMD ){
 			error_status = UART_EPS_Pars_Get_CMD( UART_eps_comm, eps_p );
 
-		}else if( package_tag == UART_EPS_ACK /* && UART_eps_comm->waiting_answer_flag == 1 */){
+		}else if( package_tag == UART_EPS_ACK  && UART_eps_comm->waiting_answer_flag == 1 ){
 			error_status = UART_EPS_Pars_Get_ACK( UART_eps_comm, eps_p );
 
 		}else if( package_tag == UART_EPS_NFC ){
 			error_status = UART_EPS_Pars_Get_NFC( UART_eps_comm, eps_p );
 
-		}else{
+		}//else{
 			//Not recognize package tag.
-			UART_eps_comm->permit_recv_pack_flag = 0;
-			UART_eps_comm->stop_recv_pack_flag = 0;
-		}
+			//UART_eps_comm->permit_recv_pack_flag = 0;
+			//UART_eps_comm->stop_recv_pack_flag = 0;
+		//}
 	}
+
+	UART_eps_comm->permit_recv_pack_flag = 0;
+    UART_eps_comm->stop_recv_pack_flag = 0;
 
 	//Set error flag to PMM struct
 	if(error_status == SUCCESS ){
@@ -455,6 +468,9 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 		send_buf[0] = UART_EPS_ID_CMD_Ping;
 		size_send_data = 1;
 
+    }else if( cmd_id == UART_EPS_ID_CMD_Get_Active_status ){
+        send_buf[0] =  UART_EPS_ID_CMD_Get_Active_status;
+        size_send_data = 1;
 	}else{
 		return ERROR_N;
 	}

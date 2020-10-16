@@ -80,7 +80,7 @@ int main(void){
 
 	SetupInterrupt();
 
-	IWDG_Init(4000);
+	//IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
 
     pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
