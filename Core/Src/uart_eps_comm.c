@@ -370,7 +370,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _EPS_Param 
 		if( package_tag == UART_EPS_CMD ){
 			error_status = UART_EPS_Pars_Get_CMD( UART_eps_comm, eps_p );
 
-		}else if( package_tag == UART_EPS_ACK  && UART_eps_comm->waiting_answer_flag == 1 ){
+		}else if( package_tag == UART_EPS_ACK && UART_eps_comm->waiting_answer_flag == 1 ){
 			error_status = UART_EPS_Pars_Get_ACK( UART_eps_comm, eps_p );
 
 		}else if( package_tag == UART_EPS_NFC ){

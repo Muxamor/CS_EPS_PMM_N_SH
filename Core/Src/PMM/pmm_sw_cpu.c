@@ -30,6 +30,8 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
     uint8_t read_val_CAN_MUX_pin14 = 2;
     uint8_t read_val_CAN_MUX_pin16 = 2;
     uint8_t save_value_Active_CPU;
+    uint8_t get_package_tag = 0;
+    uint32_t UART_answer_add_timeout = 0;
 	uint32_t i = 0;
 
 
@@ -39,15 +41,65 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
 
         save_value_Active_CPU = eps_p.eps_pmm_ptr->Active_CPU;
 
+        //Get Active CPU from Main UART port
+        UART_EPS_Pars_Get_Package(UART_Backup_eps_comm, eps_p);
+        UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p);
         error_status = ERROR_N;
         error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_Active_status, 1, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p );
 
-        if(  error_status != SUCCESS ){
-            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_Active_status, 1, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p );
+        if( error_status != SUCCESS ){
+
+            error_status = SUCCESS;
+            get_package_tag = 0;
+            UART_answer_add_timeout = SysTick_Counter;
+
+            while(  UART_EPS_ACK != get_package_tag ){
+
+                if ( ( (uint32_t)(SysTick_Counter - UART_answer_add_timeout) ) > 700 ){
+                    error_status = ERROR_N;
+                    #ifdef DEBUGprintf
+                        Error_Handler();
+                    #endif
+                    break;
+                }
+
+                UART_EPS_Pars_Get_Package(UART_Backup_eps_comm, eps_p);
+                UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p);
+                get_package_tag = UART_Main_eps_comm->recv_pack_buf[3];
+            }
         }
 
+        
         if(  error_status != SUCCESS ){
+
+            //Get Active CPU from Backup UART port
+            UART_EPS_Pars_Get_Package(UART_Backup_eps_comm, eps_p);
+            UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p);
+            error_status = ERROR_N;
             error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_Active_status, 2, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p );
+
+            if( error_status != SUCCESS ){
+
+                error_status = SUCCESS;
+                get_package_tag = 0;
+                UART_answer_add_timeout = SysTick_Counter;
+
+                while(  UART_EPS_ACK != get_package_tag ){
+
+                    if ( ( (uint32_t)(SysTick_Counter - UART_answer_add_timeout) ) > 700 ){
+                        error_status = ERROR_N;
+                        #ifdef DEBUGprintf
+                            Error_Handler();
+                        #endif
+                        break;
+                    }
+
+                    UART_EPS_Pars_Get_Package(UART_Backup_eps_comm, eps_p);
+                    UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p);
+                    get_package_tag = UART_Backup_eps_comm->recv_pack_buf[3];
+                }
+            }
+
         }
 
         if( error_status == SUCCESS ){
