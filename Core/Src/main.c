@@ -80,7 +80,7 @@ int main(void){
 
 	SetupInterrupt();
 
-	IWDG_Init(4000);
+	//IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
 
     pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
@@ -168,7 +168,7 @@ int main(void){
             PMM_Get_Telemetry(pmm_ptr);
             PDM_Get_Telemetry(pdm_ptr);
             PAM_Get_Telemetry(pam_ptr);
-            PBM_Get_Telemetry(pbm_mas);
+            PBM_Get_Telemetry(pbm_mas); //TODO off polling if Logic power is OFF
 
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){

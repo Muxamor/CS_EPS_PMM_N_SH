@@ -30,6 +30,7 @@ extern "C" {
 #define UART_EPS_ID_CMD_Reboot 				0x0A
 #define UART_EPS_ID_CMD_Take_CTRL			0x0B
 #define UART_EPS_ID_CMD_Ping				0x0C
+#define UART_EPS_ID_CMD_Get_Active_status 	0x0D
 
 #define UART_EPS_ID_ACK_SAVE_PMM_struct 	0x01
 #define UART_EPS_ID_ACK_SAVE_PDM_struct 	0x02
@@ -43,6 +44,7 @@ extern "C" {
 #define UART_EPS_ID_ACK_Reboot 				0x0A
 #define UART_EPS_ID_ACK_Take_CTRL 			0x0B
 #define UART_EPS_ID_ACK_Ping				0x0C
+#define UART_EPS_ID_ACK_Get_Active_status 	0x0D
 
 #define UART_EPS_ID_NFS_Prep_Take_CTRL 		0x01
 

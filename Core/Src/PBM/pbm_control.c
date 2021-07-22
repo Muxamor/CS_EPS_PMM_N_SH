@@ -364,7 +364,7 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 
 	pbm_table = PBM_Table(PBM_number);
 
-	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)){
+	if ((Branch == PBM_BRANCH_1) || (Branch == PBM_BRANCH_ALL)){
 
 		if( pbm[PBM_number].PCA9534_ON_Heat_1 != State ){
 			pbm[PBM_number].PBM_save_conf_flag = 1;
@@ -414,7 +414,7 @@ ErrorStatus PBM_SetStateHeatBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_nu
 
 	Error = ERROR_N;
 	count = 0;
-	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+	if ((Branch == PBM_BRANCH_2) || (Branch == PBM_BRANCH_ALL)) {
 
 		if(pbm[PBM_number].PCA9534_ON_Heat_2 != State){
 			pbm[PBM_number].PBM_save_conf_flag = 1;
@@ -488,7 +488,7 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 
 	pbm_table = PBM_Table(PBM_number);
 
-	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)) {
+	if ((Branch == PBM_BRANCH_1) || (Branch == PBM_BRANCH_ALL)) {
 		if(pbm[PBM_number].Branch_1_ChgEnableBit != State){
 			pbm[PBM_number].PBM_save_conf_flag = 1;
 		}
@@ -525,7 +525,7 @@ ErrorStatus PBM_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_
 
 	Error = ERROR_N;
 	count = 0;
-	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+	if ((Branch == PBM_BRANCH_2) || (Branch == PBM_BRANCH_ALL)) {
 		if(pbm[PBM_number].Branch_2_ChgEnableBit != State){
 			pbm[PBM_number].PBM_save_conf_flag = 1;
 		}
@@ -586,7 +586,7 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 
 	pbm_table = PBM_Table(PBM_number);
 
-	if ((Branch == PBM_BRANCH_1) | (Branch == PBM_BRANCH_ALL)) {
+	if ((Branch == PBM_BRANCH_1) || (Branch == PBM_BRANCH_ALL)) {
 		if(pbm[PBM_number].Branch_1_DchgEnableBit != State){
 			pbm[PBM_number].PBM_save_conf_flag = 1;
 		}
@@ -622,7 +622,7 @@ ErrorStatus PBM_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t P
 
 	Error = ERROR_N;
 	count = 0;
-	if ((Branch == PBM_BRANCH_2) | (Branch == PBM_BRANCH_ALL)) {
+	if ((Branch == PBM_BRANCH_2) || (Branch == PBM_BRANCH_ALL)) {
 		if(pbm[PBM_number].Branch_2_DchgEnableBit != State){
 			pbm[PBM_number].PBM_save_conf_flag = 1;
 		}

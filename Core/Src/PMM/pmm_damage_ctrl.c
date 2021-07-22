@@ -54,13 +54,15 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, DISABLE);
                 PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, DISABLE);
                 PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, DISABLE);
-                LL_mDelay(80);
+                LL_mDelay(250);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
                 PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
                 PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
+                LL_mDelay(20);
                 CAN_init_eps(CAN1);
                 CAN_init_eps(CAN2);
+                CAN_RegisterAllVars();
                 eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 1;
 
             }else{
@@ -282,6 +284,7 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
 
     uint8_t num_pwr_ch;
 
+    //TODO нужно добавить условие проверки что измерители мощности не имеют ошибки связи по i2c
     if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_ZERO_ENERGY_EDGE )  &&  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_ZERO_ENERGY_EDGE ){
 
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
