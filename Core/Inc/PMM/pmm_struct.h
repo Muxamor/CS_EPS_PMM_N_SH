@@ -93,7 +93,7 @@ typedef struct{
 	int16_t  PWR_Supply_Backup_eF_in_Current_val;
 	int16_t  PWR_Supply_Backup_eF_out_Current_val;
 
-	uint8_t Main_Backup_mode_CPU 	:1; //= 1-Main, =0-Backup mode CPU. 
+	uint8_t Main_Backup_mode_CPU 	:1; //= 0-Main, 1-Backup mode CPU.
 	uint8_t Active_CPU		 		:1;	//= 0-Main CPU is active, Backup CPU is passive. // Need to save in flash.
 										//= 1-Main CPU is passive, Backup CPU is active.
 	uint8_t CAN_constatnt_mode		:1;	//= 1-Constant mode CANreg5 is ON, 0-Constant CANreg5 is OFF. // Need to save in flash.
