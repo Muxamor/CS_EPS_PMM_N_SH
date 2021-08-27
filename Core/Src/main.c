@@ -97,9 +97,6 @@ int main(void){
     //Restore settings EPS from FRAM
     PMM_FRAM_Restore_Settings(eps_param);
 
-    pmm_ptr->EPS_Mode = 0xFF;
-    pmm_ptr->PWR_Ch_State_CANmain = 0x01;
-    pmm_ptr->PWR_Ch_State_CANbackup = 0x01;
 
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
         pmm_ptr->reboot_counter_CPUm++;

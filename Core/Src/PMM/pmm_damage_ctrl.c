@@ -18,8 +18,8 @@
 #include "uart_eps_comm.h"
 
 
-uint32_t PMM_Start_Time_Check_CAN;
-uint32_t PMM_Start_Time_Check_UART_PassiveCPU;
+    uint32_t PMM_Start_Time_Check_CAN;
+    uint32_t PMM_Start_Time_Check_UART_PassiveCPU;
 /** @brief  Check Damage CAN port ( Time interval check = PMM_CAN_Exch_Data_Check_Time_Gap )
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
@@ -54,12 +54,12 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, DISABLE);
                 PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, DISABLE);
                 PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, DISABLE);
-                LL_mDelay(250);
+                LL_mDelay(700);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
                 PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
                 PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
-                LL_mDelay(20);
+                LL_mDelay(100);
                 CAN_init_eps(CAN1);
                 CAN_init_eps(CAN2);
                 CAN_RegisterAllVars();
@@ -284,23 +284,26 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
 
     uint8_t num_pwr_ch;
 
-    //TODO нужно добавить условие проверки что измерители мощности не имеют ошибки связи по i2c
-    if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_ZERO_ENERGY_EDGE )  &&  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_ZERO_ENERGY_EDGE ){
+    if( (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF1 != ERROR) && (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2 != ERROR)  ){
 
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, DISABLE );
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
+    	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val != 0 )
+    			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val != 0) ){
 
-        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
-        PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
+        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
+        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, DISABLE );
+        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
 
-        //Disable TM SP power channels.
-        for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
-            PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, num_pwr_ch, DISABLE);
-        }
+        	PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+        	PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
 
-        CAN_Var4_fill(eps_p);
+        	//Disable TM SP power channels.
+        	for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
+            	PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, num_pwr_ch, DISABLE);
+        	}
+
+        	CAN_Var4_fill(eps_p);
+    	}
     }
 
 }

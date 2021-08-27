@@ -272,7 +272,7 @@ void PMM_Take_Control_EPS_PassiveCPU( _EPS_Param eps_p ){
     eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = ENABLE;
 
     //Delay for disable power at Active CPU
-    LL_mDelay(120);
+    LL_mDelay(500);
 
     // Take control.
     PMM_Set_mode_Active_CPU( eps_p );
@@ -300,7 +300,7 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
     eps_p.eps_pmm_ptr->Error_CAN_port_B  = SUCCESS;
 
     I2C4_Init();
-    PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+    // PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
 
 	PMM_init( eps_p.eps_pmm_ptr );
 
