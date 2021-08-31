@@ -70,19 +70,11 @@ int main(void){
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
 	GPIO_Init();
 	I2C3_Init();
-	//UART5_Init();
-
-   	LPUART1_Init();
-	USART3_Init();
 	I2C4_Init();
 
    //PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
 
-	SetupInterrupt();
-
-	//IWDG_Init(4000);
-    LL_IWDG_ReloadCounter(IWDG);
-
+	//Restore settings of EPS
     pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
 
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
@@ -93,10 +85,8 @@ int main(void){
         UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
     }
 
-
     //Restore settings EPS from FRAM
     PMM_FRAM_Restore_Settings(eps_param);
-
 
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
         pmm_ptr->reboot_counter_CPUm++;
@@ -106,7 +96,15 @@ int main(void){
 
     pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
 
+	//UART5_Init();
+   	LPUART1_Init();
+	USART3_Init();
+
+    SetupInterrupt();
+
+   	//IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
+
     //Check Active flag between active and passive CPU.
     PMM_CPUm_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
@@ -211,7 +209,7 @@ int main(void){
             }
 
             //Check Errors UART ports and get reboot counter passive CPU.
-            PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+           PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
             //Parsing command from CAN
             if(CAN_cmd_mask_status != 0){
