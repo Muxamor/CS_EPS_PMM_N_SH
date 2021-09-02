@@ -1302,18 +1302,18 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 
 //	    // ----------------------- ТМИ 8 -------------------
-	CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[0];
-	CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[1];
-	CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_3                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[2];
-	CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_4                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[3];
-	CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[0];
-	CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[1];
-	CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_3                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[2];
-	CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_4                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[3];
-	CAN_IVar5_telemetry.CAN_Panal_temp_pY_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[0];
-	CAN_IVar5_telemetry.CAN_Panal_temp_pY_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[1];
-	CAN_IVar5_telemetry.CAN_Panal_temp_nY_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[0];
-	CAN_IVar5_telemetry.CAN_Panal_temp_nY_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_pX_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_pX_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_pX_sensor_3                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[2];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_pX_sensor_4                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[3];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_nX_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_nX_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_nX_sensor_3                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[2];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_nX_sensor_4                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[3];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_pY_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_pY_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[1];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_nY_sensor_1                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[0];
+	CAN_IVar5_telemetry.CAN_SPanel_temp_nY_sensor_2                      =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[1];
 	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_1               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[0];
 	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_2               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[1];
 	CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_3               =  eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[2];
@@ -1687,18 +1687,18 @@ void CAN_Var5_fill_telemetry_const(void){
 
 
     // ----------------------- ТМИ 8 -------------------
-    CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_1                      =	0x2C;
-    CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_2                      =	0x2D;
-    CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_3                      =	0x2E;
-    CAN_IVar5_telemetry.CAN_Panal_temp_pX_sensor_4                      =	0x2F;
-    CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_1                      =	0x30;
-    CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_2                      =	0x31;
-    CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_3                      =	0x32;
-    CAN_IVar5_telemetry.CAN_Panal_temp_nX_sensor_4                      =	0x33;
-    CAN_IVar5_telemetry.CAN_Panal_temp_pY_sensor_1                      =	0x34;
-    CAN_IVar5_telemetry.CAN_Panal_temp_pY_sensor_2                      =	0x35;
-    CAN_IVar5_telemetry.CAN_Panal_temp_nY_sensor_1                      =	0x36;
-    CAN_IVar5_telemetry.CAN_Panal_temp_nY_sensor_2                      =	0x37;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_pX_sensor_1                      =	0x2C;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_pX_sensor_2                      =	0x2D;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_pX_sensor_3                      =	0x2E;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_pX_sensor_4                      =	0x2F;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_nX_sensor_1                      =	0x30;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_nX_sensor_2                      =	0x31;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_nX_sensor_3                      =	0x32;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_nX_sensor_4                      =	0x33;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_pY_sensor_1                      =	0x34;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_pY_sensor_2                      =	0x35;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_nY_sensor_1                      =	0x36;
+    CAN_IVar5_telemetry.CAN_SPanel_temp_nY_sensor_2                      =	0x37;
     CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_1               =  0x38;
     CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_2               =  0x39;
     CAN_IVar5_telemetry.CAN_Hinged_panel_temp_pY_sensor_3               =  0x3A;

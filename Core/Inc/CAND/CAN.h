@@ -343,18 +343,18 @@ struct CAN_IVar5{
 
     // ----------------------- ТМИ 8 -------------------        --------  	   |
     //Массив температур солнечных панелей                                      |
-    uint8_t  CAN_Panal_temp_pX_sensor_1;                            //+261     |  const = 0x2C               |   Температура панели +X датчик 1
-    uint8_t  CAN_Panal_temp_pX_sensor_2;                            //+262     |  const = 0x2D               |   Температура панели +X датчик 2
-    uint8_t  CAN_Panal_temp_pX_sensor_3;                            //+263     |  const = 0x2E               |   Температура панели +X датчик 3
-    uint8_t  CAN_Panal_temp_pX_sensor_4;                            //+264     |  const = 0x2F               |   Температура панели +X датчик 4
-    uint8_t  CAN_Panal_temp_nX_sensor_1;                            //+265     |  const = 0x30               |   Температура панели -X датчик 1
-    uint8_t  CAN_Panal_temp_nX_sensor_2;                            //+266     |  const = 0x31               |   Температура панели -X датчик 2
-    uint8_t  CAN_Panal_temp_nX_sensor_3;                            //+267     |  const = 0x32               |   Температура панели -X датчик 3
-    uint8_t  CAN_Panal_temp_nX_sensor_4;                            //+268     |  const = 0x33               |   Температура панели -X датчик 4
-    uint8_t  CAN_Panal_temp_pY_sensor_1;                            //+269     |  const = 0x34               |   Температура панели +Y датчик 1
-    uint8_t  CAN_Panal_temp_pY_sensor_2;                            //+270     |  const = 0x35               |   Температура панели +Y датчик 2
-    uint8_t  CAN_Panal_temp_nY_sensor_1;                            //+271     |  const = 0x36               |   Температура панели -Y датчик 1
-    uint8_t  CAN_Panal_temp_nY_sensor_2;                            //+272     |  const = 0x37               |   Температура панели -Y датчик 2
+    uint8_t  CAN_SPanel_temp_pX_sensor_1;                            //+261     |  const = 0x2C               |   Температура панели +X датчик 1
+    uint8_t  CAN_SPanel_temp_pX_sensor_2;                            //+262     |  const = 0x2D               |   Температура панели +X датчик 2
+    uint8_t  CAN_SPanel_temp_pX_sensor_3;                            //+263     |  const = 0x2E               |   Температура панели +X датчик 3
+    uint8_t  CAN_SPanel_temp_pX_sensor_4;                            //+264     |  const = 0x2F               |   Температура панели +X датчик 4
+    uint8_t  CAN_SPanel_temp_nX_sensor_1;                            //+265     |  const = 0x30               |   Температура панели -X датчик 1
+    uint8_t  CAN_SPanel_temp_nX_sensor_2;                            //+266     |  const = 0x31               |   Температура панели -X датчик 2
+    uint8_t  CAN_SPanel_temp_nX_sensor_3;                            //+267     |  const = 0x32               |   Температура панели -X датчик 3
+    uint8_t  CAN_SPanel_temp_nX_sensor_4;                            //+268     |  const = 0x33               |   Температура панели -X датчик 4
+    uint8_t  CAN_SPanel_temp_pY_sensor_1;                            //+269     |  const = 0x34               |   Температура панели +Y датчик 1
+    uint8_t  CAN_SPanel_temp_pY_sensor_2;                            //+270     |  const = 0x35               |   Температура панели +Y датчик 2
+    uint8_t  CAN_SPanel_temp_nY_sensor_1;                            //+271     |  const = 0x36               |   Температура панели -Y датчик 1
+    uint8_t  CAN_SPanel_temp_nY_sensor_2;                            //+272     |  const = 0x37               |   Температура панели -Y датчик 2
     uint8_t  CAN_Hinged_panel_temp_pY_sensor_1;                     //+273     |  const = 0x38               |   Температура откидной панели +Y датчик 1
     uint8_t  CAN_Hinged_panel_temp_pY_sensor_2;                     //+274     |  const = 0x39               |   Температура откидной панели +Y датчик 2
     uint8_t  CAN_Hinged_panel_temp_pY_sensor_3;                     //+275     |  const = 0x3A               |   Температура откидной панели +Y датчик 3
