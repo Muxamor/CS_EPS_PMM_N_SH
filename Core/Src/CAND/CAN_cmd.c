@@ -2,6 +2,7 @@
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_tim.h"
 #include "median_filter.h"
+#include "SetupPeriph.h"
 #include "tim_pwm.h"
 #include "PBM/pbm_config.h"
 #include "PBM/pbm_control.h"
@@ -26,21 +27,16 @@
 extern _UART_EPS_COMM *UART_M_eps_comm;
 extern _UART_EPS_COMM *UART_B_eps_comm;
 
-void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
+void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
 
-	uint8_t number_cmd_reg = 0;
-	uint64_t cmd_bit_flag = 0;
+	uint16_t number_cmd_reg = 0;
 
 	NVIC_DisableIRQ(CAN1_RX0_IRQn);
 	NVIC_DisableIRQ(CAN2_RX0_IRQn);
 
-	for( number_cmd_reg = 0; number_cmd_reg < 64; number_cmd_reg++ ){
+	for( number_cmd_reg = 0; number_cmd_reg < CAN_cmd_Buff.length; number_cmd_reg++ ){
 
-		cmd_bit_flag = (*cmd_status) >> number_cmd_reg;
-
-		if( cmd_bit_flag & 0x0000000000000001 ){
-
-			switch (number_cmd_reg) {
+	    switch (CAN_cmd_Buff.CAN_IN_BUFF[number_cmd_reg]){
 
                 case CAN_Constant_mode_offset://Constant mode command
 
@@ -728,6 +724,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> Enable power OFF Passive CPU\n", CAN_PMM_PWR_OFF_Passive_CPU_offset);
                         #endif
+                        PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
                         PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
                         PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
                         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = ENABLE;
@@ -737,6 +734,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #endif
                         PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                         PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                        PWM_DeInit_Ch3_Ch4( );
                         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
                     }
                     eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
@@ -747,11 +745,13 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d ->Reboot Passive CPU\n", CAN_PMM_Reboot_Passive_CPU_offset);
                         #endif
+                        PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
                         PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
                         PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
                         LL_mDelay(50);
                         PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                         PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                        PWM_DeInit_Ch3_Ch4( );
                         CAN_IVar4_RegCmd.CAN_PMM_Reboot_Passive_CPU = 0x00;
                     }
                     break;
@@ -760,13 +760,9 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
 					break;
 			}
 
-			if( ( cmd_bit_flag & 0xFFFFFFFFFFFFFFFE ) == 0 ){
-				break;
-			}
 		}
-	}
 
-	*cmd_status = 0;
+	CAN_cmd_Buff.length = 0;
 	NVIC_EnableIRQ(CAN1_RX0_IRQn);
 	NVIC_EnableIRQ(CAN2_RX0_IRQn);
 }

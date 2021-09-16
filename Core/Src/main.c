@@ -42,7 +42,7 @@ int main(void){
     uint32_t Passive_CPU_start_time_wait_data = 0 ;
 
     SysTick_Counter = 0;
-    CAN_cmd_mask_status = 0;
+    CAN_cmd_Buff.length = 0;
     CAN1_exchange_data_flag = 0;
     CAN2_exchange_data_flag = 0;
 
@@ -212,8 +212,8 @@ int main(void){
            PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
             //Parsing command from CAN
-            if(CAN_cmd_mask_status != 0){
-                CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
+            if(CAN_cmd_Buff.length != 0){
+                CAN_Var4_cmd_parser( eps_param );
             }
 
             //Fill CAN Var5

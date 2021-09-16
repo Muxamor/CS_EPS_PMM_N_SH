@@ -15,7 +15,7 @@ typedef enum
 } FunctionalState;*/
 
 
-void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p );
+void CAN_Var4_cmd_parser( _EPS_Param eps_p );
 void CAN_Var5_fill_telemetry( _EPS_Param eps_p );
 void CAN_Var5_fill_telemetry_const(void);
 void CAN_Var4_fill( _EPS_Param eps_p );

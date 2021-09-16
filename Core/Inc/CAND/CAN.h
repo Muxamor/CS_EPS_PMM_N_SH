@@ -86,7 +86,14 @@ extern "C" {
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
 
-extern uint64_t CAN_cmd_mask_status;
+
+struct CAN_IN_Buffer{
+    uint16_t length;
+    uint16_t CAN_IN_BUFF[64];
+};
+
+extern struct CAN_IN_Buffer CAN_cmd_Buff;
+
 extern uint8_t CAN1_exchange_data_flag;  // 0 - no exchange   1 - was exchange
 extern uint8_t CAN2_exchange_data_flag;// 0 - no exchange  1 - was exchange
 
