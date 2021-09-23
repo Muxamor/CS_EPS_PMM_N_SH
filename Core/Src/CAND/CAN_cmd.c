@@ -380,19 +380,19 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
 
                 case CAN_Switch_active_CPU_offset: // Switch active CPU (CPUmain active or CPUbackup
 
-					if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x00 ){
+                    if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x00 ){
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUmain\n", CAN_Switch_active_CPU_offset);
 						#endif
-                        if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Set_active_CPU ){
+                        if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Switch_active_CPU ){
                             eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
                             eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
                         }
-					}else if( CAN_IVar4_RegCmd.CAN_Set_active_CPU == 0x01 ){
+                    }else if( CAN_IVar4_RegCmd.CAN_Switch_active_CPU == 0x01 ){
 						#ifdef DEBUGprintf
 							printf("Get comm. reg. %d -> Set active CPUbackup\n", CAN_Switch_active_CPU_offset);
 						#endif
-                        if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Set_active_CPU ){
+                        if( eps_p.eps_pmm_ptr->Active_CPU != CAN_IVar4_RegCmd.CAN_Switch_active_CPU ){
                             eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
                             eps_p.eps_serv_ptr->Set_Active_CPU = CPUbackup_Active;
                         }
@@ -1868,7 +1868,7 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     }
 
 	CAN_IVar4_RegCmd.CAN_EPS_Mode                     					= eps_p.eps_pmm_ptr->EPS_Mode;
-	CAN_IVar4_RegCmd.CAN_Set_active_CPU               					= eps_p.eps_pmm_ptr->Active_CPU;
+    CAN_IVar4_RegCmd.CAN_Switch_active_CPU               				= eps_p.eps_pmm_ptr->Active_CPU;
 	CAN_IVar4_RegCmd.CAN_Reset_to_default              					= 0x00;
 	CAN_IVar4_RegCmd.CAN_Perform_Deploy                					= 0x00;
 	CAN_IVar4_RegCmd.CAN_AB1_Heat_Branch1              					= eps_p.eps_pbm_ptr[0].PCA9534_ON_Heat_1;
