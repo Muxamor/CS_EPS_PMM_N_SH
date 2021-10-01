@@ -95,6 +95,8 @@ int main(void){
     }
 
     pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
+    pam_ptr->PAM_save_conf_flag = 1; //To properly startup the power supplies
+    pdm_ptr->PDM_save_conf_flag = 1; //To properly startup the power supplies
 
 	//UART5_Init();
    	LPUART1_Init();
