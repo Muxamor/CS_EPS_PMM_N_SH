@@ -95,6 +95,8 @@ int main(void){
     }
 
     pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
+    pam_ptr->PAM_save_conf_flag = 1; //To properly startup the power supplies
+    pdm_ptr->PDM_save_conf_flag = 1; //To properly startup the power supplies
 
 	//UART5_Init();
    	LPUART1_Init();
@@ -204,12 +206,12 @@ int main(void){
             if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
                 UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
                 UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
-                UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
-                UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
+                UART_EPS_Pars_Get_Package( UART_M_eps_comm, eps_param );
+                UART_EPS_Pars_Get_Package( UART_B_eps_comm, eps_param );
             }
 
             //Check Errors UART ports and get reboot counter passive CPU.
-           PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
+            PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
             //Parsing command from CAN
             if(CAN_cmd_Buff.length != 0){
