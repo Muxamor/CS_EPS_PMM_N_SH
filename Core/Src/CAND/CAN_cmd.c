@@ -239,7 +239,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
 
                 case CAN_PWR_CH1_offset: //Enable/Disable power channel 1 (SOP1)
 
-                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1 == 0x01 && PDM_PCB_Assembled_PWR_CH1 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 1\n", CAN_PWR_CH1_offset);
                         #endif
@@ -249,12 +249,13 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> DISABLE power channel 1\n", CAN_PWR_CH1_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+                        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1 = 0x00;
                     }
                     break;
 
                 case CAN_PWR_CH2_offset: //Enable/Disable power channel 2 (SOP2)
 
-                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2 == 0x01 && PDM_PCB_Assembled_PWR_CH2){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 2\n", CAN_PWR_CH2_offset);
                         #endif
@@ -264,12 +265,13 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> DISABLE power channel 2\n", CAN_PWR_CH2_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+                        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2 = 0x00;
                     }
                     break;
 
                 case CAN_PWR_CH3_offset: //Enable/Disable power channel 3 (BRK1)
 
-                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3 == 0x01 && PDM_PCB_Assembled_PWR_CH3 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 3\n", CAN_PWR_CH3_offset);
                         #endif
@@ -279,12 +281,13 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> DISABLE power channel 3\n", CAN_PWR_CH3_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, DISABLE );
+                        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3 = 0x00;
                     }
                     break;
 
                 case CAN_PWR_CH4_offset: //Enable/Disable power channel 4 (BRK2)  uint8_t CAN_PDM_PWR_CH4;
 
-                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4 == 0x01 && PDM_PCB_Assembled_PWR_CH4 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 4\n", CAN_PWR_CH4_offset);
                         #endif
@@ -294,12 +297,13 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> DISABLE power channel 4\n", CAN_PWR_CH4_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, DISABLE );
+                        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4 = 0x00;
                     }
                     break;
 
                 case CAN_PWR_CH5_offset: //Enable/Disable power channel 5
 
-                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH5 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH5 == 0x01 && PDM_PCB_Assembled_PWR_CH5 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 5\n", CAN_PWR_CH5_offset);
                         #endif
@@ -309,12 +313,13 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> DISABLE power channel 5\n", CAN_PWR_CH5_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_5, DISABLE );
+                        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH5 = 0x00;
                     }
                     break;
 
                 case CAN_PWR_CH6_offset: //Enable/Disable power channel 6
 
-                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH6 == 0x01 ){
+                    if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH6 == 0x01 && PDM_PCB_Assembled_PWR_CH6 ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE power channel 6\n", CAN_PWR_CH6_offset);
                         #endif
@@ -324,6 +329,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> DISABLE power channel 6\n", CAN_PWR_CH6_offset);
                         #endif
                         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_6, DISABLE );
+                        CAN_IVar4_RegCmd.CAN_PDM_PWR_CH6 = 0x00;
                     }
                     break;
 
@@ -1826,7 +1832,7 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
 	CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_1                     = eps_p.eps_pbm_ptr[2].Branch_1_DchgEnableBit;
 	CAN_IVar4_RegCmd.CAN_AB3_Charge_key_branch_2                        = eps_p.eps_pbm_ptr[2].Branch_2_ChgEnableBit;
 	CAN_IVar4_RegCmd.CAN_AB3_Discharge_key_branch_2                     = eps_p.eps_pbm_ptr[2].Branch_2_DchgEnableBit;
-
+//TODO Add fill 4 PBM
 
     if( eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_out == ENABLE ){
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1                     				= 0x01;
