@@ -98,10 +98,6 @@ int main(void){
     pam_ptr->PAM_save_conf_flag = 1; //To properly startup the power supplies
     pdm_ptr->PDM_save_conf_flag = 1; //To properly startup the power supplies
 
-
-    pmm_ptr->PWR_Ch_State_CANmain =1;
-    pmm_ptr->PWR_Ch_State_CANbackup =1;
-
 	//UART5_Init();
    	LPUART1_Init();
 	USART3_Init();
