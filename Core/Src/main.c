@@ -98,6 +98,10 @@ int main(void){
     pam_ptr->PAM_save_conf_flag = 1; //To properly startup the power supplies
     pdm_ptr->PDM_save_conf_flag = 1; //To properly startup the power supplies
 
+
+    pmm_ptr->PWR_Ch_State_CANmain =1;
+    pmm_ptr->PWR_Ch_State_CANbackup =1;
+
 	//UART5_Init();
    	LPUART1_Init();
 	USART3_Init();
@@ -236,7 +240,7 @@ int main(void){
 		}else{
 
             Passive_CPU_start_time_wait_data = SysTick_Counter;
-		    while(( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
+		    while( ( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
                 UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
                 UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
                 UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param);
