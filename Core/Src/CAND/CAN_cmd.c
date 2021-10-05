@@ -562,8 +562,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE PAM Power DC_DC source \n", CAN_PAM_PWR_DC_DC_offset);
                         #endif
-                       // PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE);
-                        eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
+                        PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE);
                         PAM_init(eps_p.eps_pam_ptr);
                     } else {
                         #ifdef DEBUGprintf
@@ -578,8 +577,7 @@ void CAN_Var4_cmd_parser(uint64_t *cmd_status, _EPS_Param eps_p ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE PAM Power LDO source \n", CAN_PAM_PWR_LDO_offset);
                         #endif
-                        //PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_LDO, ENABLE);
-                        eps_p.eps_pam_ptr->State_LDO = ENABLE;
+                        PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_LDO, ENABLE);
                         PAM_init(eps_p.eps_pam_ptr);
                     } else {
                         #ifdef DEBUGprintf
