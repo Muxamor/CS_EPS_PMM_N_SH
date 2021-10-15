@@ -7,8 +7,8 @@
 
 struct CAN_IVar5 CAN_IVar5_telemetry;
 struct CAN_IVar4  CAN_IVar4_RegCmd;
+struct CAN_IN_Buffer CAN_cmd_Buff;
 
-uint64_t CAN_cmd_mask_status;
 uint8_t CAN1_exchange_data_flag;
 uint8_t CAN2_exchange_data_flag;
 
@@ -38,7 +38,12 @@ void CAN_ProcCallbackCmds(CAN_TypeDef *can_ref, CAN_typeIdxMask id, uint16_t len
 
 	if(id.std.RTR == 0)
 		for(uint16_t i = 0; i < leng; i++){
-			CAN_cmd_mask_status = CAN_cmd_mask_status | ( ( (uint64_t)1 ) << (id.uf.Offset + i) );
+
+		    CAN_cmd_Buff.CAN_IN_BUFF[CAN_cmd_Buff.length] = (id.uf.Offset + i);
+		    CAN_cmd_Buff.length = CAN_cmd_Buff.length + 1;
+		    if(CAN_cmd_Buff.length > 64 ){
+		        CAN_cmd_Buff.length = 63;
+		    }
 		}
 }
 

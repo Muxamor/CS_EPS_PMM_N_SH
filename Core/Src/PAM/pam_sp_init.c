@@ -32,10 +32,6 @@ ErrorStatus PAM_SP_init(_PAM *pam_ptr, uint8_t number_sp){
             }
             error_count =  error_count + error_status;
         }
-    }else{
-        for( i = 0; i < pam_sp_table.temp_sensor_quantity; i++ ){
-            pam_ptr->Solar_Panel[number_sp].Error_temp_sensor[i] = SUCCESS;
-        }
     }
 
     if(error_count != SUCCESS){

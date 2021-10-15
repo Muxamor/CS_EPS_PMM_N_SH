@@ -42,7 +42,7 @@ int main(void){
     uint32_t Passive_CPU_start_time_wait_data = 0 ;
 
     SysTick_Counter = 0;
-    CAN_cmd_mask_status = 0;
+    CAN_cmd_Buff.length = 0;
     CAN1_exchange_data_flag = 0;
     CAN2_exchange_data_flag = 0;
 
@@ -70,19 +70,11 @@ int main(void){
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
 	GPIO_Init();
 	I2C3_Init();
-	//UART5_Init();
-
-   	LPUART1_Init();
-	USART3_Init();
 	I2C4_Init();
 
-    PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+   //PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
 
-	SetupInterrupt();
-
-	//IWDG_Init(4000);
-    LL_IWDG_ReloadCounter(IWDG);
-
+	//Restore settings of EPS
     pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
 
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
@@ -103,8 +95,18 @@ int main(void){
     }
 
     pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
+    pam_ptr->PAM_save_conf_flag = 1; //To properly startup the power supplies
+    pdm_ptr->PDM_save_conf_flag = 1; //To properly startup the power supplies
 
+	//UART5_Init();
+   	LPUART1_Init();
+	USART3_Init();
+
+    SetupInterrupt();
+
+   	//IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
+
     //Check Active flag between active and passive CPU.
     PMM_CPUm_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
@@ -204,16 +206,16 @@ int main(void){
             if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
                 UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
                 UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
-                UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param );
-                UART_EPS_Pars_Get_Package(UART_B_eps_comm, eps_param );
+                UART_EPS_Pars_Get_Package( UART_M_eps_comm, eps_param );
+                UART_EPS_Pars_Get_Package( UART_B_eps_comm, eps_param );
             }
 
             //Check Errors UART ports and get reboot counter passive CPU.
             PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
             //Parsing command from CAN
-            if(CAN_cmd_mask_status != 0){
-                CAN_Var4_cmd_parser(&CAN_cmd_mask_status, eps_param );
+            if(CAN_cmd_Buff.length != 0){
+                CAN_Var4_cmd_parser( eps_param );
             }
 
             //Fill CAN Var5
@@ -234,7 +236,7 @@ int main(void){
 		}else{
 
             Passive_CPU_start_time_wait_data = SysTick_Counter;
-		    while(( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
+		    while( ( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
                 UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
                 UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
                 UART_EPS_Pars_Get_Package(UART_M_eps_comm, eps_param);

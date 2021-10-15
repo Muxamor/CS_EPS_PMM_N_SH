@@ -45,6 +45,7 @@ extern "C" {
 #define PBM_1                				0x00 	//Designation for choose PBM №1.
 #define PBM_2                				0x01 	//Designation for choose PBM №2.
 #define PBM_3                				0x02	//Designation for choose PBM №3.
+#define PBM_4                				0x03	//Designation for choose PBM №3.
 
 #define PBM_BRANCH_1                		0x01 	//Designation for choose branch №1 PBM.
 #define PBM_BRANCH_2                		0x02 	//Designation for choose branch №2 PBM.

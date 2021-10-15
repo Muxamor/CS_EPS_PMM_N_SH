@@ -27,9 +27,11 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 
 		//Powe oFF Passive CPU
         if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
+        	PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
             PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
             PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
         }else{
+        	PWM_DeInit_Ch3_Ch4( );
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
         }

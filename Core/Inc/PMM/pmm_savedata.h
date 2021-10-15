@@ -40,7 +40,7 @@ typedef struct{
     uint8_t Branch_2_ChgEnableBit   :1;
     uint8_t PCA9534_ON_Heat_1       :1;
     uint8_t PCA9534_ON_Heat_2       :1;
-    uint8_t :4;
+    uint8_t :2;
 
 }FRAM_PBM;
 
