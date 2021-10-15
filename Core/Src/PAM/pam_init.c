@@ -23,14 +23,15 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 	error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, pam_ptr->State_DC_DC);
 	error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, pam_ptr->State_LDO);
 
-	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
-	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
-
 	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
 	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 
+	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
+	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
+
+	//Automatic protection of switching to backup power supply
     if( (pam_ptr->State_DC_DC == ENABLE) && ( (pam_ptr->PG_DC_DC == ERROR) || (pam_ptr->Error_State_DC_DC == ERROR) ) && (pam_ptr->State_LDO == DISABLE) ){
-        error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, ENABLE);
+	    error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, ENABLE);
         pam_ptr->State_LDO = ENABLE;
 	}
 

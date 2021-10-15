@@ -52,16 +52,16 @@ extern "C" {
 #define pdm_i2c_delay_att_conn		3 	 //ms Delay between attempts connection through I2C in millisecond
 
 
-//!!!! Later transfer to structure PDM
+//Later transfer to structure PDM
 #define PDM_PCB_Assembled_PWR_CH1 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH2 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH3 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH4 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
-#define PDM_PCB_Assembled_PWR_CH5 		0x00 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
+#define PDM_PCB_Assembled_PWR_CH5 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH6 		0x00 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
-//!!!!!
 
-#define PDM_PWR_Ch_quantity  0x04 // Total quantity power channels on the PDM
+
+#define PDM_PWR_Ch_quantity  5 // Total quantity power channels on the PDM
  
 #define PDM_PWR_Channel_1 			0x00
 #define PDM_PWR_Channel_2 			0x01

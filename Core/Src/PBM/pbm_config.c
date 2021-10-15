@@ -45,6 +45,10 @@ _PBM_table PBM_Table(uint8_t PBM_number) {
 		pbm_table.TEMP_SENSOR_4_Addr = PBM_3_TMP1075_ADDR_4;
 		break;
 
+	case PBM_4:
+
+		    break;
+
 	default:
 		break;
 	}

@@ -29,7 +29,9 @@ ErrorStatus PBM_ReadGPIO(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_number) {
 
 	while ((Error != SUCCESS) && (count < PBM_I2C_ATTEMPT_CONN)) {
 		if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, PCA9534_IO_P00|PCA9534_IO_P05) == SUCCESS){
-		    Error = PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
+			if (PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN) == SUCCESS) {
+				Error = PCA9534_conf_IO_pol_normal(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
+			}
 		}
 		if (Error == SUCCESS) {
 			Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
@@ -341,7 +343,6 @@ ErrorStatus PBM_ReadBatteryData(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_numbe
  + Data.PBM_Data_2.Error_TMP1075_3 + Data.PBM_Data_2.Error_TMP1075_4 + Data.PBM_Data_2.Error_PCA9534;
  *Er_PBM_3 = *Er_PBM_3 + Data.PBM_Data_3.Error_DS2777_1 + Data.PBM_Data_3.Error_DS2777_2 + Data.PBM_Data_3.Error_TMP1075_1 + Data.PBM_Data_3.Error_TMP1075_2
  + Data.PBM_Data_3.Error_TMP1075_3 + Data.PBM_Data_3.Error_TMP1075_4 + Data.PBM_Data_3.Error_PCA9534;
-
  }*/
 
 /** @brief	ON/OFF heat for selected branch for selected PBM.
