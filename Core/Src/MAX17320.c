@@ -16,7 +16,7 @@ ErrorStatus I2C_Read_MAX17320(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint32_t reg
 
 	uint8_t high_byte = 0, low_byte = 0;
 
-	SlaveAddr = (uint8_t)(SlaveAddr << 1);
+	//SlaveAddr = (uint8_t)(SlaveAddr << 1);
 	I2C_Clear_Error_Flags(I2Cx);
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
 		return ERROR_N;
@@ -45,10 +45,84 @@ ErrorStatus I2C_Read_MAX17320(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint32_t reg
 		return ERROR_N;
 	}
 	LL_I2C_ClearFlag_STOP(I2Cx);
-	*data =  (uint16_t)( ( high_byte  << 8 ) | low_byte );
+	//*data =  (uint16_t)( ( high_byte  << 8 ) | low_byte );
+	*data =  (uint16_t)( ( low_byte  << 8 ) | high_byte );
 
 	return SUCCESS;
 }
+
+/**@brief	Writing two byte register from MAX17320. (St generate only one start)
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	SlaveAddr - 8-bit device address.
+	@param  size_reg_addr - size of reg_addr in byte if:
+				reg_addr = U8 	-> 	size_reg_addr = I2C_SIZE_REG_ADDR_U8
+				reg_addr = U16 	-> 	size_reg_addr = I2C_SIZE_REG_ADDR_U16
+				reg_addr = U24 	-> 	size_reg_addr = I2C_SIZE_REG_ADDR_U24
+				reg_addr = U32 	-> 	size_reg_addr = I2C_SIZE_REG_ADDR_U32
+	@param 	reg_addr - 8,16,24,32-bit Registry address on the remote device
+	@param  data - uint16_t data to be writing
+	@retval 0 - SUCCESS, -1 - ERROR
+*/
+ErrorStatus I2C_Write_MAX17320(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size_reg_addr, uint32_t reg_addr, uint16_t data){
+
+	if( size_reg_addr == 0 || size_reg_addr > 4 ){
+		return ERROR_N;
+	}
+
+	//uint8_t low_byte = (uint8_t) data;
+	//uint8_t high_byte = (uint8_t)(data >> 8);
+	uint8_t low_byte = (uint8_t) (data>> 8);
+	uint8_t high_byte = (uint8_t) data;
+	uint8_t i = 0;
+	int8_t  j = 0;
+
+	//SlaveAddr = (uint8_t)(SlaveAddr << 1);
+
+	//Clear flags if the previous attempt to exchange was not successful.
+	I2C_Clear_Error_Flags(I2Cx);
+
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != 0){
+		return ERROR_N;
+	}
+	LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)(size_reg_addr+2), LL_I2C_MODE_AUTOEND , LL_I2C_GENERATE_START_WRITE); ////LL_I2C_MODE_SOFTEND
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
+
+		LL_I2C_TransmitData8(I2Cx, (uint8_t)(reg_addr >> (j*8)) );
+
+		if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+			return ERROR_N;
+		}
+	}
+
+	LL_I2C_TransmitData8(I2Cx, high_byte );
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	LL_I2C_TransmitData8(I2Cx, low_byte );
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	//if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
+	//	return ERROR_N;
+	//}
+
+	//LL_I2C_GenerateStopCondition(I2Cx);
+
+	if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
+		return ERROR_N;
+	}
+
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+	return SUCCESS;
+}
+
 
 /**
  * @brief  Read Status Register (000h, 0B0h). The Status register maintains all flags related to alert thresholds and battery insertion or removal.
@@ -72,7 +146,7 @@ ErrorStatus MAX17320_Read_StatusReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct
 		Struct->Tmx = (Data & 0x2000) >> 13;
 		Struct->Smx = (Data & 0x4000) >> 14;
 		Struct->PA = (Data & 0x8000) >> 15;
-		if (I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x00, (Data & 0x88BB)) == 0) {
+		if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x00, (Data & 0x88BB)) == 0) {
 			if (I2C_Read_MAX17320(I2Cx, 0x6C, 0xB0, &Data) == 0) {
 				Struct->Hib = (Data & 0x002) >> 1;
 
@@ -210,13 +284,32 @@ ErrorStatus MAX17320_Read_HistoryProtStatusReg (I2C_TypeDef *I2Cx, MAX17320_RegD
 }
 
 /**
+ * @brief  Read Branch Balancing Registers (1F5h). This registers contains a Balancing data.
+ * @param  I2Cx - Port I2C
+ * @param  Struct - Returned struct with status data
+ * @retval 0 - SUCCESS, -1 - ERROR
+ */
+ErrorStatus MAX17320_Read_Balancing (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
+
+	uint16_t Data = 0;
+	if (I2C_Read_MAX17320(I2Cx, 0x16, 0xF5, &Data) == 0) {
+		Struct->BalCell1 = (Data & 0x0080) >> 7;
+		Struct->BalCell2 = (Data & 0x0200) >> 9;
+
+		return SUCCESS;
+	} else {
+		return ERROR_N;
+	}
+}
+
+/**
  * @brief  Clear ProtAlrt Register (0AFh). The Protection Alerts register contains a history of any protection events that have been logged by the device.
  * @param  I2Cx - Port I2C
  * @retval 0 - SUCCESS, -1 - ERROR
  */
 ErrorStatus MAX17320_Clear_HistoryProtStatusReg (I2C_TypeDef *I2Cx) {
 
-	if (I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0xAF, 0x0000) == 0) {
+	if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0xAF, 0x0000) == 0) {
 
 		return SUCCESS;
 	} else {
@@ -234,7 +327,7 @@ ErrorStatus MAX17320_Read_HProtCfg2Reg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPRO
 
 	uint16_t Data = 0;
 
-	if (I2C_Read_MAX17320(I2Cx, 0x16, 0xF1, &Data) == 0) {
+	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0xF1, &Data) == 0) {
 		Struct->CHGs = (Data & 0x0001);
 		Struct->DISs = (Data & 0x0002) >> 1;
 		Struct->PBEN = (Data & 0x0008) >> 3;
@@ -1466,17 +1559,17 @@ ErrorStatus MAX17320_Write_FullReset (I2C_TypeDef *I2Cx) {
 	uint8_t attempt = 0;
 	uint8_t Error = 0;
 
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x60, 0x000F);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x60, 0x000F);
 	LL_mDelay(10);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0xAB, 0x8000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0xAB, 0x8000);
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xAB, &Data);
 	POR_bit = (Data & 0x8000) >> 15;
 	while((POR_bit != 0) || (attempt < 10)){
@@ -1489,9 +1582,9 @@ ErrorStatus MAX17320_Write_FullReset (I2C_TypeDef *I2Cx) {
 	if(POR_bit != 0){
 		Error--;
 	}
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
 	if (Error == 0) {
 		return SUCCESS;
 	} else {
@@ -1511,11 +1604,11 @@ ErrorStatus MAX17320_Write_FuelGaugeReset (I2C_TypeDef *I2Cx) {
 	uint8_t attempt = 0;
 	uint8_t Error = 0;
 
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0xAB, 0x8000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0xAB, 0x8000);
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xAB, &Data);
 	POR_bit = (Data & 0x8000) >> 15;
 	while((POR_bit != 0) || (attempt < 10)){
@@ -1528,9 +1621,9 @@ ErrorStatus MAX17320_Write_FuelGaugeReset (I2C_TypeDef *I2Cx) {
 	if(POR_bit != 0){
 		Error--;
 	}
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
 	if (Error == 0) {
 		return SUCCESS;
 	} else {
@@ -1539,22 +1632,41 @@ ErrorStatus MAX17320_Write_FuelGaugeReset (I2C_TypeDef *I2Cx) {
 }
 
 /**
- * @brief  ON/OFF charge/discharge FETs MAX17320.
+ * @brief  ON/OFF charge FETs MAX17320.
  * @param  I2Cx - Port I2C
- * @param  Chg_key - MAX17320_ON_FET - 0, MAX17320_OFF_FET - 1;
+ * @param  Chg_key - MAX17320_ON_FET - 1, MAX17320_OFF_FET - 0;
+ * @retval 0 - SUCCESS, -1 - ERROR
+ */
+ErrorStatus MAX17320_Write_ON_OFF_CHRG_FET (I2C_TypeDef *I2Cx, uint8_t Chg_key) {
+
+	uint16_t Data = 0;
+	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data) == 0 ){
+		Data = (uint16_t)(Data & 0xFEFF);
+		Data = (uint16_t) (Data | (!Chg_key << 8));
+		if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data) == 0 ) {
+			return SUCCESS;
+		}
+	}
+	return ERROR_N;
+}
+
+/**
+ * @brief  ON/OFF discharge FETs MAX17320.
+ * @param  I2Cx - Port I2C
  * @param  Dchg_key - MAX17320_ON_FET - 0, MAX17320_OFF_FET - 1;
  * @retval 0 - SUCCESS, -1 - ERROR
  */
-ErrorStatus MAX17320_Write_ON_OFF_FET (I2C_TypeDef *I2Cx, uint8_t Chg_key, uint8_t Dchg_key) {
+ErrorStatus MAX17320_Write_ON_OFF_DCHRG_FET (I2C_TypeDef *I2Cx, uint8_t Dchg_key) {
 
 	uint16_t Data = 0;
-
-	Data = (uint16_t) ((Chg_key << 8) | (Dchg_key << 9));
-	if (I2C_Write_word_u16_St(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data) == 0 ) {
-		return SUCCESS;
-	} else {
-		return ERROR_N;
+	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data) == 0 ){
+		Data = (uint16_t)(Data & 0xFDFF);
+		Data = (uint16_t) (Data | (!Dchg_key << 9));
+		if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data) == 0 ) {
+			return SUCCESS;
+		}
 	}
+	return ERROR_N;
 }
 
 /**
@@ -1655,6 +1767,24 @@ ErrorStatus MAX17320_Read_Br_HistoryProtStatus_Reg (I2C_TypeDef *I2Cx, MAX17320_
 	}
 }
 
+/**
+ * @brief  Read Branch Balancing Registers (1F5h). This registers contains a Balancing data.
+ * @param  I2Cx - Port I2C
+ * @param  Struct - Returned struct with status data
+ * @retval 0 - SUCCESS, -1 - ERROR
+ */
+ErrorStatus MAX17320_Read_Balancing_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct) {
+
+	uint16_t Data = 0;
+	if (I2C_Read_MAX17320(I2Cx, 0x16, 0xF5, &Data) == 0) {
+		Struct->BalCell1 = (Data & 0x0080) >> 7;
+		Struct->BalCell2 = (Data & 0x0200) >> 9;
+
+		return SUCCESS;
+	} else {
+		return ERROR_N;
+	}
+}
 
 /**
  * @brief  Read Branch Voltage Measurement Registers (0D1h-0D8h, 0DAh, 008h). This registers contains a Voltage Measurement data.
@@ -1669,25 +1799,26 @@ ErrorStatus MAX17320_Read_Br_Voltage_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData
 	uint8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD8, &Data);
+	Data = (((Data & 0x00FF) << 8)|((Data & 0xFF00) >> 8));
 	Struct->Cell1_Reg = (uint16_t) (Data);
 	Data = 0;
 	if ((ConfigBattBr == MAX17320_3S_batt) || (ConfigBattBr == MAX17320_4S_batt)) {
-		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD7, &Data);
+		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD6, &Data);
 		Struct->Cell2_Reg = (uint16_t) (Data);
 		Data = 0;
-		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD3, &Data);
+		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD2, &Data);
 		Struct->AvgCell2_Reg = (uint16_t) (Data);
 		Data = 0;
 	}
 	if (ConfigBattBr == MAX17320_4S_batt) {
-		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD6, &Data);
+		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD5, &Data);
 		Struct->Cell3_Reg = (uint16_t) (Data);
 		Data = 0;
-		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD2, &Data);
+		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD1, &Data);
 		Struct->AvgCell3_Reg = (uint16_t) (Data);
 		Data = 0;
 	}
-	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD5, &Data);
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD7, &Data);
 	Struct->Cell4_Reg = (uint16_t) (Data);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD4, &Data);
@@ -1723,39 +1854,39 @@ ErrorStatus MAX17320_Read_Br_Voltage_mV (I2C_TypeDef *I2Cx, MAX17320_BranchData 
 	uint8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD8, &Data);
-	Struct->Cell1_Reg = (uint16_t) (Data);
+	Struct->Cell1_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 	Data = 0;
 	if ((ConfigBattBr == MAX17320_3S_batt) || (ConfigBattBr == MAX17320_4S_batt)) {
-		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD7, &Data);
-		Struct->Cell2_Reg = (uint16_t) (Data * MAX17320_LSB_mV);
+		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD6, &Data);
+		Struct->Cell2_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 		Data = 0;
-		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD3, &Data);
-		Struct->AvgCell2_Reg = (uint16_t) (Data * MAX17320_LSB_mV);
+		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD2, &Data);
+		Struct->AvgCell2_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 		Data = 0;
 	}
 	if (ConfigBattBr == MAX17320_4S_batt) {
-		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD6, &Data);
-		Struct->Cell3_Reg = (uint16_t) (Data * MAX17320_LSB_mV);
+		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD5, &Data);
+		Struct->Cell3_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 		Data = 0;
-		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD2, &Data);
-		Struct->AvgCell3_Reg = (uint16_t) (Data * MAX17320_LSB_mV);
+		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD1, &Data);
+		Struct->AvgCell3_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 		Data = 0;
 	}
-	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD5, &Data);
-	Struct->Cell4_Reg = (uint16_t) (Data * MAX17320_LSB_mV);
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD7, &Data);
+	Struct->Cell4_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD4, &Data);
-	Struct->AvgCell1_Reg = (uint16_t) (Data * MAX17320_LSB_mV);
+	Struct->AvgCell1_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 	Data = 0;
-	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD1, &Data);
-	Struct->AvgCell4_Reg = (uint16_t) (Data * MAX17320_LSB_mV);
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD3, &Data);
+	Struct->AvgCell4_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xDA, &Data);
-	Struct->Batt_Reg = (uint16_t) (Data * MAX17320_LSB_mV);
+	Struct->Batt_mV = (uint16_t) (Data * 625 / 2000);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x08, &Data);
-	Struct->MaxVCELL_Reg = (uint8_t) (((Data & 0xFF00) >> 8) * 20); // LSB 20mV
-	Struct->MinVCELL_Reg = (uint8_t) ((Data & 0x00FF) * 20); // LSB 20mV
+	Struct->MaxVCELL_mV = (uint32_t) (((Data & 0xFF00) >> 8) * 20); // LSB 20mV
+	Struct->MinVCELL_mV = (uint32_t) ((Data & 0x00FF) * 20); // LSB 20mV
 
 	if (Error == 0) {
 		return SUCCESS;
@@ -1805,14 +1936,14 @@ ErrorStatus MAX17320_Read_Br_Current_mA (I2C_TypeDef *I2Cx, MAX17320_BranchData 
 	uint8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x1C, &Data);
-	Struct->Curr_mA = (int16_t) (Data * MAX17320_LSB_mA / Rsense);
+	Struct->Curr_mA = (int16_t) ((int16_t) Data * MAX17320_LSB_mA / Rsense);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x1D, &Data);
-	Struct->AvgCurr_mA = (int16_t) (Data * MAX17320_LSB_mA / Rsense);
+	Struct->AvgCurr_mA = (int16_t) ((int16_t) Data * MAX17320_LSB_mA / Rsense);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x0A, &Data);
-	Struct->MaxCurr_mA = (int8_t) (((Data & 0xFF00) >> 8) * 0.4 / Rsense * 1000);
-	Struct->MinCurr_mA = (int8_t) ((Data & 0x00FF) * 0.4 / Rsense * 1000);
+	Struct->MaxCurr_mA = (int32_t) (((Data & 0xFF00) >> 8) * 0.4 / Rsense * 1000);
+	Struct->MinCurr_mA = (int32_t) ((int8_t)((Data & 0x00FF)) * 0.4 / Rsense * 1000);
 
 	if (Error == 0) {
 		return SUCCESS;
@@ -1858,10 +1989,10 @@ ErrorStatus MAX17320_Read_Br_Pwr_mW (I2C_TypeDef *I2Cx, MAX17320_BranchData *Str
 	uint8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB1, &Data);
-	Struct->Pwr_mW = (int16_t) (Data * 0.08 * Rsense);
+	Struct->Pwr_mW = (int16_t) ((int16_t) Data * 0.08 * Rsense);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB3, &Data);
-	Struct->AvgPwr_mW = (int16_t) (Data * 0.08 * Rsense);
+	Struct->AvgPwr_mW = (int16_t) ((int16_t) Data * 0.08 * Rsense);
 
 	if (Error == 0) {
 		return SUCCESS;
@@ -2050,7 +2181,7 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_mAh (I2C_TypeDef *I2Cx, MAX17320_BranchDat
 	Struct->RepCap_mAh = (uint16_t) (Data * MAX17320_LSB_mAh / Rsense);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x06, &Data);
-	Struct->RepSOC_mAh = (uint16_t) (Data * MAX17320_LSB_mAh / Rsense);
+	Struct->RepSOC_Per = (uint16_t) (Data * MAX17320_LSB_degree);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x07, &Data);
 	Struct->Age_Dg = (uint16_t) (Data * MAX17320_LSB_degree);
@@ -2071,5 +2202,33 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_mAh (I2C_TypeDef *I2Cx, MAX17320_BranchDat
 	}
 }
 
+/**
+ * @brief  Write Branch ModelGauge m5 Algorithm Output mAh in real values (005h, 010h).
+ * 		   This registers contains a ModelGauge m5 Algorithm Output Registers data.
+ * @param  I2Cx - Port I2C
+ * @param  Max_cap - Maximum value of capacity in mAh.
+ * @param  AccmCharge - Value an accumulate charge of battery's in mAh.
+ * @param  Rsense - Value of current shunt in mOhm
+ * @retval 0 - SUCCESS, -1 - ERROR
+ */
+ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t Max_cap, uint16_t AccmCharge, uint8_t Rsense) {
+
+	uint16_t Data = 0;
+
+	Data = AccmCharge * Rsense / MAX17320_LSB_mAh ;
+	if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x05, Data) == SUCCESS ) {
+		if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x10, &Data) == SUCCESS){
+			Data = (uint16_t) (Data * MAX17320_LSB_mAh / Rsense);
+			if(Data > Max_cap){
+				Data = (uint16_t) (Max_cap * Rsense / MAX17320_LSB_mAh);
+				if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x10, Data) == SUCCESS ) {
+					return SUCCESS;
+				}
+			}
+		}
+	}
+
+	return ERROR_N;
+}
 
 

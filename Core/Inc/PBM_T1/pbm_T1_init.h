@@ -1,3 +1,4 @@
+
 #ifndef INC_PBM_T1_INIT_H_
 #define INC_PBM_T1_INIT_H_
 
@@ -10,7 +11,11 @@ extern "C" {
 
 ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] );
 
-ErrorStatus PBM_T1_Re_Init( _PBM_T1 pbm[], _PMM *pmm_ptr);
+ErrorStatus PBM_T1_Re_Init( _PBM_T1 pbm[], _PMM *pmm_ptr );
+
+ErrorStatus PBM_T1_TempSensorInit( _PBM_T1 pbm[], uint8_t PBM_number );
+
+ErrorStatus PBM_T1_I2CMuxInit(_PBM_T1 pbm[], uint8_t PBM_number);
 
 #ifdef __cplusplus
 }
