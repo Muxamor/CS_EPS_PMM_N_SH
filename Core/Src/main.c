@@ -14,9 +14,10 @@
 #include "PMM/pmm_deploy.h"
 #include "PMM/pmm_savedata.h"
 #include "PMM/pmm_damage_ctrl.h"
-#include "PBM/pbm_control.h"
-#include "PBM/pbm_init.h"
-#include "PBM/pbm.h"
+#include "PBM_T1/pbm_T1_control.h"
+#include "PBM_T1/pbm_T1_config.h"
+#include "PBM_T1/pbm_T1_init.h"
+#include "PBM_T1/pbm_T1.h"
 #include "PAM/pam_init.h"
 #include "PAM/pam.h"
 #include "uart_eps_comm.h"
@@ -52,7 +53,7 @@ int main(void){
 	_PDM pdm = {0}, *pdm_ptr = &pdm;
 	_PMM pmm = {0}, *pmm_ptr = &pmm;
 	_PAM pam = {0}, *pam_ptr = &pam;
-	_PBM pbm_mas[PBM_QUANTITY] = {0};
+	_PBM_T1 pbm_mas[PBM_T1_QUANTITY] = {0};
     _EPS_Service eps_service = {0}, *eps_service_ptr = &eps_service;
 
 	_EPS_Param eps_param = {.eps_pmm_ptr = pmm_ptr, 
@@ -126,7 +127,7 @@ int main(void){
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
 		PDM_init( pdm_ptr );
-		PBM_Init( pbm_mas );
+		PBM_T1_Init( pbm_mas );
         PAM_init( pam_ptr );
 
         if( pmm_ptr->CAN_constatnt_mode == ENABLE){
@@ -170,7 +171,7 @@ int main(void){
             PMM_Get_Telemetry(pmm_ptr);
             PDM_Get_Telemetry(pdm_ptr);
             PAM_Get_Telemetry(pam_ptr);
-            PBM_Get_Telemetry(pbm_mas); //TODO off polling if Logic power is OFF
+            PBM_T1_Get_Telemetry(pbm_mas); //TODO off polling if Logic power is OFF
 
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
