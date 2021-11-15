@@ -6,6 +6,8 @@
 extern "C" {
 #endif
 
+#include "TCA9548.h"
+
 /*********************** Configuration for PBM module ***********************/
 
 #define PBM_T1_I2C_PORT                		I2C4 	//Number of I2C port for PBM.
@@ -60,6 +62,11 @@ extern "C" {
 #define PBM_T1_LOW_ENERGY_EDGE              6500 	//Voltage in mV for warning low energy PBM.
 #define PBM_T1_ZERO_ENERGY_EDGE             6000 	//Voltage in mV for off all payload.
 
+#define PBM_T1_I2C_MUX_CH_GPIO 				TCA9548_CH2 // Number I2C Mux channel for GPIO mux
+#define PBM_T1_I2C_MUX_CH_Br1 				TCA9548_CH6 // Number I2C Mux channel for MAX17320 mux branch 1
+#define PBM_T1_I2C_MUX_CH_Br2 				TCA9548_CH5 // Number I2C Mux channel for MAX17320 mux branch 2
+#define PBM_T1_I2C_MUX_CH_Temp1 			TCA9548_CH0 // Number I2C Mux channel for TMP1075 mux branch 1
+#define PBM_T1_I2C_MUX_CH_Temp2 			TCA9548_CH3 // Number I2C Mux channel for TMP1075 mux branch 2
 
 
 typedef struct{

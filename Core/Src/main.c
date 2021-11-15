@@ -156,7 +156,7 @@ int main(void){
 
         LL_IWDG_ReloadCounter(IWDG);
         //Save setting to FRAM for Active and Passive CPU and sync. settings Active->Passive CPU
-        if((pmm_ptr->PMM_save_conf_flag == SET) || (pdm_ptr->PDM_save_conf_flag == SET) || (pam_ptr->PAM_save_conf_flag == SET) || (PBM_CheckSaveSetupFlag(pbm_mas) == SET)){
+        if((pmm_ptr->PMM_save_conf_flag == SET) || (pdm_ptr->PDM_save_conf_flag == SET) || (pam_ptr->PAM_save_conf_flag == SET) || (PBM_T1_CheckSaveSetupFlag(pbm_mas) == SET)){
             PMM_Sync_and_Save_Settings_A_P_CPU(eps_param);
         }
 
