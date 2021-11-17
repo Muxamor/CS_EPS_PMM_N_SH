@@ -559,7 +559,7 @@ ErrorStatus INA231_write_alert_lim_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_add
 }
 
 
-
+//TODO нужно исправить так как write_reg = (uint16_t)((write_data << 9) | read_reg); не корретно
 /** @brief	Write averaging mode. These bits set the number of samples that are collected and averaged together
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA231_addr - 7-bit device address.
@@ -1080,15 +1080,7 @@ ErrorStatus INA231_reset_alert_latch(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr)
 */
 ErrorStatus INA231_power_reset(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
 
-	uint16_t read_reg;
-	uint16_t write_reg;
-
-	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CONFIGURATION_REG_ADDR, &read_reg) != SUCCESS){
-		return ERROR_N;
-	}
-	write_reg = (uint16_t)((1 << 15) | read_reg);
-
-	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CONFIGURATION_REG_ADDR, write_reg) != SUCCESS){
+	if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_CONFIGURATION_REG_ADDR, 0x8000) != SUCCESS){
 		return ERROR_N;
 	}
 
