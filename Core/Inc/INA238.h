@@ -65,12 +65,47 @@ extern "C" {
 ErrorStatus INA238_read_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t INA238_addr_reg, uint16_t *read_data);
 ErrorStatus INA238_write_reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t INA238_addr_reg, uint16_t write_data);
 
-
+//************** Configuration (CONFIG) Register (Address = 0h)
 ErrorStatus INA238_Hard_reset(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr);
 ErrorStatus INA238_setup_CONVDLY(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t conv_delay);
 ErrorStatus INA238_get_CONVDLY(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *conv_delay);
 ErrorStatus INA238_setup_ADCRANGE(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t adc_range);
 ErrorStatus INA238_get_ADCRANGE(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *adc_range);
+
+//************** ADC Configuration (ADC_CONFIG) Register (Address = 1h)
+ErrorStatus INA238_setup_MODE(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t mode);
+ErrorStatus INA238_get_MODE(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *mode);
+ErrorStatus INA238_setup_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t vbusct);
+ErrorStatus INA238_get_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *vbusct);
+ErrorStatus INA238_setup_VSHCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t vshct);
+ErrorStatus INA238_get_VSHCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *vshct);
+ErrorStatus INA238_setup_VTCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t vtct);
+ErrorStatus INA238_get_VTCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *vtct);
+ErrorStatus INA238_setup_AVG(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t avg);
+ErrorStatus INA238_get_AVG(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *avg);
+
+//************** Shunt Calibration (SHUNT_CAL) Register (Address = 2h)
+ErrorStatus INA238_Set_calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float Rshunt);
+ErrorStatus INA231_Set_calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, uint16_t Rshunt);
+
+//************** Shunt Voltage Measurement (VSHUNT) Register (Address = 4h) [reset = 0h]
+ErrorStatus INA238_Get_shunt_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float *shunt_voltage);
+ErrorStatus INA238_Get_shunt_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, int16_t *shunt_voltage);
+
+//**************  Bus Voltage Measurement (VBUS) Register (Address = 5h)
+ErrorStatus INA238_Get_bus_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float *bus_voltage);
+ErrorStatus INA238_Get_bus_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t *bus_voltage);
+
+//************** Temperature Measurement (DIETEMP) Register (Address = 6h)
+ErrorStatus INA238_Get_temperature_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float *temperature);
+
+//************** Current Result (CURRENT) Register (Address = 7h)
+ErrorStatus INA238_Get_current_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float *current);
+ErrorStatus INA238_Get_current_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, int16_t max_exp_current_mA, int16_t *current);
+
+
+
+
 
 #ifdef __cplusplus
 }

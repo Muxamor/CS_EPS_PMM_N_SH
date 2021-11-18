@@ -1655,12 +1655,12 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch5_Median_Temp                    = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp;
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch6_Median_Temp                    = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp;
     CAN_IVar5_telemetry.CAN_Beacon_PAM_In_PwrCh_ID_State_BitsMask           = CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_ID_State_BitsMask;
-    uint16_t  CAN_Beacon_SP_State_BitsMask_BEACON;                  //+19,20     |  const = 0x                 |  Статус солнечных панелей, битовая маска (в т.ч. ФЭП) (МАЯК)
-    uint16_t CAN_Beacon_PBM_Chrg_Dichrg_Key_Status_BitMask;         //+21,22     |  const = 0x                 | Статус ключей заряда/разряда
-    uint8_t  CAN_Beacon_PBM_Heating_Element_State_BitMask;          //+23        |  const = 0x                 | Текущее состояние Термостата
-    uint8_t  CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[3];        //+24,25,26  |  const = 0x                 | Статусы отказов (ошибок)АБ, битовая маска (МАЯК)
-    uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[2];        //+27,28     |  const = 0x                 | Статус отказов элементов СЭС, битовая маска (МАЯК)
-    //Total 29 byte
+   // uint16_t  CAN_Beacon_SP_State_BitsMask_BEACON;                  //+19,20     |  const = 0x                 |  Статус солнечных панелей, битовая маска (в т.ч. ФЭП) (МАЯК)
+   // uint16_t CAN_Beacon_PBM_Chrg_Dichrg_Key_Status_BitMask;         //+21,22     |  const = 0x                 | Статус ключей заряда/разряда
+   // uint8_t  CAN_Beacon_PBM_Heating_Element_State_BitMask;          //+23        |  const = 0x                 | Текущее состояние Термостата
+   // uint8_t  CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[3];        //+24,25,26  |  const = 0x                 | Статусы отказов (ошибок)АБ, битовая маска (МАЯК)
+   // uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[2];        //+27,28     |  const = 0x                 | Статус отказов элементов СЭС, битовая маска (МАЯК)
+                                                                            //Total 29 byte
 
 
 
