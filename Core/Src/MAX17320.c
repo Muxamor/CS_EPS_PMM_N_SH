@@ -1989,10 +1989,10 @@ ErrorStatus MAX17320_Read_Br_Pwr_mW (I2C_TypeDef *I2Cx, MAX17320_BranchData *Str
 	uint8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB1, &Data);
-	Struct->Pwr_mW = (int16_t) ((int16_t) Data * 0.08 * Rsense);
+	Struct->Pwr_mW = (int16_t) ((int16_t) Data * 0.16 * Rsense);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB3, &Data);
-	Struct->AvgPwr_mW = (int16_t) ((int16_t) Data * 0.08 * Rsense);
+	Struct->AvgPwr_mW = (int16_t) ((int16_t) Data * 0.16 * Rsense);
 
 	if (Error == 0) {
 		return SUCCESS;
@@ -2156,6 +2156,10 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchDat
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB2, &Data);
 	Struct->VRipple_Reg = (uint16_t) (Data);
+	Data = 0;
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xA8, &Data);
+	Struct->LeakCurr_Reg = (Data & 0x0ff);
+	Struct->LDet = (Data & 0x0200) >> 9;
 
 	if (Error == 0) {
 		return SUCCESS;
@@ -2194,6 +2198,10 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_mAh (I2C_TypeDef *I2Cx, MAX17320_BranchDat
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB2, &Data);
 	Struct->VRipple_mV = (uint16_t) (Data * MAX17320_LSB_mVrip);
+	Data = 0;
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xA8, &Data);
+	Struct->LeakCurr_mA = (uint16_t)(((uint8_t)(Data & 0x0ff)) * MAX17320_LSB_mA / Rsense);
+	Struct->LDet = (Data & 0x0200) >> 9;
 
 	if (Error == 0) {
 		return SUCCESS;
@@ -2211,21 +2219,21 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_mAh (I2C_TypeDef *I2Cx, MAX17320_BranchDat
  * @param  Rsense - Value of current shunt in mOhm
  * @retval 0 - SUCCESS, -1 - ERROR
  */
-ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t Max_cap, uint16_t AccmCharge, uint8_t Rsense) {
+ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t AccmCharge, uint8_t Rsense) {
 
 	uint16_t Data = 0;
 
 	Data = AccmCharge * Rsense / MAX17320_LSB_mAh ;
 	if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x05, Data) == SUCCESS ) {
-		if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x10, &Data) == SUCCESS){
+		/*if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x10, &Data) == SUCCESS){
 			Data = (uint16_t) (Data * MAX17320_LSB_mAh / Rsense);
 			if(Data > Max_cap){
 				Data = (uint16_t) (Max_cap * Rsense / MAX17320_LSB_mAh);
-				if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x10, Data) == SUCCESS ) {
-					return SUCCESS;
-				}
+				if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x10, Data) == SUCCESS ) {*/
+		return SUCCESS;
+				/*}
 			}
-		}
+		}*/
 	}
 
 	return ERROR_N;
