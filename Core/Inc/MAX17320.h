@@ -8,9 +8,9 @@ extern "C" {
 
 #define MAX17320_ON_FET       	0x00  		// ON charge/discharge keys MAX17320.
 #define MAX17320_OFF_FET        0x01   		// OFF charge/discharge keys MAX17320.
-#define MAX17320_2S_batt        0x00   		// 2s1p configuration battery in branch.
-#define MAX17320_3S_batt        0x01   		// 3s1p configuration battery in branch.
-#define MAX17320_4S_batt        0x02   		// 4s1p configuration battery in branch.
+#define MAX17320_2S_batt        0x02   		// 2s1p configuration battery in branch.
+#define MAX17320_3S_batt        0x03   		// 3s1p configuration battery in branch.
+#define MAX17320_4S_batt        0x04   		// 4s1p configuration battery in branch.
 #define MAX17320_0_termistors	0			// 0 termistors in branch.
 #define MAX17320_1_termistors	1			// 1 termistors in branch.
 #define MAX17320_2_termistors	2			// 2 termistors in branch.
@@ -567,7 +567,8 @@ typedef struct // The Battery Branch Data
 
 	uint8_t BalCell1 :1;	// Flag balancing cell1.
 	uint8_t BalCell2 :1;	// Flag balancing cell2.
-	uint8_t  :6;
+	uint8_t LDet :1; 		// Leakage Detection Fault. This bit is set when a leakage detection fault has been detected.
+	uint8_t  :5;
 
 	uint16_t Cell1_Reg; 	// Cell1 Register. Each update cycle, the cell voltage measurement for each cell is placed in  Cell1 register.
 	uint16_t Cell2_Reg; 	// Cell2 Register. Each update cycle, the cell voltage measurement for each cell is placed in  Cell2 register.
@@ -633,13 +634,14 @@ typedef struct // The Battery Branch Data
 	uint16_t Cycles_Reg; 	// Cycles Register. The Cycles register maintains a total count of the number of charge/discharge cycles of the cell that have occurred.
 	uint16_t RCell_Reg; 	// RCell Register. The register displays the calculated internal resistance of the cell or the average internal resistance.
 	uint16_t VRipple_Reg; 	// VRipple Register. The register holds the slow average RMS value of the VCell register reading variation compared to the AvgVCell	register.
-	uint16_t RepCap_mAh; 	// RepCap Register. Reported Capacity is a filtered version of the AvCap register that prevents large jumps.
-	uint16_t RepSOC_Per; 	// RepSOC Register. RepSOC is a filtered version of the AvSOC register that prevents large jumps.
-	uint16_t Age_Dg; 		// Age Register. The Age register contains a calculated percentage value of the application’s present cell capacity.
-	uint16_t Cycles_Cn; 	// Cycles Register. The Cycles register maintains a total count of the number of charge/discharge cycles of the cell that have occurred.
-	uint16_t RCell_mOhm; 	// RCell Register. The register displays the calculated internal resistance of the cell or the average internal resistance.
-	uint16_t VRipple_mV; 	// VRipple Register. The register holds the slow average RMS value of the VCell register reading variation compared to the AvgVCell	register.
-
+	uint8_t LeakCurr_Reg; 	// Leakage Current Register. Leakage current is an unsigned 8-bit result of leakage current from self-discharge in a cell.
+	uint16_t RepCap_mAh; 	// RepCap value. Reported Capacity is a filtered version of the AvCap register that prevents large jumps.
+	uint16_t RepSOC_Per; 	// RepSOC value. RepSOC is a filtered version of the AvSOC register that prevents large jumps.
+	uint16_t Age_Dg; 		// Age value. The Age register contains a calculated percentage value of the application’s present cell capacity.
+	uint16_t Cycles_Cn; 	// Cycles value. The Cycles register maintains a total count of the number of charge/discharge cycles of the cell that have occurred.
+	uint16_t RCell_mOhm; 	// RCell value. The register displays the calculated internal resistance of the cell or the average internal resistance.
+	uint16_t VRipple_mV; 	// VRipple value. The register holds the slow average RMS value of the VCell register reading variation compared to the AvgVCell	register.
+	uint16_t LeakCurr_mA;	// Leakage Current value. Leakage current is an unsigned 8-bit result of leakage current from self-discharge in a cell.
 
 } MAX17320_BranchData;
 
@@ -747,7 +749,7 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchDat
 
 ErrorStatus MAX17320_Read_Br_GaugeOut_mAh (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Rsense);
 
-ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t Max_cap, uint16_t AccmCharge, uint8_t Rsense);
+ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t AccmCharge, uint8_t Rsense);
 
 #ifdef __cplusplus
 }

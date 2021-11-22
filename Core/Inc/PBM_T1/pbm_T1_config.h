@@ -13,7 +13,13 @@ extern "C" {
 #define PBM_T1_I2C_PORT                		I2C4 	//Number of I2C port for PBM.
 #define PBM_T1_I2C_ATTEMPT_CONN             3 	    //Quantity attempt to connection through I2C.
 #define PBM_T1_i2c_delay_att_conn			3 	 	//ms Delay between attempts connection through I2C in millisecond
-#define PBM_T1_QUANTITY 					0x04 	// Total quantity power channels on the PDM
+#define PBM_T1_QUANTITY 					0x04 	// Total quantity power modules PBM
+#define PBM_T1_BRANCH_QUANTITY 				0x02 	// Total quantity branches on one PBM
+#define PBM_T1_BRANCH_BAT_QUANTITY			0x02 	// Total quantity battery in branch
+#define PBM_T1_HEAT_QUANTITY 				0x02 	// Total quantity heaters on one PBM
+#define PBM_T1_HEAT_TEMPSENS_QUANTITY		0x02 	// Total quantity temperature sensors on one heat
+#define PBM_T1_TEMPSENS_QUANTITY			0x00 	// Total quantity temperature sensors
+
 
 #define PBM_T1_1_TCA9548A_ADDR              0x70 	//Address GPIO mux PCA9534ARGTR Battery Module №1.
 #define PBM_T1_2_TCA9548A_ADDR              0x71 	//Address GPIO mux PCA9534ARGTR Battery Module №2.
@@ -22,8 +28,8 @@ extern "C" {
 
 #define PBM_T1_PCA9534_ADDR               	0x38 	//Address GPIO mux PCA9534ARGTR Battery Module.
 
-#define PBM_T1_INA_ADDR_1					0x40 	//Address INA mux 1 Battery Module.
-#define PBM_T1_INA_ADDR_2					0x41 	//Address INA mux 2 Battery Module.
+#define PBM_T1_INA238_ADDR_1				0x40 	//Address INA mux 1 Battery Module.
+#define PBM_T1_INA238_ADDR_2				0x41 	//Address INA mux 2 Battery Module.
 
 #define PBM_T1_TMP1075_ADDR_1               0x48 	//Address Temperature Sensor 1 TMP1075 Battery Module.
 #define PBM_T1_TMP1075_ADDR_2               0x49 	//Address Temperature Sensor 2 TMP1075 Battery Module.
@@ -39,9 +45,15 @@ extern "C" {
 #define PBM_T1_3                			0x02	//Designation for choose PBM №3.
 #define PBM_T1_4                			0x03	//Designation for choose PBM №3.
 
-#define PBM_T1_BRANCH_1                		0x01 	//Designation for choose branch №1 PBM.
-#define PBM_T1_BRANCH_2                		0x02 	//Designation for choose branch №2 PBM.
-#define PBM_T1_BRANCH_ALL                	0x00 	//Designation for choose all branch PBM.
+#define PBM_T1_BRANCH_1                		0x00 	//Designation for choose branch №1 PBM.
+#define PBM_T1_BRANCH_2                		0x01 	//Designation for choose branch №2 PBM.
+#define PBM_T1_BRANCH_ALL                	0xff 	//Designation for choose all branch PBM.
+
+#define PBM_T1_HEAT_1						0x00 	//Designation for choose heat №1 PBM.
+#define PBM_T1_HEAT_2						0x01 	//Designation for choose heat №1 PBM.
+
+#define PBM_T1_TEMPSENS_1                	0x00 	//Designation for choose temperature sensor №1 in heat branch.
+#define PBM_T1_TEMPSENS_2                	0x01 	//Designation for choose temperature sensor №2 in heat branch.
 
 #define PBM_T1_ON_HEAT                		0x01 	//Enable heat branch.
 #define PBM_T1_OFF_HEAT                		0x00 	//Disable heat branch.
@@ -52,39 +64,58 @@ extern "C" {
 #define PBM_T1_ON_DISCHARGE                	0x01 	//Enable discharge branch.
 #define PBM_T1_OFF_DISCHARGE               	0x00 	//Disable discharge branch.
 
-#define PBM_T1_ON_SDWN_CHRG          		0x01 	//Enable emergency charge.
-#define PBM_T1_OFF_SDWN_CHRG         		0x00 	//Disable emergency charge.
+#define PBM_T1_ON_EMERG_CHRG          		0x01 	//Enable emergency charge.
+#define PBM_T1_OFF_EMERG_CHRG         		0x00 	//Disable emergency charge.
 
-#define PBM_T1_R_SENSE           			10 		//Resistance of current shunt im mOhm.
+#define PBM_T1_MAX17320_R_SENSE    			10 		//Resistance of current shunt im mOhm.
 #define PBM_T1_MAX_BATT_CAP           		3100 	//Maximum branch battery capacity in mAh.
 
 #define PBM_T1_NORMAL_ENERGY_EDGE           7200 	//Voltage in mV for hysteresis loop warning low energy PBM.
 #define PBM_T1_LOW_ENERGY_EDGE              6500 	//Voltage in mV for warning low energy PBM.
 #define PBM_T1_ZERO_ENERGY_EDGE             6000 	//Voltage in mV for off all payload.
 
-#define PBM_T1_I2C_MUX_CH_GPIO 				TCA9548_CH2 // Number I2C Mux channel for GPIO mux
-#define PBM_T1_I2C_MUX_CH_Br1 				TCA9548_CH6 // Number I2C Mux channel for MAX17320 mux branch 1
-#define PBM_T1_I2C_MUX_CH_Br2 				TCA9548_CH5 // Number I2C Mux channel for MAX17320 mux branch 2
-#define PBM_T1_I2C_MUX_CH_Temp1 			TCA9548_CH0 // Number I2C Mux channel for TMP1075 mux branch 1
-#define PBM_T1_I2C_MUX_CH_Temp2 			TCA9548_CH3 // Number I2C Mux channel for TMP1075 mux branch 2
+#define PBM_T1_I2C_MUX_CH_GPIO 				TCA9548_CH2 // Number I2C Mux channel for GPIO mux.
+#define PBM_T1_I2C_MUX_CH_Br1 				TCA9548_CH6 // Number I2C Mux channel for MAX17320 mux branch 1.
+#define PBM_T1_I2C_MUX_CH_Br2 				TCA9548_CH5 // Number I2C Mux channel for MAX17320 mux branch 2.
+#define PBM_T1_I2C_MUX_CH_Heat1 			TCA9548_CH0 // Number I2C Mux channel for TMP1075 mux heat 1.
+#define PBM_T1_I2C_MUX_CH_Heat2 			TCA9548_CH3 // Number I2C Mux channel for TMP1075 mux heat 2.
 
+#define PBM_T1_GPIO_CH_Heat_CMD_1 			PCA9534_IO_P00 // Number GPIO Mux channel for set ON/OFF heat command branch 1.
+#define PBM_T1_GPIO_CH_Heat_State_1			PCA9534_IO_P01 // Number GPIO Mux channel for read real heat state branch 1.
+#define PBM_T1_GPIO_CH_Heat_CMD_2 			PCA9534_IO_P03 // Number GPIO Mux channel for set ON/OFF heat command branch 1.
+#define PBM_T1_GPIO_CH_Heat_State_2			PCA9534_IO_P04 // Number GPIO Mux channel for read real heat state branch 1.
+#define PBM_T1_GPIO_CH_EmergChrg_1 			PCA9534_IO_P02 // Number GPIO Mux channel for ON/OFF emergency charge branch 1.
+#define PBM_T1_GPIO_CH_EmergChrg_2 			PCA9534_IO_P05 // Number GPIO Mux channel for ON/OFF emergency charge branch 2.
+
+#define PBM_T1_GPIO_CH_Shift_Heat_CMD_1 	0x00 	// Shift pin GPIO Mux channel for set ON/OFF heat command branch 1.
+#define PBM_T1_GPIO_CH_Shift_Heat_State_1	0x01 	// Shift pin GPIO Mux channel for read real heat state branch 1.
+#define PBM_T1_GPIO_CH_Shift_Heat_CMD_2 	0x03 	// Shift pin GPIO Mux channel for set ON/OFF heat command branch 1.
+#define PBM_T1_GPIO_CH_Shift_Heat_State_2	0x04 	// Shift pin GPIO Mux channel for read real heat state branch 1.
+#define PBM_T1_GPIO_CH_Shift_EmergChrg_1 	0x02 	// Shift pin GPIO Mux channel for ON/OFF emergency charge branch 1.
+#define PBM_T1_GPIO_CH_Shift_EmergChrg_2 	0x05 	// Shift pin GPIO Mux channel for ON/OFF emergency charge branch 2.
 
 typedef struct{
 
 	uint8_t  I2C_MUX_Addr;
 	uint8_t  GPIO_Addr;
-	uint8_t  INA_1_Addr;
-	uint8_t  INA_2_Addr;
+	uint8_t  INA238_1_Addr;
+	uint8_t  INA238_2_Addr;
 	uint8_t  TEMP_SENSOR_1_Addr;
 	uint8_t  TEMP_SENSOR_2_Addr;
-	uint8_t  TEMP_SENSOR_3_Addr;
-	uint8_t  TEMP_SENSOR_4_Addr;
 
+	uint8_t  GPIO_Pin_Heat_CMD;
+	uint8_t  GPIO_Pin_Shift_Heat_CMD;
+	uint8_t  GPIO_Pin_Heat_State;
+	uint8_t  GPIO_Pin_Shift_Heat_State;
+	uint8_t  GPIO_Pin_TempSens;
+	uint8_t  GPIO_Pin_EmergChrg;
+	uint8_t  GPIO_Pin_Shift_EmergChrg;
 	uint8_t  GPIO_INPUT_PIN;
+	uint8_t  GPIO_OUTPUT_PIN;
 
 } _PBM_T1_table;
 
-_PBM_T1_table PBM_T1_Table(uint8_t PBM_number);
+_PBM_T1_table PBM_T1_Table(uint8_t PBM_number, uint8_t Branch, uint8_t Heat);
 
 #ifdef __cplusplus
 }
