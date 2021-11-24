@@ -31,10 +31,10 @@ extern "C" {
 #define PBM_T1_INA238_ADDR_1				0x40 	//Address INA mux 1 Battery Module.
 #define PBM_T1_INA238_ADDR_2				0x41 	//Address INA mux 2 Battery Module.
 
-#define PBM_T1_TMP1075_ADDR_1               0x48 	//Address Temperature Sensor 1 TMP1075 Battery Module.
-#define PBM_T1_TMP1075_ADDR_2               0x49 	//Address Temperature Sensor 2 TMP1075 Battery Module.
-#define PBM_T1_TMP1075_ADDR_3               0x4A 	//Address Temperature Sensor 3 TMP1075 Battery Module.
-#define PBM_T1_TMP1075_ADDR_4               0x4B 	//Address Temperature Sensor 4 TMP1075 Battery Module.
+#define PBM_T1_TMP1075_HEAT_1_ADDR_1        0x48 	//Address Temperature Sensor 1 Heat 1.
+#define PBM_T1_TMP1075_HEAT_1_ADDR_2        0x49 	//Address Temperature Sensor 2 Heat 1.
+#define PBM_T1_TMP1075_HEAT_2_ADDR_1        0x4A 	//Address Temperature Sensor 1 Heat 2.
+#define PBM_T1_TMP1075_HEAT_2_ADDR_2        0x4B 	//Address Temperature Sensor 2 Heat 2.
 
 #define PBM_T1_TMP1075_TEMP_HI             	10.0 	//Hi limit for comparison TMP1075 Battery Module in °C.
 #define PBM_T1_TMP1075_TEMP_LO             	2.0 	//Lo limit for comparison TMP1075 Battery Module in °C.
@@ -47,13 +47,13 @@ extern "C" {
 
 #define PBM_T1_BRANCH_1                		0x00 	//Designation for choose branch №1 PBM.
 #define PBM_T1_BRANCH_2                		0x01 	//Designation for choose branch №2 PBM.
-#define PBM_T1_BRANCH_ALL                	0xff 	//Designation for choose all branch PBM.
+//#define PBM_T1_BRANCH_ALL                	0xff 	//Designation for choose all branch PBM.
 
 #define PBM_T1_HEAT_1						0x00 	//Designation for choose heat №1 PBM.
 #define PBM_T1_HEAT_2						0x01 	//Designation for choose heat №1 PBM.
 
-#define PBM_T1_TEMPSENS_1                	0x00 	//Designation for choose temperature sensor №1 in heat branch.
-#define PBM_T1_TEMPSENS_2                	0x01 	//Designation for choose temperature sensor №2 in heat branch.
+#define PBM_T1_HEAT_TEMPSENS_1              0x00 	//Designation for choose temperature sensor №1 in heat branch.
+#define PBM_T1_HEAT_TEMPSENS_2              0x01 	//Designation for choose temperature sensor №2 in heat branch.
 
 #define PBM_T1_ON_HEAT                		0x01 	//Enable heat branch.
 #define PBM_T1_OFF_HEAT                		0x00 	//Disable heat branch.
@@ -97,11 +97,15 @@ extern "C" {
 typedef struct{
 
 	uint8_t  I2C_MUX_Addr;
+	uint8_t  I2C_MUX_Ch_GPIO;
+	uint8_t  I2C_MUX_Ch_Branch;
+	uint8_t  I2C_MUX_Ch_Heat;
+	uint8_t  I2C_MUX_Ch_TempSens;
 	uint8_t  GPIO_Addr;
 	uint8_t  INA238_1_Addr;
 	uint8_t  INA238_2_Addr;
-	uint8_t  TEMP_SENSOR_1_Addr;
-	uint8_t  TEMP_SENSOR_2_Addr;
+	uint8_t  TEMP_HEAT_SENSOR_Addr[PBM_T1_HEAT_TEMPSENS_QUANTITY];
+	uint8_t  TEMP_SENSOR_Addr[PBM_T1_TEMPSENS_QUANTITY];
 
 	uint8_t  GPIO_Pin_Heat_CMD;
 	uint8_t  GPIO_Pin_Shift_Heat_CMD;

@@ -6,6 +6,8 @@
 extern "C" {
 #endif
 
+ErrorStatus PBM_T1_Heat_TMP1075_InitState(I2C_TypeDef *I2Cx, uint8_t AddrTMP1075);
+
 ErrorStatus PBM_T1_TMP1075_InitState(I2C_TypeDef *I2Cx, uint8_t AddrTMP1075);
 
 #ifdef __cplusplus
