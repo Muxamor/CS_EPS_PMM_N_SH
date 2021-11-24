@@ -183,7 +183,6 @@ typedef struct // The register data
 	uint8_t TempTimer :2; 	// Set TempTimer to configure the fault-timing for the following faults: TooColdC, TooHotC, Die-Hot, and TooHotD.
 	uint8_t PermFailTimer :2;// Set PermFailTimer to configure the fault-timing for permanent failure detection.
 
-
 	uint8_t OverCurrTimer :3;// It configures the fault timing for the slow overcharge-current detection (OCCP) as well as	overdischarge-current detection (ODCP).
 	uint8_t OVPTimer :2; 	// Set OVPTimer to configure the fault timing for Overvoltage-Protection.
 	uint8_t FullTimer :3; 	// Set FullTimer to configure the timing for full-detection.

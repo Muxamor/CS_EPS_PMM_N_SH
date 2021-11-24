@@ -1,3 +1,4 @@
+
 #ifndef CS_EPS_PMM_N_SH_V_INA238_H
 #define CS_EPS_PMM_N_SH_V_INA238_H
 
@@ -39,11 +40,10 @@ extern "C" {
 #define INA238_CONVERSION_TIME_540us	0x04
 #define INA238_CONVERSION_TIME_1052us	0x05
 #define INA238_CONVERSION_TIME_2074us	0x06
-#define INA238_CONVERSION_TIME_4120us	0x07
+#define INA238_CONVERSION_TIME_1420us	0x07
 
 //#define INA238_SHUTDOWN						 0x00
 #define INA238_BUS_VOLTAGE_TRIGGERED	    	 0x01
-
 #define INA238_SHUNT_VOLTAGE_TRIGGERED			 0x02
 #define INA238_SHUNT_AND_BUS_TRIGGERED			 0x03
 #define INA238_TEMPERATURE_TRIGGERED			 0x04
@@ -66,7 +66,7 @@ ErrorStatus INA238_Read_Reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t 
 ErrorStatus INA238_Write_Reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t INA238_addr_reg, uint16_t write_data);
 
 //************** Configuration (CONFIG) Register (Address = 0h)
-ErrorStatus INA238_Hard_Reset(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr);
+ErrorStatus INA238_Hard_reset(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr);
 ErrorStatus INA238_Setup_CONVDLY(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t conv_delay);
 ErrorStatus INA238_Get_CONVDLY(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *conv_delay);
 ErrorStatus INA238_Setup_ADCRANGE(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t adc_range);
