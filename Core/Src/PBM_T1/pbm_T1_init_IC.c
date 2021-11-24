@@ -5,12 +5,12 @@
 #include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_init_IC.h"
 
-/** @brief	Initialize single TMP1075 sensor.
+/** @brief	Initialize single TMP1075 sensor for heat.
     @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
     @param 	AddrTMP1075 - 7-bit device address.
     @retval 0-OK, ERROR_N-Error
  */
-ErrorStatus PBM_T1_TMP1075_InitState(I2C_TypeDef *I2Cx, uint8_t AddrTMP1075) {
+ErrorStatus PBM_T1_Heat_TMP1075_InitState(I2C_TypeDef *I2Cx, uint8_t AddrTMP1075) {
 
 	int8_t Error = ERROR_N;
 	uint8_t count = 0;
@@ -39,3 +39,25 @@ ErrorStatus PBM_T1_TMP1075_InitState(I2C_TypeDef *I2Cx, uint8_t AddrTMP1075) {
 	return Error;
 }
 
+/** @brief	Initialize single TMP1075 sensor.
+    @param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+    @param 	AddrTMP1075 - 7-bit device address.
+    @retval 0-OK, ERROR_N-Error
+ */
+ErrorStatus PBM_T1_TMP1075_InitState(I2C_TypeDef *I2Cx, uint8_t AddrTMP1075) {
+
+	int8_t Error = ERROR_N;
+	uint8_t count = 0;
+
+	while ((Error != 0) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
+		Error = TMP1075_set_mode(I2Cx, AddrTMP1075, TMP1075_CONTINUOUS_CONV);
+
+		if (Error != SUCCESS) {
+			LL_mDelay(PBM_T1_i2c_delay_att_conn);
+			count++;
+			continue;
+		};
+	}
+
+	return Error;
+}
