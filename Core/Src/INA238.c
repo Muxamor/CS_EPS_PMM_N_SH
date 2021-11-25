@@ -241,7 +241,7 @@ ErrorStatus INA238_Setup_MODE(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_
         }
 
         //setup valu ADCRANGE
-        write_reg = (uint16_t)( (0x4095 & read_reg) | (( (uint16_t)mode ) << 12) ); //(0x4095 & read_reg) - reset MODE value
+        write_reg = (uint16_t)( (0x0FFF & read_reg) | (( (uint16_t)mode ) << 12) ); //(0x0FFF & read_reg) - reset MODE value
 
         if(I2C_Write_word_u16_St(I2Cx, I2C_INA238_addr, I2C_SIZE_REG_ADDR_U8, INA238_ADC_CONFIG_REG_ADDR, write_reg) != SUCCESS){
             return ERROR_N;
@@ -302,7 +302,7 @@ ErrorStatus INA238_Get_MODE(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t 
         INA238_CONVERSION_TIME_540us	0x04
         INA238_CONVERSION_TIME_1052us	0x05
         INA238_CONVERSION_TIME_2074us	0x06
-        INA238_CONVERSION_TIME_1420us	0x07
+        INA238_CONVERSION_TIME_4120us	0x07
  	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Setup_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t vbusct){
@@ -340,7 +340,7 @@ ErrorStatus INA238_Setup_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint
             INA238_CONVERSION_TIME_540us	0x04
             INA238_CONVERSION_TIME_1052us	0x05
             INA238_CONVERSION_TIME_2074us	0x06
-            INA238_CONVERSION_TIME_1420us	0x07
+            INA238_CONVERSION_TIME_4120us	0x07
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Get_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *vbusct){
@@ -368,7 +368,7 @@ ErrorStatus INA238_Get_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_
         INA238_CONVERSION_TIME_540us	0x04
         INA238_CONVERSION_TIME_1052us	0x05
         INA238_CONVERSION_TIME_2074us	0x06
-        INA238_CONVERSION_TIME_1420us	0x07
+        INA238_CONVERSION_TIME_4120us	0x07
  	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Setup_VSHCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t vshct){
@@ -382,7 +382,7 @@ ErrorStatus INA238_Setup_VSHCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8
         }
 
         //setup valu ADCRANGE
-        write_reg = (uint16_t)( (0xFE3F & read_reg) | (( (uint16_t)vshct ) << 6) ); //(0xF1FF & read_reg) - reset VSHCT value
+        write_reg = (uint16_t)( (0xFE3F & read_reg) | (( (uint16_t)vshct ) << 6) ); //(0xFE3F & read_reg) - reset VSHCT value
 
         if(I2C_Write_word_u16_St(I2Cx, I2C_INA238_addr, I2C_SIZE_REG_ADDR_U8, INA238_ADC_CONFIG_REG_ADDR, write_reg) != SUCCESS){
             return ERROR_N;
@@ -406,7 +406,7 @@ ErrorStatus INA238_Setup_VSHCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8
             INA238_CONVERSION_TIME_540us	0x04
             INA238_CONVERSION_TIME_1052us	0x05
             INA238_CONVERSION_TIME_2074us	0x06
-            INA238_CONVERSION_TIME_1420us	0x07
+            INA238_CONVERSION_TIME_4120us	0x07
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Get_VSHCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *vshct){
@@ -434,7 +434,7 @@ ErrorStatus INA238_Get_VSHCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t
         INA238_CONVERSION_TIME_540us	0x04
         INA238_CONVERSION_TIME_1052us	0x05
         INA238_CONVERSION_TIME_2074us	0x06
-        INA238_CONVERSION_TIME_1420us	0x07
+        INA238_CONVERSION_TIME_4120us	0x07
  	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Setup_VTCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t vtct){
@@ -472,7 +472,7 @@ ErrorStatus INA238_Setup_VTCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_
             INA238_CONVERSION_TIME_540us	0x04
             INA238_CONVERSION_TIME_1052us	0x05
             INA238_CONVERSION_TIME_2074us	0x06
-            INA238_CONVERSION_TIME_1420us	0x07
+            INA238_CONVERSION_TIME_4120us	0x07
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Get_VTCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *vtct){
@@ -539,7 +539,7 @@ ErrorStatus INA238_Setup_AVG(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t
             INA238_CONVERSION_TIME_540us	0x04
             INA238_CONVERSION_TIME_1052us	0x05
             INA238_CONVERSION_TIME_2074us	0x06
-            INA238_CONVERSION_TIME_1420us	0x07
+            INA238_CONVERSION_TIME_4120us	0x07
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Get_AVG(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *avg){
@@ -566,11 +566,11 @@ ErrorStatus INA238_Get_AVG(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *
 	@param 	Rshunt - value of shunt resistor (Ohm float).
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA238_Setup_Calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float Rshunt){
+ErrorStatus INA238_Setup_Calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float Rshunt_Ohm){
 
     uint16_t calibration = 0;
 
-    calibration = (uint16_t)( (819.2*1000000*max_exp_current_A*Rshunt)/32768.0f );
+    calibration = (uint16_t)( (819.2*1000000*max_exp_current_A*Rshunt_Ohm)/32768.0f );
 
     if(INA238_Write_Reg(I2Cx, I2C_INA238_addr, INA238_SHUNT_CAL_REG_ADDR, calibration) != SUCCESS ){
         return ERROR_N;
@@ -583,15 +583,15 @@ ErrorStatus INA238_Setup_Calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238
 /** @brief	Initialization of INA238. Setting SHUNT_CAL calibration register for starting measuring in miliAmpere and miliOhm
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA281_addr - I2C INA238 7-bit address.
-	@param 	max_exp_current - maximum expected current of load (miliAmpere uint16_t).
-	@param 	Rshunt - value of shunt resistor (miliOhm uint16_t).
+	@param 	max_exp_current_mA - maximum expected current of load (miliAmpere uint16_t).
+	@param 	Rshunt_mOhm - value of shunt resistor (miliOhm uint16_t).
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA238_Setup_Calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, uint16_t Rshunt){
+ErrorStatus INA238_Setup_Calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, uint16_t Rshunt_mOhm){
 
     uint16_t calibration = 0;
 
-    calibration = (uint16_t)( ((uint32_t)(8192*max_exp_current_mA*Rshunt))/((uint32_t)327680) );
+    calibration = (uint16_t)( ((uint32_t)(8192*max_exp_current_mA*Rshunt_mOhm))/((uint32_t)327680) );
 
     if(INA238_Write_Reg(I2Cx, I2C_INA238_addr, INA238_SHUNT_CAL_REG_ADDR, calibration) != SUCCESS ){
         return ERROR_N;
@@ -1045,8 +1045,7 @@ ErrorStatus INA238_Reset_APOL(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr){
 }
 
 
-/** @brief	Set MATHOF This bit is set to 1 if an arithmetic operation resulted in an overflow
-            error. It indicates that current and power data may be invalid.
+/** @brief	Get alert flags (DIAG_ALRT)
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_INA238_addr - 7-bit device address.
     @param 	alert_flags - contain value of alert flags:
@@ -1065,7 +1064,6 @@ ErrorStatus INA238_Reset_APOL(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr){
         bit13 - SLOWALERT
         bit14 - CNVR
         bit15 - ALATCH
-
 	@retval 0-OK, -1-ERROR_N
 */
 

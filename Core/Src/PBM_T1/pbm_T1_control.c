@@ -6,6 +6,7 @@
 #include "TMP1075.h"
 #include "TCA9548.h"
 #include "MAX17320.h"
+#include "INA238.h"
 #include "PBM_T1/pbm_T1_init.h"
 #include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_control.h"
@@ -319,7 +320,7 @@ ErrorStatus PBM_T1_ReadHeatTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t
 		Error = ERROR_N;
 		while ((Error != 0) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
 
-			Error = TMP1075_read_int8_temperature(I2Cx, pbm_table.TEMP_HEAT_SENSOR_Addr[temp_number], &data8);
+			Error = TMP1075_read_int8_temperature(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], &data8);
 
 			if( Error != SUCCESS ) {
 				count++;
@@ -370,7 +371,7 @@ ErrorStatus PBM_T1_ReadHeatTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t
 	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
-ErrorStatus PBM_T1_ReadTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t temp_number) {
+/*ErrorStatus PBM_T1_ReadTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t temp_number) {
 
 	int8_t data8 = 0;
 	uint8_t count = 0;
@@ -439,8 +440,90 @@ ErrorStatus PBM_T1_ReadTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM
 	}
 
     return SUCCESS;
-}
+}*/
 
+/** @brief	Read data from power monitor INA238 for selected PBM.
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
+	@param 	Heat - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
+	@retval 	ErrorStatus
+ */
+ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat) {
+
+	int16_t current = 0;
+	uint16_t bus_voltage = 0, power = 0;
+	uint8_t count = 0;
+	int8_t Error = ERROR_N;
+	int8_t Error_I2C_MUX = ERROR_N;
+	uint8_t i = 0;
+	_PBM_T1_table pbm_table = { 0 };
+
+	SW_TMUX1209_I2C_main_PBM();
+
+	pbm_table = PBM_T1_Table(PBM_number, 0, Heat);
+
+	//Enable I2C MUX channel
+
+	while (( Error != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN )){
+		Error = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_PwrMon);
+		if( Error != SUCCESS ){
+			i++;
+			LL_mDelay(PBM_T1_i2c_delay_att_conn);
+		}
+	}
+
+	Error_I2C_MUX = Error;
+
+	if (Error == SUCCESS ){
+		Error = ERROR_N;
+		while ((Error != 0) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
+
+			Error = INA238_Get_I_V_P_int16(I2Cx, pbm_table.PwrMon_Addr, PBM_T1_INA238_MAX_CURRENT, &current, &bus_voltage, &power);
+
+			if( Error != SUCCESS ) {
+				count++;
+				LL_mDelay(PBM_T1_i2c_delay_att_conn);
+			}
+		}
+	}
+
+	//Disable I2C MUX channel.
+	//Note: Do not check the error since it doesn’t matter anymore.
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_PwrMon);
+
+	//Parse error
+	if( Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pbm[PBM_number].Error_I2C_MUX = ERROR;
+	}else{
+		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
+	}
+
+
+	if( Error == ERROR_N || Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pbm[PBM_number].Heat[Heat].HeatCurrent = 0;
+		pbm[PBM_number].Heat[Heat].HeatVoltage = 0;
+		pbm[PBM_number].Heat[Heat].HeatPower = 0;
+		pbm[PBM_number].Heat[Heat].Error_INA238 = ERROR;
+	}else{
+		pbm[PBM_number].Heat[Heat].HeatCurrent = current;
+		pbm[PBM_number].Heat[Heat].HeatVoltage = bus_voltage;
+		pbm[PBM_number].Heat[Heat].HeatPower = power;
+		pbm[PBM_number].Heat[Heat].Error_INA238 = SUCCESS; //No error
+	}
+
+	if (Error != SUCCESS) {
+        return ERROR_N;
+	}
+
+    return SUCCESS;
+}
 
 /** @brief	Read data from two MAX17320 for selected PBM.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
@@ -1015,7 +1098,7 @@ ErrorStatus PBM_T1_CheckOverHeat(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat
 
 		if (count >= 1) { // off heat if at least one temp sense dont work right
 			PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_number, Heat, PBM_T1_OFF_HEAT);
-			PBM_T1_Init_Heat_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_number, Heat, pbm_table.TEMP_HEAT_SENSOR_Addr[tempsense]); //TCA9548_CH0
+			PBM_T1_Init_Heat_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_number, Heat, pbm_table.TempSens_Heat_Addr[tempsense]); //TCA9548_CH0
 			pbm[PBM_number].Heat[Heat].PCA9534_ON_Heat_CMD = 1;
 			pbm[PBM_number].Heat[Heat].Error_Heat = ERROR;
 
