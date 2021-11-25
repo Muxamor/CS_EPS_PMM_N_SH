@@ -20,7 +20,6 @@ extern "C" {
 #define PBM_T1_HEAT_TEMPSENS_QUANTITY		0x02 	// Total quantity temperature sensors on one heat
 #define PBM_T1_TEMPSENS_QUANTITY			0x00 	// Total quantity temperature sensors
 
-
 #define PBM_T1_1_TCA9548A_ADDR              0x70 	//Address GPIO mux PCA9534ARGTR Battery Module №1.
 #define PBM_T1_2_TCA9548A_ADDR              0x71 	//Address GPIO mux PCA9534ARGTR Battery Module №2.
 #define PBM_T1_3_TCA9548A_ADDR              0x72 	//Address GPIO mux PCA9534ARGTR Battery Module №3.
@@ -30,6 +29,9 @@ extern "C" {
 
 #define PBM_T1_INA238_ADDR_1				0x40 	//Address INA mux 1 Battery Module.
 #define PBM_T1_INA238_ADDR_2				0x41 	//Address INA mux 2 Battery Module.
+
+#define PBM_T1_INA238_MAX_CURRENT			300 	//Maximum current on heat mA.
+#define PBM_T1_INA238_RSHUNT				150 	//Resistance of current shunt heat im mOhm.
 
 #define PBM_T1_TMP1075_HEAT_1_ADDR_1        0x48 	//Address Temperature Sensor 1 Heat 1.
 #define PBM_T1_TMP1075_HEAT_1_ADDR_2        0x49 	//Address Temperature Sensor 2 Heat 1.
@@ -79,6 +81,8 @@ extern "C" {
 #define PBM_T1_I2C_MUX_CH_Br2 				TCA9548_CH5 // Number I2C Mux channel for MAX17320 mux branch 2.
 #define PBM_T1_I2C_MUX_CH_Heat1 			TCA9548_CH0 // Number I2C Mux channel for TMP1075 mux heat 1.
 #define PBM_T1_I2C_MUX_CH_Heat2 			TCA9548_CH3 // Number I2C Mux channel for TMP1075 mux heat 2.
+#define PBM_T1_I2C_MUX_CH_PwrMon1 			TCA9548_CH1 // Number I2C Mux channel for INA238 mux heat 1.
+#define PBM_T1_I2C_MUX_CH_PwrMon2 			TCA9548_CH4 // Number I2C Mux channel for INA238 mux heat 2.
 
 #define PBM_T1_GPIO_CH_Heat_CMD_1 			PCA9534_IO_P00 // Number GPIO Mux channel for set ON/OFF heat command branch 1.
 #define PBM_T1_GPIO_CH_Heat_State_1			PCA9534_IO_P01 // Number GPIO Mux channel for read real heat state branch 1.
@@ -100,12 +104,12 @@ typedef struct{
 	uint8_t  I2C_MUX_Ch_GPIO;
 	uint8_t  I2C_MUX_Ch_Branch;
 	uint8_t  I2C_MUX_Ch_Heat;
+	uint8_t  I2C_MUX_Ch_PwrMon;
 	uint8_t  I2C_MUX_Ch_TempSens;
 	uint8_t  GPIO_Addr;
-	uint8_t  INA238_1_Addr;
-	uint8_t  INA238_2_Addr;
-	uint8_t  TEMP_HEAT_SENSOR_Addr[PBM_T1_HEAT_TEMPSENS_QUANTITY];
-	uint8_t  TEMP_SENSOR_Addr[PBM_T1_TEMPSENS_QUANTITY];
+	uint8_t  PwrMon_Addr;
+	uint8_t  TempSens_Heat_Addr[PBM_T1_HEAT_TEMPSENS_QUANTITY];
+	//uint8_t  TempSens_Addr[PBM_T1_TEMPSENS_QUANTITY];
 
 	uint8_t  GPIO_Pin_Heat_CMD;
 	uint8_t  GPIO_Pin_Shift_Heat_CMD;

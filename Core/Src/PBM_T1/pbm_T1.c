@@ -35,13 +35,14 @@ ErrorStatus PBM_T1_Get_Telemetry(_PBM_T1 pbm[]) {
 				Error = Error + PBM_T1_ReadHeatTempSensors(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat, TempSens);
 			}
 			Error = Error + PBM_T1_ReadStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
+			Error = Error + PBM_T1_ReadHeatPwrMon(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
 			Error = Error + PBM_T1_CheckStateCmdHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
 			Error = Error + PBM_T1_CheckOverHeat(pbm, PBM_Number, Heat);
 		}
 
-        for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
+        /*for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
         	Error = Error + PBM_T1_ReadTempSensors(PBM_T1_I2C_PORT, pbm, PBM_Number, TempSens);
-        }
+        }*/
 
         PBM_T1_CalcTotalCapacity(pbm, PBM_Number);
         PBM_T1_CheckLowLevelEnergy(pbm, PBM_Number);

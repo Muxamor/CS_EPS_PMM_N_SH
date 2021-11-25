@@ -79,8 +79,8 @@ typedef struct  // Structure for PBM data
 	_T1_Branch_Data Branch[PBM_T1_BRANCH_QUANTITY]; // All branch data struct.
 	_T1_Heat_Data Heat[PBM_T1_HEAT_QUANTITY];		// All heat data struct.
 
-	int8_t TMP1075_Temp [PBM_T1_TEMPSENS_QUANTITY]; 		// Temperature TMP1075 №1 in °C.
-	uint8_t Error_TMP1075 [PBM_T1_TEMPSENS_QUANTITY]; 	// Register error TMP1075.
+	//int8_t TMP1075_Temp [PBM_T1_TEMPSENS_QUANTITY]; 		// Temperature TMP1075 №1 in °C.
+	//uint8_t Error_TMP1075 [PBM_T1_TEMPSENS_QUANTITY]; 	// Register error TMP1075.
 
 	int16_t TotalAbcoluteCapacity_mAh;		// Register total accumulate charge of battery's in mAh.
 	uint8_t TotalRelativeCapacity_Perc;		// Register total active relative capacity PBM in %.
