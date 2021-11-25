@@ -302,7 +302,7 @@ ErrorStatus INA238_Get_MODE(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t 
         INA238_CONVERSION_TIME_540us	0x04
         INA238_CONVERSION_TIME_1052us	0x05
         INA238_CONVERSION_TIME_2074us	0x06
-        INA238_CONVERSION_TIME_1420us	0x07
+        INA238_CONVERSION_TIME_4120us	0x07
  	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Setup_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t vbusct){
@@ -340,7 +340,7 @@ ErrorStatus INA238_Setup_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint
             INA238_CONVERSION_TIME_540us	0x04
             INA238_CONVERSION_TIME_1052us	0x05
             INA238_CONVERSION_TIME_2074us	0x06
-            INA238_CONVERSION_TIME_1420us	0x07
+            INA238_CONVERSION_TIME_4120us	0x07
 	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Get_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *vbusct){
@@ -368,7 +368,7 @@ ErrorStatus INA238_Get_VBUSCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_
         INA238_CONVERSION_TIME_540us	0x04
         INA238_CONVERSION_TIME_1052us	0x05
         INA238_CONVERSION_TIME_2074us	0x06
-        INA238_CONVERSION_TIME_1420us	0x07
+        INA238_CONVERSION_TIME_4120us	0x07
  	@retval 0-OK, -1-ERROR_N
 */
 ErrorStatus INA238_Setup_VSHCT(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t vshct){
