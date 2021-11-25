@@ -17,8 +17,7 @@
     @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
    	@param 	Heat_Branch - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
 	@param  temp_number - I2C sensor number (PBM_T1_TEMPSENS_1, PBM_T1_TEMPSENS_2).
-	@param  i2c_mux_ch  - Number channel MUX
-    @retval Error status
+	@retval Error status
  */
 ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat, uint8_t temp_number) {
 
@@ -51,7 +50,7 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 
 		while( ( Error_I2C != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
 
-			Error_I2C = PBM_T1_Heat_TMP1075_InitState(I2Cx, pbm_table.TEMP_HEAT_SENSOR_Addr[temp_number]);
+			Error_I2C = PBM_T1_Heat_TMP1075_InitState(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number]);
 
 			if( Error_I2C != SUCCESS ){
 				i++;
@@ -102,10 +101,9 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
     @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
    	@param 	Heat_Branch - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
 	@param  temp_number - I2C sensor number (PBM_T1_TEMPSENS_1, PBM_T1_TEMPSENS_2).
-	@param  i2c_mux_ch  - Number channel MUX
-    @retval Error status
+	@retval Error status
  */
-ErrorStatus PBM_T1_Init_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t temp_number) {
+/*ErrorStatus PBM_T1_Init_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t temp_number) {
 
 	_PBM_T1_table pbm_table = { 0 };
 	uint8_t i = 0;
@@ -179,8 +177,88 @@ ErrorStatus PBM_T1_Init_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_nu
     }
 
     return SUCCESS;
-}
+}*/
 
+/** @brief	Initialize power monitor INA238 for selected heat.
+  	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+    @param 	pbm - structure data for all PBM modules.
+    @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
+   	@param 	Heat_Branch - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
+    @retval Error status
+ */
+ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat) {
+
+	_PBM_T1_table pbm_table = { 0 };
+	uint8_t i = 0;
+	int8_t Error_I2C = ERROR_N; //0-OK -1-ERROR_N
+	int8_t Error_I2C_MUX = ERROR_N;
+
+	SW_TMUX1209_I2C_main_PBM();
+
+	pbm_table = PBM_T1_Table(PBM_number, 0, Heat);
+
+	//Enable I2C MUX channel
+
+	while( ( Error_I2C != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
+		Error_I2C = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_PwrMon);
+		if( Error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay(PBM_T1_i2c_delay_att_conn);
+		}
+	}
+
+	Error_I2C_MUX = Error_I2C;
+
+	if (Error_I2C == SUCCESS ){
+
+		//Setup TMP1075
+		i=0;
+		Error_I2C = ERROR_N;
+
+		while( ( Error_I2C != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
+
+			Error_I2C = PBM_T1_Heat_INA238_InitState(I2Cx, pbm_table.PwrMon_Addr);
+
+			if( Error_I2C != SUCCESS ){
+				i++;
+				LL_mDelay(PBM_T1_i2c_delay_att_conn);
+			}
+		}
+	}
+
+	//Disable I2C MUX channel.
+	//Note: Do not check the error since it doesn’t matter anymore.
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_PwrMon);
+
+	//Parse error
+	if( Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pbm[PBM_number].Error_I2C_MUX = ERROR;
+	}else{
+		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
+	}
+
+
+	if( Error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pbm[PBM_number].Heat[Heat].Error_INA238 = ERROR;
+	}else{
+		pbm[PBM_number].Heat[Heat].Error_INA238 = SUCCESS; //No error
+	}
+
+	if( Error_I2C != SUCCESS){
+        #ifdef DEBUGprintf
+            Error_Handler();
+        #endif
+        return ERROR_N;
+    }
+
+    return SUCCESS;
+}
 
 /** @brief	Initialize TCA9548 for selected PBM.
    	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
@@ -253,7 +331,9 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
 
 		for(Heat = 0; Heat < PBM_T1_HEAT_QUANTITY; Heat++){
 
-           	if (pbm[PBM_Number].Heat[Heat].PCA9534_ON_Heat_CMD == ENABLE) {
+			Error += PBM_T1_Init_Heat_INA238(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
+
+			if (pbm[PBM_Number].Heat[Heat].PCA9534_ON_Heat_CMD == ENABLE) {
                 Error += PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat, PBM_T1_ON_HEAT);
     		} else {
                 Error += PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat, PBM_T1_OFF_HEAT);
@@ -264,9 +344,9 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
         	}
         }
 
-        for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
+        /*for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
         	Error += PBM_T1_Init_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_Number, TempSens);
-        }
+        }*/
 
 	}
 
@@ -304,6 +384,7 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 		if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
 
 			for(Branch = 0; Branch < PBM_T1_BRANCH_QUANTITY; Branch++){
+
 				Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, pbm[PBM_Number].Branch[Branch].ChgEnableBit);
 				Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, pbm[PBM_Number].Branch[Branch].DchgEnableBit);
 
@@ -315,6 +396,9 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 			}
 
 			for(Heat = 0; Heat < PBM_T1_HEAT_QUANTITY; Heat++){
+
+				Error += PBM_T1_Init_Heat_INA238(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
+
 	           	if (pbm[PBM_Number].Heat[Heat].PCA9534_ON_Heat_CMD == ENABLE) {
 	                Error += PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat, PBM_T1_ON_HEAT);
 	    		} else {
@@ -328,9 +412,9 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 	        	}
 	        }
 
-	        for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
+	        /*for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
 	        	Error += PBM_T1_Init_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_Number, TempSens);
-	        }
+	        }*/
         }
 	}
 
