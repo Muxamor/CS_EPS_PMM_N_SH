@@ -13,14 +13,6 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] );
 
 ErrorStatus PBM_T1_Re_Init( _PBM_T1 pbm[], _PMM *pmm_ptr);
 
-ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat, uint8_t temp_number);
-
-ErrorStatus PBM_T1_Init_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t temp_number);
-
-ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat);
-
-ErrorStatus PBM_T1_Init_I2CMux(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number);
-
 #ifdef __cplusplus
 }
 #endif
