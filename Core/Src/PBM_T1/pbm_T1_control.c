@@ -8,6 +8,7 @@
 #include "MAX17320.h"
 #include "INA238.h"
 #include "PBM_T1/pbm_T1_init.h"
+#include "PBM_T1/pbm_T1_init_IC.h"
 #include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_control.h"
 #include "Error_Handler.h"
@@ -17,7 +18,6 @@
     @param 	pbm[] - structure data for all PBM modules.
     @param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
     @param 	Heat - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
-    @param  i2c_mux_ch  - Number channel MUX
     @retval ErrorStatus
  */
 ErrorStatus PBM_T1_ReadStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat) {
@@ -101,7 +101,6 @@ ErrorStatus PBM_T1_ReadStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
     @param 	pbm[] - structure data for all PBM modules.
     @param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
     @param 	Heat - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
-    @param  i2c_mux_ch  - Number channel MUX
     @retval ErrorStatus
  */
 ErrorStatus PBM_T1_CheckStateCmdHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat) {
@@ -193,7 +192,6 @@ ErrorStatus PBM_T1_CheckStateCmdHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
     @param 	pbm[] - structure data for all PBM modules.
     @param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
     @param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
-    @param  i2c_mux_ch  - Number channel MUX
     @retval ErrorStatus
  */
 ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
@@ -288,7 +286,6 @@ ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Heat - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
 	@param  temp_number - I2C sensor number (PBM_T1_TEMPSENS_1, PBM_T1_TEMPSENS_2).
-	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
 ErrorStatus PBM_T1_ReadHeatTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat, uint8_t temp_number) {
@@ -368,7 +365,6 @@ ErrorStatus PBM_T1_ReadHeatTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Heat - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
 	@param  temp_number - I2C sensor number (PBM_T1_TEMPSENS_1, PBM_T1_TEMPSENS_2).
-	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
 /*ErrorStatus PBM_T1_ReadTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t temp_number) {
@@ -530,7 +526,6 @@ ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_
 	@param 	pbm[] - structure data for all PBM modules.
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
-	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
 ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
@@ -682,7 +677,6 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Heat - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
 	@param 	State - select state heat (PBM_T1_ON_HEAT or PBM_T1_OFF_HEAT).
-	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
 ErrorStatus PBM_T1_SetStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat, uint8_t State) {
@@ -788,7 +782,6 @@ ErrorStatus PBM_T1_SetStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_nu
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
 	@param 	State - select state heat (PBM_T1_ON_SHDN_CHRG or PBM_T1_OFF_SHDN_CHRG).
-	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
 ErrorStatus PBM_T1_SetStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t State) {
@@ -894,7 +887,6 @@ ErrorStatus PBM_T1_SetStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
 	@param 	State - select state charge (PBM_T1_ON_CHARGE or PBM_T1_OFF_CHARGE).
-	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
 ErrorStatus PBM_T1_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t State) {
@@ -987,13 +979,12 @@ ErrorStatus PBM_T1_SetStateChargeBranch(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Branch - select Branch (PBM_BRANCH[1], PBM_BRANCH[2]).
 	@param 	State - select state charge (PBM_ON_DISCHARGE or PBM_OFF_DISCHARGE).
-	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
 ErrorStatus PBM_T1_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t State) {
 
 	int8_t Error = ERROR_N;
-	//int8_t Error_count = 0;
+	int8_t Error_count = 0;
 	uint8_t count = 0;
 	int8_t Error_I2C_MUX = 0;
 	uint8_t i = 0;
@@ -1026,7 +1017,7 @@ ErrorStatus PBM_T1_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uin
 			Error = MAX17320_Write_ON_OFF_DCHRG_FET(I2Cx, State);
 			LL_mDelay(10);
 			Error = Error + MAX17320_Read_HProtCfg2Reg (I2Cx, &data_reg);
-			pbm[PBM_number].Branch[Branch].ChgControlFlag = data_reg.DISs;
+			pbm[PBM_number].Branch[Branch].DchgControlFlag = data_reg.DISs;
 			if (Error != SUCCESS) {
 				LL_mDelay(PBM_T1_i2c_delay_att_conn);
 				count++;
@@ -1034,15 +1025,14 @@ ErrorStatus PBM_T1_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uin
 		}
 
 		if (Error == SUCCESS) {
-			if (Branch == PBM_T1_BRANCH_1) {
-				if (pbm[PBM_number].Branch[Branch].DchgControlFlag == State) {
-					pbm[PBM_number].Branch[Branch].Error_Discharge = SUCCESS;
-				} else {
-					pbm[PBM_number].Branch[Branch].Error_Discharge = ERROR;
-				}
+			if (pbm[PBM_number].Branch[Branch].DchgControlFlag == State) {
+				pbm[PBM_number].Branch[Branch].Error_Discharge = SUCCESS;
+			} else {
+				pbm[PBM_number].Branch[Branch].Error_Discharge = ERROR;
 			}
 			pbm[PBM_number].Branch[Branch].Error_MAX17320 = SUCCESS;
 		} else {
+			Error_count = Error_count + 1;
 			pbm[PBM_number].Branch[Branch].Error_MAX17320 = ERROR;
 			pbm[PBM_number].Branch[Branch].Error_Discharge = ERROR;
 
@@ -1079,8 +1069,7 @@ ErrorStatus PBM_T1_SetStateDischargeBranch(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uin
 	@param 	pbm[] - structure data for all PBM modules.
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Heat - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
-    @param  i2c_mux_ch  - Number channel MUX
-	@retval 	ErrorStatus
+    @retval 	ErrorStatus
  */
 ErrorStatus PBM_T1_CheckOverHeat(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat) {
 
@@ -1153,18 +1142,16 @@ ErrorStatus PBM_T1_CheckChargeDischargeState(_PBM_T1 pbm[], uint8_t PBM_number, 
 	@param 	pbm[] - structure data for all PBM modules.
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
-	@param  i2c_mux_ch  - Number channel MUX
 	@retval 	ErrorStatus
  */
 ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
 
-	int16_t AbsoluteCapacity = 0;
+	uint16_t AbsoluteCapacity = 0;
 	float Capacity = 0, Voltage = 0;
 	float Error = 0;
 	int8_t Error_i2c = ERROR_N;
 	int8_t Error_I2C_MUX = ERROR_N;
 	uint8_t i = 0;
-	int8_t Error_count = 0;
 	_PBM_T1_table pbm_table = { 0 };
 
 	SW_TMUX1209_I2C_main_PBM();
@@ -1190,9 +1177,9 @@ ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM
 			Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
 			Error = (float) (Voltage / Capacity);
 			Error = (float) (Error - 1.0f) * 100.0f;  // in %
-			if ((Error > 25) || (Error < -25) || (Capacity > 100)) {
-				AbsoluteCapacity = (int16_t) ((Voltage * PBM_T1_MAX_BATT_CAP) / 100);
-				MAX17320_WriteAccmCharge(I2Cx, PBM_T1_MAX17320_R_SENSE, AbsoluteCapacity);
+			if ((Error > 25) || (Error < -25) || (Capacity > 110)) {
+				AbsoluteCapacity = (uint16_t) ((Voltage * PBM_T1_MAX_BATT_CAP) / 100);
+				Error_i2c = MAX17320_WriteAccmCharge(I2Cx, AbsoluteCapacity, PBM_T1_MAX17320_R_SENSE);
 			}
 		}
 
@@ -1212,7 +1199,7 @@ ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
 	}
 
-	if (Error_count != SUCCESS) {
+	if (Error_i2c != SUCCESS) {
 		return ERROR_N;
 	}
 
@@ -1298,6 +1285,68 @@ void PBM_T1_CheckLowLevelEnergy(_PBM_T1 pbm[], uint8_t PBM_number) {
 
 		pbm[PBM_number].Zero_Energy_Flag = 0;
 	}
+}
+
+
+/** @brief	Check and reset max17320 if prequal charge timer error for selected branch.
+ 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
+	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
+*/
+ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
+
+	float Error = 0;
+	int8_t Error_i2c = ERROR_N;
+	int8_t Error_I2C_MUX = ERROR_N;
+	uint8_t i = 0;
+	int8_t Error_count = 0;
+	_PBM_T1_table pbm_table = { 0 };
+
+	SW_TMUX1209_I2C_main_PBM();
+
+	pbm_table = PBM_T1_Table(PBM_number, Branch, 0);
+
+	//Enable I2C MUX channel
+
+	while( ( Error_i2c != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
+		Error_i2c = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);//TCA9548_CH6 TCA9548_CH5
+		if( Error_i2c != SUCCESS ){
+			i++;
+			LL_mDelay(PBM_T1_i2c_delay_att_conn);
+		}
+	}
+
+	Error_I2C_MUX = Error_i2c;
+
+	if (Error == SUCCESS ){
+		if ((pbm[PBM_number].Branch[Branch].Error_MAX17320 == 0) && (pbm[PBM_number].Branch[Branch].PreqF == 1) && (pbm[PBM_number].Branch[Branch].Counter_Reset_PreqF < 5 )) {
+			pbm[PBM_number].Branch[Branch].Counter_Reset_PreqF++;
+			MAX17320_Write_FullReset (I2Cx);
+
+		}
+
+	}
+
+	//Disable I2C MUX channel.
+	//Note: Do not check the error since it doesn’t matter anymore.
+	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+
+	//Parse error
+	if( Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pbm[PBM_number].Error_I2C_MUX = ERROR;
+	}else{
+		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
+	}
+
+	if (Error_count != SUCCESS) {
+		return ERROR_N;
+	}
+
+    return SUCCESS;
 }
 
 /** @brief    Check flag to save setting.

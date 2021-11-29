@@ -1,6 +1,7 @@
 #include "stm32l4xx_ll_gpio.h"
 #include "SetupPeriph.h"
 #include "TCA9548.h"
+#include "MAX17320.h"
 #include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_struct.h"
 #include "PBM_T1/pbm_T1_control.h"
@@ -23,9 +24,10 @@ ErrorStatus PBM_T1_Get_Telemetry(_PBM_T1 pbm[]) {
 
 		for(Branch = 0; Branch < PBM_T1_BRANCH_QUANTITY; Branch++){
 
-			Error = PBM_T1_ReadBatteryTelemetry(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch);
+			Error = Error + PBM_T1_ReadBatteryTelemetry(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch);
 			Error = Error + PBM_T1_CheckChargeDischargeState(pbm, PBM_Number, Branch);
 			Error = Error + PBM_T1_ReadStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch);
+			Error = Error + PBM_T1_CheckResetPreqChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch);
 
 		}
 
@@ -40,7 +42,7 @@ ErrorStatus PBM_T1_Get_Telemetry(_PBM_T1 pbm[]) {
 			Error = Error + PBM_T1_CheckOverHeat(pbm, PBM_Number, Heat);
 		}
 
-        /*for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
+		/*for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
         	Error = Error + PBM_T1_ReadTempSensors(PBM_T1_I2C_PORT, pbm, PBM_Number, TempSens);
         }*/
 

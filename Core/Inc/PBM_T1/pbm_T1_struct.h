@@ -19,7 +19,7 @@ typedef struct  // Structure for PBM data
 	uint16_t DchgEnableBit :1; 				// Discharge Enable Bit must be set zero to allow the ON state. // Need to save in flash.
 	uint16_t ChgEnableBit :1; 				// Charge Enable Bit must be set zero to allow the ON state. // Need to save in flash.
 	uint16_t DchgControlFlag :1; 			// Discharge Control Flag indicates the real logic state of the DC pin driver.
-	uint16_t ChgControlFlag :1; 				// Charge Control Flag indicates the logic state of the CC pin driver.
+	uint16_t ChgControlFlag :1; 			// Charge Control Flag indicates the logic state of the CC pin driver.
 	uint16_t PreqF :1; 						// Prequal timeout faults.
 	uint16_t LDet :1; 						// Leakage Detection Fault. This bit is set when a leakage detection fault has been detected.
 	uint16_t OC :1;
@@ -27,12 +27,13 @@ typedef struct  // Structure for PBM data
 	uint16_t SC :1;
 	uint16_t PreqChrg :1;
 
-	uint8_t PCA9534_Emerg_Chrg :1; 			// PCA9534 port. Show state emergency charge.
-	uint8_t Error_Charge :1; 				// Register error charge branch.
-	uint8_t Error_Discharge :1; 			// Register error discharge branch.
-	uint8_t Error_Emerg_Chrg :1; 			// Register error emergency charge branch №1.
-	uint8_t Error_MAX17320 :1; 				// Register error MAX17320.
-	uint8_t :3; 							// Reserve.
+	uint16_t PCA9534_Emerg_Chrg :1; 		// PCA9534 port. Show state emergency charge.
+	uint16_t Counter_Reset_PreqF :8; 		// Counter for reset MAX17320 if exist prequal timer error.
+	uint16_t Error_Charge :1; 				// Register error charge branch.
+	uint16_t Error_Discharge :1; 			// Register error discharge branch.
+	uint16_t Error_Emerg_Chrg :1; 			// Register error emergency charge branch №1.
+	uint16_t Error_MAX17320 :1; 			// Register error MAX17320.
+	uint16_t :3; 							// Reserve.
 
 	int16_t Voltage [PBM_T1_BRANCH_BAT_QUANTITY];// Register voltage of high battery (on 8.4V) in mV.
 	uint16_t MaxVCELL; 						// MaxVCELL value. Maximum channel voltage reading (20mV resolution).
@@ -50,7 +51,7 @@ typedef struct  // Structure for PBM data
 	uint8_t CycleCounter;					// Register cycle counter is an absolute count of the discharge cycles.
 	uint16_t RCell;						 	// RCell value. The register displays the calculated internal resistance of the cell or the average internal resistance.
 	uint16_t LeakCurr;						// Leakage Current value. Leakage current is an unsigned 8-bit result of leakage current from self-discharge in a cell.
-	uint8_t Reserve_byte_1:3; 				// Reserve.
+
 
 } _T1_Branch_Data;
 
@@ -63,13 +64,13 @@ typedef struct  // Structure for heat data
 	int16_t HeatCurrent;					// Current on heat branch in mA.
 	uint16_t HeatPower; 					// Power on heat branch in mW.
 
-	uint8_t PCA9534_ON_Heat_CMD :1; 		// PCA9534 port. State permission bit auto heat branch. // Need to save in flash.
-	uint8_t PCA9534_Heat_State :1; 			// PCA9534 port. Show state auto heat branch.
-	uint8_t Error_INA238 :1; 				// Register error INA238.
-	uint8_t Error_Heat :1; 					// Register error heat branch.
-	uint8_t :4; 							// Reserve.
+	uint16_t PCA9534_ON_Heat_CMD :1; 		// PCA9534 port. State permission bit auto heat branch. // Need to save in flash.
+	uint16_t PCA9534_Heat_State :1; 		// PCA9534 port. Show state auto heat branch.
+	uint16_t Error_INA238 :1; 				// Register error INA238.
+	uint16_t Error_Heat :1; 				// Register error heat branch.
+	uint16_t :12; 							// Reserve.
 
-	uint8_t Reserve_byte_1:3; 				// Reserve.
+
 
 
 } _T1_Heat_Data;

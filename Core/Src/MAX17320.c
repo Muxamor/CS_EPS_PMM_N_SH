@@ -93,17 +93,20 @@ ErrorStatus I2C_Write_MAX17320(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t siz
 
 		LL_I2C_TransmitData8(I2Cx, (uint8_t)(reg_addr >> (j*8)) );
 
+		LL_mDelay(5);
 		if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
 			return ERROR_N;
 		}
 	}
 
 	LL_I2C_TransmitData8(I2Cx, high_byte );
+	LL_mDelay(5);
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
 		return ERROR_N;
 	}
 
 	LL_I2C_TransmitData8(I2Cx, low_byte );
+	LL_mDelay(5);
 	if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
 		return ERROR_N;
 	}
@@ -350,7 +353,7 @@ ErrorStatus MAX17320_Read_HProtCfg2Reg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPRO
 ErrorStatus MAX17320_Read_VoltageReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x1A, &Data);
 	Struct->VCell = (uint16_t) (Data);
@@ -408,7 +411,7 @@ ErrorStatus MAX17320_Read_VoltageReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struc
 ErrorStatus MAX17320_Read_CurrentReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x1C, &Data);
 	Struct->Curr = (int16_t) (Data);
@@ -436,7 +439,7 @@ ErrorStatus MAX17320_Read_CurrentReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struc
 ErrorStatus MAX17320_Read_TempReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x1B, &Data);
 	Struct->Temp = (int16_t) (Data);
@@ -494,7 +497,7 @@ ErrorStatus MAX17320_Read_TempReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) 
 ErrorStatus MAX17320_Read_PwrReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB1, &Data);
 	Struct->Pwr = (int16_t) (Data);
@@ -518,7 +521,7 @@ ErrorStatus MAX17320_Read_PwrReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 ErrorStatus MAX17320_Read_ChgParamReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x28, &Data);
 	Struct->ChgCurr = (uint16_t) (Data);
@@ -543,7 +546,7 @@ ErrorStatus MAX17320_Read_ChgParamReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Stru
 ErrorStatus MAX17320_Read_GaugeOutReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x05, &Data);
 	Struct->RepCap = (uint16_t) (Data);
@@ -597,7 +600,7 @@ ErrorStatus MAX17320_Read_GaugeOutReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Stru
 ErrorStatus MAX17320_Read_nGaugeOutReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xA4, &Data);
 	Struct->Cycle = (uint16_t) (Data & 0xFFF8) >> 3;
@@ -629,7 +632,7 @@ ErrorStatus MAX17320_Read_nGaugeOutReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPRO
 ErrorStatus MAX17320_Read_nXTableReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0x80, &Data);
 	Struct->XTable0 = (uint16_t) (Data);
@@ -683,7 +686,7 @@ ErrorStatus MAX17320_Read_nXTableReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME
 ErrorStatus MAX17320_Read_nOCVTableReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0x90, &Data);
 	Struct->OCVTable0 = (uint16_t) (Data);
@@ -738,7 +741,7 @@ ErrorStatus MAX17320_Read_nOCVTableReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPRO
 ErrorStatus MAX17320_Read_nQRTableReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xA0, &Data);
 	Struct->QRTable00 = (uint16_t) (Data);
@@ -768,7 +771,7 @@ ErrorStatus MAX17320_Read_nQRTableReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROM
 ErrorStatus MAX17320_Read_nGaugeInReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xC6, &Data);
 	Struct->FullSOCThr = (uint16_t) (Data & 0xFFF8) >> 3;
@@ -807,7 +810,7 @@ ErrorStatus MAX17320_Read_nGaugeInReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROM
 ErrorStatus MAX17320_Read_nGaugeConfigReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xB0, &Data);
 	Struct->TAlrtEn = (Data & 0x0001);
@@ -920,7 +923,7 @@ ErrorStatus MAX17320_Read_nGaugeConfigReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEE
 ErrorStatus MAX17320_Read_ConfigReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x0B, &Data);
 	Struct->PAen = (Data & 0x0001);
@@ -991,7 +994,7 @@ ErrorStatus MAX17320_Read_ConfigReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct
 ErrorStatus MAX17320_Read_GaugeAddReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x0C, &Data);
 	Struct->QRes = (uint16_t) (Data);
@@ -1045,7 +1048,7 @@ ErrorStatus MAX17320_Read_GaugeAddReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Stru
 ErrorStatus MAX17320_Read_nIDReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xBC, &Data);
 	Struct->ROMID0 = (uint16_t) (Data);
@@ -1112,7 +1115,7 @@ ErrorStatus MAX17320_Read_nIDReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *St
 ErrorStatus MAX17320_Read_AtRateReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x04, &Data);
 	Struct->AtRate = (int16_t) (Data);
@@ -1145,7 +1148,7 @@ ErrorStatus MAX17320_Read_AtRateReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct
 ErrorStatus MAX17320_Read_nAlertReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0x8C, &Data);
 	Struct->VMIN = (uint8_t) (Data & 0x00FF);
@@ -1179,7 +1182,7 @@ ErrorStatus MAX17320_Read_nAlertReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME 
 ErrorStatus MAX17320_Read_AlertReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x01, &Data);
 	Struct->VMIN = (uint8_t) (Data & 0x00FF);
@@ -1213,7 +1216,7 @@ ErrorStatus MAX17320_Read_AlertReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct)
 ErrorStatus MAX17320_Read_nProtectReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xB5, &Data);
 	Struct->NCELLS = (Data & 0x0003);
@@ -1281,7 +1284,7 @@ ErrorStatus MAX17320_Read_nProtectReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROM
 ErrorStatus MAX17320_Read_nTempProtReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xD1, &Data);
 	Struct->T1 = (uint8_t) (Data & 0x00FF);
@@ -1317,7 +1320,7 @@ ErrorStatus MAX17320_Read_nTempProtReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPRO
 ErrorStatus MAX17320_Read_nFaultTimerReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xDC, &Data);
 	Struct->UVPTimer = (Data & 0x0003);
@@ -1355,7 +1358,7 @@ ErrorStatus MAX17320_Read_nFaultTimerReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEP
 ErrorStatus MAX17320_Read_nProtCfgReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xDC, &Data);
 	Struct->FetPFEn = (Data & 0x0004) >> 2;
@@ -1385,7 +1388,7 @@ ErrorStatus MAX17320_Read_nProtCfgReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROM
 ErrorStatus MAX17320_Read_DoubleReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x0F, &Data);
 	Struct->SACFG = (Data & 0x0003);
@@ -1472,7 +1475,7 @@ ErrorStatus MAX17320_Read_DoubleReg (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct
 ErrorStatus MAX17320_Read_nDoubleReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x16, 0xA9, &Data);
 	Struct->FullCapRep = (int16_t) (Data);
@@ -1554,25 +1557,29 @@ ErrorStatus MAX17320_Read_nDoubleReg (I2C_TypeDef *I2Cx, MAX17320_RegDataEEPROME
  */
 ErrorStatus MAX17320_Write_FullReset (I2C_TypeDef *I2Cx) {
 
-	uint16_t Data = 0;
+	uint16_t Data_key = 0, Data = 0;
 	uint8_t POR_bit = 0;
 	uint8_t attempt = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data_key);
+
+	Data_key = (uint16_t)(Data_key & 0x0300);
+
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
 	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x60, 0x000F);
 	LL_mDelay(10);
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
 	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0xAB, 0x8000);
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xAB, &Data);
 	POR_bit = (Data & 0x8000) >> 15;
-	while((POR_bit != 0) || (attempt < 10)){
+	while((POR_bit != 0) && (attempt < 50)){
 		Data = 0;
 		LL_mDelay(1);
 		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xAB, &Data);
@@ -1582,9 +1589,10 @@ ErrorStatus MAX17320_Write_FullReset (I2C_TypeDef *I2Cx) {
 	if(POR_bit != 0){
 		Error--;
 	}
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
+	Data_key = (Data_key | 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	if (Error == 0) {
 		return SUCCESS;
 	} else {
@@ -1599,14 +1607,18 @@ ErrorStatus MAX17320_Write_FullReset (I2C_TypeDef *I2Cx) {
  */
 ErrorStatus MAX17320_Write_FuelGaugeReset (I2C_TypeDef *I2Cx) {
 
-	uint16_t Data = 0;
+	uint16_t Data_key = 0, Data = 0;
 	uint8_t POR_bit = 0;
 	uint8_t attempt = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data_key);
+
+	Data_key = (uint16_t)(Data_key & 0x0300);
+
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x0000);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
 	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0xAB, 0x8000);
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xAB, &Data);
@@ -1621,9 +1633,10 @@ ErrorStatus MAX17320_Write_FuelGaugeReset (I2C_TypeDef *I2Cx) {
 	if(POR_bit != 0){
 		Error--;
 	}
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
+	Data_key = (Data_key | 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
-	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	if (Error == 0) {
 		return SUCCESS;
 	} else {
@@ -1639,15 +1652,36 @@ ErrorStatus MAX17320_Write_FuelGaugeReset (I2C_TypeDef *I2Cx) {
  */
 ErrorStatus MAX17320_Write_ON_OFF_CHRG_FET (I2C_TypeDef *I2Cx, uint8_t Chg_key) {
 
-	uint16_t Data = 0;
-	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data) == 0 ){
-		Data = (uint16_t)(Data & 0xFEFF);
-		Data = (uint16_t) (Data | (!Chg_key << 8));
-		if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data) == 0 ) {
-			return SUCCESS;
-		}
+	uint16_t Data_key = 0, Data = 0;
+	int8_t Error = 0;
+
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data_key);
+
+	Data_key = (uint16_t)(Data & 0x0300);
+
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data);
+
+	Data = (uint16_t) (Data & 0xFEFF);
+	Data = (uint16_t) (Data | (!Chg_key << 8));
+
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data);
+
+	Data_key = (Data | 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+
+
+	if (Error == 0 ) {
+		return SUCCESS;
+	} else {
+		return ERROR_N;
 	}
-	return ERROR_N;
 }
 
 /**
@@ -1658,15 +1692,35 @@ ErrorStatus MAX17320_Write_ON_OFF_CHRG_FET (I2C_TypeDef *I2Cx, uint8_t Chg_key) 
  */
 ErrorStatus MAX17320_Write_ON_OFF_DCHRG_FET (I2C_TypeDef *I2Cx, uint8_t Dchg_key) {
 
-	uint16_t Data = 0;
-	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data) == 0 ){
-		Data = (uint16_t)(Data & 0xFDFF);
-		Data = (uint16_t) (Data | (!Dchg_key << 9));
-		if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data) == 0 ) {
-			return SUCCESS;
-		}
+	uint16_t Data_key = 0, Data = 0;
+	int8_t Error = 0;
+
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data_key);
+
+	Data_key = (uint16_t)(Data & 0x0300);
+
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data);
+
+	Data = (uint16_t)(Data & 0xFDFF);
+	Data = (uint16_t) (Data | (!Dchg_key << 9));
+
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data);
+
+	Data_key = (Data | 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+
+	if (Error == 0 ) {
+		return SUCCESS;
+	} else {
+		return ERROR_N;
 	}
-	return ERROR_N;
 }
 
 /**
@@ -1796,7 +1850,7 @@ ErrorStatus MAX17320_Read_Balancing_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData 
 ErrorStatus MAX17320_Read_Br_Voltage_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t ConfigBattBr) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD8, &Data);
 	Data = (((Data & 0x00FF) << 8)|((Data & 0xFF00) >> 8));
@@ -1851,7 +1905,7 @@ ErrorStatus MAX17320_Read_Br_Voltage_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData
 ErrorStatus MAX17320_Read_Br_Voltage_mV (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t ConfigBattBr) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD8, &Data);
 	Struct->Cell1_mV = (uint16_t) (Data * MAX17320_LSB_mV);
@@ -1904,7 +1958,7 @@ ErrorStatus MAX17320_Read_Br_Voltage_mV (I2C_TypeDef *I2Cx, MAX17320_BranchData 
 ErrorStatus MAX17320_Read_Br_Current_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x1C, &Data);
 	Struct->Curr_Reg = (int16_t) (Data);
@@ -1933,7 +1987,7 @@ ErrorStatus MAX17320_Read_Br_Current_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData
 ErrorStatus MAX17320_Read_Br_Current_mA (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Rsense) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x1C, &Data);
 	Struct->Curr_mA = (int16_t) ((int16_t) Data * MAX17320_LSB_mA / Rsense);
@@ -1961,7 +2015,7 @@ ErrorStatus MAX17320_Read_Br_Current_mA (I2C_TypeDef *I2Cx, MAX17320_BranchData 
 ErrorStatus MAX17320_Read_Br_Pwr_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB1, &Data);
 	Struct->Pwr_Reg = (int16_t) (Data);
@@ -1986,7 +2040,7 @@ ErrorStatus MAX17320_Read_Br_Pwr_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *St
 ErrorStatus MAX17320_Read_Br_Pwr_mW (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Rsense) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB1, &Data);
 	Struct->Pwr_mW = (int16_t) ((int16_t) Data * 0.16 * Rsense);
@@ -2011,7 +2065,7 @@ ErrorStatus MAX17320_Read_Br_Pwr_mW (I2C_TypeDef *I2Cx, MAX17320_BranchData *Str
 ErrorStatus MAX17320_Read_Br_Temp_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t NumTermistors) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x09, &Data);
 	Struct->MaxTemp_Reg = (int8_t) (Data & 0xFF00) >> 8;
@@ -2074,7 +2128,7 @@ ErrorStatus MAX17320_Read_Br_Temp_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *S
 ErrorStatus MAX17320_Read_Br_Temp_Dg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t NumTermistors) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x09, &Data);
 	Struct->MaxTemp_Dg = (int8_t) (Data & 0xFF00) >> 8;
@@ -2137,7 +2191,7 @@ ErrorStatus MAX17320_Read_Br_Temp_Dg (I2C_TypeDef *I2Cx, MAX17320_BranchData *St
 ErrorStatus MAX17320_Read_Br_GaugeOut_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x05, &Data);
 	Struct->RepCap_Reg = (uint16_t) (Data);
@@ -2179,7 +2233,7 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchDat
 ErrorStatus MAX17320_Read_Br_GaugeOut_mAh (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Rsense) {
 
 	uint16_t Data = 0;
-	uint8_t Error = 0;
+	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x05, &Data);
 	Struct->RepCap_mAh = (uint16_t) (Data * MAX17320_LSB_mAh / Rsense);
@@ -2221,22 +2275,40 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_mAh (I2C_TypeDef *I2Cx, MAX17320_BranchDat
  */
 ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t AccmCharge, uint8_t Rsense) {
 
-	uint16_t Data = 0;
+	uint16_t Data_key = 0, Data = 0;
+	int8_t Error = 0;
 
 	Data = AccmCharge * Rsense / MAX17320_LSB_mAh ;
-	if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x05, Data) == SUCCESS ) {
-		/*if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x10, &Data) == SUCCESS){
-			Data = (uint16_t) (Data * MAX17320_LSB_mAh / Rsense);
-			if(Data > Max_cap){
-				Data = (uint16_t) (Max_cap * Rsense / MAX17320_LSB_mAh);
-				if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x10, Data) == SUCCESS ) {*/
-		return SUCCESS;
+
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data_key);
+
+	Data_key = (uint16_t)(Data_key & 0x0300);
+
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x05, Data);
+	Data_key = (Data_key | 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+
+	/*if (I2C_Read_MAX17320(I2Cx, 0x6C, 0x10, &Data) == SUCCESS){
+		Data = (uint16_t) (Data * MAX17320_LSB_mAh / Rsense);
+		if(Data > Max_cap){
+			Data = (uint16_t) (Max_cap * Rsense / MAX17320_LSB_mAh);
+			if (I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x10, Data) == SUCCESS ) {*/
+
 				/*}
 			}
 		}*/
-	}
 
-	return ERROR_N;
+	if (Error == 0) {
+		return SUCCESS;
+	} else {
+		return ERROR_N;
+	}
 }
 
 
