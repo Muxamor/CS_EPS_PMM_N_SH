@@ -52,11 +52,11 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 
 		while( ( Error_I2C != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
 
-			if (TMP1075_set_mode(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], TMP1075_CONTINUOUS_CONV) == SUCCESS) {
-				if (TMP1075_ALERT_active_level(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], TMP1075_ACTIVE_HIGH) == SUCCESS) {
-					if (TMP1075_set_mode_ALERT_pin(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], TMP1075_COMPARATOR_MODE) == SUCCESS) {
-						if (TMP1075_set_time_conversion(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], TMP1075_CR_MEDIUM) == SUCCESS) {
-							if (TMP1075_ALERT_sensitivity(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], TMP1075_TWO_FAULT) == SUCCESS) {
+			if (TMP1075_set_mode(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Mode) == SUCCESS) {
+				if (TMP1075_ALERT_active_level(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Alert_Level) == SUCCESS) {
+					if (TMP1075_set_mode_ALERT_pin(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Mode_Alert) == SUCCESS) {
+						if (TMP1075_set_time_conversion(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Convr_Time) == SUCCESS) {
+							if (TMP1075_ALERT_sensitivity(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Alert_Sens) == SUCCESS) {
 								if (TMP1075_set_low_limit(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], PBM_T1_TMP1075_TEMP_LO) == SUCCESS) {
 									Error_I2C = TMP1075_set_high_limit(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], PBM_T1_TMP1075_TEMP_HI);
 								}
@@ -147,8 +147,8 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 
 		while( ( Error_I2C != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
 
-			if (TMP1075_set_mode(I2Cx, pbm_table.TempSens_Addr[temp_number], TMP1075_CONTINUOUS_CONV) == SUCCESS ){
-				if ( TMP1075_set_time_conversion(I2Cx, pbm_table.TempSens_Addr[temp_number], TMP1075_CR_MEDIUM) == SUCCESS ){
+			if (TMP1075_set_mode(I2Cx, pbm_table.TempSens_Addr[temp_number], pbm_table.TMP1075_Mode) == SUCCESS ){
+				if ( TMP1075_set_time_conversion(I2Cx, pbm_table.TempSens_Addr[temp_number], pbm_table.TMP1075_Convr_Time) == SUCCESS ){
 
 					Error_I2C = TMP1075_disable_ALERT_pin( I2Cx, pbm_table.TempSens_Addr[temp_number]);
 				}
@@ -236,12 +236,12 @@ ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 
 			if( INA238_Hard_Reset( I2Cx, pbm_table.PwrMon_Addr) == SUCCESS ){
 				if ( INA238_Setup_Calibration_int16( I2Cx, pbm_table.PwrMon_Addr, PBM_T1_INA238_MAX_CURRENT, PBM_T1_INA238_RSHUNT) == SUCCESS ){
-					if ( INA238_Setup_ADCRANGE( I2Cx, pbm_table.PwrMon_Addr, INA238_ADC_RANGE_163mv) == SUCCESS ){
-						if ( INA238_Setup_VBUSCT( I2Cx, pbm_table.PwrMon_Addr, INA238_CONVERSION_TIME_1052us) == SUCCESS ){
-							if ( INA238_Setup_VSHCT( I2Cx, pbm_table.PwrMon_Addr, INA238_CONVERSION_TIME_1052us) == SUCCESS ){
-								if ( INA238_Setup_VTCT( I2Cx, pbm_table.PwrMon_Addr, INA238_CONVERSION_TIME_1052us) == SUCCESS ){
-									if ( INA238_Setup_AVG( I2Cx, pbm_table.PwrMon_Addr, INA238_AVERAGING_COUNT_1) == SUCCESS ){
-										Error_I2C = INA238_Setup_MODE( I2Cx, pbm_table.PwrMon_Addr, INA238_SHUNT_AND_BUS_CONTINUOUS);
+					if ( INA238_Setup_ADCRANGE( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_ADC_Range) == SUCCESS ){
+						if ( INA238_Setup_VBUSCT( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_Convr_Time) == SUCCESS ){
+							if ( INA238_Setup_VSHCT( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_Convr_Time) == SUCCESS ){
+								if ( INA238_Setup_VTCT( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_Convr_Time) == SUCCESS ){
+									if ( INA238_Setup_AVG( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_Aver_Count) == SUCCESS ){
+										Error_I2C = INA238_Setup_MODE( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_Mode);
 									}
 								}
 							}
