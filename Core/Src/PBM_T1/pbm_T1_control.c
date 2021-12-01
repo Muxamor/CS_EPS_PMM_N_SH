@@ -448,7 +448,7 @@ ErrorStatus PBM_T1_ReadHeatTempSensors(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t
 ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat) {
 
 	int16_t current = 0;
-	uint16_t bus_voltage = 0, power = 0;
+	uint16_t bus_voltage = 0, power = 0, alert_flags = 0;
 	uint8_t count = 0;
 	int8_t Error = ERROR_N;
 	int8_t Error_I2C_MUX = ERROR_N;
@@ -484,6 +484,10 @@ ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_
 		}
 	}
 
+	if (Error == SUCCESS ){
+			Error = INA238_Get_ALERT_Flags(I2Cx, pbm_table.PwrMon_Addr, &alert_flags);
+	}
+
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
 	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_PwrMon);
@@ -508,10 +512,16 @@ ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_
 		pbm[PBM_number].Heat[Heat].HeatPower = 0;
 		pbm[PBM_number].Heat[Heat].Error_INA238 = ERROR;
 	}else{
-		pbm[PBM_number].Heat[Heat].HeatCurrent = current;
+
 		pbm[PBM_number].Heat[Heat].HeatVoltage = bus_voltage;
 		pbm[PBM_number].Heat[Heat].HeatPower = power;
-		pbm[PBM_number].Heat[Heat].Error_INA238 = SUCCESS; //No error
+		if(((alert_flags & 0x0200) >> 9) == 1){
+			pbm[PBM_number].Heat[Heat].HeatCurrent = -255;
+			pbm[PBM_number].Heat[Heat].Error_INA238 = ERROR; //No error
+		} else {
+			pbm[PBM_number].Heat[Heat].HeatCurrent = current;
+			pbm[PBM_number].Heat[Heat].Error_INA238 = SUCCESS; //No error
+		}
 	}
 
 	if (Error != SUCCESS) {

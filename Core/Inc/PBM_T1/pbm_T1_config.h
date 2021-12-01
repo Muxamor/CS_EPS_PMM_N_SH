@@ -30,7 +30,7 @@ extern "C" {
 #define PBM_T1_INA238_ADDR_1				0x40 	//Address INA mux 1 Battery Module.
 #define PBM_T1_INA238_ADDR_2				0x41 	//Address INA mux 2 Battery Module.
 
-#define PBM_T1_INA238_MAX_CURRENT			300 	//Maximum current on heat mA.
+#define PBM_T1_INA238_MAX_CURRENT			350 	//Maximum current on heat mA.
 #define PBM_T1_INA238_RSHUNT				150 	//Resistance of current shunt heat im mOhm.
 
 #define PBM_T1_TMP1075_HEAT_1_ADDR_1        0x48 	//Address Temperature Sensor 1 Heat 1.
@@ -106,8 +106,21 @@ typedef struct{
 	uint8_t  I2C_MUX_Ch_Heat;
 	uint8_t  I2C_MUX_Ch_PwrMon;
 	uint8_t  I2C_MUX_Ch_TempSens;
+
 	uint8_t  GPIO_Addr;
 	uint8_t  PwrMon_Addr;
+
+	uint8_t  INA238_Convr_Time;
+	uint8_t  INA238_Aver_Count;
+	uint8_t  INA238_ADC_Range;
+	uint8_t  INA238_Mode;
+
+	uint8_t  TMP1075_Mode;
+	uint8_t  TMP1075_Alert_Level;
+	uint8_t  TMP1075_Mode_Alert;
+	uint8_t  TMP1075_Convr_Time;
+	uint8_t  TMP1075_Alert_Sens;
+
 	uint8_t  TempSens_Heat_Addr[PBM_T1_HEAT_TEMPSENS_QUANTITY];
 	//uint8_t  TempSens_Addr[PBM_T1_TEMPSENS_QUANTITY];
 

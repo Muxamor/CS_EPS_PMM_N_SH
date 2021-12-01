@@ -1,6 +1,8 @@
 #include "stm32l4xx.h"
 #include "PCA9534.h"
 #include "TCA9548.h"
+#include "INA238.h"
+#include "TMP1075.h"
 #include "PBM_T1/pbm_T1_config.h"
 
 
@@ -23,6 +25,17 @@ _PBM_T1_table PBM_T1_Table(uint8_t PBM_number, uint8_t Branch, uint8_t Heat) {
 	//pbm_T1_table.I2C_MUX_Ch_TempSens = PBM_T1_I2C_MUX_CH_TEMPSENS;
 
 	//pbm_T1_table.TEMP_SENSOR_Addr[0] = ;
+
+	pbm_T1_table.INA238_Convr_Time = INA238_CONVERSION_TIME_1052us;
+	pbm_T1_table.INA238_Aver_Count = INA238_AVERAGING_COUNT_128;
+	pbm_T1_table.INA238_ADC_Range = INA238_ADC_RANGE_163mv;
+	pbm_T1_table.INA238_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
+
+	pbm_T1_table.TMP1075_Mode = TMP1075_CONTINUOUS_CONV;
+	pbm_T1_table.TMP1075_Alert_Level = TMP1075_ACTIVE_HIGH;
+	pbm_T1_table.TMP1075_Mode_Alert = TMP1075_COMPARATOR_MODE;
+	pbm_T1_table.TMP1075_Convr_Time = TMP1075_CR_MEDIUM;
+	pbm_T1_table.TMP1075_Alert_Sens = TMP1075_TWO_FAULT;
 
 	switch (PBM_number) {
 
