@@ -28,9 +28,9 @@
 	@param 	*Read_data - pointer to store data from Registers.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA238_Read_Reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t INA238_addr_reg, uint16_t *Read_data){
+ErrorStatus INA238_Read_Reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t INA238_addr_reg, uint16_t *read_data){
 
-    if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA238_addr, I2C_SIZE_REG_ADDR_U8, INA238_addr_reg, Read_data) != SUCCESS){
+    if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA238_addr, I2C_SIZE_REG_ADDR_U8, INA238_addr_reg, read_data) != SUCCESS){
         return ERROR_N;
     }
 
@@ -1479,7 +1479,7 @@ ErrorStatus INA238_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, u
     uint16_t bus_volt_reg = 0;
     float current_lsb = ((float)max_exp_current_mA)/32768.0f;
     float power_lsb = current_lsb * 0.2f;
-    float voltage_lsb = 0.003125f; //ADC LSB value 3.125mV
+    float voltage_lsb = 3.125f; //ADC LSB value 3.125mV
 
     //Get current
     if(INA238_Read_Reg(I2Cx, I2C_INA238_addr, INA238_CURRENT_REG_ADDR, &current_reg) != SUCCESS){
