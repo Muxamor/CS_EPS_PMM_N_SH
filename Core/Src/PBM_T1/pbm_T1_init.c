@@ -31,8 +31,8 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
 
 		for(Branch = 0; Branch < PBM_T1_BRANCH_QUANTITY; Branch++){
 
-			Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, PBM_T1_BRANCH_1, 0);
-			Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, PBM_T1_BRANCH_1, 0);
+			Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, 1);
+			Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, 1);
 
 			pbm[PBM_Number].Branch[Branch].Counter_Reset_PreqF = 0;
 
@@ -71,9 +71,7 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
 
 	}
 
-	PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, 0, 0, PBM_T1_ON_EMERG_CHRG);
-
-    if( Error != SUCCESS){
+	if( Error != SUCCESS){
         #ifdef DEBUGprintf
             Error_Handler();
         #endif

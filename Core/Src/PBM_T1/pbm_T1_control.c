@@ -1157,10 +1157,10 @@ ErrorStatus PBM_T1_CheckChargeDischargeState(_PBM_T1 pbm[], uint8_t PBM_number, 
 ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
 
 	uint16_t AbsoluteCapacity = 0;
-	float Capacity = 0, Voltage = 0;
-	float Error = 0;
+	float Voltage = 0;
 	int8_t Error_i2c = ERROR_N;
 	int8_t Error_I2C_MUX = ERROR_N;
+	MAX17320_BranchData Struct = {0};
 	uint8_t i = 0;
 	_PBM_T1_table pbm_table = { 0 };
 
@@ -1180,19 +1180,14 @@ ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM
 
 	Error_I2C_MUX = Error_i2c;
 
-	if (Error == SUCCESS ){
-		if (pbm[PBM_number].Branch[Branch].Error_MAX17320 == 0) {
-			Capacity = ((float) (pbm[PBM_number].Branch[Branch].AbcoluteCapacity_mAh) / PBM_T1_MAX_BATT_CAP * 100.0f); // (3000.0 * 100.0) convert to %
-			Voltage = ((float) (pbm[PBM_number].Branch[Branch].Voltage[0] + pbm[PBM_number].Branch[Branch].Voltage[1])) / 2.0f;
-			Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
-			Error = (float) (Voltage / Capacity);
-			Error = (float) (Error - 1.0f) * 100.0f;  // in %
-			if ((Error > 25) || (Error < -25) || (Capacity > 110)) {
-				AbsoluteCapacity = (uint16_t) ((Voltage * PBM_T1_MAX_BATT_CAP) / 100);
-				Error_i2c = MAX17320_WriteAccmCharge(I2Cx, AbsoluteCapacity, PBM_T1_MAX17320_R_SENSE);
-			}
-		}
-
+	if (Error_i2c == SUCCESS ){
+		Error_i2c = MAX17320_Read_Br_Voltage_mV (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
+		pbm[PBM_number].Branch[Branch].Voltage[1] = Struct.Cell4_mV;
+		pbm[PBM_number].Branch[Branch].Voltage[0] = Struct.Cell1_mV;
+		Voltage = ((float) (pbm[PBM_number].Branch[Branch].Voltage[0] + pbm[PBM_number].Branch[Branch].Voltage[1])) / 2.0f;
+		Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
+		AbsoluteCapacity = (uint16_t) ((Voltage * PBM_T1_MAX_BATT_CAP) / 100);
+		Error_i2c = Error_i2c + MAX17320_WriteAccmCharge(I2Cx, AbsoluteCapacity, PBM_T1_MAX17320_R_SENSE);
 	}
 
 	//Disable I2C MUX channel.
@@ -1232,7 +1227,7 @@ void PBM_T1_CalcTotalCapacity(_PBM_T1 pbm[], uint8_t PBM_number) {
 			TotalRelCapacity = TotalRelCapacity + pbm[PBM_number].Branch[Branch_Number].RelativeCapacity_Perc;
 		}
 	}
-	pbm[PBM_number].TotalRelativeCapacity_Perc = TotalRelCapacity / (Branch_Number + 1);
+	pbm[PBM_number].TotalRelativeCapacity_Perc = TotalRelCapacity / Branch_Number;
 	pbm[PBM_number].TotalAbcoluteCapacity_mAh = TotalAbsCapacity;
 }
 
@@ -1297,20 +1292,17 @@ void PBM_T1_CheckLowLevelEnergy(_PBM_T1 pbm[], uint8_t PBM_number) {
 	}
 }
 
-
-/** @brief	Check and reset max17320 if prequal charge timer error for selected branch.
+/** @brief	Reset MAX17320  for selected branch.
  	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	pbm[] - structure data for all PBM modules.
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
 */
-ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
+ErrorStatus PBM_T1_ResetBranch(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
 
-	float Error = 0;
 	int8_t Error_i2c = ERROR_N;
 	int8_t Error_I2C_MUX = ERROR_N;
 	uint8_t i = 0;
-	int8_t Error_count = 0;
 	_PBM_T1_table pbm_table = { 0 };
 
 	SW_TMUX1209_I2C_main_PBM();
@@ -1329,11 +1321,67 @@ ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t P
 
 	Error_I2C_MUX = Error_i2c;
 
-	if (Error == SUCCESS ){
+	if (Error_i2c == SUCCESS ){
+		Error_i2c = MAX17320_Write_FullReset (I2Cx);
+		LL_mDelay(200);
+		Error_i2c = Error_i2c + PBM_T1_CorrectCapacity(I2Cx, pbm, PBM_number, Branch);
+	}
+
+	//Disable I2C MUX channel.
+	//Note: Do not check the error since it doesn’t matter anymore.
+	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+
+	//Parse error
+	if( Error_I2C_MUX == ERROR_N ){
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
+		pbm[PBM_number].Error_I2C_MUX = ERROR;
+	}else{
+		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
+	}
+
+	if (Error_i2c != SUCCESS) {
+		return ERROR_N;
+	}
+
+    return SUCCESS;
+}
+
+/** @brief	Check and reset MAX17320 if prequal charge timer error for selected branch.
+ 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
+	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
+*/
+ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
+
+	int8_t Error_i2c = ERROR_N;
+	int8_t Error_I2C_MUX = ERROR_N;
+	uint8_t i = 0;
+	_PBM_T1_table pbm_table = { 0 };
+
+	SW_TMUX1209_I2C_main_PBM();
+
+	pbm_table = PBM_T1_Table(PBM_number, Branch, 0);
+
+	//Enable I2C MUX channel
+
+	while( ( Error_i2c != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
+		Error_i2c = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);//TCA9548_CH6 TCA9548_CH5
+		if( Error_i2c != SUCCESS ){
+			i++;
+			LL_mDelay(PBM_T1_i2c_delay_att_conn);
+		}
+	}
+
+	Error_I2C_MUX = Error_i2c;
+
+	if (Error_i2c == SUCCESS ){
 		if ((pbm[PBM_number].Branch[Branch].Error_MAX17320 == 0) && (pbm[PBM_number].Branch[Branch].PreqF == 1) && (pbm[PBM_number].Branch[Branch].Counter_Reset_PreqF < 5 )) {
 			pbm[PBM_number].Branch[Branch].Counter_Reset_PreqF++;
-			MAX17320_Write_FullReset (I2Cx);
 
+			MAX17320_Write_FullReset (I2Cx);
 		}
 
 	}
@@ -1352,7 +1400,7 @@ ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t P
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
 	}
 
-	if (Error_count != SUCCESS) {
+	if (Error_i2c != SUCCESS) {
 		return ERROR_N;
 	}
 
