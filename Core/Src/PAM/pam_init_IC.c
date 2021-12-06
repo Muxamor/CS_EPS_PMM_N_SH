@@ -191,13 +191,13 @@ ErrorStatus PAM_init_PWR_Mon_INA231(_PAM *pam_ptr, uint8_t num_pwr_ch){
 
 		while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){
 
-			if ( INA231_power_reset( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon) == SUCCESS ){
-				if ( INA231_Set_calibration_int16( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Max_Current_int16, pam_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
-					if ( INA231_write_aver_mode( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_aver_mode) == SUCCESS ){
-						if ( INA231_write_bus_conv_time( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_bus_conv_time ) == SUCCESS ){
-							if ( INA231_write_shunt_conv_time( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_shunt_conv_time ) == SUCCESS ){
+		    if ( INA231_Power_Reset( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon) == SUCCESS ){
+				if ( INA231_Set_Calibration_int16( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Max_Current_int16, pam_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
+				    if ( INA231_Setup_AVG( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_aver_mode) == SUCCESS ){
+				        if ( INA231_Setup_VbusCT( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_bus_conv_time ) == SUCCESS ){
+				            if ( INA231_Setup_VshCT( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_shunt_conv_time ) == SUCCESS ){
 
-								error_I2C = INA231_write_mode( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_work_mode );
+				                error_I2C = INA231_Setup_Mode( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_work_mode );
 							}
 						}
 					}

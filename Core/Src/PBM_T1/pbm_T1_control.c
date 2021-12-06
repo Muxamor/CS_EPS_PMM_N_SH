@@ -48,13 +48,12 @@ ErrorStatus PBM_T1_ReadStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 	if (Error == SUCCESS) {
 		Error = ERROR_N;
 		while ((Error != SUCCESS) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
-			if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_OUTPUT_PIN) == SUCCESS){
-				if (PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN) == SUCCESS) {
-					Error = PCA9534_conf_IO_pol_normal(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
-				}
+			if (PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_Heat_State) == SUCCESS) {
+				Error = PCA9534_conf_IO_pol_normal(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_Heat_State);
 			}
+
 			if (Error == SUCCESS) {
-				Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+				Error = PCA9534_read_input_pin(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_Heat_State, &data8);
 			}
 
 			if (Error != SUCCESS) {
@@ -81,7 +80,7 @@ ErrorStatus PBM_T1_ReadStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 
 	if (Error == SUCCESS) {
 
-		pbm[PBM_number].Heat[Heat].PCA9534_Heat_State = !(uint8_t) (((data8 & pbm_table.GPIO_Pin_Heat_State) >> pbm_table.GPIO_Pin_Shift_Heat_State));
+		pbm[PBM_number].Heat[Heat].PCA9534_Heat_State = !(data8);
 
 		pbm[PBM_number].Error_PCA9534 = SUCCESS;
 
@@ -131,13 +130,11 @@ ErrorStatus PBM_T1_CheckStateCmdHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 	if (Error == SUCCESS) {
 		Error = ERROR_N;
 		while ((Error != SUCCESS) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
-			if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_OUTPUT_PIN) == SUCCESS){
-				if (PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN) == SUCCESS) {
-					Error = PCA9534_conf_IO_pol_normal(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
-				}
-			}
+
+			Error = PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_Heat_CMD);
+
 			if (Error == SUCCESS) {
-				Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+				Error = PCA9534_read_input_pin(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_Heat_CMD, &data8);
 			}
 
 			if (Error != SUCCESS) {
@@ -164,7 +161,7 @@ ErrorStatus PBM_T1_CheckStateCmdHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 	}
 
 	if (Error == SUCCESS) {
-		if (pbm[PBM_number].Heat[Heat].PCA9534_ON_Heat_CMD == ((data8 & pbm_table.GPIO_Pin_Heat_CMD) >> pbm_table.GPIO_Pin_Shift_Heat_CMD)) {
+		if (pbm[PBM_number].Heat[Heat].PCA9534_ON_Heat_CMD == (data8)) {
 			pbm[PBM_number].Heat[Heat].Error_Heat = SUCCESS;
 		} else {
 		    //Try update pin value
@@ -222,13 +219,10 @@ ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 	if (Error == SUCCESS) {
 		Error = ERROR_N;
 		while ((Error != SUCCESS) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
-			if(PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_OUTPUT_PIN) == SUCCESS){
-				if (PCA9534_conf_IO_dir_input(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN) == SUCCESS) {
-					Error = PCA9534_conf_IO_pol_normal(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_INPUT_PIN);
-				}
-			}
+			Error = PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_EmergChrg);
+
 			if (Error == SUCCESS) {
-				Error = PCA9534_read_input_reg(I2Cx, pbm_table.GPIO_Addr, &data8);
+				Error = PCA9534_read_input_pin(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_EmergChrg, &data8);
 			}
 
 			if (Error != SUCCESS) {
@@ -257,7 +251,7 @@ ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	if (Error == SUCCESS) {
 
-		if (pbm[PBM_number].Branch[Branch].PCA9534_Emerg_Chrg == ((data8 & pbm_table.GPIO_Pin_EmergChrg) >> pbm_table.GPIO_Pin_Shift_EmergChrg)) {
+		if (pbm[PBM_number].Branch[Branch].PCA9534_Emerg_Chrg == (data8)) {
 			pbm[PBM_number].Branch[Branch].Error_Emerg_Chrg = SUCCESS;
 		} else {
 			//Try update pin value
