@@ -125,14 +125,10 @@ typedef struct{
 	//uint8_t  TempSens_Addr[PBM_T1_TEMPSENS_QUANTITY];
 
 	uint8_t  GPIO_Pin_Heat_CMD;
-	uint8_t  GPIO_Pin_Shift_Heat_CMD;
 	uint8_t  GPIO_Pin_Heat_State;
-	uint8_t  GPIO_Pin_Shift_Heat_State;
 	uint8_t  GPIO_Pin_TempSens;
 	uint8_t  GPIO_Pin_EmergChrg;
-	uint8_t  GPIO_Pin_Shift_EmergChrg;
-	uint8_t  GPIO_INPUT_PIN;
-	uint8_t  GPIO_OUTPUT_PIN;
+
 
 } _PBM_T1_table;
 
