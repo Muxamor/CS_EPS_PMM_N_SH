@@ -1146,9 +1146,10 @@ ErrorStatus PBM_T1_CheckChargeDischargeState(_PBM_T1 pbm[], uint8_t PBM_number, 
 	@param 	pbm[] - structure data for all PBM modules.
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Branch - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
+	@param 	Max_cap - Maximum capacity of battery cell in mAh.
 	@retval 	ErrorStatus
  */
-ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
+ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t Max_cap) {
 
 	uint16_t AbsoluteCapacity = 0;
 	float Voltage = 0;
@@ -1180,7 +1181,7 @@ ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM
 		pbm[PBM_number].Branch[Branch].Voltage[0] = Struct.Cell1_mV;
 		Voltage = ((float) (pbm[PBM_number].Branch[Branch].Voltage[0] + pbm[PBM_number].Branch[Branch].Voltage[1])) / 2.0f;
 		Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
-		AbsoluteCapacity = (uint16_t) ((Voltage * PBM_T1_MAX_BATT_CAP) / 100);
+		AbsoluteCapacity = (uint16_t) ((Voltage * Max_cap) / 100);
 		Error_i2c = Error_i2c + MAX17320_WriteAccmCharge(I2Cx, AbsoluteCapacity, PBM_T1_MAX17320_R_SENSE);
 	}
 
@@ -1221,7 +1222,7 @@ void PBM_T1_CalcTotalCapacity(_PBM_T1 pbm[], uint8_t PBM_number) {
 			TotalRelCapacity = TotalRelCapacity + pbm[PBM_number].Branch[Branch_Number].RelativeCapacity_Perc;
 		}
 	}
-	pbm[PBM_number].TotalRelativeCapacity_Perc = TotalRelCapacity / Branch_Number;
+	pbm[PBM_number].TotalRelativeCapacity_Perc = TotalRelCapacity / PBM_T1_BRANCH_QUANTITY;
 	pbm[PBM_number].TotalAbcoluteCapacity_mAh = TotalAbsCapacity;
 }
 
@@ -1318,7 +1319,7 @@ ErrorStatus PBM_T1_ResetBranch(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_numb
 	if (Error_i2c == SUCCESS ){
 		Error_i2c = MAX17320_Write_FullReset (I2Cx);
 		LL_mDelay(200);
-		Error_i2c = Error_i2c + PBM_T1_CorrectCapacity(I2Cx, pbm, PBM_number, Branch);
+		Error_i2c = Error_i2c + PBM_T1_CorrectCapacity(I2Cx, pbm, PBM_number, Branch, PBM_T1_MAX_BATT_CAP);
 	}
 
 	//Disable I2C MUX channel.

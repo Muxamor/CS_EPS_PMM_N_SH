@@ -31,13 +31,10 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
 
 		for(Branch = 0; Branch < PBM_T1_BRANCH_QUANTITY; Branch++){
 
-			Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, 1);
-			Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, 1);
-
 			pbm[PBM_Number].Branch[Branch].Counter_Reset_PreqF = 0;
 
-			//Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, pbm[PBM_Number].Branch[Branch].ChgEnableBit);
-			//Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, pbm[PBM_Number].Branch[Branch].DchgEnableBit);
+			Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, pbm[PBM_Number].Branch[Branch].ChgEnableBit);
+			Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, pbm[PBM_Number].Branch[Branch].DchgEnableBit);
 
     		if (pbm[PBM_Number].Branch[Branch].PCA9534_Emerg_Chrg == ENABLE) {
                 Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch, PBM_T1_ON_EMERG_CHRG);
@@ -46,9 +43,7 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
     		}
 		}
 
-        //MAX17320_WriteAccmCharge (PBM_T1_I2C_PORT, 3000, 10);
-
-		for(Heat = 0; Heat < PBM_T1_HEAT_QUANTITY; Heat++){
+        for(Heat = 0; Heat < PBM_T1_HEAT_QUANTITY; Heat++){
 
 			Error += PBM_T1_Init_Heat_INA238(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
 
@@ -63,9 +58,7 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
         	}
         }
 
-
-		PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, 0, 0, PBM_T1_ON_EMERG_CHRG);
-        /*for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
+		/*for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
         	Error += PBM_T1_Init_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_Number, TempSens);
         }*/
 
