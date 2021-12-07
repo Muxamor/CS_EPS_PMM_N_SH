@@ -603,6 +603,7 @@ ErrorStatus INA231_Reset_CNVR(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
         bit2 - OVF: Math Overflow Flag
         bit3 - CVRF: Conversion Ready Flag
         bit4 - AFF: Alert Function Flag
+
         bit10 - CNVR: Conversion Ready
         bit11 - POL: Power Overlimit
         bit12 - BUL: Bus Voltage Undervoltage
