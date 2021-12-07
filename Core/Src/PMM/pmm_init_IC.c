@@ -352,7 +352,3 @@ void PMM_Reset_pin_Free_I2C_GPIOExt( uint8_t tca9539_addr ){
 		//need write
 	}
 }
-
-
-
-
