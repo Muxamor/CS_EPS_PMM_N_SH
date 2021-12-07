@@ -559,7 +559,7 @@ ErrorStatus INA231_Set_CNVR(I2C_TypeDef *I2Cx, uint8_t I2C_INA231_addr){
         return ERROR_N;
     }
 
-    read_reg = (uint16_t)( (0xFBFF & read_reg) | 0x0500);
+    read_reg = (uint16_t)( (0xFBFF & read_reg) | 0x0400);
 
     if(I2C_Write_word_u16_St(I2Cx, I2C_INA231_addr, I2C_SIZE_REG_ADDR_U8, INA231_MASK_REG_ADDR,  read_reg) != SUCCESS){
         return ERROR_N;

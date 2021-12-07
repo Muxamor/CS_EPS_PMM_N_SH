@@ -1660,11 +1660,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
    // uint8_t  CAN_Beacon_PBM_Heating_Element_State_BitMask;          //+23        |  const = 0x                 | Текущее состояние Термостата
    // uint8_t  CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[3];        //+24,25,26  |  const = 0x                 | Статусы отказов (ошибок)АБ, битовая маска (МАЯК)
    // uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[2];        //+27,28     |  const = 0x                 | Статус отказов элементов СЭС, битовая маска (МАЯК)
-                                                                            //Total 29 byte
-
-
-
-
+                                                                         //Total 29 byte
 
 }
 
