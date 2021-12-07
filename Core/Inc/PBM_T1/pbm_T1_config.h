@@ -91,13 +91,6 @@ extern "C" {
 #define PBM_T1_GPIO_CH_EmergChrg_1 			PCA9534_IO_P02 // Number GPIO Mux channel for ON/OFF emergency charge branch 1.
 #define PBM_T1_GPIO_CH_EmergChrg_2 			PCA9534_IO_P05 // Number GPIO Mux channel for ON/OFF emergency charge branch 2.
 
-#define PBM_T1_GPIO_CH_Shift_Heat_CMD_1 	0x00 	// Shift pin GPIO Mux channel for set ON/OFF heat command branch 1.
-#define PBM_T1_GPIO_CH_Shift_Heat_State_1	0x01 	// Shift pin GPIO Mux channel for read real heat state branch 1.
-#define PBM_T1_GPIO_CH_Shift_Heat_CMD_2 	0x03 	// Shift pin GPIO Mux channel for set ON/OFF heat command branch 1.
-#define PBM_T1_GPIO_CH_Shift_Heat_State_2	0x04 	// Shift pin GPIO Mux channel for read real heat state branch 1.
-#define PBM_T1_GPIO_CH_Shift_EmergChrg_1 	0x02 	// Shift pin GPIO Mux channel for ON/OFF emergency charge branch 1.
-#define PBM_T1_GPIO_CH_Shift_EmergChrg_2 	0x05 	// Shift pin GPIO Mux channel for ON/OFF emergency charge branch 2.
-
 typedef struct{
 
 	uint8_t  I2C_MUX_Addr;
