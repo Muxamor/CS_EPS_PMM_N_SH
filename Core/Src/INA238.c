@@ -28,9 +28,9 @@
 	@param 	*Read_data - pointer to store data from Registers.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA238_Read_Reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t INA238_addr_reg, uint16_t *Read_data){
+ErrorStatus INA238_Read_Reg(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t INA238_addr_reg, uint16_t *read_data){
 
-    if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA238_addr, I2C_SIZE_REG_ADDR_U8, INA238_addr_reg, Read_data) != SUCCESS){
+    if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_INA238_addr, I2C_SIZE_REG_ADDR_U8, INA238_addr_reg, read_data) != SUCCESS){
         return ERROR_N;
     }
 
@@ -1064,6 +1064,7 @@ ErrorStatus INA238_Reset_APOL(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr){
         bit13 - SLOWALERT
         bit14 - CNVR
         bit15 - ALATCH
+
 	@retval 0-OK, -1-ERROR_N
 */
 
