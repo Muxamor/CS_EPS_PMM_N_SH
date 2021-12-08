@@ -109,6 +109,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
                     eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit = ENABLE;
                     eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit = ENABLE;
+                    eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg = ENABLE;
             	}
             	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
             		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = DISABLE;

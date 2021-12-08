@@ -37,7 +37,8 @@ typedef struct{
 
 	uint8_t DchgEnableBit :1; 				// Discharge Enable Bit must be set 1 to allow the ON state.
 	uint8_t ChgEnableBit :1; 				// Charge Enable Bit must be set 1 to allow the ON state.
-	uint8_t :6;
+	uint8_t StateEmergChrg :1; 			// PCA9534 port. Show and set state emergency charge.
+	uint8_t :5;
 
 }FRAM_PBM_T1_Branch;
 
