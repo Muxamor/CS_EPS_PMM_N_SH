@@ -622,14 +622,13 @@ struct CAN_IVar5{
     int16_t CAN_TMIx_PMM_VBAT2_Current;                             //+     |  const = 0x                   |   Ток VBAT2
     int16_t CAN_TMIx_PMM_VBAT1_Current_Aver_10s;                    //+     |  const = 0x               |   Ток VBAT1 усреднение 10s
     int16_t CAN_TMIx_PMM_VBAT2_Current_Aver_10s;                    //+     |  const = 0x               |   Ток VBAT2 усреднение 10s
-    //uint16_t CAN_TMIx_PMM_Own_Current_Consumption;                  //+  |  const = 0x                   |   Ток потребления модуля PMM
-    //uint16_t CAN_TMIx_PMM_Voltage;                                  //+  |  const = 0x                   |   Напряжение питания модуля PMM 3.3V
+    uint16_t CAN_TMIx_PMM_Own_Current_Consumption;                  //+  |  const = 0x                   |   Ток потребления модуля PMM
+    uint16_t CAN_TMIx_PMM_Voltage;                                  //+  |  const = 0x                   |   Напряжение питания модуля PMM 3.3V
     uint16_t CAN_TMIx_EPS_Main_Bus_Voltage;                         //+   |  const = 0x                   |   Напряжение внутренней шины СЭС
-    int16_t CAN_TMIx_EPS_Total_PBM_Char_Dischar_Power;              //+  |  const = 0x                   |   Полная мощность зарядки/разрядки PBM
-    uint16_t CAN_TMIx_EPS_Total_PAM_Generation_Power;               //+  |  const = 0x                   |   Полная вырабатываемая мощность PAM
+
+
     uint16_t CAN_TMIx_EPS_CubeSat_Total_Cons_Power;                 //+  |  const = 0x                   |   Полная мощность потребления КА
-    uint16_t CAN_TMIx_EPS_Total_Battery_Level_mAh;			        //+    |  const = 0xD               |   Полный уровень заряда АБ в mAh
-    uint8_t  CAN_TMIx_EPS_Total_Battery_Level_percent;              //+   |  const = 0x7F                 |   Полный уровень заряда АБ в %
+
     uint16_t CAN_TMIx_EPS_Deploy_Status;                            //+  |  const = 0x                   |  Состояние концевиков раскрыв. элементов, битовая маска
     uint16_t CAN_TMIx_PMM_Version_FW;                               //+  |  const = 0x                   |   Firmware version
                                                                     //Total 54 byte
@@ -677,6 +676,7 @@ struct CAN_IVar5{
     uint16_t CAN_TMI1_version;                                  	//+    |  const = 0x                   |   Версия ТМИ
     // PAM //
     uint16_t CAN_TMIx_PAM_PWR_Ch_State_BitMask;                     //+    |  const = 0x              | State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
+    uint16_t CAN_TMIx_EPS_Total_PAM_Generation_Power;               //+  |  const = 0x                   |   Полная вырабатываемая мощность PAM
     uint16_t CAN_TMIx_PAM_PWR_PG_BitMask;                           //+    |  const = 0x
     uint32_t CAN_TMIx_PAM_PWR_Error_BitMask;                        //+    |  const = 0x              | Статус ошибок модуля PAM, битовая маска: State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
     int8_t  CAN_TMIx_PAM_Temp_Sensor1;                              //+    |  const = 0x               |   PAM датчик 1
@@ -750,6 +750,9 @@ struct CAN_IVar5{
     uint8_t CAN_TMIx_PBM_Thermostat_ComReg_BitMask;                 //+ |  const = 0x                   | Команда на включение Термостат
     uint8_t CAN_TMIx_PBM_Heating_Element_State_BitMask;             //+ |  const = 0x                       | Текущее состояние Термостата
     uint8_t CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask;            //+ |  const = 0x                   | Ключи аварийной зарядки
+    int16_t CAN_TMIx_EPS_Total_PBM_Char_Dischar_Power;              //+  |  const = 0x                   |   Полная мощность зарядки/разрядки PBM
+    uint16_t CAN_TMIx_EPS_Total_Battery_Level_mAh;			        //+    |  const = 0xD               |   Полный уровень заряда АБ в mAh
+    uint8_t  CAN_TMIx_EPS_Total_Battery_Level_percent;              //+   |  const = 0x7F                 |   Полный уровень заряда АБ в %
     uint16_t CAN_TMIx_PBM1_Error_BitMask;                           //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
     uint16_t CAN_TMIx_PBM2_Error_BitMask;                           //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
     uint16_t CAN_TMIx_PBM3_Error_BitMask;                           //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
