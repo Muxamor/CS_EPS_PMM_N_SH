@@ -511,7 +511,7 @@ ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_
 		pbm[PBM_number].Heat[Heat].HeatPower = power;
 		if(((alert_flags & 0x0200) >> 9) == 1){
 			pbm[PBM_number].Heat[Heat].HeatCurrent = -255;
-			pbm[PBM_number].Heat[Heat].Error_INA238 = ERROR; //No error
+			pbm[PBM_number].Heat[Heat].Error_INA238 = ERROR;
 		} else {
 			pbm[PBM_number].Heat[Heat].HeatCurrent = current;
 			pbm[PBM_number].Heat[Heat].Error_INA238 = SUCCESS; //No error
@@ -1149,7 +1149,7 @@ ErrorStatus PBM_T1_CheckChargeDischargeState(_PBM_T1 pbm[], uint8_t PBM_number, 
 	@param 	Max_cap - Maximum capacity of battery cell in mAh.
 	@retval 	ErrorStatus
  */
-ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch, uint8_t Max_cap) {
+ErrorStatus PBM_T1_CorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch, uint16_t Max_cap) {
 
 	uint16_t AbsoluteCapacity = 0;
 	float Voltage = 0;
