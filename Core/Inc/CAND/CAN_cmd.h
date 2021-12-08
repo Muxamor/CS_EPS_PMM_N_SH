@@ -1,4 +1,3 @@
-
 #ifndef INC_CAND_CAN_CMD_H_
 #define INC_CAND_CAN_CMD_H_
 

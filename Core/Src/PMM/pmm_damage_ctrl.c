@@ -11,8 +11,8 @@
 #include "PDM/pdm_ctrl.h"
 #include "PAM/pam_init.h"
 #include "PAM/pam_ctrl.h"
-#include "PBM/pbm_config.h"
-#include "PBM/pbm_init.h"
+#include "PBM_T1/pbm_T1_config.h"
+#include "PBM_T1/pbm_T1_init.h"
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
 #include "uart_eps_comm.h"
@@ -259,7 +259,7 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
 
             PDM_init(eps_p.eps_pdm_ptr);
             PAM_init(eps_p.eps_pam_ptr);
-            PBM_Re_Init(eps_p.eps_pbm_ptr, eps_p.eps_pmm_ptr);
+            PBM_T1_Re_Init(eps_p.eps_pbm_ptr, eps_p.eps_pmm_ptr);
 
         //Branch for Passive CPU
         }else{
@@ -286,8 +286,8 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
 
     if( (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF1 != ERROR) && (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2 != ERROR)  ){
 
-    	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val != 0 )
-    			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val != 0) ){
+    	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_T1_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val != 0 )
+    			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_T1_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val != 0) ){
 
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );

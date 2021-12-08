@@ -1,4 +1,3 @@
-
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_i2c.h"
 #include "i2c_comm.h"

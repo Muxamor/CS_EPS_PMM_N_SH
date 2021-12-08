@@ -2,7 +2,7 @@
 #include "INA231.h"
 #include "TCA6424A.h"
 #include "TCA9548.h"
-#include "pam_config.h"
+#include "PAM/pam_config.h"
 
 _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 

@@ -14,8 +14,8 @@
 #include "PDM/pdm_ctrl.h"
 #include "PAM/pam_init.h"
 #include "PAM/pam.h"
-#include "PBM/pbm_config.h"
-#include "PBM/pbm_init.h"
+#include "PBM_T1/pbm_T1_config.h"
+#include "PBM_T1/pbm_T1_init.h"
 #include "PMM/pmm_deploy.h"
 
 /** @brief  Deploy CubeSat Norbi.
@@ -28,6 +28,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     uint16_t  i = 0;
     int8_t error_status = SUCCESS;
     uint8_t deploy_stage;
+	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_Number = 0;
     static uint32_t  Deploy_start_time_delay = 0;
     static uint32_t  Exit_LSW_poll_time_delay  = 0;
     static uint16_t  Counter_deploy_exit_LSW_1  = 0;
@@ -100,15 +101,21 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
             //Enable PBM logic power and thermostat.
             PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
-            for( i = 0 ; i < PBM_QUANTITY; i++ ){
-                eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = ENABLE;
-                eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = ENABLE;
-                eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = ENABLE;
-                eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = ENABLE;
-                eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = ENABLE;
-                eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = ENABLE;
+
+
+            // change!!!!!! Morsin A.A.
+            //PBM
+            for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){
+            	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+                    eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit = ENABLE;
+                    eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit = ENABLE;
+            	}
+            	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
+            		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = DISABLE;
+            	}
             }
-            PBM_Init( eps_p.eps_pbm_ptr );
+
+            PBM_T1_Init( eps_p.eps_pbm_ptr );
 
             //Enable passive CPU
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
@@ -170,8 +177,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 3 -  low level energy, check battery level and waiting for charge if battery low.
     }else if(deploy_stage == 3){
-        if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val > PBM_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ||
-                (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val > PBM_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_NORMAL_ENERGY_EDGE) ){
+        if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) ||
+                (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
         }else{

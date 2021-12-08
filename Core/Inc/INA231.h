@@ -1,5 +1,3 @@
-
-
 #ifndef INC_INA231_H_
 #define INC_INA231_H_
 

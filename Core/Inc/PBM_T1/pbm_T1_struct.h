@@ -1,4 +1,3 @@
-
 #ifndef INC_PBM_T1_STRUCT_H_
 #define INC_PBM_T1_STRUCT_H_
 
@@ -16,8 +15,8 @@ typedef struct  // Structure for PBM data
 	uint16_t ODCP :1; 						// Overdischarge current faults.
 	uint16_t BalCell1 :1;					// Flag balancing cell1.
 	uint16_t BalCell2 :1;					// Flag balancing cell2.
-	uint16_t DchgEnableBit :1; 				// Discharge Enable Bit must be set zero to allow the ON state. // Need to save in flash.
-	uint16_t ChgEnableBit :1; 				// Charge Enable Bit must be set zero to allow the ON state. // Need to save in flash.
+	uint16_t DchgEnableBit :1; 				// Discharge Enable Bit must be set 1 to allow the ON state. // Need to save in flash.
+	uint16_t ChgEnableBit :1; 				// Charge Enable Bit must be set 1 to allow the ON state. // Need to save in flash.
 	uint16_t DchgControlFlag :1; 			// Discharge Control Flag indicates the real logic state of the DC pin driver.
 	uint16_t ChgControlFlag :1; 			// Charge Control Flag indicates the logic state of the CC pin driver.
 	uint16_t PreqF :1; 						// Prequal timeout faults.
@@ -83,7 +82,7 @@ typedef struct  // Structure for PBM data
 	//int8_t TMP1075_Temp [PBM_T1_TEMPSENS_QUANTITY]; 		// Temperature TMP1075 №1 in °C.
 	//uint8_t Error_TMP1075 [PBM_T1_TEMPSENS_QUANTITY]; 	// Register error TMP1075.
 
-	int16_t TotalAbcoluteCapacity_mAh;		// Register total accumulate charge of battery's in mAh.
+	uint16_t TotalAbcoluteCapacity_mAh;		// Register total accumulate charge of battery's in mAh.
 	uint8_t TotalRelativeCapacity_Perc;		// Register total active relative capacity PBM in %.
 
 	uint8_t Error_PCA9534 :1; 				// Register error PCA9534.

@@ -1,4 +1,3 @@
-
 #ifndef INC_PAM_PAM_STRUCT_H_
 #define INC_PAM_PAM_STRUCT_H_
 

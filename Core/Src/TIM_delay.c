@@ -1,4 +1,3 @@
-
 #include "TIM_delay.h"
 
 uint8_t TIM2_finished; // Global flag that indicates status of timer. 0 - still counting; 1 - finished

@@ -8,7 +8,7 @@
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_sw_cpu.h"
-#include "PBM/pbm_config.h"
+#include "PBM_T1/pbm_T1_config.h"
 #include "uart_eps_comm.h"
 
 extern uint32_t SysTick_Counter;
@@ -163,7 +163,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 		ACK_Attribute = 1;
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM_struct ){
-		memcpy( eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), ( sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_QUANTITY ) );
+		memcpy( eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), ( sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_T1_QUANTITY ) );
 		eps_p.eps_pbm_ptr->PBM_save_conf_flag = 1; //Save received settings in FRAM
 		ACK_Attribute = 1;
 
@@ -193,7 +193,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_PBM_struct ){
 		uint16_t size_data = 0;
-		size_data = sizeof( eps_p.eps_pbm_ptr[0]) * PBM_QUANTITY;
+		size_data = sizeof( eps_p.eps_pbm_ptr[0]) * PBM_T1_QUANTITY;
 		ACK_buf[0] = UART_EPS_ID_ACK_Get_PBM_struct;
 		memcpy( &(ACK_buf[1]), eps_p.eps_pbm_ptr, size_data );
 		size_ACK = size_data + 1;
@@ -294,7 +294,7 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_
 		memcpy( eps_p.eps_pam_ptr, (&(UART_eps_comm->recv_pack_buf[7])), sizeof( *(eps_p.eps_pam_ptr) ) );
 
 	}else if( cmd_id == UART_EPS_ID_ACK_Get_PBM_struct	 ){
-        memcpy(eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), (sizeof(eps_p.eps_pbm_ptr[0]) * PBM_QUANTITY));
+        memcpy(eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), (sizeof(eps_p.eps_pbm_ptr[0]) * PBM_T1_QUANTITY));
 
     }else if(cmd_id == UART_EPS_ID_ACK_Get_Active_status ){
         eps_p.eps_pmm_ptr->Active_CPU = UART_eps_comm->recv_pack_buf[7];
@@ -446,7 +446,7 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM_struct ){
 		send_buf[0] = UART_EPS_ID_CMD_SAVE_PBM_struct;
-		size_struct = sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_QUANTITY;
+		size_struct = sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_T1_QUANTITY;
 		memcpy( (&(send_buf[1])),eps_p.eps_pbm_ptr, size_struct );
 		size_send_data = size_struct + 1;
 
