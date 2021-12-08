@@ -43,7 +43,7 @@ typedef struct{
 
 typedef struct{
 
-	uint16_t PCA9534_ON_Heat_CMD :1; 		// PCA9534 port. State permission bit auto heat branch.
+	uint8_t PCA9534_ON_Heat_CMD :1; 		// PCA9534 port. State permission bit auto heat branch.
 	uint8_t :7;
 
 }FRAM_PBM_T1_Heat;
@@ -52,13 +52,6 @@ typedef struct{
 
 	FRAM_PBM_T1_Branch Branch[PBM_T1_BRANCH_QUANTITY]; // Branch data to need save in fram.
 	FRAM_PBM_T1_Heat Heat[PBM_T1_HEAT_QUANTITY];		// Heat data to need save in fram.
-    uint8_t Branch_1_DchgEnableBit  :1;
-    uint8_t Branch_1_ChgEnableBit   :1;
-    uint8_t Branch_2_DchgEnableBit  :1;
-    uint8_t Branch_2_ChgEnableBit   :1;
-    uint8_t PCA9534_ON_Heat_1       :1;
-    uint8_t PCA9534_ON_Heat_2       :1;
-    uint8_t :2;
 
 }FRAM_PBM_T1;
 
