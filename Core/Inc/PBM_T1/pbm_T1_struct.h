@@ -26,7 +26,7 @@ typedef struct  // Structure for PBM data
 	uint16_t SC :1;
 	uint16_t PreqChrg :1;
 
-	uint16_t PCA9534_Emerg_Chrg :1; 		// PCA9534 port. Show state emergency charge.
+	uint16_t PCA9534_Emerg_Chrg :1; 		// PCA9534 port. Show and set state emergency charge. // Need to save in flash.
 	uint16_t Counter_Reset_PreqF :8; 		// Counter for reset MAX17320 if exist prequal timer error.
 	uint16_t Error_Charge :1; 				// Register error charge branch.
 	uint16_t Error_Discharge :1; 			// Register error discharge branch.
