@@ -1,5 +1,3 @@
-
-
 #ifndef INC_PDM_PDM_CONFIG_H_
 #define INC_PDM_PDM_CONFIG_H_
 

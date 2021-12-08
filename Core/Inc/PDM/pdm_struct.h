@@ -1,4 +1,3 @@
-
 #ifndef INC_PDM_PDM_STRUCT_H_
 #define INC_PDM_PDM_STRUCT_H_
 

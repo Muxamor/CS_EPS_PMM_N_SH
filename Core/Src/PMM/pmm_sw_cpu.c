@@ -1,4 +1,3 @@
-
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"

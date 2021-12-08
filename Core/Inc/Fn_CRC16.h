@@ -1,4 +1,3 @@
-
 #ifndef INC_FN_CRC16_H_
 #define INC_FN_CRC16_H_
 

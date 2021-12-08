@@ -3,7 +3,7 @@
 #include "Fn_CRC16.h"
 #include "uart_eps_comm.h"
 #include "PMM/pmm_config.h"
-#include "PBM/pbm_control.h"
+#include "PBM_T1/pbm_T1_control.h"
 #include "PMM/pmm_damage_ctrl.h"
 #include "PMM/pmm_savedata.h"
 
@@ -26,6 +26,7 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
     uint32_t i = 0;
     _FRAM_SAVE_DATA fram_data_write = {0};
 	uint8_t *fram_data_write_ptr;
+	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_Number = 0;
 
 	// ------- Filling of data to write in FRAM -------- //
 	//PMM
@@ -76,15 +77,16 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
     for( i = 0; i < PAM_PWR_TM_SP_Ch_quantity; i++ ){
         fram_data_write.FRAM_PAM_PWR_Ch_TM_SP[i].State_eF_out = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[i].State_eF_out;
     }
-
+    // change!!!!!! Morsin A.A.
     //PBM
-    for( i = 0; i < PBM_QUANTITY; i++  ){
-        fram_data_write.FRAM_PBM_PBM[i].Branch_1_DchgEnableBit = eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit;
-        fram_data_write.FRAM_PBM_PBM[i].Branch_1_ChgEnableBit = eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit;
-        fram_data_write.FRAM_PBM_PBM[i].Branch_2_DchgEnableBit = eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit;
-        fram_data_write.FRAM_PBM_PBM[i].Branch_2_ChgEnableBit = eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit;
-        fram_data_write.FRAM_PBM_PBM[i].PCA9534_ON_Heat_1 = eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1;
-        fram_data_write.FRAM_PBM_PBM[i].PCA9534_ON_Heat_2 = eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2;
+    for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){
+    	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+    		fram_data_write.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].DchgEnableBit = eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit;
+    		fram_data_write.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].ChgEnableBit = eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit;
+    	}
+    	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
+    		fram_data_write.FRAM_PBM_T1[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD;
+    	}
     }
     // -------------------------------------- //
 
@@ -135,6 +137,7 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
     _FRAM_SAVE_DATA fram_data_read = {0};
     uint8_t *fram_data_read_ptr;
     uint32_t i = 0;
+	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_Number = 0;
 
     fram_data_read_ptr = (uint8_t*)(&fram_data_read);
 
@@ -219,15 +222,19 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
             eps_p.eps_pam_ptr->PWR_Channel_TM_SP[i].State_eF_out = fram_data_read.FRAM_PAM_PWR_Ch_TM_SP[i].State_eF_out;
         }
 
+
+        // change!!!!!! Morsin A.A.
         //PBM
-        for( i = 0; i < PBM_QUANTITY; i++ ){
-            eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = fram_data_read.FRAM_PBM_PBM[i].Branch_1_DchgEnableBit;
-            eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = fram_data_read.FRAM_PBM_PBM[i].Branch_1_ChgEnableBit;
-            eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = fram_data_read.FRAM_PBM_PBM[i].Branch_2_DchgEnableBit;
-            eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = fram_data_read.FRAM_PBM_PBM[i].Branch_2_ChgEnableBit;
-            eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = fram_data_read.FRAM_PBM_PBM[i].PCA9534_ON_Heat_1;
-            eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = fram_data_read.FRAM_PBM_PBM[i].PCA9534_ON_Heat_2;
+        for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){
+        	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit = fram_data_read.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].DchgEnableBit;
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit = fram_data_read.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].ChgEnableBit;
+        	}
+        	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
+        		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = fram_data_read.FRAM_PBM_T1[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD;
+        	}
         }
+
     }
 
     // -------------------------------------- //
@@ -245,10 +252,10 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
 */
 ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 
-    uint16_t i = 0;
     int8_t state_FRAM1 = 0;
     int8_t state_FRAM2 = 0;
     int8_t error_status = SUCCESS;
+	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_Number = 0;
 
     state_FRAM1 = FRAM_Detect_Empty(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
     state_FRAM2 = FRAM_Detect_Empty(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
@@ -277,14 +284,18 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
         eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in = ENABLE;
         eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out = ENABLE;
 
-        for( i = 0; i < PBM_QUANTITY; i++ ){
-            eps_p.eps_pbm_ptr[i].Branch_1_ChgEnableBit = ENABLE;
-            eps_p.eps_pbm_ptr[i].Branch_1_DchgEnableBit = ENABLE;
-            eps_p.eps_pbm_ptr[i].Branch_2_ChgEnableBit = ENABLE;
-            eps_p.eps_pbm_ptr[i].Branch_2_DchgEnableBit = ENABLE;
-            eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_1 = ENABLE;
-            eps_p.eps_pbm_ptr[i].PCA9534_ON_Heat_2 = ENABLE;
+        // change!!!!!! Morsin A.A.
+        //PBM
+        for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){
+        	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit = ENABLE;
+        	}
+        	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
+        		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = ENABLE;
+        	}
         }
+
     }
 
     return  error_status;
@@ -300,7 +311,7 @@ ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
     int8_t error_status = SUCCESS;
 
     //Check flag save settings for Active and Passive CPU
-    if( (eps_p.eps_pmm_ptr->PMM_save_conf_flag == SET) || ( eps_p.eps_pdm_ptr->PDM_save_conf_flag == SET) || ( eps_p.eps_pam_ptr->PAM_save_conf_flag == SET) || (PBM_CheckSaveSetupFlag( eps_p.eps_pbm_ptr ) == SET)){
+    if( (eps_p.eps_pmm_ptr->PMM_save_conf_flag == SET) || ( eps_p.eps_pdm_ptr->PDM_save_conf_flag == SET) || ( eps_p.eps_pam_ptr->PAM_save_conf_flag == SET) || (PBM_T1_CheckSaveSetupFlag( eps_p.eps_pbm_ptr ) == SET)){
 
         //Sending (sync) settings from Active to Passive CPU
         if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE ){
@@ -321,7 +332,7 @@ ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
                     error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
                 }
 
-                if( PBM_CheckSaveSetupFlag(eps_p.eps_pbm_ptr) == SET ){
+                if( PBM_T1_CheckSaveSetupFlag(eps_p.eps_pbm_ptr) == SET ){
                     error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
                 }
             }
@@ -333,7 +344,7 @@ ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = RESET;
         eps_p.eps_pdm_ptr->PDM_save_conf_flag = RESET;
         eps_p.eps_pam_ptr->PAM_save_conf_flag = RESET;
-        PBM_ClearSaveSetupFlag( eps_p.eps_pbm_ptr );
+        PBM_T1_ClearSaveSetupFlag( eps_p.eps_pbm_ptr );
     }
 
     if( error_status != SUCCESS ){
