@@ -1,4 +1,3 @@
-
 #ifndef MAX17320_H
 #define MAX17320_H
 

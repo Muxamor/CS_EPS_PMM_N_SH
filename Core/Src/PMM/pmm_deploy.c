@@ -102,13 +102,13 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             //Enable PBM logic power and thermostat.
             PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
 
+
+            // change!!!!!! Morsin A.A.
             //PBM
             for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){
             	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
                     eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit = ENABLE;
                     eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit = ENABLE;
-                    eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Key = ENABLE;
-                    eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Key = DISABLE;
             	}
             	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
             		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = DISABLE;
