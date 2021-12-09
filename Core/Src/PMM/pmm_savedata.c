@@ -239,7 +239,7 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
 
     }
 
-    // -------------------------------------- //
+
 
     if( eps_p.eps_pmm_ptr->Error_FRAM1 == ERROR || eps_p.eps_pmm_ptr->Error_FRAM2 == ERROR ){
         return ERROR_N;
