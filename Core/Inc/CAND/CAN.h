@@ -841,7 +841,57 @@ struct CAN_IVar5{
     uint16_t CAN_TMIx_PBM4_Branch2_Battery2_Voltage;                //+     |  const = 0x               |  Напряжение АБ3 ветвь 2 аккумулятор 2
 
     int16_t CAN_TMIx_PBM1_Branch1_Max_Current;                      //+     |  const = 0x               |  Максимальный ток АБ1 ветвь 1
+    int16_t CAN_TMIx_PBM1_Branch1_Min_Current;                      //+     |  const = 0x               |  Минимальный ток АБ1 ветвь 1
+    int16_t CAN_TMIx_PBM1_Branch2_Max_Current;                      //+     |  const = 0x               |  Максимальный ток АБ1 ветвь 2
+    int16_t CAN_TMIx_PBM1_Branch2_Min_Current;                      //+     |  const = 0x               |  Минимальный ток АБ1 ветвь 2
+    int16_t CAN_TMIx_PBM2_Branch1_Max_Current;                      //+     |  const = 0x               |  Максимальный ток АБ2 ветвь 1
+    int16_t CAN_TMIx_PBM2_Branch1_Min_Current;                      //+     |  const = 0x               |  Минимальный ток АБ2 ветвь 1
+    int16_t CAN_TMIx_PBM2_Branch2_Max_Current;                      //+     |  const = 0x               |  Максимальный ток АБ2 ветвь 2
+    int16_t CAN_TMIx_PBM2_Branch2_Min_Current;                      //+     |  const = 0x               |  Минимальный ток АБ2 ветвь 2
+    int16_t CAN_TMIx_PBM3_Branch1_Max_Current;                      //+     |  const = 0x               |  Максимальный ток АБ3 ветвь 1
+    int16_t CAN_TMIx_PBM3_Branch1_Min_Current;                      //+     |  const = 0x               |  Минимальный ток АБ3 ветвь 1
+    int16_t CAN_TMIx_PBM3_Branch2_Max_Current;                      //+     |  const = 0x               |  Максимальный ток АБ3 ветвь 2
+    int16_t CAN_TMIx_PBM3_Branch2_Min_Current;                      //+     |  const = 0x               |  Минимальный ток АБ3 ветвь 2
+    int16_t CAN_TMIx_PBM4_Branch1_Max_Current;                      //+     |  const = 0x               |  Максимальный ток АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM4_Branch1_Min_Current;                      //+     |  const = 0x               |  Минимальный ток АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM4_Branch2_Max_Current;                      //+     |  const = 0x               |  Максимальный ток АБ4 ветвь 2
+    int16_t CAN_TMIx_PBM4_Branch2_Min_Current;                      //+     |  const = 0x               |  Минимальный ток АБ4 ветвь 2
 
+    uint16_t CAN_TMIx_PBM1_Branch1_Min_Voltage;                     //+     |  const = 0x               |  Минимальное напряжение АБ1 ветвь 1
+    uint16_t CAN_TMIx_PBM1_Branch2_Min_Voltage;                     //+     |  const = 0x               |  Минимальное напряжение АБ1 ветвь 2
+    uint16_t CAN_TMIx_PBM2_Branch1_Min_Voltage;                     //+     |  const = 0x               |  Минимальное напряжение АБ2 ветвь 1
+    uint16_t CAN_TMIx_PBM2_Branch2_Min_Voltage;                     //+     |  const = 0x               |  Минимальное напряжение АБ2 ветвь 2
+    uint16_t CAN_TMIx_PBM3_Branch1_Min_Voltage;                     //+     |  const = 0x               |  Минимальное напряжение АБ3 ветвь 1
+    uint16_t CAN_TMIx_PBM3_Branch2_Min_Voltage;                     //+     |  const = 0x               |  Минимальное напряжение АБ3 ветвь 2
+    uint16_t CAN_TMIx_PBM4_Branch1_Min_Voltage;                     //+     |  const = 0x               |  Минимальное напряжение АБ3 ветвь 1
+    uint16_t CAN_TMIx_PBM4_Branch2_Min_Voltage;                     //+     |  const = 0x               |  Минимальное напряжение АБ3 ветвь 2
+
+    int16_t CAN_TMIx_PBM1_Branch1_Heat_Current;                     //+     |  const = 0x               |  Ток нагревателей АБ1 ветвь 1
+    int16_t CAN_TMIx_PBM1_Branch2_Heat_Current;                     //+     |  const = 0x               |  Ток нагревателей АБ1 ветвь 2
+    int16_t CAN_TMIx_PBM2_Branch1_Heat_Current;                     //+     |  const = 0x               |  Ток нагревателей АБ2 ветвь 1
+    int16_t CAN_TMIx_PBM2_Branch2_Heat_Current;                     //+     |  const = 0x               |  Ток нагревателей АБ2 ветвь 2
+    int16_t CAN_TMIx_PBM3_Branch1_Heat_Current;                     //+     |  const = 0x               |  Ток нагревателей АБ3 ветвь 1
+    int16_t CAN_TMIx_PBM3_Branch2_Heat_Current;                     //+     |  const = 0x               |  Ток нагревателей АБ3 ветвь 2
+    int16_t CAN_TMIx_PBM4_Branch1_Heat_Current;                     //+     |  const = 0x               |  Ток нагревателей АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM4_Branch2_Heat_Current;                     //+     |  const = 0x               |  Ток нагревателей АБ4 ветвь 2
+
+    uint8_t CAN_TMIx_PBM1_Branch1_Age;                              //+     |  const = 0x               | Возраст батареи АБ1 ветвь 1
+    uint8_t CAN_TMIx_PBM1_Branch2_Age;                              //+     |  const = 0x               | Возраст батареи АБ1 ветвь 2
+    uint8_t CAN_TMIx_PBM2_Branch1_Age;                              //+     |  const = 0x               | Возраст батареи АБ2 ветвь 1
+    uint8_t CAN_TMIx_PBM2_Branch2_Age;                              //+     |  const = 0x               | Возраст батареи АБ2 ветвь 2
+    uint8_t CAN_TMIx_PBM3_Branch1_Age;                              //+     |  const = 0x               | Возраст батареи АБ3 ветвь 1
+    uint8_t CAN_TMIx_PBM3_Branch2_Age;                              //+     |  const = 0x               | Возраст батареи АБ3 ветвь 2
+    uint8_t CAN_TMIx_PBM4_Branch1_Age;                              //+     |  const = 0x               | Возраст батареи АБ4 ветвь 1
+    uint8_t CAN_TMIx_PBM4_Branch2_Age;                              //+     |  const = 0x               | Возраст батареи АБ4 ветвь 2
+
+    uint8_t CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ1 ветвь 1
+    uint8_t CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ1 ветвь 2
+    uint8_t CAN_TMIx_PBM2_Branch1_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ2 ветвь 1
+    uint8_t CAN_TMIx_PBM2_Branch2_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ2 ветвь 2
+    uint8_t CAN_TMIx_PBM3_Branch1_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ3 ветвь 1
+    uint8_t CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ3 ветвь 2
+    uint8_t CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ4 ветвь 1
+    uint8_t CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ4 ветвь 2
 
     uint8_t  CAN_TMI3_Reserved[2];                                  //+  |  const = 0x
 };
