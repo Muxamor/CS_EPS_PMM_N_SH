@@ -7,9 +7,6 @@
 #include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_struct.h"
 #include "PBM_T1/pbm_T1_init_IC.h"
-#include "PBM_T1/pbm_T1_init.h"
-#include "PBM_T1/pbm_T1_control.h"
-#include "PMM/pmm_struct.h"
 #include "TCA9548.h"
 #include "Error_Handler.h"
 
@@ -17,11 +14,11 @@
   	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
     @param 	pbm - structure data for all PBM modules.
     @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
-   	@param 	Heat_Branch - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
-	@param  temp_number - I2C sensor number (PBM_T1_TEMPSENS_1, PBM_T1_TEMPSENS_2).
+   	@param 	Heat_number - select number Heat (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
+	@param  sensor_number - I2C sensor number (PBM_T1_TEMPSENS_1, PBM_T1_TEMPSENS_2).
 	@retval Error status
  */
-ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat, uint8_t temp_number) {
+ErrorStatus PBM_T1_Init_Heat_TMP1075( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat_number, uint8_t sensor_number) {
 
 	_PBM_T1_table pbm_table = { 0 };
 	uint8_t i = 0;
@@ -30,7 +27,7 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 
 	SW_TMUX1209_I2C_main_PBM();
 
-	pbm_table = PBM_T1_Table(PBM_number, 0, Heat);
+	pbm_table = PBM_T1_Table(PBM_number, 0, Heat_number);
 
 	//Enable I2C MUX channel
 
@@ -52,13 +49,13 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 
 		while( ( Error_I2C != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
 
-			if (TMP1075_set_mode(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Mode) == SUCCESS) {
-				if (TMP1075_ALERT_active_level(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Alert_Level) == SUCCESS) {
-					if (TMP1075_set_mode_ALERT_pin(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Mode_Alert) == SUCCESS) {
-						if (TMP1075_set_time_conversion(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Convr_Time) == SUCCESS) {
-							if (TMP1075_ALERT_sensitivity(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], pbm_table.TMP1075_Alert_Sens) == SUCCESS) {
-								if (TMP1075_set_low_limit(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], PBM_T1_TMP1075_TEMP_LO) == SUCCESS) {
-									Error_I2C = TMP1075_set_high_limit(I2Cx, pbm_table.TempSens_Heat_Addr[temp_number], PBM_T1_TMP1075_TEMP_HI);
+			if ( TMP1075_set_mode(I2Cx, pbm_table.TempSens_Heat_Addr[sensor_number], pbm_table.TMP1075_Mode) == SUCCESS) {
+				if ( TMP1075_ALERT_active_level(I2Cx, pbm_table.TempSens_Heat_Addr[sensor_number], pbm_table.TMP1075_Alert_Level) == SUCCESS) {
+					if ( TMP1075_set_mode_ALERT_pin(I2Cx, pbm_table.TempSens_Heat_Addr[sensor_number], pbm_table.TMP1075_Mode_Alert) == SUCCESS) {
+						if ( TMP1075_set_time_conversion(I2Cx, pbm_table.TempSens_Heat_Addr[sensor_number], pbm_table.TMP1075_Convr_Time) == SUCCESS) {
+							if ( TMP1075_ALERT_sensitivity(I2Cx, pbm_table.TempSens_Heat_Addr[sensor_number], pbm_table.TMP1075_Alert_Sens) == SUCCESS) {
+								if ( TMP1075_set_low_limit(I2Cx, pbm_table.TempSens_Heat_Addr[sensor_number], PBM_T1_TMP1075_TEMP_LO) == SUCCESS) {
+									Error_I2C = TMP1075_set_high_limit(I2Cx, pbm_table.TempSens_Heat_Addr[sensor_number], PBM_T1_TMP1075_TEMP_HI);
 								}
 							}
 						}
@@ -92,10 +89,10 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pbm[PBM_number].Heat[Heat].Heat_TMP1075[temp_number] = 0x7F;
-		pbm[PBM_number].Heat[Heat].Error_Heat_TMP1075[temp_number]= ERROR;
+		pbm[PBM_number].Heat[Heat_number].Heat_TMP1075[sensor_number] = 0x7F;
+		pbm[PBM_number].Heat[Heat_number].Error_Heat_TMP1075[sensor_number]= ERROR;
 	}else{
-		pbm[PBM_number].Heat[Heat].Error_Heat_TMP1075[temp_number] = SUCCESS; //No error
+		pbm[PBM_number].Heat[Heat_number].Error_Heat_TMP1075[sensor_number] = SUCCESS; //No error
 	}
 
 	if( Error_I2C != SUCCESS){
@@ -200,10 +197,10 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
   	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
     @param 	pbm - structure data for all PBM modules.
     @param 	PBM_number - select PBM (PBM_1, PBM_2, PBM_3).
-   	@param 	Heat_Branch - select Branch (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
+   	@param 	Heat_number - select number heat (PBM_T1_HEAT_1, PBM_T1_HEAT_2).
     @retval Error status
  */
-ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat) {
+ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat_number) {
 
 	_PBM_T1_table pbm_table = { 0 };
 	uint8_t i = 0;
@@ -212,7 +209,7 @@ ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 
 	SW_TMUX1209_I2C_main_PBM();
 
-	pbm_table = PBM_T1_Table(PBM_number, 0, Heat);
+	pbm_table = PBM_T1_Table(PBM_number, 0, Heat_number);
 
 	//Enable I2C MUX channel
 
@@ -276,9 +273,9 @@ ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pbm[PBM_number].Heat[Heat].Error_INA238 = ERROR;
+		pbm[PBM_number].Heat[Heat_number].Error_INA238 = ERROR;
 	}else{
-		pbm[PBM_number].Heat[Heat].Error_INA238 = SUCCESS; //No error
+		pbm[PBM_number].Heat[Heat_number].Error_INA238 = SUCCESS; //No error
 	}
 
 	if( Error_I2C != SUCCESS){

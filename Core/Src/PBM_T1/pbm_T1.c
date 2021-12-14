@@ -1,7 +1,5 @@
 #include "stm32l4xx_ll_gpio.h"
 #include "SetupPeriph.h"
-#include "TCA9548.h"
-#include "MAX17320.h"
 #include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_struct.h"
 #include "PBM_T1/pbm_T1_control.h"
@@ -18,33 +16,33 @@ ErrorStatus PBM_T1_Get_Telemetry(_PBM_T1 pbm[]) {
 	uint8_t PBM_Number = 0;
 	uint8_t Low_Energy_Flag_counter = 0;
 	int8_t Error = SUCCESS;
-	uint8_t Branch = 0, Heat = 0, TempSens = 0;
+	uint8_t Branch_number = 0, Heat_number = 0, Heat_TempSens_number = 0;
 
 	for (PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++) {
 
-		for(Branch = 0; Branch < PBM_T1_BRANCH_QUANTITY; Branch++){
+		for( Branch_number = 0; Branch_number < PBM_T1_BRANCH_QUANTITY; Branch_number++){
 
-			Error = Error + PBM_T1_ReadBatteryTelemetry(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch);
-			Error = Error + PBM_T1_CheckChargeDischargeState(pbm, PBM_Number, Branch);
-			Error = Error + PBM_T1_ReadStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch);
-			Error = Error + PBM_T1_CheckResetPreqChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch);
+			Error = Error + PBM_T1_ReadBatteryTelemetry(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number);
+			Error = Error + PBM_T1_CheckChargeDischargeState(pbm, PBM_Number, Branch_number);
+			Error = Error + PBM_T1_ReadStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number);
+			Error = Error + PBM_T1_CheckResetPreqChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number);
 
 		}
 
-		for(Heat = 0; Heat < PBM_T1_HEAT_QUANTITY; Heat++){
+		for( Heat_number = 0; Heat_number < PBM_T1_HEAT_QUANTITY; Heat_number++){
 
-			for(TempSens = 0; TempSens < PBM_T1_HEAT_TEMPSENS_QUANTITY; TempSens++){
-				Error = Error + PBM_T1_ReadHeatTempSensors(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat, TempSens);
+			for( Heat_TempSens_number = 0; Heat_TempSens_number < PBM_T1_HEAT_TEMPSENS_QUANTITY; Heat_TempSens_number++){
+				Error = Error + PBM_T1_ReadHeatTempSensors(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, Heat_TempSens_number);
 			}
-			Error = Error + PBM_T1_ReadStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
-			Error = Error + PBM_T1_ReadHeatPwrMon(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
-			Error = Error + PBM_T1_CheckStateCmdHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat);
-			Error = Error + PBM_T1_CheckOverHeat(pbm, PBM_Number, Heat);
+			Error = Error + PBM_T1_ReadStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number);
+			Error = Error + PBM_T1_ReadHeatPwrMon(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number);
+			Error = Error + PBM_T1_CheckStateCmdHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number);
+			Error = Error + PBM_T1_CheckOverHeat(pbm, PBM_Number, Heat_number);
 		}
 
 
-		/*for(TempSens = 0; TempSens < PBM_T1_TEMPSENS_QUANTITY; TempSens++){
-        	Error = Error + PBM_T1_ReadTempSensors(PBM_T1_I2C_PORT, pbm, PBM_Number, TempSens);
+		/*for(TempSens_number = 0; TempSens_number < PBM_T1_TEMPSENS_QUANTITY; TempSens_number++){
+        	Error = Error + PBM_T1_ReadTempSensors(PBM_T1_I2C_PORT, pbm, PBM_Number, TempSens_number);
         }*/
 
 		PBM_T1_CalcTotalCapacity(pbm, PBM_Number);

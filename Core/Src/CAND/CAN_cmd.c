@@ -958,6 +958,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Current_Aver_10s             =  (uint16_t)( Filtr2Step(CHF_I5, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Current ) );
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current_Aver_10s             =  (uint16_t)( Filtr2Step(CHF_I6, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current ) );
 
+	//TODO Заполнить поля
 	//uint16_t CAN_TMIx_PMM_Own_Current_Consumption;                  //+68,69  |  const = 0x                   |   Ток потребления модуля PMM
 	//uint16_t CAN_TMIx_PMM_Voltage;                                  //+70,71  |  const = 0x                   |   Напряжение питания модуля PMM 3.3V
 
@@ -968,22 +969,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	    CAN_IVar5_telemetry.CAN_TMIx_EPS_Main_Bus_Voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val;
 	}
 
-	CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PBM_Char_Dischar_Power 		 =  0x0000;
-	// change!!!!!! Morsin A.A.
-	for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
-		for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-			CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PBM_Char_Dischar_Power    =  CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PBM_Char_Dischar_Power +
-																					(int16_t) (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Power);
-		}
-	}
-
-	CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power 		 =  0x0000;
-	for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
-	    CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power      =  CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power + eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val;
-	}
-
-
-	//TODO добавить потрбление нагревателей
+	//TODO  к полной мощности приплюсовать потребление нагревателей.
 	//***
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power            =  0x0000;
 	for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
@@ -993,18 +979,6 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power            =  CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power + eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Power_val +
 	                                                                        eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Power_val + eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val;
 	//---
-
-	// change!!!!!! Morsin A.A.
-	CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_Battery_Level_mAh	 		 = 0x0000;
-	for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
-	    CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_Battery_Level_mAh		 = CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_Battery_Level_mAh + (uint16_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalAbcoluteCapacity_mAh);
-	}
-
-	CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_Battery_Level_percent 		 = 0x0000;
-	for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
-	    CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_Battery_Level_percent     = CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_Battery_Level_percent + (uint8_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalRelativeCapacity_Perc / PBM_T1_QUANTITY);
-	}
-
 
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_Deploy_Status                       = (eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1) | (eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 << 1) |
 	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp << 2) | (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp << 3) |
@@ -1088,11 +1062,17 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMI0_Reserved[0]                             = 0x00;
 
     // -------------------  ТМИ 1  ------------------ //
+    //PAM Module
     CAN_IVar5_telemetry.CAN_TMI1_version                                 = 0x0002;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_PWR_Ch_State_BitMask                = (eps_p.eps_pam_ptr->State_DC_DC) | (eps_p.eps_pam_ptr->State_LDO << 1);
 
     for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++, move_bit_pos ++ ){
         CAN_IVar5_telemetry.CAN_TMIx_PAM_PWR_Ch_State_BitMask  = CAN_IVar5_telemetry.CAN_TMIx_PAM_PWR_Ch_State_BitMask  | ( eps_p.eps_pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out << move_bit_pos );
+    }
+
+    CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power 		 =  0x0000;
+    for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
+        CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power      =  CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power + eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val;
     }
 
     CAN_IVar5_telemetry.CAN_TMIx_PAM_PWR_PG_BitMask                      = (eps_p.eps_pam_ptr->PG_DC_DC) | (eps_p.eps_pam_ptr->PG_LDO << 1);
@@ -1221,9 +1201,33 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value, PAM_SP6_temp_sens_quantity );
 
     // -------------------  ТМИ 2  ------------------ //
+    // PBM part1 //
 
 
-    // PBM //
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power 		 =  0x0000;
+    for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
+        for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+            CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power    =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power +
+                                                                                    (int16_t) (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Power);
+        }
+    }
+
+    //TODO добавить потрбление нагревателей
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh	 		 = 0x0000;
+    for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
+        CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh		 = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh + (uint16_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalAbcoluteCapacity_mAh);
+    }
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent 		 = 0x0000;
+    for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
+        CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent     = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent + (uint8_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalRelativeCapacity_Perc / PBM_T1_QUANTITY);
+    }
+
+
+    // -------------------  ТМИ 3 ------------------ //
+    // PBM part2 //
+
     /*
     uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;           //+ |  const = 0x                   |
     uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_Status_BitMask;           //+ |  const = 0x                   |
@@ -1646,10 +1650,10 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     // -------------------  Beacon  ------------------ //
     CAN_IVar5_telemetry.CAN_Beacon_PMM_Switch_Active_CPU                    = CAN_IVar5_telemetry.CAN_TMIx_PMM_Switch_Active_CPU;
     CAN_IVar5_telemetry.CAN_Beacon_EPS_Main_Bus_Voltage                     = CAN_IVar5_telemetry.CAN_TMIx_EPS_Main_Bus_Voltage;
-    CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_PBM_Char_Dischar_Power         = CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PBM_Char_Dischar_Power;
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_PBM_Char_Dischar_Power         = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power;
     CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_PAM_Generation_Power           = CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power;
     CAN_IVar5_telemetry.CAN_Beacon_EPS_CubeSat_Total_Cons_Power             = CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power;
-    CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_Battery_Level_mAh              = CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_Battery_Level_mAh;
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_Battery_Level_mAh              = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh;
     CAN_IVar5_telemetry.CAN_Beacon_PMM_Temp_Sensor                          = CAN_IVar5_telemetry.CAN_TMIx_PMM_Temp_Sensor;
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch1_Median_Temp                    = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Median_Temp;
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch2_Median_Temp                    = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Median_Temp;
