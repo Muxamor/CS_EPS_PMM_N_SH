@@ -562,7 +562,7 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 				continue;
 			}
 
-			Error = MAX17320_Read_Balancing_Reg (I2Cx, &Struct);
+			Error = MAX17320_Read_Balancing_Reg (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
 			if (Error != SUCCESS) {
 				Error_count++;
 				continue;
@@ -614,11 +614,31 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 		pbm[PBM_number].Branch[Branch_number].OCCP = Struct.OCCP;
 		pbm[PBM_number].Branch[Branch_number].ODCP = Struct.ODCP;
 		pbm[PBM_number].Branch[Branch_number].PreqF = Struct.PreqF;
-		pbm[PBM_number].Branch[Branch_number].BalCell1 = Struct.BalCell1;
-		pbm[PBM_number].Branch[Branch_number].BalCell2 = Struct.BalCell2;
 		pbm[PBM_number].Branch[Branch_number].LDet = Struct.LDet;
-		pbm[PBM_number].Branch[Branch_number].Voltage[1] = Struct.Cell4_mV;
-		pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+		if(PBM_T1_BRANCH_BAT_QUANTITY == 1){
+			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 2){
+			pbm[PBM_number].Branch[Branch_number].Voltage[1] = Struct.Cell4_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+			pbm[PBM_number].Branch[Branch_number].BalCell[1] = Struct.BalCell4;
+			pbm[PBM_number].Branch[Branch_number].BalCell[0] = Struct.BalCell1;
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 3){
+			pbm[PBM_number].Branch[Branch_number].Voltage[2] = Struct.Cell4_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[1] = Struct.Cell3_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+			pbm[PBM_number].Branch[Branch_number].BalCell[2] = Struct.BalCell4;
+			pbm[PBM_number].Branch[Branch_number].BalCell[1] = Struct.BalCell3;
+			pbm[PBM_number].Branch[Branch_number].BalCell[0] = Struct.BalCell1;
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 4){
+			pbm[PBM_number].Branch[Branch_number].Voltage[3] = Struct.Cell4_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[2] = Struct.Cell2_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[1] = Struct.Cell3_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+			pbm[PBM_number].Branch[Branch_number].BalCell[3] = Struct.BalCell4;
+			pbm[PBM_number].Branch[Branch_number].BalCell[2] = Struct.BalCell2;
+			pbm[PBM_number].Branch[Branch_number].BalCell[1] = Struct.BalCell3;
+			pbm[PBM_number].Branch[Branch_number].BalCell[0] = Struct.BalCell1;
+		}
 		pbm[PBM_number].Branch[Branch_number].MaxVCELL = Struct.MaxVCELL_mV;
 		pbm[PBM_number].Branch[Branch_number].MinVCELL = Struct.MinVCELL_mV;
 		pbm[PBM_number].Branch[Branch_number].Current = Struct.Curr_mA;
@@ -730,23 +750,6 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 				LL_mDelay(PBM_T1_i2c_delay_att_conn);
 			}
 		}
-
-		if (Error == SUCCESS) {
-			if ( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD == data8 ) {
-				pbm[PBM_number].Heat[Heat_number].Error_Heat = SUCCESS;
-			} else {
-				Error_count = Error_count + 1;
-				pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
-			}
-			pbm[PBM_number].Error_PCA9534 = SUCCESS;
-		} else {
-			Error_count = Error_count + 1;
-			pbm[PBM_number].Error_PCA9534 = ERROR;
-			pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-		}
 	}
 
 
@@ -765,6 +768,23 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 
 	}else{
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
+	}
+
+	if (Error == SUCCESS) {
+		if ( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD == data8 ) {
+			pbm[PBM_number].Heat[Heat_number].Error_Heat = SUCCESS;
+		} else {
+			Error_count = Error_count + 1;
+			pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
+		}
+		pbm[PBM_number].Error_PCA9534 = SUCCESS;
+	} else {
+		Error_count = Error_count + 1;
+		pbm[PBM_number].Error_PCA9534 = ERROR;
+		pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 	}
 
 	if (Error_count != SUCCESS) {
@@ -837,21 +857,6 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 				LL_mDelay(PBM_T1_i2c_delay_att_conn);
 			}
 		}
-
-		if (Error == SUCCESS) {
-			if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == data8 ) {
-				pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = SUCCESS;
-			} else {
-				pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
-			}
-			pbm[PBM_number].Error_PCA9534 = SUCCESS;
-		} else {
-			pbm[PBM_number].Error_PCA9534 = ERROR;
-			pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-		}
 	}
 
 	//Disable I2C MUX channel.
@@ -869,6 +874,21 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	}else{
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
+	}
+
+	if (Error == SUCCESS) {
+		if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == data8 ) {
+			pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = SUCCESS;
+		} else {
+			pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
+		}
+		pbm[PBM_number].Error_PCA9534 = SUCCESS;
+	} else {
+		pbm[PBM_number].Error_PCA9534 = ERROR;
+		pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 	}
 
 	if (Error != SUCCESS) {
@@ -929,23 +949,6 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 				count++;
 			}
 		}
-
-		if (Error == SUCCESS) {
-			if ( pbm[PBM_number].Branch[Branch_number].ChgControlFlag == State) {
-				pbm[PBM_number].Branch[Branch_number].Error_Charge = SUCCESS;
-			} else {
-				Error_count = Error_count + 1;
-				pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
-			}
-			pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = SUCCESS;
-		} else {
-			Error_count = Error_count + 1;
-			pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = ERROR;
-			pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-		}
 	}
 
 	//Disable I2C MUX channel.
@@ -962,6 +965,23 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 		pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
 	}else{
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
+	}
+
+	if (Error == SUCCESS) {
+		if ( pbm[PBM_number].Branch[Branch_number].ChgControlFlag == State) {
+			pbm[PBM_number].Branch[Branch_number].Error_Charge = SUCCESS;
+		} else {
+			Error_count = Error_count + 1;
+			pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
+		}
+		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = SUCCESS;
+	} else {
+		Error_count = Error_count + 1;
+		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = ERROR;
+		pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 	}
 
 	if (Error_count != SUCCESS) {
@@ -1021,23 +1041,6 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 				count++;
 			}
 		}
-
-		if (Error == SUCCESS) {
-			if ( pbm[PBM_number].Branch[Branch_number].DchgControlFlag == State) {
-				pbm[PBM_number].Branch[Branch_number].Error_Discharge = SUCCESS;
-			} else {
-				pbm[PBM_number].Branch[Branch_number].Error_Discharge = ERROR;
-			}
-			pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = SUCCESS;
-		} else {
-			Error_count = Error_count + 1;
-			pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = ERROR;
-			pbm[PBM_number].Branch[Branch_number].Error_Discharge = ERROR;
-
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-		}
 	}
 
 	//Disable I2C MUX channel.
@@ -1054,6 +1057,23 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 		pbm[PBM_number].Branch[Branch_number].Error_Discharge = ERROR;
 	}else{
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
+	}
+
+	if (Error == SUCCESS) {
+		if ( pbm[PBM_number].Branch[Branch_number].DchgControlFlag == State) {
+			pbm[PBM_number].Branch[Branch_number].Error_Discharge = SUCCESS;
+		} else {
+			pbm[PBM_number].Branch[Branch_number].Error_Discharge = ERROR;
+		}
+		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = SUCCESS;
+	} else {
+		Error_count = Error_count + 1;
+		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = ERROR;
+		pbm[PBM_number].Branch[Branch_number].Error_Discharge = ERROR;
+
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 	}
 
 	if (Error != SUCCESS) {
@@ -1171,9 +1191,28 @@ ErrorStatus PBM_T1_CorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 
 	if (Error_i2c == SUCCESS ){
 		Error_i2c = MAX17320_Read_Br_Voltage_mV (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
-		pbm[PBM_number].Branch[Branch_number].Voltage[1] = Struct.Cell4_mV;
-		pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
-		Voltage = ((float) (pbm[PBM_number].Branch[Branch_number].Voltage[0] + pbm[PBM_number].Branch[Branch_number].Voltage[1])) / 2.0f;
+		if(PBM_T1_BRANCH_BAT_QUANTITY == 1){
+			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+			Voltage = (float) (pbm[PBM_number].Branch[Branch_number].Voltage[0]);
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 2){
+			pbm[PBM_number].Branch[Branch_number].Voltage[1] = Struct.Cell4_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+			Voltage = ((float) (pbm[PBM_number].Branch[Branch_number].Voltage[0] + pbm[PBM_number].Branch[Branch_number].Voltage[1])) / 2.0f;
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 3){
+			pbm[PBM_number].Branch[Branch_number].Voltage[2] = Struct.Cell4_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[1] = Struct.Cell2_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+			Voltage = ((float) (pbm[PBM_number].Branch[Branch_number].Voltage[0] + pbm[PBM_number].Branch[Branch_number].Voltage[1] +
+					pbm[PBM_number].Branch[Branch_number].Voltage[2])) / 3.0f;
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 4){
+			pbm[PBM_number].Branch[Branch_number].Voltage[3] = Struct.Cell4_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[2] = Struct.Cell3_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[1] = Struct.Cell2_mV;
+			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
+			Voltage = ((float) (pbm[PBM_number].Branch[Branch_number].Voltage[0] + pbm[PBM_number].Branch[Branch_number].Voltage[1] +
+								pbm[PBM_number].Branch[Branch_number].Voltage[2] + pbm[PBM_number].Branch[Branch_number].Voltage[3])) / 4.0f;
+		}
+
 		Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
 		AbsoluteCapacity = (uint16_t) ((Voltage * Max_cap) / 100);
 		Error_i2c = Error_i2c + MAX17320_WriteAccmCharge(I2Cx, AbsoluteCapacity, PBM_T1_MAX17320_R_SENSE);
@@ -1235,7 +1274,17 @@ void PBM_T1_CheckLowLevelEnergy(_PBM_T1 pbm[], uint8_t PBM_number) {
 
 	for (Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
 
-		Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1];
+		if(PBM_T1_BRANCH_BAT_QUANTITY == 1){
+			Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0];
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 2){
+			Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1];
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 3){
+			Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1] +
+					pbm[PBM_number].Branch[Branch_Number].Voltage[2];
+		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 4){
+			Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1] +
+					pbm[PBM_number].Branch[Branch_Number].Voltage[2] + pbm[PBM_number].Branch[Branch_Number].Voltage[3];
+		}
 
 		if ((Voltage_Branch <= PBM_T1_LOW_ENERGY_EDGE) && (pbm[PBM_number].Branch[Branch_Number].Error_MAX17320 == SUCCESS) &&
 				(pbm[PBM_number].Branch[Branch_Number].DchgControlFlag == ENABLE)) {
