@@ -570,7 +570,7 @@ typedef struct // The Battery Branch Data
 	uint8_t BalCell3 :1;	// Flag balancing cell3.
 	uint8_t BalCell4 :1;	// Flag balancing cell4.
 	uint8_t LDet :1; 		// Leakage Detection Fault. This bit is set when a leakage detection fault has been detected.
-	uint8_t  :1;
+	uint8_t  :3;
 
 	uint16_t Cell1_Reg; 	// Cell1 Register. Each update cycle, the cell voltage measurement for each cell is placed in  Cell1 register.
 	uint16_t Cell2_Reg; 	// Cell2 Register. Each update cycle, the cell voltage measurement for each cell is placed in  Cell2 register.
