@@ -290,14 +290,26 @@ ErrorStatus MAX17320_Read_HistoryProtStatusReg (I2C_TypeDef *I2Cx, MAX17320_RegD
  * @brief  Read Branch Balancing Registers (1F5h). This registers contains a Balancing data.
  * @param  I2Cx - Port I2C
  * @param  Struct - Returned struct with status data
+ * @param  Battery_number - number of battery in branch.
  * @retval 0 - SUCCESS, -1 - ERROR
  */
-ErrorStatus MAX17320_Read_Balancing (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct) {
+ErrorStatus MAX17320_Read_Balancing (I2C_TypeDef *I2Cx, MAX17320_RegData *Struct, uint8_t Battery_number) {
 
 	uint16_t Data = 0;
 	if (I2C_Read_MAX17320(I2Cx, 0x16, 0xF5, &Data) == 0) {
-		Struct->BalCell1 = (Data & 0x0080) >> 7;
-		Struct->BalCell2 = (Data & 0x0200) >> 9;
+		if(Battery_number == 2){
+			Struct->BalCell1 = (Data & 0x0080) >> 7;
+			Struct->BalCell4 = (Data & 0x0200) >> 9;
+		} else if(Battery_number == 3){
+			Struct->BalCell1 = (Data & 0x0080) >> 7;
+			Struct->BalCell3 = (((Data & 0x0080) >> 7) & ((Data & 0x0100) >> 8));
+			Struct->BalCell4 = (Data & 0x0200) >> 9;
+		} else if(Battery_number == 4){
+			Struct->BalCell1 = (Data & 0x0080) >> 7;
+			Struct->BalCell2 = (Data & 0x0100) >> 8;
+			Struct->BalCell3 = (((Data & 0x0080) >> 7) & ((Data & 0x0100) >> 8));
+			Struct->BalCell4 = (Data & 0x0200) >> 9;
+		}
 
 		return SUCCESS;
 	} else {
@@ -1825,14 +1837,26 @@ ErrorStatus MAX17320_Read_Br_HistoryProtStatus_Reg (I2C_TypeDef *I2Cx, MAX17320_
  * @brief  Read Branch Balancing Registers (1F5h). This registers contains a Balancing data.
  * @param  I2Cx - Port I2C
  * @param  Struct - Returned struct with status data
+ * @param  Battery_number - number of battery in branch.
  * @retval 0 - SUCCESS, -1 - ERROR
  */
-ErrorStatus MAX17320_Read_Balancing_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct) {
+ErrorStatus MAX17320_Read_Balancing_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Battery_number) {
 
 	uint16_t Data = 0;
 	if (I2C_Read_MAX17320(I2Cx, 0x16, 0xF5, &Data) == 0) {
-		Struct->BalCell1 = (Data & 0x0080) >> 7;
-		Struct->BalCell2 = (Data & 0x0200) >> 9;
+		if(Battery_number == 2){
+			Struct->BalCell1 = (Data & 0x0080) >> 7;
+			Struct->BalCell4 = (Data & 0x0200) >> 9;
+		} else if(Battery_number == 3){
+			Struct->BalCell1 = (Data & 0x0080) >> 7;
+			Struct->BalCell3 = (((Data & 0x0080) >> 7) & ((Data & 0x0100) >> 8));
+			Struct->BalCell4 = (Data & 0x0200) >> 9;
+		} else if(Battery_number == 4){
+			Struct->BalCell1 = (Data & 0x0080) >> 7;
+			Struct->BalCell2 = (Data & 0x0100) >> 8;
+			Struct->BalCell3 = (((Data & 0x0080) >> 7) & ((Data & 0x0100) >> 8));
+			Struct->BalCell4 = (Data & 0x0200) >> 9;
+		}
 
 		return SUCCESS;
 	} else {
@@ -1912,18 +1936,18 @@ ErrorStatus MAX17320_Read_Br_Voltage_mV (I2C_TypeDef *I2Cx, MAX17320_BranchData 
 	Data = 0;
 	if ((ConfigBattBr == MAX17320_3S_batt) || (ConfigBattBr == MAX17320_4S_batt)) {
 		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD6, &Data);
-		Struct->Cell2_mV = (uint16_t) (Data * MAX17320_LSB_mV);
+		Struct->Cell3_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 		Data = 0;
 		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD2, &Data);
-		Struct->AvgCell2_mV = (uint16_t) (Data * MAX17320_LSB_mV);
+		Struct->AvgCell3_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 		Data = 0;
 	}
 	if (ConfigBattBr == MAX17320_4S_batt) {
 		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD5, &Data);
-		Struct->Cell3_mV = (uint16_t) (Data * MAX17320_LSB_mV);
+		Struct->Cell2_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 		Data = 0;
 		Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD1, &Data);
-		Struct->AvgCell3_mV = (uint16_t) (Data * MAX17320_LSB_mV);
+		Struct->AvgCell2_mV = (uint16_t) (Data * MAX17320_LSB_mV);
 		Data = 0;
 	}
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xD7, &Data);
