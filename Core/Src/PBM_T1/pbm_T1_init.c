@@ -30,7 +30,7 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
 			Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].ChgEnableBit);
 			Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].DchgEnableBit);
 
-    		if ( pbm[PBM_Number].Branch[Branch_number].PCA9534_Emerg_Chrg == ENABLE) {
+    		if ( pbm[PBM_Number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == ENABLE) {
                 Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_ON_EMERG_CHRG);
     		} else {
                 Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_OFF_EMERG_CHRG);
@@ -96,7 +96,7 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 				Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].ChgEnableBit);
 				Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].DchgEnableBit);
 
-	    		if ( pbm[PBM_Number].Branch[Branch_number].PCA9534_Emerg_Chrg == ENABLE) {
+	    		if ( pbm[PBM_Number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == ENABLE) {
 	                Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_ON_EMERG_CHRG);
 	    		} else {
 	                Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_OFF_EMERG_CHRG);

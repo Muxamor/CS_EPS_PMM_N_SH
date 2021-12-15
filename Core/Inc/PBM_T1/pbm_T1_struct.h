@@ -26,13 +26,14 @@ typedef struct  // Structure for PBM data
 	uint16_t SC :1;
 	uint16_t PreqChrg :1;
 
-	uint16_t PCA9534_Emerg_Chrg :1; 		// PCA9534 port. Show and set state emergency charge. // Need to save in flash.
+	uint16_t Auto_Corr_Capacity_Key :1;    // Bit for enable/disable correction capacity level in auto mode.
+	uint16_t PCA9534_Emerg_Chrg_Key :1; 		// PCA9534 port. Show and set state emergency charge. // Need to save in flash.
 	uint16_t Counter_Reset_PreqF :8; 		// Counter for reset MAX17320 if exist prequal timer error.
 	uint16_t Error_Charge :1; 				// Register error charge branch.
 	uint16_t Error_Discharge :1; 			// Register error discharge branch.
 	uint16_t Error_Emerg_Chrg :1; 			// Register error emergency charge branch №1.
 	uint16_t Error_MAX17320 :1; 			// Register error MAX17320.
-	uint16_t :3; 							// Reserve.
+	uint16_t :2; 							// Reserve.
 
 	int16_t Voltage [PBM_T1_BRANCH_BAT_QUANTITY];// Register voltage of high battery (on 8.4V) in mV.
 	uint16_t MaxVCELL; 						// MaxVCELL value. Maximum channel voltage reading (20mV resolution).
@@ -50,7 +51,6 @@ typedef struct  // Structure for PBM data
 	uint8_t CycleCounter;					// Register cycle counter is an absolute count of the discharge cycles.
 	uint16_t RCell;						 	// RCell value. The register displays the calculated internal resistance of the cell or the average internal resistance.
 	uint16_t LeakCurr;						// Leakage Current value. Leakage current is an unsigned 8-bit result of leakage current from self-discharge in a cell.
-
 
 } _T1_Branch_Data;
 

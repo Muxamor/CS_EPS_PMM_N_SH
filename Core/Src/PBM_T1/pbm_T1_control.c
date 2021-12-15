@@ -248,7 +248,7 @@ ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	if (Error == SUCCESS) {
 
-		if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg == (data8)) {
+		if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == (data8)) {
 			pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = SUCCESS;
 		} else {
 			pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
@@ -809,11 +809,11 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	if (Error == SUCCESS ){
 
-		if( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg != State ){
+		if( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key != State ){
 			pbm[PBM_number].PBM_save_conf_flag = 1;
 		}
 
-		pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg = State;
+		pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key = State;
 
 		Error = ERROR_N;
 		while ((Error != SUCCESS) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
@@ -839,7 +839,7 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 		}
 
 		if (Error == SUCCESS) {
-			if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg == data8 ) {
+			if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == data8 ) {
 				pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = SUCCESS;
 			} else {
 				pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
