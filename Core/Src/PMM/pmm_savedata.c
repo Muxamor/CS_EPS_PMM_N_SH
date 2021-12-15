@@ -83,7 +83,8 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
     	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
     		fram_data_write.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].DchgEnableBit = eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit;
     		fram_data_write.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].ChgEnableBit = eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit;
-    		fram_data_write.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].StateEmergChrg = eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Key;
+    		fram_data_write.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].StateEmergChrgKey = eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Key;
+    		fram_data_write.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].AutoCorrCapacityKey = eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Key;
     	}
     	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
     		fram_data_write.FRAM_PBM_T1[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD;
@@ -230,8 +231,9 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
         	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit = fram_data_read.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].DchgEnableBit;
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit = fram_data_read.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].ChgEnableBit;
-                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Key = fram_data_read.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].StateEmergChrg;
-            }
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Key = fram_data_read.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].StateEmergChrgKey;
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Key = fram_data_read.FRAM_PBM_T1[PBM_Number].Branch[Branch_Number].AutoCorrCapacityKey;
+        	}
         	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
         		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = fram_data_read.FRAM_PBM_T1[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD;
         	}
@@ -292,6 +294,7 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
         	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableBit = ENABLE;
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit = ENABLE;
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Key = DISABLE;
         	}
         	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
         		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = ENABLE;

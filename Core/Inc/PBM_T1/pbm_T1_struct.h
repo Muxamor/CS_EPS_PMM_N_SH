@@ -13,8 +13,6 @@ typedef struct  // Structure for PBM data
 	uint16_t UVP :1; 						// Undervoltage faults.
 	uint16_t OCCP :1; 						// Overcharge current faults.
 	uint16_t ODCP :1; 						// Overdischarge current faults.
-	uint16_t BalCell1 :1;					// Flag balancing cell1.
-	uint16_t BalCell2 :1;					// Flag balancing cell2.
 	uint16_t DchgEnableBit :1; 				// Discharge Enable Bit must be set 1 to allow the ON state. // Need to save in flash.
 	uint16_t ChgEnableBit :1; 				// Charge Enable Bit must be set 1 to allow the ON state. // Need to save in flash.
 	uint16_t DchgControlFlag :1; 			// Discharge Control Flag indicates the real logic state of the DC pin driver.
@@ -25,17 +23,18 @@ typedef struct  // Structure for PBM data
 	uint16_t OD :1;
 	uint16_t SC :1;
 	uint16_t PreqChrg :1;
+	uint16_t Auto_Corr_Capacity_Key :1;    	// Bit for enable/disable correction capacity level in auto mode. // Need to save in flash.
+	uint16_t PCA9534_Emerg_Chrg_Key :1; 	// PCA9534 port. Show and set state emergency charge. // Need to save in flash.
 
-	uint16_t Auto_Corr_Capacity_Key :1;    // Bit for enable/disable correction capacity level in auto mode.
-	uint16_t PCA9534_Emerg_Chrg_Key :1; 		// PCA9534 port. Show and set state emergency charge. // Need to save in flash.
 	uint16_t Counter_Reset_PreqF :8; 		// Counter for reset MAX17320 if exist prequal timer error.
 	uint16_t Error_Charge :1; 				// Register error charge branch.
 	uint16_t Error_Discharge :1; 			// Register error discharge branch.
 	uint16_t Error_Emerg_Chrg :1; 			// Register error emergency charge branch №1.
 	uint16_t Error_MAX17320 :1; 			// Register error MAX17320.
-	uint16_t :2; 							// Reserve.
+	uint16_t :4; 							// Reserve.
 
-	int16_t Voltage [PBM_T1_BRANCH_BAT_QUANTITY];// Register voltage of high battery (on 8.4V) in mV.
+	uint16_t Voltage [PBM_T1_BRANCH_BAT_QUANTITY];// Register voltage of high battery (on 8.4V) in mV.
+	uint8_t BalCell[PBM_T1_BRANCH_BAT_QUANTITY];// Flag balancing cell.
 	uint16_t MaxVCELL; 						// MaxVCELL value. Maximum channel voltage reading (20mV resolution).
 	uint16_t MinVCELL; 						// MinVCELL value. Minimum VCell register reading (20mV resolution).
 	int16_t Current;						// Register charge/discharge current level over the preceding 351ms in mA.
