@@ -848,43 +848,43 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     }
                     break;
 
-                  /*
-                     CAN_PBM1_Emerg_Charge_Key_Branch1_offset
-                     CAN_PBM1_Emerg_Charge_Key_Branch2_offset
-                     CAN_PBM2_Emerg_Charge_Key_Branch1_offset
-                     CAN_PBM2_Emerg_Charge_Key_Branch2_offset
-                     CAN_PBM3_Emerg_Charge_Key_Branch1_offset
-                     CAN_PBM3_Emerg_Charge_Key_Branch2_offset
-                     CAN_PBM4_Emerg_Charge_Key_Branch1_offset
-                     CAN_PBM4_Emerg_Charge_Key_Branch2_offset
+                    /*
+                    CAN_PBM1_Emerg_Charge_Key_Branch1_offset
+                    CAN_PBM1_Emerg_Charge_Key_Branch2_offset
+                    CAN_PBM2_Emerg_Charge_Key_Branch1_offset
+                    CAN_PBM2_Emerg_Charge_Key_Branch2_offset
+                    CAN_PBM3_Emerg_Charge_Key_Branch1_offset
+                    CAN_PBM3_Emerg_Charge_Key_Branch2_offset
+                    CAN_PBM4_Emerg_Charge_Key_Branch1_offset
+                    CAN_PBM4_Emerg_Charge_Key_Branch2_offset
 
-                     CAN_PBM1_Corr_Charge_Level_Branch1_offset
-                     CAN_PBM1_Corr_Charge_Level_Branch2_offset
-                     CAN_PBM2_Corr_Charge_Level_Branch1_offset
-                     CAN_PBM2_Corr_Charge_Level_Branch2_offset
-                     CAN_PBM3_Corr_Charge_Level_Branch1_offset
-                     CAN_PBM3_Corr_Charge_Level_Branch2_offset
-                     CAN_PBM4_Corr_Charge_Level_Branch1_offset
-                     CAN_PBM4_Corr_Charge_Level_Branch2_offset
+                    CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset
+                    CAN_PBM1_Auto_Corr_Cap_Level_Branch2_offset
+                    CAN_PBM2_Auto_Corr_Cap_Level_Branch1_offset
+                    CAN_PBM2_Auto_Corr_Cap_Level_Branch2_offset
+                    CAN_PBM3_Auto_Corr_Cap_Level_Branch1_offset
+                    CAN_PBM3_Auto_Corr_Cap_Level_Branch2_offset
+                    CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset
+                    CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset
 
-                     CAN_PBM1_Corr_MAX_Charge_Level_Branch1_offset
-                     CAN_PBM1_Corr_MAX_Charge_Level_Branch2_offset
-                     CAN_PBM2_Corr_MAX_Charge_Level_Branch1_offset
-                     CAN_PBM2_Corr_MAX_Charge_Level_Branch2_offset
-                     CAN_PBM3_Corr_MAX_Charge_Level_Branch1_offset
-                     CAN_PBM3_Corr_MAX_Charge_Level_Branch2_offset
-                     CAN_PBM4_Corr_MAX_Charge_Level_Branch1_offset
-                     CAN_PBM4_Corr_MAX_Charge_Level_Branch2_offset
+                    CAN_PBM1_Corr_Cap_Level_Branch1_offset
+                    CAN_PBM1_Corr_Cap_Level_Branch2_offset
+                    CAN_PBM2_Corr_Cap_Level_Branch1_offset
+                    CAN_PBM2_Corr_Cap_Level_Branch2_offset
+                    CAN_PBM3_Corr_Cap_Level_Branch1_offset
+                    CAN_PBM3_Corr_Cap_Level_Branch2_offset
+                    CAN_PBM4_Corr_Cap_Level_Branch1_offset
+                    CAN_PBM4_Corr_Cap_Level_Branch2_offset
 
-                     CAN_PBM1_Reset_Branch1_offset
-                     CAN_PBM1_Reset_Branch2_offset
-                     CAN_PBM2_Reset_Branch1_offset
-                     CAN_PBM2_Reset_Branch2_offset
-                     CAN_PBM3_Reset_Branch1_offset
-                     CAN_PBM3_Reset_Branch2_offset
-                     CAN_PBM4_Reset_Branch1_offset
-                     CAN_PBM4_Reset_Branch2_offset
-                  */
+                    CAN_PBM1_Reset_Branch1_offset
+                    CAN_PBM1_Reset_Branch2_offset
+                    CAN_PBM2_Reset_Branch1_offset
+                    CAN_PBM2_Reset_Branch2_offset
+                    CAN_PBM3_Reset_Branch1_offset
+                    CAN_PBM3_Reset_Branch2_offset
+                    CAN_PBM4_Reset_Branch1_offset
+                    CAN_PBM4_Reset_Branch2_offset
+                    */
                 default:
 					break;
 			}

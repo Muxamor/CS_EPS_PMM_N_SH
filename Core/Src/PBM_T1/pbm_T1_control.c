@@ -739,7 +739,7 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 			} else {
 				Error = PCA9534_Reset_output_pin(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_Heat_CMD);
 			}
-				if (Error == SUCCESS) {
+			if (Error == SUCCESS) {
 				Error = PCA9534_conf_IO_dir_output(I2Cx, pbm_table.GPIO_Addr, pbm_table.GPIO_Pin_Heat_CMD);
 			}
 			if (Error == SUCCESS) {
@@ -770,7 +770,7 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
 	}
 
-	if (Error == SUCCESS) {
+	if (Error == SUCCESS ) {
 		if ( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD == data8 ) {
 			pbm[PBM_number].Heat[Heat_number].Error_Heat = SUCCESS;
 		} else {
@@ -891,7 +891,7 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 		#endif
 	}
 
-	if (Error != SUCCESS) {
+	if (Error != SUCCESS || Error_I2C_MUX == ERROR_N ) {
         return ERROR_N;
     }
 
@@ -922,7 +922,6 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 	pbm_table = PBM_T1_Table(PBM_number, Branch_number, 0);
 
 	//Enable I2C MUX channel
-
 	while( ( Error != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
 		Error = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 		if( Error != SUCCESS ){
@@ -933,11 +932,13 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 
 	Error_I2C_MUX = Error;
 
+	if( pbm[PBM_number].Branch[Branch_number].ChgEnableBit != State){
+	    pbm[PBM_number].Branch[Branch_number].ChgEnableBit = State;
+	    pbm[PBM_number].PBM_save_conf_flag = 1;
+	}
+
 	if (Error == SUCCESS ){
-		if( pbm[PBM_number].Branch[Branch_number].ChgEnableBit != State){
-			pbm[PBM_number].PBM_save_conf_flag = 1;
-		}
-		pbm[PBM_number].Branch[Branch_number].ChgEnableBit = State;
+
 		Error = ERROR_N;
 		while ((Error != SUCCESS) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
 			Error = MAX17320_Write_ON_OFF_CHRG_FET(I2Cx, State);
@@ -1025,11 +1026,14 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 
 	Error_I2C_MUX = Error;
 
+	if( pbm[PBM_number].Branch[Branch_number].DchgEnableBit != State){
+	    pbm[PBM_number].Branch[Branch_number].DchgEnableBit = State;
+	    pbm[PBM_number].PBM_save_conf_flag = 1;
+	}
+
+
 	if (Error == SUCCESS ){
-		if( pbm[PBM_number].Branch[Branch_number].DchgEnableBit != State){
-			pbm[PBM_number].PBM_save_conf_flag = 1;
-		}
-		pbm[PBM_number].Branch[Branch_number].DchgEnableBit = State;
+
 		Error = ERROR_N;
 		while ((Error != 0) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
 			Error = MAX17320_Write_ON_OFF_DCHRG_FET(I2Cx, State);
