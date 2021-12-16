@@ -97,28 +97,36 @@ extern "C" {
 #define CAN_PBM2_Emerg_Charge_Key_Branch1_offset 350
 #define CAN_PBM2_Emerg_Charge_Key_Branch2_offset 351
 #define CAN_PBM3_Emerg_Charge_Key_Branch1_offset 352
-
 #define CAN_PBM3_Emerg_Charge_Key_Branch2_offset 353
 #define CAN_PBM4_Emerg_Charge_Key_Branch1_offset 354
 #define CAN_PBM4_Emerg_Charge_Key_Branch2_offset 355
 
-#define CAN_PBM1_Corr_Charge_Level_Branch1_offset 364
-#define CAN_PBM1_Corr_Charge_Level_Branch2_offset 365
-#define CAN_PBM2_Corr_Charge_Level_Branch1_offset 366
-#define CAN_PBM2_Corr_Charge_Level_Branch2_offset 367
-#define CAN_PBM3_Corr_Charge_Level_Branch1_offset 368
-#define CAN_PBM3_Corr_Charge_Level_Branch2_offset 369
-#define CAN_PBM4_Corr_Charge_Level_Branch1_offset 370
-#define CAN_PBM4_Corr_Charge_Level_Branch2_offset 371
+#define CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset 364
+#define CAN_PBM1_Auto_Corr_Cap_Level_Branch2_offset 365
+#define CAN_PBM2_Auto_Corr_Cap_Level_Branch1_offset 366
+#define CAN_PBM2_Auto_Corr_Cap_Level_Branch2_offset 367
+#define CAN_PBM3_Auto_Corr_Cap_Level_Branch1_offset 368
+#define CAN_PBM3_Auto_Corr_Cap_Level_Branch2_offset 369
+#define CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset 370
+#define CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset 371
 
-#define CAN_PBM1_Reset_Branch1_offset 380
-#define CAN_PBM1_Reset_Branch2_offset 381
-#define CAN_PBM2_Reset_Branch1_offset 382
-#define CAN_PBM2_Reset_Branch2_offset 383
-#define CAN_PBM3_Reset_Branch1_offset 384
-#define CAN_PBM3_Reset_Branch2_offset 385
-#define CAN_PBM4_Reset_Branch1_offset 386
-#define CAN_PBM4_Reset_Branch2_offset 387
+#define CAN_PBM1_Corr_Cap_Level_Branch1_offset 364
+#define CAN_PBM1_Corr_Cap_Level_Branch2_offset 365
+#define CAN_PBM2_Corr_Cap_Level_Branch1_offset 366
+#define CAN_PBM2_Corr_Cap_Level_Branch2_offset 367
+#define CAN_PBM3_Corr_Cap_Level_Branch1_offset 368
+#define CAN_PBM3_Corr_Cap_Level_Branch2_offset 369
+#define CAN_PBM4_Corr_Cap_Level_Branch1_offset 370
+#define CAN_PBM4_Corr_Cap_Level_Branch2_offset 371
+
+#define CAN_PBM1_Reset_Branch1_offset 396
+#define CAN_PBM1_Reset_Branch2_offset 397
+#define CAN_PBM2_Reset_Branch1_offset 398
+#define CAN_PBM2_Reset_Branch2_offset 399
+#define CAN_PBM3_Reset_Branch1_offset 400
+#define CAN_PBM3_Reset_Branch2_offset 401
+#define CAN_PBM4_Reset_Branch1_offset 402
+#define CAN_PBM4_Reset_Branch2_offset 403
 
 
 
@@ -532,39 +540,59 @@ struct CAN_IVar4 {
     uint8_t CAN_Comd_Reserved_362;                  //+362          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_363;                  //+363          Командный регистр зарезервирован
 
-    uint8_t CAN_PBM1_Corr_Charge_Level_Branch1;         //+364
-    uint8_t CAN_PBM1_Corr_Charge_Level_Branch2;         //+365
-    uint8_t CAN_PBM2_Corr_Charge_Level_Branch1;         //+366
-    uint8_t CAN_PBM2_Corr_Charge_Level_Branch2;         //+367
-    uint8_t CAN_PBM3_Corr_Charge_Level_Branch1;         //+368
-    uint8_t CAN_PBM3_Corr_Charge_Level_Branch2;         //+369
-    uint8_t CAN_PBM4_Corr_Charge_Level_Branch1;         //+370
-    uint8_t CAN_PBM4_Corr_Charge_Level_Branch2;         //+371
-    uint8_t CAN_Comd_Reserved_372;                      //+372          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_373;                      //+373          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_374;                      //+374          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_375;                      //+375          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_376;                      //+376          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_377;                      //+377          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_378;                      //+378          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_379;                      //+379          Командный регистр зарезервирован
 
-    uint8_t CAN_PBM1_Reset_Branch1;                     //+380
-    uint8_t CAN_PBM1_Reset_Branch2;                     //+381
-    uint8_t CAN_PBM2_Reset_Branch1;                     //+382
-    uint8_t CAN_PBM2_Reset_Branch2;                     //+383
-    uint8_t CAN_PBM3_Reset_Branch1;                     //+384
-    uint8_t CAN_PBM3_Reset_Branch2;                     //+385
-    uint8_t CAN_PBM4_Reset_Branch1;                     //+386
-    uint8_t CAN_PBM4_Reset_Branch2;                     //+387
-    uint8_t CAN_Comd_Reserved_388;                      //+388          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_389;                      //+389          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_390;                      //+390          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_391;                      //+391          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_392;                      //+392          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_393;                      //+393          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_394;                      //+394          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_395;                      //+395          Командный регистр зарезервирован
+    uint8_t CAN_PBM1_Auto_Corr_Cap_Level_Branch1;   //+364
+    uint8_t CAN_PBM1_Auto_Corr_Cap_Level_Branch2;   //+365
+    uint8_t CAN_PBM2_Auto_Corr_Cap_Level_Branch1;   //+366
+    uint8_t CAN_PBM2_Auto_Corr_Cap_Level_Branch2;   //+367
+    uint8_t CAN_PBM3_Auto_Corr_Cap_Level_Branch1;   //+368
+    uint8_t CAN_PBM3_Auto_Corr_Cap_Level_Branch2;   //+369
+    uint8_t CAN_PBM4_Auto_Corr_Cap_Level_Branch1;   //+370
+    uint8_t CAN_PBM4_Auto_Corr_Cap_Level_Branch2;   //+371
+    uint8_t CAN_Comd_Reserved_372;                  //+372          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_373;                  //+373          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_374;                  //+374          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_375;                  //+375          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_376;                  //+376          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_377;                  //+377          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_378;                  //+378          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_379;                  //+379          Командный регистр зарезервирован
+
+
+    uint8_t CAN_PBM1_Corr_Cap_Level_Branch1;         //+380
+    uint8_t CAN_PBM1_Corr_Cap_Level_Branch2;         //+381
+    uint8_t CAN_PBM2_Corr_Cap_Level_Branch1;         //+382
+    uint8_t CAN_PBM2_Corr_Cap_Level_Branch2;         //+383
+    uint8_t CAN_PBM3_Corr_Cap_Level_Branch1;         //+384
+    uint8_t CAN_PBM3_Corr_Cap_Level_Branch2;         //+385
+    uint8_t CAN_PBM4_Corr_Cap_Level_Branch1;         //+386
+    uint8_t CAN_PBM4_Corr_Cap_Level_Branch2;         //+387
+    uint8_t CAN_Comd_Reserved_388;                   //+388          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_389;                   //+389          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_390;                   //+390          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_391;                   //+391          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_392;                   //+392          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_393;                   //+393          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_394;                   //+394          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_395;                   //+395          Командный регистр зарезервирован
+
+
+    uint8_t CAN_PBM1_Reset_Branch1;                  //+396
+    uint8_t CAN_PBM1_Reset_Branch2;                  //+397
+    uint8_t CAN_PBM2_Reset_Branch1;                  //+398
+    uint8_t CAN_PBM2_Reset_Branch2;                  //+399
+    uint8_t CAN_PBM3_Reset_Branch1;                  //+400
+    uint8_t CAN_PBM3_Reset_Branch2;                  //+401
+    uint8_t CAN_PBM4_Reset_Branch1;                  //+402
+    uint8_t CAN_PBM4_Reset_Branch2;                  //+403
+    uint8_t CAN_Comd_Reserved_404;                   //+404          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_405;                   //+405          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_406;                   //+406          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_407;                   //+407          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_408;                   //+408          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_409;                   //+409          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_410;                   //+410          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_411;                   //+411          Командный регистр зарезервирован
 
 };
 
@@ -747,6 +775,7 @@ struct CAN_IVar5{
     uint8_t CAN_TMIx_PBM_Thermostat_ComReg_BitMask;                 //+ |  const = 0x                   | Команда на включение Термостат
     uint8_t CAN_TMIx_PBM_Heating_Element_State_BitMask;             //+ |  const = 0x                       | Текущее состояние Термостата
     uint8_t CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask;            //+ |  const = 0x                   | Ключи аварийной зарядки
+    uint8_t CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask;            //+ |  const = 0x                   | Ключи аварийной зарядки
     int16_t CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power;              //+  |  const = 0x                   |   Полная мощность зарядки/разрядки PBM
     uint16_t CAN_TMIx_PBM_Total_Heating_Elements_Power;			    //+    |  const = 0xD               |   Полный уровень заряда АБ в mAh
     uint16_t CAN_TMIx_PBM_Total_Battery_Level_mAh;			        //+    |  const = 0xD               |   Полный уровень заряда АБ в mAh
