@@ -29,6 +29,8 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 
 ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint8_t State);
 
+ErrorStatus PBM_T1_SetStateAutoCorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint8_t State);
+
 ErrorStatus PBM_T1_CheckOverHeat(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat_number);
 
 ErrorStatus PBM_T1_CheckChargeDischargeState(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number);

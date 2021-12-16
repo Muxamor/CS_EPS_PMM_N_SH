@@ -64,10 +64,10 @@ ErrorStatus PBM_T1_ReadStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
-	if( Error_I2C_MUX == ERROR_N ){
+	if(Error_I2C_MUX == ERROR_N) {
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
@@ -78,20 +78,20 @@ ErrorStatus PBM_T1_ReadStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 	}
 
 	if (Error == SUCCESS) {
-
 		pbm[PBM_number].Heat[Heat_number].PCA9534_Heat_State = !(data8);
-
 		pbm[PBM_number].Error_PCA9534 = SUCCESS;
-
-		return SUCCESS;
 
 	}else{
 		pbm[PBM_number].Error_PCA9534 = ERROR;
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
+	}
+
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
 		return ERROR_N;
 	}
+    return SUCCESS;
 }
 
 /** @brief	Read state heat from PCA9534 for selected PBM.
@@ -145,7 +145,7 @@ ErrorStatus PBM_T1_CheckStateCmdHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -160,26 +160,25 @@ ErrorStatus PBM_T1_CheckStateCmdHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 	}
 
 	if (Error == SUCCESS) {
-		if ( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD == (data8)) {
+		if (pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD == (data8)) {
 			pbm[PBM_number].Heat[Heat_number].Error_Heat = SUCCESS;
 		} else {
-		    //Try update pin value
-			pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
+		   pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
 		}
-
 		pbm[PBM_number].Error_PCA9534 = SUCCESS;
-
-		return SUCCESS;
 
 	}else{
 		pbm[PBM_number].Error_PCA9534 = ERROR;
 		pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
-
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
+	}
+
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
 		return ERROR_N;
 	}
+    return SUCCESS;
 }
 
 /** @brief	Read state emergency charge from PCA9534 for selected PBM.
@@ -231,7 +230,7 @@ ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -253,19 +252,20 @@ ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 		} else {
 			pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
 		}
-
 		pbm[PBM_number].Error_PCA9534 = SUCCESS;
-		return SUCCESS;
 
 	}else{
 		pbm[PBM_number].Error_PCA9534 = ERROR;
 		pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
-
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
+	}
+
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
 		return ERROR_N;
 	}
+    return SUCCESS;
 }
 
 /** @brief	Read temperature heat TMP1075 sensor for selected PBM.
@@ -329,21 +329,20 @@ ErrorStatus PBM_T1_ReadHeatTempSensors( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 	}
 
 
-	if( Error == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+	if( Error == ERROR_N){
+		pbm[PBM_number].Heat[Heat_number].Heat_TMP1075[Sensor_number] = 0x7F;
+		pbm[PBM_number].Heat[Heat_number].Error_Heat_TMP1075[Sensor_number] = ERROR;
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pbm[PBM_number].Heat[Heat_number].Heat_TMP1075[Sensor_number] = 0x7F;
-		pbm[PBM_number].Heat[Heat_number].Error_Heat_TMP1075[Sensor_number] = ERROR;
 	}else{
 		pbm[PBM_number].Heat[Heat_number].Heat_TMP1075[Sensor_number] = data8;
 		pbm[PBM_number].Heat[Heat_number].Error_Heat_TMP1075[Sensor_number] = SUCCESS; //No error
 	}
 
-	if (Error != SUCCESS) {
-        return ERROR_N;
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+		return ERROR_N;
 	}
-
     return SUCCESS;
 }
 
@@ -408,21 +407,20 @@ ErrorStatus PBM_T1_ReadHeatTempSensors( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 	}
 
 
-	if( Error == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+	if( Error == ERROR_N){
+		pbm[PBM_number].TMP1075_Temp[temp_number] = 0x7F;
+		pbm[PBM_number].Error_TMP1075[temp_number] = ERROR;
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pbm[PBM_number].TMP1075_Temp[temp_number] = 0x7F;
-		pbm[PBM_number].Error_TMP1075[temp_number] = ERROR;
 	}else{
 		pbm[PBM_number].TMP1075_Temp[temp_number] = data8;
 		pbm[PBM_number].Error_TMP1075[temp_number] = SUCCESS; //No error
 	}
 
-	if (Error != SUCCESS) {
-        return ERROR_N;
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+		return ERROR_N;
 	}
-
     return SUCCESS;
 }*/
 
@@ -491,7 +489,7 @@ ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_
 	}
 
 
-	if( Error == ERROR_N || Error_I2C_MUX == ERROR_N ){
+	if (Error == ERROR_N){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
@@ -512,10 +510,9 @@ ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_
 		}
 	}
 
-	if (Error != SUCCESS) {
-        return ERROR_N;
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+		return ERROR_N;
 	}
-
     return SUCCESS;
 }
 
@@ -529,7 +526,6 @@ ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_
 ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number) {
 
 	int8_t Error = ERROR_N;
-	int8_t Error_count = 0;
 	uint8_t count = 0;
 	MAX17320_BranchData Struct = {0};
 	int8_t Error_I2C_MUX = ERROR_N;
@@ -555,54 +551,16 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 	if (Error == SUCCESS ){
 		Error = ERROR_N;
 		while ((Error != SUCCESS) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
-			Error_count = 0;
+
 			Error = MAX17320_Read_Br_ProtStatus_Reg (I2Cx, &Struct);
-			if (Error != SUCCESS) {
-				Error_count++;
-				continue;
-			}
+			Error = Error + MAX17320_Read_Balancing_Reg (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
+			Error = Error + MAX17320_Read_Br_Voltage_mV (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
+			Error = Error + MAX17320_Read_Br_Current_mA (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
+			Error = Error + MAX17320_Read_Br_Pwr_mW (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
+			Error = Error + MAX17320_Read_Br_Temp_Dg (I2Cx, &Struct, MAX17320_0_termistors);
+			Error = Error + MAX17320_Read_Br_GaugeOut_mAh (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
 
-			Error = MAX17320_Read_Balancing_Reg (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
-			if (Error != SUCCESS) {
-				Error_count++;
-				continue;
-			}
-
-			Error = MAX17320_Read_Br_Voltage_mV (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
-			if (Error != SUCCESS) {
-				Error_count++;
-				continue;
-			}
-
-			Error = MAX17320_Read_Br_Current_mA (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
-			if (Error != SUCCESS) {
-				Error_count++;
-				continue;
-			}
-
-
-			Error = MAX17320_Read_Br_Pwr_mW (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
-			if (Error != SUCCESS) {
-				Error_count++;
-				continue;
-			}
-
-
-			Error = MAX17320_Read_Br_Temp_Dg (I2Cx, &Struct, MAX17320_0_termistors);
-			if (Error != SUCCESS) {
-				Error_count++;
-				Struct.DieTemp_Dg = 0x7F;
-				continue;
-			}
-
-
-			Error = MAX17320_Read_Br_GaugeOut_mAh (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
-			if (Error != SUCCESS) {
-				Error_count++;
-				continue;
-			}
-
-			if (Error_count != SUCCESS){
+			if (Error != SUCCESS){
 				Error = ERROR_N;
 				count++;
 				LL_mDelay(PBM_T1_i2c_delay_att_conn);
@@ -654,21 +612,11 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 		pbm[PBM_number].Branch[Branch_number].CycleCounter = Struct.Cycles_Cn;
 		pbm[PBM_number].Branch[Branch_number].RCell = Struct.RCell_mOhm;
 		pbm[PBM_number].Branch[Branch_number].LeakCurr = Struct.LeakCurr_mA;
-
-		if (Error == SUCCESS) {
-			pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = SUCCESS;
-
-		} else {
-			pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = ERROR;
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-		}
 	}
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -681,11 +629,19 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
 	}
 
-	if (Error_count != SUCCESS) {
+	if (Error == SUCCESS) {
+		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = SUCCESS;
+
+	} else {
 		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = ERROR;
-        return ERROR_N;
+		#ifdef DEBUGprintf
+			Error_Handler();
+		#endif
 	}
 
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+		return ERROR_N;
+	}
     return SUCCESS;
 }
 
@@ -700,7 +656,6 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat_number, uint8_t State) {
 
 	int8_t Error = ERROR_N;
-	int8_t Error_count = 0;
 	uint8_t data8 = 0;
 	uint8_t count = 0;
 	int8_t Error_I2C_MUX = ERROR_N;
@@ -723,13 +678,12 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 
 	Error_I2C_MUX = Error;
 
-	if (Error == SUCCESS ){
-
-		if( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD != State ){
-			pbm[PBM_number].PBM_save_conf_flag = 1;
-		}
-
+	if( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD != State ){
 		pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD = State;
+		pbm[PBM_number].PBM_save_conf_flag = 1;
+	}
+
+	if (Error == SUCCESS ){
 
 		Error = ERROR_N;
 		while ((Error != SUCCESS) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
@@ -755,7 +709,7 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -774,12 +728,11 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 		if ( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD == data8 ) {
 			pbm[PBM_number].Heat[Heat_number].Error_Heat = SUCCESS;
 		} else {
-			Error_count = Error_count + 1;
 			pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
 		}
 		pbm[PBM_number].Error_PCA9534 = SUCCESS;
+
 	} else {
-		Error_count = Error_count + 1;
 		pbm[PBM_number].Error_PCA9534 = ERROR;
 		pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
 		#ifdef DEBUGprintf
@@ -787,10 +740,9 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 		#endif
 	}
 
-	if (Error_count != SUCCESS) {
-        return ERROR_N;
-    }
-
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+		return ERROR_N;
+	}
     return SUCCESS;
 }
 
@@ -827,13 +779,12 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	Error_I2C_MUX = Error;
 
-	if (Error == SUCCESS ){
-
-		if( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key != State ){
-			pbm[PBM_number].PBM_save_conf_flag = 1;
-		}
-
+	if( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key != State ){
 		pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key = State;
+		pbm[PBM_number].PBM_save_conf_flag = 1;
+	}
+
+	if (Error == SUCCESS ){
 
 		Error = ERROR_N;
 		while ((Error != SUCCESS) && (count < PBM_T1_I2C_ATTEMPT_CONN)) {
@@ -861,7 +812,7 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -891,10 +842,9 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 		#endif
 	}
 
-	if (Error != SUCCESS || Error_I2C_MUX == ERROR_N ) {
-        return ERROR_N;
-    }
-
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+		return ERROR_N;
+	}
     return SUCCESS;
 }
 
@@ -910,7 +860,6 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint8_t State) {
 
 	int8_t Error = ERROR_N;
-	int8_t Error_count = 0;
 	uint8_t count = 0;
 	int8_t Error_I2C_MUX = 0;
 	uint8_t i = 0;
@@ -954,7 +903,7 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -972,12 +921,10 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 		if ( pbm[PBM_number].Branch[Branch_number].ChgControlFlag == State) {
 			pbm[PBM_number].Branch[Branch_number].Error_Charge = SUCCESS;
 		} else {
-			Error_count = Error_count + 1;
 			pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
 		}
 		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = SUCCESS;
 	} else {
-		Error_count = Error_count + 1;
 		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = ERROR;
 		pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
 		#ifdef DEBUGprintf
@@ -985,10 +932,9 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 		#endif
 	}
 
-	if (Error_count != SUCCESS) {
-        return ERROR_N;
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+		return ERROR_N;
 	}
-
     return SUCCESS;
 }
 
@@ -1003,7 +949,6 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint8_t State) {
 
 	int8_t Error = ERROR_N;
-	int8_t Error_count = 0;
 	uint8_t count = 0;
 	int8_t Error_I2C_MUX = 0;
 	uint8_t i = 0;
@@ -1031,7 +976,6 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 	    pbm[PBM_number].PBM_save_conf_flag = 1;
 	}
 
-
 	if (Error == SUCCESS ){
 
 		Error = ERROR_N;
@@ -1049,7 +993,7 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -1071,7 +1015,6 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 		}
 		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = SUCCESS;
 	} else {
-		Error_count = Error_count + 1;
 		pbm[PBM_number].Branch[Branch_number].Error_MAX17320 = ERROR;
 		pbm[PBM_number].Branch[Branch_number].Error_Discharge = ERROR;
 
@@ -1080,12 +1023,37 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 		#endif
 	}
 
-	if (Error != SUCCESS) {
-        return ERROR_N;
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+		return ERROR_N;
 	}
-
     return SUCCESS;
 }
+
+/** @brief	ON/OFF auto correction capacity selected branch for selected PBM.
+  	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	pbm[] - structure data for all PBM modules.
+	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
+	@param 	Branch_number - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
+	@param 	State - select state heat (PBM_T1_ON_SHDN_CHRG or PBM_T1_OFF_SHDN_CHRG).
+	@retval 	ErrorStatus
+ */
+ErrorStatus PBM_T1_SetStateAutoCorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint8_t State) {
+
+	int8_t Error = 0;
+
+	if( pbm[PBM_number].Branch[Branch_number].Auto_Corr_Capacity_Key != State ){
+		pbm[PBM_number].Branch[Branch_number].Auto_Corr_Capacity_Key = State;
+		pbm[PBM_number].PBM_save_conf_flag = 1;
+	}
+
+	Error = PBM_T1_CorrectCapacity(I2Cx, pbm, PBM_number, Branch_number, PBM_T1_MAX_BATT_CAP);
+
+	if (Error != SUCCESS) {
+		return ERROR_N;
+	}
+    return SUCCESS;
+}
+
 
 /** @brief	Check auto heat OFF.
 	@param 	pbm[] - structure data for all PBM modules.
@@ -1123,7 +1091,6 @@ ErrorStatus PBM_T1_CheckOverHeat(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat
 	if (Error != SUCCESS) {
 		return ERROR_N;
 	}
-
     return SUCCESS;
 }
 
@@ -1135,27 +1102,26 @@ ErrorStatus PBM_T1_CheckOverHeat(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat
  */
 ErrorStatus PBM_T1_CheckChargeDischargeState(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number) {
 
-	int8_t Error_count = 0;
+	uint8_t Error = 0;
 
 	if((pbm[PBM_number].Branch[Branch_number].ChgEnableBit == pbm[PBM_number].Branch[Branch_number].ChgControlFlag) && (pbm[PBM_number].Branch[Branch_number].Error_MAX17320 == SUCCESS)){
 
 		pbm[PBM_number].Branch[Branch_number].Error_Charge = SUCCESS;
 	} else {
-		Error_count = Error_count + 1;
+		Error = Error + 1;
 		pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
 	}
 	if((pbm[PBM_number].Branch[Branch_number].DchgEnableBit == pbm[PBM_number].Branch[Branch_number].DchgControlFlag) && (pbm[PBM_number].Branch[Branch_number].Error_MAX17320 == SUCCESS)){
 
 		pbm[PBM_number].Branch[Branch_number].Error_Discharge = SUCCESS;
 	} else {
-		Error_count = Error_count + 1;
+		Error = Error + 1;
 		pbm[PBM_number].Branch[Branch_number].Error_Discharge = ERROR;
 	}
 
-	if (Error_count != SUCCESS) {
+	if (Error != SUCCESS) {
 	    return ERROR_N;
 	}
-
 	return SUCCESS;
 }
 
@@ -1171,7 +1137,7 @@ ErrorStatus PBM_T1_CorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 
 	uint16_t AbsoluteCapacity = 0;
 	float Voltage = 0;
-	int8_t Error_i2c = ERROR_N;
+	int8_t Error = ERROR_N;
 	int8_t Error_I2C_MUX = ERROR_N;
 	MAX17320_BranchData Struct = {0};
 	uint8_t i = 0;
@@ -1183,18 +1149,18 @@ ErrorStatus PBM_T1_CorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 
 	//Enable I2C MUX channel
 
-	while( ( Error_i2c != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
-		Error_i2c = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);//TCA9548_CH6 TCA9548_CH5
-		if( Error_i2c != SUCCESS ){
+	while( ( Error != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
+		Error = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);//TCA9548_CH6 TCA9548_CH5
+		if( Error != SUCCESS ){
 			i++;
 			LL_mDelay(PBM_T1_i2c_delay_att_conn);
 		}
 	}
 
-	Error_I2C_MUX = Error_i2c;
+	Error_I2C_MUX = Error;
 
-	if (Error_i2c == SUCCESS ){
-		Error_i2c = MAX17320_Read_Br_Voltage_mV (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
+	if (Error == SUCCESS ){
+		Error = MAX17320_Read_Br_Voltage_mV (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
 		if(PBM_T1_BRANCH_BAT_QUANTITY == 1){
 			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
 			Voltage = (float) (pbm[PBM_number].Branch[Branch_number].Voltage[0]);
@@ -1219,12 +1185,12 @@ ErrorStatus PBM_T1_CorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 
 		Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
 		AbsoluteCapacity = (uint16_t) ((Voltage * Max_cap) / 100);
-		Error_i2c = Error_i2c + MAX17320_WriteAccmCharge(I2Cx, AbsoluteCapacity, PBM_T1_MAX17320_R_SENSE);
+		Error = Error + MAX17320_WriteAccmCharge(I2Cx, AbsoluteCapacity, PBM_T1_MAX17320_R_SENSE);
 	}
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -1236,10 +1202,9 @@ ErrorStatus PBM_T1_CorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
 	}
 
-	if (Error_i2c != SUCCESS) {
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
 		return ERROR_N;
 	}
-
     return SUCCESS;
 }
 
@@ -1304,12 +1269,11 @@ void PBM_T1_CheckLowLevelEnergy(_PBM_T1 pbm[], uint8_t PBM_number) {
 			}
 		}
 	}
-	if (count_low_energy != 0){
 
+	if (count_low_energy != 0){
 		pbm[PBM_number].Low_Energy_Flag = 1;
 
-	} else if (count_reset_low_energy == (PBM_T1_BRANCH_QUANTITY + 1)){
-
+	} else if (count_reset_low_energy == PBM_T1_BRANCH_QUANTITY){
 		pbm[PBM_number].Low_Energy_Flag = 0;
 	}
 
@@ -1325,11 +1289,9 @@ void PBM_T1_CheckLowLevelEnergy(_PBM_T1 pbm[], uint8_t PBM_number) {
 		}
 	}
 	if (count_zero_energy != 0){
-
 		pbm[PBM_number].Zero_Energy_Flag = 1;
 
-	} else if (count_reset_zero_energy == (PBM_T1_BRANCH_QUANTITY + 1)){
-
+	} else if (count_reset_zero_energy == PBM_T1_BRANCH_QUANTITY){
 		pbm[PBM_number].Zero_Energy_Flag = 0;
 	}
 }
@@ -1342,7 +1304,7 @@ void PBM_T1_CheckLowLevelEnergy(_PBM_T1 pbm[], uint8_t PBM_number) {
 */
 ErrorStatus PBM_T1_ResetBranch(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number) {
 
-	int8_t Error_i2c = ERROR_N;
+	int8_t Error = ERROR_N;
 	int8_t Error_I2C_MUX = ERROR_N;
 	uint8_t i = 0;
 	_PBM_T1_table pbm_table = { 0 };
@@ -1353,25 +1315,25 @@ ErrorStatus PBM_T1_ResetBranch(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_numb
 
 	//Enable I2C MUX channel
 
-	while( ( Error_i2c != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
-		Error_i2c = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);//TCA9548_CH6 TCA9548_CH5
-		if( Error_i2c != SUCCESS ){
+	while( ( Error != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
+		Error = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);//TCA9548_CH6 TCA9548_CH5
+		if( Error != SUCCESS ){
 			i++;
 			LL_mDelay(PBM_T1_i2c_delay_att_conn);
 		}
 	}
 
-	Error_I2C_MUX = Error_i2c;
+	Error_I2C_MUX = Error;
 
-	if (Error_i2c == SUCCESS ){
-		Error_i2c = MAX17320_Write_FullReset (I2Cx);
+	if (Error == SUCCESS ){
+		Error = MAX17320_Write_FullReset (I2Cx);
 		LL_mDelay(200);
-		Error_i2c = Error_i2c + PBM_T1_CorrectCapacity(I2Cx, pbm, PBM_number, Branch_number, PBM_T1_MAX_BATT_CAP);
+		Error = Error + PBM_T1_CorrectCapacity(I2Cx, pbm, PBM_number, Branch_number, PBM_T1_MAX_BATT_CAP);
 	}
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -1383,10 +1345,9 @@ ErrorStatus PBM_T1_ResetBranch(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_numb
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
 	}
 
-	if (Error_i2c != SUCCESS) {
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
 		return ERROR_N;
 	}
-
     return SUCCESS;
 }
 
@@ -1398,7 +1359,7 @@ ErrorStatus PBM_T1_ResetBranch(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_numb
 */
 ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch) {
 
-	int8_t Error_i2c = ERROR_N;
+	int8_t Error = ERROR_N;
 	int8_t Error_I2C_MUX = ERROR_N;
 	uint8_t i = 0;
 	_PBM_T1_table pbm_table = { 0 };
@@ -1409,17 +1370,17 @@ ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t P
 
 	//Enable I2C MUX channel
 
-	while( ( Error_i2c != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
-		Error_i2c = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);//TCA9548_CH6 TCA9548_CH5
-		if( Error_i2c != SUCCESS ){
+	while( ( Error != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
+		Error = TCA9548_Enable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);//TCA9548_CH6 TCA9548_CH5
+		if( Error != SUCCESS ){
 			i++;
 			LL_mDelay(PBM_T1_i2c_delay_att_conn);
 		}
 	}
 
-	Error_I2C_MUX = Error_i2c;
+	Error_I2C_MUX = Error;
 
-	if (Error_i2c == SUCCESS ){
+	if (Error == SUCCESS ){
 		if ((pbm[PBM_number].Branch[Branch].Error_MAX17320 == 0) && (pbm[PBM_number].Branch[Branch].PreqF == 1) && (pbm[PBM_number].Branch[Branch].Counter_Reset_PreqF < 5 )) {
 			pbm[PBM_number].Branch[Branch].Counter_Reset_PreqF++;
 
@@ -1430,7 +1391,7 @@ ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t P
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -1442,10 +1403,9 @@ ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t P
 		pbm[PBM_number].Error_I2C_MUX = SUCCESS;
 	}
 
-	if (Error_i2c != SUCCESS) {
+	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
 		return ERROR_N;
 	}
-
     return SUCCESS;
 }
 
@@ -1462,7 +1422,7 @@ uint8_t PBM_T1_CheckSaveSetupFlag(_PBM_T1 pbm[]){
         }
     }
 
-    return 0;
+    return SUCCESS;
 }
 
 /** @brief    Clear flag to save setting.
