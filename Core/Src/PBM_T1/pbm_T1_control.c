@@ -64,7 +64,7 @@ ErrorStatus PBM_T1_ReadStateHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if(Error_I2C_MUX == ERROR_N) {
@@ -145,7 +145,7 @@ ErrorStatus PBM_T1_CheckStateCmdHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -230,7 +230,7 @@ ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -616,7 +616,7 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -709,7 +709,7 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -812,7 +812,7 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_GPIO);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -903,7 +903,7 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -993,7 +993,7 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -1030,20 +1030,28 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 }
 
 /** @brief	ON/OFF auto correction capacity selected branch for selected PBM.
+  	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	pbm[] - structure data for all PBM modules.
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).
 	@param 	Branch_number - select Branch (PBM_BRANCH_1, PBM_BRANCH_2).
 	@param 	State - select state heat (PBM_T1_ON_SHDN_CHRG or PBM_T1_OFF_SHDN_CHRG).
 	@retval 	ErrorStatus
  */
-ErrorStatus PBM_T1_SetStateAutoCorrectCapacity( _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint8_t State) {
+ErrorStatus PBM_T1_SetStateAutoCorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint8_t State) {
+
+	int8_t Error = 0;
 
 	if( pbm[PBM_number].Branch[Branch_number].Auto_Corr_Capacity_Key != State ){
 		pbm[PBM_number].Branch[Branch_number].Auto_Corr_Capacity_Key = State;
 		pbm[PBM_number].PBM_save_conf_flag = 1;
 	}
 
-	return SUCCESS;
+	Error = PBM_T1_CorrectCapacity(I2Cx, pbm, PBM_number, Branch_number, PBM_T1_MAX_BATT_CAP);
+
+	if (Error != SUCCESS) {
+		return ERROR_N;
+	}
+    return SUCCESS;
 }
 
 
@@ -1182,7 +1190,7 @@ ErrorStatus PBM_T1_CorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -1325,7 +1333,7 @@ ErrorStatus PBM_T1_ResetBranch(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t PBM_numb
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
@@ -1383,7 +1391,7 @@ ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t P
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch(PBM_T1_I2C_PORT, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
+	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Branch);
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){
