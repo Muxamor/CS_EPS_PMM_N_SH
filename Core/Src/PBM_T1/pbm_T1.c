@@ -4,6 +4,8 @@
 #include "PBM_T1/pbm_T1_struct.h"
 #include "PBM_T1/pbm_T1_control.h"
 #include "PBM_T1/pbm_T1.h"
+#include  <stdio.h>
+#include "Error_Handler.h"
 
 
 /** @brief	Read data for all PBM.
@@ -26,18 +28,36 @@ ErrorStatus PBM_T1_Get_Telemetry(_PBM_T1 pbm[]) {
 			Error = Error + PBM_T1_CheckChargeDischargeState(pbm, PBM_Number, Branch_number);
 			Error = Error + PBM_T1_ReadStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number);
 			Error = Error + PBM_T1_CheckResetPreqChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number);
-
+			if ( Error != SUCCESS){
+			    #ifdef DEBUGprintf
+			        Error_Handler();
+			        printf("Error Get Telemetry PBM number: %d, Branch number: %d \n", PBM_Number, Branch_number);
+                #endif
+			}
 		}
 
 		for( Heat_number = 0; Heat_number < PBM_T1_HEAT_QUANTITY; Heat_number++){
 
 			for( Heat_TempSens_number = 0; Heat_TempSens_number < PBM_T1_HEAT_TEMPSENS_QUANTITY; Heat_TempSens_number++){
 				Error = Error + PBM_T1_ReadHeatTempSensors(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, Heat_TempSens_number);
+				if ( Error != SUCCESS){
+			        #ifdef DEBUGprintf
+				        Error_Handler();
+				        printf("Error Get Telemetry PBM number: %d, Heat temp. sensor number: %d \n", PBM_Number, Heat_TempSens_number);
+                    #endif
+				}
 			}
 			Error = Error + PBM_T1_ReadStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number);
 			Error = Error + PBM_T1_ReadHeatPwrMon(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number);
 			Error = Error + PBM_T1_CheckStateCmdHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number);
 			Error = Error + PBM_T1_CheckOverHeat(pbm, PBM_Number, Heat_number);
+
+			if ( Error != SUCCESS){
+			    #ifdef DEBUGprintf
+			        Error_Handler();
+			        printf("Error Get Telemetry PBM number: %d, Heat number: %d \n", PBM_Number, Heat_number);
+                #endif
+			}
 		}
 
 

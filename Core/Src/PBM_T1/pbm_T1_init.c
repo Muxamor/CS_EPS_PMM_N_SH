@@ -5,6 +5,7 @@
 #include "PBM_T1/pbm_T1_init.h"
 #include "PBM_T1/pbm_T1_control.h"
 #include "Error_Handler.h"
+#include  <stdio.h>
 
 /** @brief	First Initialize selected PBM.
     @param 	pbm - structure data for all PBM modules.
@@ -38,6 +39,12 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
     		if ( pbm[PBM_Number].Branch[Branch_number].Auto_Corr_Capacity_Key == ENABLE) {
     			Error += PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_MAX_BATT_CAP);
     		}
+    		if ( Error != SUCCESS){
+			    #ifdef DEBUGprintf
+    		        Error_Handler();
+    		        printf("Error Init PBM number: %d, Branch number: %d \n", PBM_Number, Branch_number);
+                #endif
+    		}
 		}
 
         for( Heat_number = 0; Heat_number < PBM_T1_HEAT_QUANTITY; Heat_number++){
@@ -53,6 +60,12 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
            	for( Heat_TempSens_number = 0; Heat_TempSens_number < PBM_T1_HEAT_TEMPSENS_QUANTITY; Heat_TempSens_number++){
         		Error += PBM_T1_Init_Heat_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, Heat_TempSens_number);
         	}
+           	if ( Error != SUCCESS){
+			    #ifdef DEBUGprintf
+           	        Error_Handler();
+           	        printf("Error Init PBM number: %d, Heat number: %d \n", PBM_Number, Heat_number);
+                #endif
+           	}
         }
 
 		/*for(TempSens_number = 0; TempSens_number < PBM_T1_TEMPSENS_QUANTITY; TempSens_number++){
@@ -107,6 +120,12 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 	    		if ( pbm[PBM_Number].Branch[Branch_number].Auto_Corr_Capacity_Key == ENABLE) {
 	    			Error += PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_MAX_BATT_CAP);
 	    		}
+	    		if ( Error != SUCCESS){
+			    #ifdef DEBUGprintf
+	    		    Error_Handler();
+	    		    printf("Error ReInit PBM number: %d, Branch number: %d \n", PBM_Number, Branch_number);
+                #endif
+	    		}
 			}
 
 			for( Heat_number = 0; Heat_number < PBM_T1_HEAT_QUANTITY; Heat_number++){
@@ -124,6 +143,13 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 	        			Error += PBM_T1_Init_Heat_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, Heat_TempSens_number);
 	        		}
 	        	}
+	        	if ( Error != SUCCESS){
+			    #ifdef DEBUGprintf
+	        	    Error_Handler();
+	        	    printf("Error ReInit PBM number: %d, Heat number: %d \n", PBM_Number, Heat_number);
+                #endif
+	        	}
+
 	        }
 
 	        /*for(TempSens_number = 0; TempSens_number < PBM_T1_TEMPSENS_QUANTITY; TempSens_number++){
