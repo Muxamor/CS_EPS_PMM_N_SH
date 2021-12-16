@@ -75,7 +75,7 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_Heat);
 
 	//Parse error
-	if( Error_I2C_MUX == ERROR_N ){
+	if( Error_I2C_MUX  != SUCCESS ){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
@@ -85,7 +85,7 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 	}
 
 
-	if( Error == ERROR_N ){
+	if( Error != SUCCESS ){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
@@ -95,7 +95,7 @@ ErrorStatus PBM_T1_Init_Heat_TMP1075( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 		pbm[PBM_number].Heat[Heat_number].Error_Heat_TMP1075[sensor_number] = SUCCESS; //No error
 	}
 
-	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+	if ((Error != SUCCESS) || (Error_I2C_MUX != SUCCESS)) {
 		return ERROR_N;
 	}
     return SUCCESS;
@@ -251,7 +251,7 @@ ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 	TCA9548_Disable_I2C_ch(I2Cx, pbm_table.I2C_MUX_Addr, pbm_table.I2C_MUX_Ch_PwrMon);
 
 	//Parse error
-	if( Error_I2C_MUX == ERROR_N ){
+	if( Error_I2C_MUX != SUCCESS ){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
@@ -261,7 +261,7 @@ ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 	}
 
 
-	if( Error == ERROR_N ){
+	if( Error != SUCCESS ){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
@@ -270,7 +270,7 @@ ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 		pbm[PBM_number].Heat[Heat_number].Error_INA238 = SUCCESS; //No error
 	}
 
-	if ((Error != SUCCESS) || (Error_I2C_MUX == ERROR_N)) {
+	if ((Error != SUCCESS) || (Error_I2C_MUX != SUCCESS)) {
 		return ERROR_N;
 	}
     return SUCCESS;
@@ -302,7 +302,7 @@ ErrorStatus PBM_T1_Init_I2CMux(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_num
 		}
 	}
 
-	if( Error == ERROR_N ){
+	if( Error != SUCCESS ){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
