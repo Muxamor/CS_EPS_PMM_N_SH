@@ -80,7 +80,8 @@ ErrorStatus PBM_T1_Get_Telemetry(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 		} else {
 			PBM_Low_Energy_Reset_pin();
 		}
-	} else {
+
+	}else{
 
 		PBM_T1_EraseData(pbm);
 	}

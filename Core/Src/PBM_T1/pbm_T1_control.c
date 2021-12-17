@@ -642,11 +642,11 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
     return SUCCESS;
 }
 
+
 /** @brief	Erase data for all PBM.
 	@param 	pbm[] - structure data for all PBM modules.
-	@retval 	ErrorStatus
  */
-ErrorStatus PBM_T1_EraseData(_PBM_T1 pbm[]) {
+void PBM_T1_EraseData(_PBM_T1 pbm[]) {
 
 	uint8_t PBM_number = 0, Branch_number = 0, Heat_number = 0, Heat_TempSens_number = 0;
 
@@ -704,9 +704,9 @@ ErrorStatus PBM_T1_EraseData(_PBM_T1 pbm[]) {
 			}
 		}
 	}
-
-    return SUCCESS;
 }
+
+
 
 /** @brief	ON/OFF heat for selected branch for selected PBM.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
