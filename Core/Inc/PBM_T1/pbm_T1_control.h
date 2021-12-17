@@ -21,6 +21,8 @@ ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_
 
 ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number);
 
+ErrorStatus PBM_T1_EraseData(_PBM_T1 pbm[]);
+
 ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat_number, uint8_t State);
 
 ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint8_t State);
