@@ -171,7 +171,7 @@ int main(void){
             PMM_Get_Telemetry(pmm_ptr);
             PDM_Get_Telemetry(pdm_ptr);
             PAM_Get_Telemetry(pam_ptr);
-            PBM_T1_Get_Telemetry(pbm_mas); //TODO off polling if Logic power is OFF
+            PBM_T1_Get_Telemetry(pbm_mas, pmm_ptr); //TODO off polling if Logic power is OFF
 
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){

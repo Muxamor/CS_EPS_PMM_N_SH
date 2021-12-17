@@ -645,6 +645,72 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
     return SUCCESS;
 }
 
+/** @brief	Erase data for all PBM.
+	@param 	pbm[] - structure data for all PBM modules.
+	@retval 	ErrorStatus
+ */
+ErrorStatus PBM_T1_EraseData(_PBM_T1 pbm[]) {
+
+	uint8_t PBM_number = 0, Branch_number = 0, Heat_number = 0, Heat_TempSens_number = 0;
+
+	for (PBM_number = 0; PBM_number < PBM_T1_QUANTITY; PBM_number++) {
+
+		pbm[PBM_number].TotalAbcoluteCapacity_mAh = 0;
+		pbm[PBM_number].TotalRelativeCapacity_Perc = 0;
+
+		for( Branch_number = 0; Branch_number < PBM_T1_BRANCH_QUANTITY; Branch_number++){
+
+			if(PBM_T1_BRANCH_BAT_QUANTITY == 1){
+				pbm[PBM_number].Branch[Branch_number].Voltage[0] = 0;
+			} else if(PBM_T1_BRANCH_BAT_QUANTITY == 2){
+				pbm[PBM_number].Branch[Branch_number].Voltage[1] = 0;
+				pbm[PBM_number].Branch[Branch_number].Voltage[0] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[1] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[0] = 0;
+			} else if(PBM_T1_BRANCH_BAT_QUANTITY == 3){
+				pbm[PBM_number].Branch[Branch_number].Voltage[2] = 0;
+				pbm[PBM_number].Branch[Branch_number].Voltage[1] = 0;
+				pbm[PBM_number].Branch[Branch_number].Voltage[0] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[2] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[1] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[0] = 0;
+			} else if(PBM_T1_BRANCH_BAT_QUANTITY == 4){
+				pbm[PBM_number].Branch[Branch_number].Voltage[3] = 0;
+				pbm[PBM_number].Branch[Branch_number].Voltage[2] = 0;
+				pbm[PBM_number].Branch[Branch_number].Voltage[1] = 0;
+				pbm[PBM_number].Branch[Branch_number].Voltage[0] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[3] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[2] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[1] = 0;
+				pbm[PBM_number].Branch[Branch_number].BalCell[0] = 0;
+			}
+
+			pbm[PBM_number].Branch[Branch_number].Current = 0;
+			pbm[PBM_number].Branch[Branch_number].AverageCurrent = 0;
+			pbm[PBM_number].Branch[Branch_number].Power = 0;
+			pbm[PBM_number].Branch[Branch_number].AveragePower = 0;
+			pbm[PBM_number].Branch[Branch_number].Temperature = 0;
+			pbm[PBM_number].Branch[Branch_number].AbcoluteCapacity_mAh = 0;
+			pbm[PBM_number].Branch[Branch_number].RelativeCapacity_Perc = 0;
+
+		}
+
+		for( Heat_number = 0; Heat_number < PBM_T1_HEAT_QUANTITY; Heat_number++){
+
+			pbm[PBM_number].Heat[Heat_number].HeatCurrent = 0;
+			pbm[PBM_number].Heat[Heat_number].HeatVoltage = 0;
+			pbm[PBM_number].Heat[Heat_number].HeatPower = 0;
+
+			for( Heat_TempSens_number = 0; Heat_TempSens_number < PBM_T1_HEAT_TEMPSENS_QUANTITY; Heat_TempSens_number++){
+
+				pbm[PBM_number].Heat[Heat_number].Heat_TMP1075[Heat_TempSens_number] = 0;
+			}
+		}
+	}
+
+    return SUCCESS;
+}
+
 /** @brief	ON/OFF heat for selected branch for selected PBM.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	pbm[] - structure data for all PBM modules.
