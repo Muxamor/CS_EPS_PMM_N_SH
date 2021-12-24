@@ -845,13 +845,12 @@ struct CAN_IVar5{
     int8_t  CAN_PBM4_Temp_Sensor2;                                  //+     |  const = 0x               |   АБ4 датчик на плате 2
     int8_t  CAN_PBM4_Temp_Sensor3;                                  //+     |  const = 0x               |   АБ4 датчик на плате 3
     int8_t  CAN_PBM4_Temp_Sensor4;                                  //+     |  const = 0x               |   АБ4 датчик на плате 4
-
     uint8_t  CAN_TMI2_Reserved[4];                                  //+  |  const = 0x
 
     // -------------------  ТМИ 3  ------------------ //
     uint8_t Protaction_GAP_TMI3[64];
-    uint16_t CAN_TMI3_version;                                  	//+ |  const = 0x                   |   Версия ТМИ
 
+    uint16_t CAN_TMI3_version;                                  	//+ |  const = 0x                   |   Версия ТМИ
     // PBM part2 //
     uint16_t CAN_TMIx_PBM1_Branch1_Battery1_Voltage;                //+     |  const = 0x               |  Напряжение АБ1 ветвь 1 аккумулятор 1
     uint16_t CAN_TMIx_PBM1_Branch1_Battery2_Voltage;                //+     |  const = 0x               |  Напряжение АБ1 ветвь 1 аккумулятор 2
@@ -922,8 +921,8 @@ struct CAN_IVar5{
     uint8_t CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ3 ветвь 2
     uint8_t CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ4 ветвь 1
     uint8_t CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ4 ветвь 2
-
     uint8_t  CAN_TMI3_Reserved[2];                                  //+  |  const = 0x
+
 };
 
 #pragma pack(pop)
