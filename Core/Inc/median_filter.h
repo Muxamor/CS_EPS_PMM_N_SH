@@ -1,4 +1,3 @@
-
 #ifndef INC_MEDIAN_FILTER_H_
 #define INC_MEDIAN_FILTER_H_
 

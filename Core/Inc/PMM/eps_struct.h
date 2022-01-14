@@ -1,4 +1,3 @@
-
 #ifndef INC_PMM_EPS_STRUCT_H_
 #define INC_PMM_EPS_STRUCT_H_
 
@@ -9,7 +8,7 @@ extern "C" {
 #include "PMM/pmm_struct.h"
 #include "PDM/pdm_struct.h"
 #include "PAM/pam_struct.h"
-#include "PBM/pbm_struct.h"
+#include "PBM_T1/pbm_T1_struct.h"
 
 
 typedef struct{
@@ -28,7 +27,7 @@ typedef struct{
 	_PMM *const eps_pmm_ptr;
 	_PDM *const eps_pdm_ptr;
 	_PAM *const eps_pam_ptr;
-	_PBM *const eps_pbm_ptr;
+	_PBM_T1 *const eps_pbm_ptr;
 	_EPS_Service *const eps_serv_ptr;
 
 }_EPS_Param;

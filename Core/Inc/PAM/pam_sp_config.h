@@ -1,4 +1,3 @@
-
 #ifndef CS_EPS_PMM_N_SH_V_PAM_SP_CONFIG_H
 #define CS_EPS_PMM_N_SH_V_PAM_SP_CONFIG_H
 
@@ -8,7 +7,7 @@ extern "C" {
 
 #define PAM_SP_quantity  			    0x06 // Quantity solar panel on the satellite
 #define PAM_SP_temp_sens_max_quantity   0x04 // Max quantity Temp. sensor per solar panel.
-#define PAM_SP_ID_max_quantity	        0x02 // Max quantity Ideal Diode per solar panel.
+#define PAM_SP_ID_max_quantity	        0x06 // Max quantity Ideal Diode per solar panel. (Maximal was in Norby1 X panel)
 
 #define PAM_SP1           			    0x00 //Solar panel namber 1 is Folding Y+ - Norbi1, is Folding X- - Norby2
 #define PAM_SP2          			    0x01 //Solar panel namber 2 is X- - Norbi1,          is Folding X- - Norby2

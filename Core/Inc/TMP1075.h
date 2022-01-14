@@ -1,5 +1,3 @@
-
-
 #ifndef INC_TMP1075_H_
 #define INC_TMP1075_H_
 

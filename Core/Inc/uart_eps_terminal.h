@@ -1,4 +1,3 @@
-
 #ifndef INC_UART_EPS_TERMINAL_H_
 #define INC_UART_EPS_TERMINAL_H_
 

@@ -1,4 +1,3 @@
-
 #ifndef INC_PMM_PMM_STRUCT_H_
 #define INC_PMM_PMM_STRUCT_H_
 
@@ -24,6 +23,7 @@ typedef struct{
 	uint32_t PWR_Ch_State_5V_Bus 				:1; //0-DISABLE, 1-ENABLE. State power 5V bus (Norbi not use) // Need to save in flash.
 	uint32_t PWR_Ch_State_3_3V_Bus 				:1; //0-DISABLE, 1-ENABLE. State power 3.3V bus (Norbi not use) // Need to save in flash.
 	uint32_t PWR_Ch_State_I2C_Bus 				:1; //0-DISABLE, 1-ENABLE. State power I2C bus.(Norbi not use) // Need to save in flash.
+
 	uint32_t PWR_Supply_Main_PG 				:1; //0-OK, 1-ERROR. Power good Main power supply 3.3V
 	uint32_t PWR_Supply_Backup_PG 				:1; //0-OK, 1-ERROR. Power good Backup power supply 3.3V
     uint32_t PWR_OFF_Passive_CPU	    		:1; //0-Enable, 1- disable power passive CPU
@@ -67,8 +67,8 @@ typedef struct{
 	uint32_t Error_FRAM2		 				:1; //=0 -OK, = 1-error FRAM2 no connection
 	uint32_t Error_UART_port_M					:1; //=0 -OK, = 1-error UART main (LPUART1) port
 	uint32_t Error_UART_port_B					:1; //=0 -OK, = 1-error UART backup (USART3) port
-	uint32_t Error_CAN_port_M					:1; //=0 -OK, = 1-error UART main (CAN1) port
-	uint32_t Error_CAN_port_B					:1; //=0 -OK, = 1-error UART backup (CAN2) port
+	uint32_t Error_CAN_port_M					:1; //=0 -OK, = 1-error CAN main (CAN1) port
+	uint32_t Error_CAN_port_B					:1; //=0 -OK, = 1-error CAN backup (CAN2) port
 	uint32_t :4;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up). // Need to save in flash.

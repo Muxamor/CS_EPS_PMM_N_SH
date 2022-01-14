@@ -1,4 +1,3 @@
-
 #include "stm32l4xx.h"
 #include "i2c_comm.h"
 #include "TMP1075.h"

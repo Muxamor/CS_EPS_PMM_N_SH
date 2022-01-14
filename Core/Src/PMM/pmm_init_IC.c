@@ -116,13 +116,13 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 	//Setup INA231
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-		if ( INA231_power_reset( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon) == SUCCESS ){
-			if ( INA231_Set_calibration_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, pmm_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
-				if ( INA231_write_aver_mode( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_aver_mode) == SUCCESS ){
-					if ( INA231_write_bus_conv_time( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_bus_conv_time ) == SUCCESS ){
-						if ( INA231_write_shunt_conv_time( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_shunt_conv_time ) == SUCCESS ){
+		if ( INA231_Power_Reset( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon) == SUCCESS ){
+			if ( INA231_Set_Calibration_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, pmm_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
+			    if ( INA231_Setup_AVG( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_aver_mode) == SUCCESS ){
+			        if ( INA231_Setup_VbusCT( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_bus_conv_time ) == SUCCESS ){
+			            if ( INA231_Setup_VshCT( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_shunt_conv_time ) == SUCCESS ){
 
-							error_I2C = INA231_write_mode( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_work_mode );
+			                error_I2C = INA231_Setup_Mode( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_work_mode );
 						}
 					}
 				}
@@ -352,7 +352,3 @@ void PMM_Reset_pin_Free_I2C_GPIOExt( uint8_t tca9539_addr ){
 		//need write
 	}
 }
-
-
-
-

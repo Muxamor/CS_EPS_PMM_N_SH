@@ -1,4 +1,3 @@
-
 #ifndef INC_PMM_PMM_H_
 #define INC_PMM_PMM_H_
 
@@ -31,18 +30,32 @@ typedef struct{
 
 }FRAM_PAM_PWR_CH_TM_SP;
 
+// change!!!!!! Morsin A.A.
+// Structure PBM_T1
 
-// Structure PBM
 typedef struct{
-    uint8_t Branch_1_DchgEnableBit  :1;
-    uint8_t Branch_1_ChgEnableBit   :1;
-    uint8_t Branch_2_DchgEnableBit  :1;
-    uint8_t Branch_2_ChgEnableBit   :1;
-    uint8_t PCA9534_ON_Heat_1       :1;
-    uint8_t PCA9534_ON_Heat_2       :1;
-    uint8_t :2;
 
-}FRAM_PBM;
+	uint8_t DchgEnableBit :1; 				// Discharge Enable Bit must be set 1 to allow the ON state.
+	uint8_t ChgEnableBit :1; 				// Charge Enable Bit must be set 1 to allow the ON state.
+	uint8_t StateEmergChrgKey :1; 			// PCA9534 port. Show and set state emergency charge.
+	uint16_t AutoCorrCapacityKey :1;    	// Bit for enable/disable correction capacity level in auto mode.
+	uint8_t :4;
+
+}FRAM_PBM_T1_Branch;
+
+typedef struct{
+
+	uint8_t PCA9534_ON_Heat_CMD :1; 		// PCA9534 port. State permission bit auto heat branch.
+	uint8_t :7;
+
+}FRAM_PBM_T1_Heat;
+
+typedef struct{
+
+	FRAM_PBM_T1_Branch Branch[PBM_T1_BRANCH_QUANTITY]; // Branch data to need save in fram.
+	FRAM_PBM_T1_Heat Heat[PBM_T1_HEAT_QUANTITY];		// Heat data to need save in fram.
+
+}FRAM_PBM_T1;
 
 
 #pragma pack(push, 1)
@@ -101,7 +114,7 @@ typedef struct{
      FRAM_PAM_PWR_CH_TM_SP FRAM_PAM_PWR_Ch_TM_SP[PAM_PWR_TM_SP_Ch_quantity];
 
      //PBM
-     FRAM_PBM FRAM_PBM_PBM[PBM_QUANTITY];
+     FRAM_PBM_T1 FRAM_PBM_T1[PBM_T1_QUANTITY];
 
      uint16_t FRAM_DATA_CRC;
 

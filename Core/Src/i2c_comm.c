@@ -1,4 +1,3 @@
-
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_i2c.h"
 #include "i2c_comm.h"
@@ -234,6 +233,91 @@ ErrorStatus I2C_Read_word_u16_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint
 
 	return SUCCESS;
 }
+
+
+/** @brief	Reading three byte register. ( St_ReSt - generate Start and Restart )
+	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
+	@param 	SlaveAddr - 8-bit device address.
+	@param  size_reg_addr - size of reg_addr in byte if:
+				reg_addr = U8 	-> 	size_reg_addr = I2C_SIZE_REG_ADDR_U8
+				reg_addr = U16 	-> 	size_reg_addr = I2C_SIZE_REG_ADDR_U16
+				reg_addr = U24 	-> 	size_reg_addr = I2C_SIZE_REG_ADDR_U24
+				reg_addr = U32 	-> 	size_reg_addr = I2C_SIZE_REG_ADDR_U32
+	@param 	reg_addr - 8,16,24,32-bit Registry address on the remote device
+	@param 	*data - pointer to variable u16 where would be written data from the remote device.
+	@retval 0 - SUCCESS, -1 - ERROR
+*/
+ErrorStatus I2C_Read_word_u24_St_ReSt(I2C_TypeDef *I2Cx, uint8_t SlaveAddr, uint8_t size_reg_addr, uint32_t reg_addr, uint32_t *data){
+
+    if( size_reg_addr == 0 || size_reg_addr > 4 ){
+        return ERROR_N;
+    }
+
+    uint8_t high_byte = 0, middle_byte = 0, low_byte = 0;
+    uint8_t i = 0;
+    int8_t  j = 0;
+
+    SlaveAddr = (uint8_t)(SlaveAddr << 1);
+
+    //Clear flags if the previous attempt to exchange was not successful.
+    I2C_Clear_Error_Flags(I2Cx);
+
+    if(I2C_check_flag(LL_I2C_IsActiveFlag_BUSY, I2Cx, SET) != SUCCESS){
+        return ERROR_N;
+    }
+
+    LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)size_reg_addr, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
+    if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+        return ERROR_N;
+    }
+
+
+    for( i = size_reg_addr , j = size_reg_addr-1 ; i != 0; i--, j-- ){ //high byte is sent first
+
+        LL_I2C_TransmitData8(I2Cx, (uint8_t)(reg_addr >> (j*8)) );
+
+        if(I2C_check_flag(LL_I2C_IsActiveFlag_TXE, I2Cx, RESET) != SUCCESS){
+            return ERROR_N;
+        }
+    }
+
+    if(I2C_check_flag(LL_I2C_IsActiveFlag_TC, I2Cx, RESET) != SUCCESS){
+        return ERROR_N;
+    }
+
+    LL_I2C_HandleTransfer(I2Cx, (uint32_t)SlaveAddr, LL_I2C_ADDRSLAVE_7BIT, (uint32_t)3, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_RESTART_7BIT_READ); //LL_I2C_MODE_SOFTEND
+
+    if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
+        return ERROR_N;
+    }
+    //LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
+    high_byte = LL_I2C_ReceiveData8(I2Cx);
+
+    if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
+        return ERROR_N;
+    }
+    //LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
+    middle_byte = LL_I2C_ReceiveData8(I2Cx);
+
+    if(I2C_check_flag(LL_I2C_IsActiveFlag_RXNE, I2Cx, RESET) != SUCCESS){
+        return ERROR_N;
+    }
+    // LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
+    low_byte = LL_I2C_ReceiveData8(I2Cx);
+
+    //LL_I2C_GenerateStopCondition(I2Cx);
+    if(I2C_check_flag(LL_I2C_IsActiveFlag_STOP, I2Cx, RESET) != SUCCESS){
+        return ERROR_N;
+    }
+
+    LL_I2C_ClearFlag_STOP(I2Cx);
+
+    *data =  (uint32_t)( (high_byte << 16) | (middle_byte << 8) | low_byte );
+
+    return SUCCESS;
+}
+
+
 
 
 /**@brief	Writing uint8_t data (byte) straight without register address  in devices. (St generate only one start)
