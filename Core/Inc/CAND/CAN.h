@@ -110,14 +110,14 @@ extern "C" {
 #define CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset 370
 #define CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset 371
 
-#define CAN_PBM1_Corr_Cap_Level_Branch1_offset 364
-#define CAN_PBM1_Corr_Cap_Level_Branch2_offset 365
-#define CAN_PBM2_Corr_Cap_Level_Branch1_offset 366
-#define CAN_PBM2_Corr_Cap_Level_Branch2_offset 367
-#define CAN_PBM3_Corr_Cap_Level_Branch1_offset 368
-#define CAN_PBM3_Corr_Cap_Level_Branch2_offset 369
-#define CAN_PBM4_Corr_Cap_Level_Branch1_offset 370
-#define CAN_PBM4_Corr_Cap_Level_Branch2_offset 371
+#define CAN_PBM1_Corr_Cap_Level_Branch1_offset 380
+#define CAN_PBM1_Corr_Cap_Level_Branch2_offset 381
+#define CAN_PBM2_Corr_Cap_Level_Branch1_offset 382
+#define CAN_PBM2_Corr_Cap_Level_Branch2_offset 383
+#define CAN_PBM3_Corr_Cap_Level_Branch1_offset 384
+#define CAN_PBM3_Corr_Cap_Level_Branch2_offset 385
+#define CAN_PBM4_Corr_Cap_Level_Branch1_offset 386
+#define CAN_PBM4_Corr_Cap_Level_Branch2_offset 387
 
 #define CAN_PBM1_Reset_Branch1_offset 396
 #define CAN_PBM1_Reset_Branch2_offset 397
