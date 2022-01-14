@@ -1843,7 +1843,7 @@ ErrorStatus MAX17320_Read_Br_HistoryProtStatus_Reg (I2C_TypeDef *I2Cx, MAX17320_
 ErrorStatus MAX17320_Read_Balancing_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Battery_number) {
 
 	uint16_t Data = 0;
-	if (I2C_Read_MAX17320(I2Cx, 0x16, 0xF5, &Data) == 0) {
+	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0xF5, &Data) == 0) {
 		if(Battery_number == 2){
 			Struct->BalCell1 = (Data & 0x0080) >> 7;
 			Struct->BalCell4 = (Data & 0x0200) >> 9;
