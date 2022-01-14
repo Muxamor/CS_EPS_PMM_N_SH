@@ -650,12 +650,14 @@ struct CAN_IVar5{
     int16_t CAN_TMIx_PMM_VBAT2_Current;                             //+     |  const = 0x                   |   Ток VBAT2
     int16_t CAN_TMIx_PMM_VBAT1_Current_Aver_10s;                    //+     |  const = 0x               |   Ток VBAT1 усреднение 10s
     int16_t CAN_TMIx_PMM_VBAT2_Current_Aver_10s;                    //+     |  const = 0x               |   Ток VBAT2 усреднение 10s
-    uint16_t CAN_TMIx_PMM_Own_Current_Consumption;                  //+  |  const = 0x                   |   Ток потребления модуля PMM
-    uint16_t CAN_TMIx_PMM_Voltage;                                  //+  |  const = 0x                   |   Напряжение питания модуля PMM 3.3V
-    uint16_t CAN_TMIx_EPS_Main_Bus_Voltage;                         //+   |  const = 0x                   |   Напряжение внутренней шины СЭС
-    uint16_t CAN_TMIx_EPS_CubeSat_Total_Cons_Power;                 //+  |  const = 0x                   |   Полная мощность потребления КА
-    uint16_t CAN_TMIx_EPS_Deploy_Status;                            //+  |  const = 0x                   |  Состояние концевиков раскрыв. элементов, битовая маска
-    uint16_t CAN_TMIx_PMM_Version_FW;                               //+  |  const = 0x                   |   Firmware version
+    uint16_t CAN_TMIx_PMM_Own_Current_Consumption;                  //+     |  const = 0x                   |   Ток потребления модуля PMM
+    uint16_t CAN_TMIx_PMM_Voltage;                                  //+     |  const = 0x                   |   Напряжение питания модуля PMM 3.3V
+    uint16_t CAN_TMIx_EPS_Main_Bus_Voltage;                         //+     |  const = 0x                   |   Напряжение внутренней шины СЭС
+    uint16_t CAN_TMIx_EPS_CubeSat_Total_Cons_Power;                 //+     |  const = 0x                   |   Полная мощность потребления КА
+    uint16_t CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power;             //+     |  const = 0x                   |   Потребляемая мощность  подсистемами и ПН КА
+
+    uint16_t CAN_TMIx_EPS_Deploy_Status;                            //+     |  const = 0x                   |  Состояние концевиков раскрыв. элементов, битовая маска
+    uint16_t CAN_TMIx_PMM_Version_FW;                               //+     |  const = 0x                   |   Firmware version
                                                                     //Total 54 byte
     // PDM //
     uint16_t CAN_TMIx_PDM_PWR_Ch_State_BitsMask;                    //+        |  const = 0x       |   Командный регистр PDM линии питания 1..6 State_eF_in State_eF_out
@@ -694,14 +696,14 @@ struct CAN_IVar5{
     int16_t CAN_TMIx_PDM_PWR_Ch4_Current_Aver_10s;                  //+    |  const = 0x               |   Ток канал 4 усреднение 10s
     int16_t CAN_TMIx_PDM_PWR_Ch5_Current_Aver_10s;                  //+    |  const = 0x               |   Ток канал 4 усреднение 10s
     int16_t CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s;                  //+    |  const = 0x               |   Ток канал 4 усреднение 10s
-    uint8_t CAN_TMI0_Reserved[1];                                   //+    |  const = 0x
+    uint8_t CAN_TMI0_Reserved[2];                                   //+    |  const = 0x
 
     // -------------------  ТМИ 1  ------------------ //
     uint8_t Protaction_GAP_TMI1[64];
     uint16_t CAN_TMI1_version;                                  	//+    |  const = 0x                   |   Версия ТМИ
     // PAM //
-    uint16_t CAN_TMIx_PAM_PWR_Ch_State_BitMask;                     //+    |  const = 0x              | State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
     uint16_t CAN_TMIx_EPS_Total_PAM_Generation_Power;               //+  |  const = 0x                   |   Полная вырабатываемая мощность PAM
+    uint16_t CAN_TMIx_PAM_PWR_Ch_State_BitMask;                     //+    |  const = 0x              | State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
     uint16_t CAN_TMIx_PAM_PWR_PG_BitMask;                           //+    |  const = 0x
     uint32_t CAN_TMIx_PAM_PWR_Error_BitMask;                        //+    |  const = 0x              | Статус ошибок модуля PAM, битовая маска: State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
     int8_t  CAN_TMIx_PAM_Temp_Sensor1;                              //+    |  const = 0x               |   PAM датчик 1
@@ -771,7 +773,6 @@ struct CAN_IVar5{
 
     // PBM part1 //
     uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;           //+ |  const = 0x                   |
-    uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_Status_BitMask;           //+ |  const = 0x                   |
     uint8_t CAN_TMIx_PBM_Thermostat_ComReg_BitMask;                 //+ |  const = 0x                   | Команда на включение Термостат
     uint8_t CAN_TMIx_PBM_Heating_Element_State_BitMask;             //+ |  const = 0x                       | Текущее состояние Термостата
     uint8_t CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask;            //+ |  const = 0x                   | Ключи аварийной зарядки
@@ -844,13 +845,12 @@ struct CAN_IVar5{
     int8_t  CAN_PBM4_Temp_Sensor2;                                  //+     |  const = 0x               |   АБ4 датчик на плате 2
     int8_t  CAN_PBM4_Temp_Sensor3;                                  //+     |  const = 0x               |   АБ4 датчик на плате 3
     int8_t  CAN_PBM4_Temp_Sensor4;                                  //+     |  const = 0x               |   АБ4 датчик на плате 4
-
-    uint8_t  CAN_TMI2_Reserved[3];                                  //+  |  const = 0x
+    uint8_t  CAN_TMI2_Reserved[4];                                  //+  |  const = 0x
 
     // -------------------  ТМИ 3  ------------------ //
     uint8_t Protaction_GAP_TMI3[64];
-    uint16_t CAN_TMI3_version;                                  	//+ |  const = 0x                   |   Версия ТМИ
 
+    uint16_t CAN_TMI3_version;                                  	//+ |  const = 0x                   |   Версия ТМИ
     // PBM part2 //
     uint16_t CAN_TMIx_PBM1_Branch1_Battery1_Voltage;                //+     |  const = 0x               |  Напряжение АБ1 ветвь 1 аккумулятор 1
     uint16_t CAN_TMIx_PBM1_Branch1_Battery2_Voltage;                //+     |  const = 0x               |  Напряжение АБ1 ветвь 1 аккумулятор 2
@@ -921,8 +921,8 @@ struct CAN_IVar5{
     uint8_t CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ3 ветвь 2
     uint8_t CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ4 ветвь 1
     uint8_t CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle;                //+     |  const = 0x               | Цмклы заряда/разряда АБ4 ветвь 2
-
     uint8_t  CAN_TMI3_Reserved[2];                                  //+  |  const = 0x
+
 };
 
 #pragma pack(pop)

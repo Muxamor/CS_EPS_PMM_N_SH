@@ -68,9 +68,6 @@ typedef struct  // Structure for heat data
 	uint16_t Error_Heat :1; 				// Register error heat branch.
 	uint16_t :12; 							// Reserve.
 
-
-
-
 } _T1_Heat_Data;
 
 typedef struct  // Structure for PBM data

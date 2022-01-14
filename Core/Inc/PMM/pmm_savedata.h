@@ -30,15 +30,13 @@ typedef struct{
 
 }FRAM_PAM_PWR_CH_TM_SP;
 
-// change!!!!!! Morsin A.A.
 // Structure PBM_T1
-
 typedef struct{
 
 	uint8_t DchgEnableBit :1; 				// Discharge Enable Bit must be set 1 to allow the ON state.
 	uint8_t ChgEnableBit :1; 				// Charge Enable Bit must be set 1 to allow the ON state.
 	uint8_t StateEmergChrgKey :1; 			// PCA9534 port. Show and set state emergency charge.
-	uint16_t AutoCorrCapacityKey :1;    	// Bit for enable/disable correction capacity level in auto mode.
+	uint8_t AutoCorrCapacityKey :1;    	// Bit for enable/disable correction capacity level in auto mode.
 	uint8_t :4;
 
 }FRAM_PBM_T1_Branch;
