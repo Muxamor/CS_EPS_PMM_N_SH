@@ -1370,81 +1370,80 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     // -------------------  ТМИ 3 ------------------ //
     // PBM part2 //
-    CAN_IVar5_telemetry.CAN_TMI3_version                                = 0x0002;
+    CAN_IVar5_telemetry.CAN_TMI3_version                             = 0x0002;
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Battery1_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Voltage[0];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Battery2_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Voltage[1];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Battery1_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Voltage[0];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Battery2_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Voltage[1];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Battery1_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Voltage[0];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Battery2_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Voltage[1];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Battery1_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Voltage[0];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Battery2_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Voltage[1];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Battery1_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Voltage[0];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Battery2_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Voltage[1];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Battery1_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Voltage[0];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Battery2_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Voltage[1];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Battery1_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Voltage[0];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Battery2_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Voltage[1];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Battery1_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Voltage[0];
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Battery2_Voltage      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Voltage[1];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Voltage[1];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Voltage[1];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Voltage[1];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Voltage[1];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Voltage[1];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Voltage[1];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Voltage[1];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Voltage[1];
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Max_Current           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MaxCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Min_Current           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MinCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Max_Current           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].MaxCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Min_Current           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].MinCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Max_Current           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].MaxCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Min_Current           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].MinCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Max_Current           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].MaxCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Min_Current           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].MinCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Max_Current           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].MaxCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Min_Current           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].MinCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Max_Current           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].MaxCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Min_Current           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].MinCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Max_Current           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MaxCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Min_Current           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MinCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Max_Current           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].MaxCurr;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Min_Current           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].MinCurr;
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Min_Voltage           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MinVCELL;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Min_Voltage           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].MinVCELL;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Min_Voltage           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].MinVCELL;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Min_Voltage           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].MinVCELL;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Min_Voltage           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].MinVCELL;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Min_Voltage           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].MinVCELL;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Min_Voltage           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MinVCELL;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Min_Voltage           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].MinVCELL;
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Heat_Current          = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].HeatCurrent;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Heat_Current          = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].HeatCurrent;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Heat_Current          = eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].HeatCurrent;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Heat_Current          = eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].HeatCurrent;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Heat_Current          = eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].HeatCurrent;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Heat_Current          = eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].HeatCurrent;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Heat_Current          = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].HeatCurrent;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Heat_Current          = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].HeatCurrent;
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Age                   = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Age                   = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Age                   = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Age                   = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Age                   = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Age                   = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Age                   = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Age                   = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AgeScalar;
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Char_Discha_Cycle     = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Cycle     = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Char_Discha_Cycle     = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle     = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].CycleCounter;
 
 
     // -------------------  Beacon  ------------------ //
-
     CAN_IVar5_telemetry.CAN_Beacon_PMM_Switch_Active_CPU               = CAN_IVar5_telemetry.CAN_TMIx_PMM_Switch_Active_CPU;
     CAN_IVar5_telemetry.CAN_Beacon_PMM_Temp_Sensor                     = CAN_IVar5_telemetry.CAN_TMIx_PMM_Temp_Sensor;
     CAN_IVar5_telemetry.CAN_Beacon_EPS_Main_Bus_Voltage                = CAN_IVar5_telemetry.CAN_TMIx_EPS_Main_Bus_Voltage;
@@ -1458,8 +1457,9 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch4_Median_Temp               = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Median_Temp;
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch5_Median_Temp               = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp;
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch6_Median_Temp               = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp;
-    CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_PBM_Char_Dischar_Power    = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power;
-    CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_Battery_Level_mAh         = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh;
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_PBM_Char_Dischar_Power    = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power;
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_Heating_Elements_Power    = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Heating_Elements_Power;
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_Battery_Level_mAh         = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh;
     CAN_IVar5_telemetry.CAN_Beacon_PBM_Heating_Element_State_BitMask   = CAN_IVar5_telemetry.CAN_TMIx_PBM_Heating_Element_State_BitMask;
     CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[0] = 0x00; //TODO заполнить так как этот параметр только для маяка
     CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[1] = 0x00; //TODO заполнить так как этот параметр только для маяка
@@ -1470,7 +1470,6 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 }
 
 void CAN_Var5_fill_telemetry_const(void){
-
 
 	CAN_IVar5_telemetry.CAN_TMI0_version                                = 0x0201;
 
@@ -1500,7 +1499,7 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power       = 0x302F;
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_Deploy_Status                      = 0x3231;
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_Version_FW                         = 0x3433;
-	//Total 53 byte
+
 	// PDM //
 	CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask              = 0x3635;
 	CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask                    = 0x3837;
@@ -1542,7 +1541,7 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMI0_Reserved[1]                            = 0x73;
 
 	// -------------------  ТМИ 1  ------------------ //
-	//Protaction_GAP_TMI1[64];                                //+274...237
+
 	CAN_IVar5_telemetry.CAN_TMI1_version                                = 0x7574;
 	// PAM //
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power         = 0x7776;
@@ -1606,7 +1605,7 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Median_Temp                  = 0x1C;
 	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp                  = 0x1D;
 	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp                  = 0x1E;
-	//Total 85 byte
+
 	CAN_IVar5_telemetry.CAN_TMI1_Reserved[0]                            = 0xC9;
 	CAN_IVar5_telemetry.CAN_TMI1_Reserved[1]                            = 0xCA;
 	CAN_IVar5_telemetry.CAN_TMI1_Reserved[2]                            = 0xCB;
@@ -1638,11 +1637,9 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMI1_Reserved[28]                           = 0xE6;
 	CAN_IVar5_telemetry.CAN_TMI1_Reserved[29]                           = 0xE7;
 	CAN_IVar5_telemetry.CAN_TMI1_Reserved[30]                           = 0xE8;
-	//Total 116 byte
 
 
 	CAN_IVar5_telemetry.CAN_TMI2_version                                = 0x0201;
-
 	// PBM part1 //
 	CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power       = 0x0403;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Heating_Elements_Power       = 0x0605;
@@ -1731,6 +1728,7 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMI2_Reserved[11]                           = 0x73;
 	CAN_IVar5_telemetry.CAN_TMI2_Reserved[12]                           = 0x74;
 
+
 	CAN_IVar5_telemetry.CAN_TMI3_version                                = 0x7675;
 	// PBM part2 //
 	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Battery1_Voltage          = 0x7877;
@@ -1804,7 +1802,6 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle         = 0xE7;
 	CAN_IVar5_telemetry.CAN_TMI3_Reserved[0]                            = 0xE8;
 	CAN_IVar5_telemetry.CAN_TMI3_Reserved[1]                            = 0xE9;
-
 }
 
 void CAN_Var4_fill( _EPS_Param eps_p ){
