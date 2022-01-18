@@ -848,43 +848,377 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     }
                     break;
 
-                    /*
-                    CAN_PBM1_Emerg_Charge_Key_Branch1_offset
-                    CAN_PBM1_Emerg_Charge_Key_Branch2_offset
-                    CAN_PBM2_Emerg_Charge_Key_Branch1_offset
-                    CAN_PBM2_Emerg_Charge_Key_Branch2_offset
-                    CAN_PBM3_Emerg_Charge_Key_Branch1_offset
-                    CAN_PBM3_Emerg_Charge_Key_Branch2_offset
-                    CAN_PBM4_Emerg_Charge_Key_Branch1_offset
-                    CAN_PBM4_Emerg_Charge_Key_Branch2_offset
+                case CAN_PBM1_Emerg_Charge_Key_Branch1_offset: //Enable/Disable Emergency charge PBM1 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM1_Emerg_Charge_Key_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE emergency charge PBM1 branch 1\n", CAN_PBM1_Emerg_Charge_Key_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1, PBM_T1_ON_EMERG_CHRG);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE emergency charge PBM1 branch 1\n", CAN_PBM1_Emerg_Charge_Key_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1, PBM_T1_OFF_EMERG_CHRG);
+                    }
+                    break;
 
-                    CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset
-                    CAN_PBM1_Auto_Corr_Cap_Level_Branch2_offset
-                    CAN_PBM2_Auto_Corr_Cap_Level_Branch1_offset
-                    CAN_PBM2_Auto_Corr_Cap_Level_Branch2_offset
-                    CAN_PBM3_Auto_Corr_Cap_Level_Branch1_offset
-                    CAN_PBM3_Auto_Corr_Cap_Level_Branch2_offset
-                    CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset
-                    CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset
 
-                    CAN_PBM1_Corr_Cap_Level_Branch1_offset
-                    CAN_PBM1_Corr_Cap_Level_Branch2_offset
-                    CAN_PBM2_Corr_Cap_Level_Branch1_offset
-                    CAN_PBM2_Corr_Cap_Level_Branch2_offset
-                    CAN_PBM3_Corr_Cap_Level_Branch1_offset
-                    CAN_PBM3_Corr_Cap_Level_Branch2_offset
-                    CAN_PBM4_Corr_Cap_Level_Branch1_offset
-                    CAN_PBM4_Corr_Cap_Level_Branch2_offset
+                case CAN_PBM1_Emerg_Charge_Key_Branch2_offset: //Enable/Disable Emergency charge PBM1 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM1_Emerg_Charge_Key_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE emergency charge PBM1 branch 2\n", CAN_PBM1_Emerg_Charge_Key_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_ON_EMERG_CHRG);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE emergency charge PBM1 branch 2\n", CAN_PBM1_Emerg_Charge_Key_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_OFF_EMERG_CHRG);
+                    }
+                    break;
 
-                    CAN_PBM1_Reset_Branch1_offset
-                    CAN_PBM1_Reset_Branch2_offset
-                    CAN_PBM2_Reset_Branch1_offset
-                    CAN_PBM2_Reset_Branch2_offset
-                    CAN_PBM3_Reset_Branch1_offset
-                    CAN_PBM3_Reset_Branch2_offset
-                    CAN_PBM4_Reset_Branch1_offset
-                    CAN_PBM4_Reset_Branch2_offset
-                    */
+                case CAN_PBM2_Emerg_Charge_Key_Branch1_offset: //Enable/Disable Emergency charge PBM2 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM2_Emerg_Charge_Key_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE emergency charge PBM2 branch 1\n", CAN_PBM2_Emerg_Charge_Key_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1, PBM_T1_ON_EMERG_CHRG);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE emergency charge PBM2 branch 1\n", CAN_PBM2_Emerg_Charge_Key_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1, PBM_T1_OFF_EMERG_CHRG);
+                    }
+                    break;
+
+
+                case CAN_PBM2_Emerg_Charge_Key_Branch2_offset: //Enable/Disable Emergency charge PBM2 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM2_Emerg_Charge_Key_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE emergency charge PBM2 branch 2\n", CAN_PBM2_Emerg_Charge_Key_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2, PBM_T1_ON_EMERG_CHRG);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE emergency charge PBM2 branch 2\n", CAN_PBM2_Emerg_Charge_Key_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2, PBM_T1_OFF_EMERG_CHRG);
+                    }
+                    break;
+
+                case CAN_PBM3_Emerg_Charge_Key_Branch1_offset: //Enable/Disable Emergency charge PBM3 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM3_Emerg_Charge_Key_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE emergency charge PBM3 branch 1\n", CAN_PBM3_Emerg_Charge_Key_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1, PBM_T1_ON_EMERG_CHRG);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE emergency charge PBM3 branch 1\n", CAN_PBM3_Emerg_Charge_Key_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1, PBM_T1_OFF_EMERG_CHRG);
+                    }
+                    break;
+
+
+                case CAN_PBM3_Emerg_Charge_Key_Branch2_offset: //Enable/Disable Emergency charge PBM3 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM3_Emerg_Charge_Key_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE emergency charge PBM3 branch 2\n", CAN_PBM3_Emerg_Charge_Key_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2, PBM_T1_ON_EMERG_CHRG);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE emergency charge PBM3 branch 2\n", CAN_PBM3_Emerg_Charge_Key_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2, PBM_T1_OFF_EMERG_CHRG);
+                    }
+                    break;
+
+                case CAN_PBM4_Emerg_Charge_Key_Branch1_offset: //Enable/Disable Emergency charge PBM4 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM4_Emerg_Charge_Key_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE emergency charge PBM4 branch 1\n", CAN_PBM4_Emerg_Charge_Key_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_1, PBM_T1_ON_EMERG_CHRG);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE emergency charge PBM4 branch 1\n", CAN_PBM4_Emerg_Charge_Key_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_1, PBM_T1_OFF_EMERG_CHRG);
+                    }
+                    break;
+
+                case CAN_PBM4_Emerg_Charge_Key_Branch2_offset: //Enable/Disable Emergency charge PBM4 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM4_Emerg_Charge_Key_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE emergency charge PBM4 branch 2\n", CAN_PBM4_Emerg_Charge_Key_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_2, PBM_T1_ON_EMERG_CHRG);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE emergency charge PBM4 branch 2\n", CAN_PBM4_Emerg_Charge_Key_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_2, PBM_T1_OFF_EMERG_CHRG);
+                    }
+                    break;
+
+                case CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset: //Enable/Disable auto correction capacity level PBM1 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM1_Auto_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM1 branch 1\n", CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM1 branch 1\n", CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM1_Auto_Corr_Cap_Level_Branch2_offset: //Enable/Disable auto correction capacity level PBM1 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM1_Auto_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM1 branch 2\n", CAN_PBM1_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM1 branch 2\n", CAN_PBM1_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM2_Auto_Corr_Cap_Level_Branch1_offset: //Enable/Disable auto correction capacity level PBM2 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM2_Auto_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM2 branch 1\n", CAN_PBM2_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM2 branch 1\n", CAN_PBM2_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM2_Auto_Corr_Cap_Level_Branch2_offset: //Enable/Disable auto correction capacity level PBM2 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM2_Auto_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM2 branch 2\n", CAN_PBM2_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM2 branch 2\n", CAN_PBM2_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM3_Auto_Corr_Cap_Level_Branch1_offset: //Enable/Disable auto correction capacity level PBM3 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM3_Auto_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM3 branch 1\n", CAN_PBM3_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM3 branch 1\n", CAN_PBM3_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM3_Auto_Corr_Cap_Level_Branch2_offset: //Enable/Disable auto correction capacity level PBM3 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM3_Auto_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM3 branch 2\n", CAN_PBM3_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM3 branch 2\n", CAN_PBM3_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset: //Enable/Disable auto correction capacity level PBM4 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM4_Auto_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM4 branch 1\n", CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_1, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM4 branch 1\n", CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_1, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset: //Enable/Disable auto correction capacity level PBM4 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM4_Auto_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM4 branch 2\n", CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_2, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM4 branch 2\n", CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_2, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM1_Corr_Cap_Level_Branch1_offset: //Perform once time correction capacity level PBM1 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Perform once time correction capacity level PBM1 branch 1\n", CAN_PBM1_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                    }
+                    break;
+
+                case CAN_PBM1_Corr_Cap_Level_Branch2_offset: //Perform once time correction capacity level PBM1 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Perform once time correction capacity level PBM1 branch 2\n", CAN_PBM1_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                    }
+                    break;
+
+                case CAN_PBM2_Corr_Cap_Level_Branch1_offset: //Perform once time correction capacity level PBM2 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM2_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Perform once time correction capacity level PBM2 branch 1\n", CAN_PBM2_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                    }
+                    break;
+
+                case CAN_PBM2_Corr_Cap_Level_Branch2_offset: //Perform once time correction capacity level PBM2 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM2_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Perform once time correction capacity level PBM2 branch 2\n", CAN_PBM2_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                    }
+                    break;
+
+                case CAN_PBM3_Corr_Cap_Level_Branch1_offset: //Perform once time correction capacity level PBM3 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM3_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Perform once time correction capacity level PBM3 branch 1\n", CAN_PBM3_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                    }
+                    break;
+
+                case CAN_PBM3_Corr_Cap_Level_Branch2_offset: //Perform once time correction capacity level PBM3 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM3_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Perform once time correction capacity level PBM3 branch 2\n", CAN_PBM3_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                    }
+                    break;
+
+                case CAN_PBM4_Corr_Cap_Level_Branch1_offset: //Perform once time correction capacity level PBM4 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM4_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Perform once time correction capacity level PBM4 branch 1\n", CAN_PBM4_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                    }
+                    break;
+
+                case CAN_PBM4_Corr_Cap_Level_Branch2_offset: //Perform once time correction capacity level PBM4 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM4_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Perform once time correction capacity level PBM4 branch 2\n", CAN_PBM4_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                    }
+                    break;
+
+                case CAN_PBM1_Reset_Branch1_offset: //Reset MAX17320 PBM1 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM1 branch 1\n", CAN_PBM1_Reset_Branch1_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1);
+                    }
+                    break;
+
+                case CAN_PBM1_Reset_Branch2_offset: //Reset MAX17320 PBM1 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM1 branch 2\n", CAN_PBM1_Reset_Branch2_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2);
+                    }
+                    break;
+
+                case CAN_PBM2_Reset_Branch1_offset: //Reset MAX17320 PBM2 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM2_Reset_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM2 branch 1\n", CAN_PBM2_Reset_Branch1_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1);
+                    }
+                    break;
+
+                case CAN_PBM2_Reset_Branch2_offset: //Reset MAX17320 PBM2 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM2_Reset_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM2 branch 2\n", CAN_PBM2_Reset_Branch2_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2);
+                    }
+                    break;
+
+                case CAN_PBM3_Reset_Branch1_offset: //Reset MAX17320 PBM3 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM3_Reset_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM3 branch 1\n", CAN_PBM3_Reset_Branch1_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1);
+                    }
+                    break;
+
+                case CAN_PBM3_Reset_Branch2_offset: //Reset MAX17320 PBM3 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM3_Reset_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM3 branch 2\n", CAN_PBM3_Reset_Branch2_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2);
+                    }
+                    break;
+
+                case CAN_PBM4_Reset_Branch1_offset: //Reset MAX17320 PBM4 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM4_Reset_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM4 branch 1\n", CAN_PBM4_Reset_Branch1_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_1);
+                    }
+                    break;
+
+                case CAN_PBM4_Reset_Branch2_offset: //Reset MAX17320 PBM4 branch 2  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM4_Reset_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM4 branch 2\n", CAN_PBM4_Reset_Branch2_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_2);
+                    }
+                    break;
+
                 default:
 					break;
 			}
@@ -1301,19 +1635,105 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
         CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent     = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent + (uint8_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalRelativeCapacity_Perc / PBM_T1_QUANTITY);
     }
 
-    /*
-    uint16_t CAN_TMIx_PBM1_Error_BitMask;                           //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM2_Error_BitMask;                           //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM3_Error_BitMask;                           //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM4_Error_BitMask;                           //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM1_Controller1_Error_BitMask;               //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM1_Controller2_Error_BitMask;               //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM2_Controller1_Error_BitMask;               //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM2_Controller2_Error_BitMask;               //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM3_Controller1_Error_BitMask;               //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM3_Controller2_Error_BitMask;               //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM4_Controller1_Error_BitMask;               //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM4_Controller2_Error_BitMask;               //+ |  const = 0x                   |   Статус ошибок модуля PBM1, битовая маска */
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_1].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_1].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_1].Low_Energy_Flag << 2)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_2].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_2].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_2].Low_Energy_Flag << 2)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_3].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_3].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_3].Low_Energy_Flag << 2)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_4].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_4].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_4].Low_Energy_Flag << 2)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 15);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 15);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 15);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 15);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 15);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 15);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 15);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 15);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
@@ -1461,10 +1881,19 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_Heating_Elements_Power    = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Heating_Elements_Power;
     CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_Battery_Level_mAh         = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh;
     CAN_IVar5_telemetry.CAN_Beacon_PBM_Heating_Element_State_BitMask   = CAN_IVar5_telemetry.CAN_TMIx_PBM_Heating_Element_State_BitMask;
-    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[0] = 0x00; //TODO заполнить так как этот параметр только для маяка
-    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[1] = 0x00; //TODO заполнить так как этот параметр только для маяка
-    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[2] = 0x00; //TODO заполнить так как этот параметр только для маяка
-    CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[0] = 0x00; //TODO заполнить так как этот параметр только для маяка
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[0] = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Discharge | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Charge << 1)
+																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 2) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Discharge << 3)
+																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Charge << 4) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 5)
+    																			| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Discharge << 6) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Charge << 7);
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[1] = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_MAX17320	| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Discharge << 1)
+    																			| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Charge << 2) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 3)
+    	    	    															| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Discharge << 4) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Charge << 5)
+																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 6) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Discharge << 7);
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[2] = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Charge | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 1)
+																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Discharge << 2) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Charge << 3)
+																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 4)	| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Discharge << 5)
+																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Charge << 6) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 7);
+	CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[0] = 0x00; //TODO заполнить так как этот параметр только для маяка
     CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[1] = 0x00; //TODO заполнить так как этот параметр только для маяка
 
 }
