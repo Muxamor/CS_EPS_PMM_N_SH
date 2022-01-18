@@ -68,6 +68,9 @@ extern "C" {
 #define PBM_T1_ON_EMERG_CHRG          		0x01 	//Enable emergency charge.
 #define PBM_T1_OFF_EMERG_CHRG         		0x00 	//Disable emergency charge.
 
+#define PBM_T1_ON_AUTO_CAP_CORRECT    		0x01 	//Enable auto correction capacity level.
+#define PBM_T1_OFF_AUTO_CAP_CORRECT         0x00 	//Disable auto correction capacity level.
+
 #define PBM_T1_MAX17320_R_SENSE    			10 		//Resistance of current shunt im mOhm.
 #define PBM_T1_MAX_BATT_CAP           		3100 	//Maximum branch battery capacity in mAh.
 
