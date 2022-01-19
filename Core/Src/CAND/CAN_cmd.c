@@ -1107,7 +1107,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM2 branch 2\n", CAN_PBM2_Corr_Cap_Level_Branch2_offset);
                         #endif
-                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
                     }
                     break;
 
