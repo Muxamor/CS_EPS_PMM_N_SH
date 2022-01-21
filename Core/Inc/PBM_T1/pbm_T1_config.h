@@ -14,10 +14,10 @@ extern "C" {
 #define PBM_T1_i2c_delay_att_conn			3 	 	//ms Delay between attempts connection through I2C in millisecond
 #define PBM_T1_QUANTITY 					0x04 	// Total quantity power modules PBM
 #define PBM_T1_BRANCH_QUANTITY 				0x02 	// Total quantity branches on one PBM
-#define PBM_T1_BRANCH_BAT_QUANTITY			0x02 	// Total quantity battery in branch
+#define PBM_T1_BRANCH_BAT_QUANTITY			2 	    // Total quantity battery in branch
 #define PBM_T1_HEAT_QUANTITY 				0x02 	// Total quantity heaters on one PBM
 #define PBM_T1_HEAT_TEMPSENS_QUANTITY		0x02 	// Total quantity temperature sensors on one heat
-#define PBM_T1_TEMPSENS_QUANTITY			0x00 	// Total quantity temperature sensors
+//#define PBM_T1_TEMPSENS_QUANTITY			0x00 	 Total quantity temperature sensors
 
 #define PBM_T1_1_TCA9548A_ADDR              0x70 	//Address GPIO mux PCA9534ARGTR Battery Module №1.
 #define PBM_T1_2_TCA9548A_ADDR              0x71 	//Address GPIO mux PCA9534ARGTR Battery Module №2.

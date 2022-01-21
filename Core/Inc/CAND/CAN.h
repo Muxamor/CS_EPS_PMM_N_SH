@@ -31,76 +31,75 @@ extern "C" {
 #define CAN_Constant_mode_offset            4
 
 // Offset Command of PMM
-#define CAN_EPS_Mode_offset                 16
-#define CAN_Switch_active_CPU_offset        17
-#define CAN_Reset_to_default_offset         18
-#define CAN_Perform_Deploy_offset           19
-#define CAN_PMM_PWR_OFF_Passive_CPU_offset  20
-#define CAN_PMM_Reboot_Passive_CPU_offset   21
-#define CAN_PMM_PWR_CAN_main_offset         22
-#define CAN_PMM_PWR_CAN_backup_offset       23
-#define CAN_PWR_VBAT1_key1_offset		    24
-#define CAN_PWR_VBAT1_key2_offset		    25
-#define CAN_PWR_VBAT2_key1_offset		    26
-#define CAN_PWR_VBAT2_key2_offset		    27
-#define CAN_PMM_PWR_PBM_Logic_offset        28
+#define CAN_EPS_Mode_offset                         16
+#define CAN_Switch_active_CPU_offset                17
+#define CAN_Reset_to_default_offset                 18
+#define CAN_Perform_Deploy_offset                   19
+#define CAN_PMM_PWR_OFF_Passive_CPU_offset          20
+#define CAN_PMM_Reboot_Passive_CPU_offset           21
+#define CAN_PMM_PWR_CAN_main_offset                 22
+#define CAN_PMM_PWR_CAN_backup_offset               23
+#define CAN_PWR_VBAT1_key1_offset		            24
+#define CAN_PWR_VBAT1_key2_offset		            25
+#define CAN_PWR_VBAT2_key1_offset		            26
+#define CAN_PWR_VBAT2_key2_offset		            27
+#define CAN_PMM_PWR_PBM_Logic_offset                28
 
 // Offset Command of PDM
-#define CAN_PWR_CH1_offset			        100
-#define CAN_PWR_CH2_offset			        101
-#define CAN_PWR_CH3_offset                  102
-#define CAN_PWR_CH4_offset			        103
-#define CAN_PWR_CH5_offset			        104
-#define CAN_PWR_CH6_offset			        105
+#define CAN_PWR_CH1_offset			                100
+#define CAN_PWR_CH2_offset			                101
+#define CAN_PWR_CH3_offset                          102
+#define CAN_PWR_CH4_offset			                103
+#define CAN_PWR_CH5_offset			                104
+#define CAN_PWR_CH6_offset			                105
 
 
 //Offset Command of PAM
-#define CAN_PAM_PWR_DC_DC_offset            200
-#define CAN_PAM_PWR_LDO_offset              201
-#define CAN_PAM_PWR_TM_SP_CH1_offset        202
-#define CAN_PAM_PWR_TM_SP_CH2_offset        203
-#define CAN_PAM_PWR_TM_SP_CH3_offset        204
-#define CAN_PAM_PWR_TM_SP_CH4_offset        205
-#define CAN_PAM_PWR_TM_SP_CH5_offset        206
-#define CAN_PAM_PWR_TM_SP_CH6_offset        207
+#define CAN_PAM_PWR_DC_DC_offset                    200
+#define CAN_PAM_PWR_LDO_offset                      201
+#define CAN_PAM_PWR_TM_SP_CH1_offset                202
+#define CAN_PAM_PWR_TM_SP_CH2_offset                203
+#define CAN_PAM_PWR_TM_SP_CH3_offset                204
+#define CAN_PAM_PWR_TM_SP_CH4_offset                205
+#define CAN_PAM_PWR_TM_SP_CH5_offset                206
+#define CAN_PAM_PWR_TM_SP_CH6_offset                207
 
 //Offset Command of PBMs
+#define CAN_PBM1_Charge_key_branch_1_offset         300
+#define CAN_PBM1_Discharge_key_branch_1_offset      301
+#define CAN_PBM1_Charge_key_branch_2_offset         302
+#define CAN_PBM1_Discharge_key_branch_2_offset      303
+#define CAN_PBM2_Charge_key_branch_1_offset         304
+#define CAN_PBM2_Discharge_key_branch_1_offset      305
+#define CAN_PBM2_Charge_key_branch_2_offset         306
+#define CAN_PBM2_Discharge_key_branch_2_offset      307
+#define CAN_PBM3_Charge_key_branch_1_offset         308
+#define CAN_PBM3_Discharge_key_branch_1_offset      309
+#define CAN_PBM3_Charge_key_branch_2_offset         310
+#define CAN_PBM3_Discharge_key_branch_2_offset      311
+#define CAN_PBM4_Charge_key_branch_1_offset         312
+#define CAN_PBM4_Discharge_key_branch_1_offset      313
+#define CAN_PBM4_Charge_key_branch_2_offset         314
+#define CAN_PBM4_Discharge_key_branch_2_offset      315
 
-#define CAN_AB1_Charge_key_1_offset         300
-#define CAN_AB1_Discharge_key_1_offset      301
-#define CAN_AB1_Charge_key_2_offset         302
-#define CAN_AB1_Discharge_key_2_offset      303
-#define CAN_AB2_Charge_key_1_offset         304
-#define CAN_AB2_Discharge_key_1_offset      305
-#define CAN_AB2_Charge_key_2_offset	        306
-#define CAN_AB2_Discharge_key_2_offset      307
-#define CAN_AB3_Charge_key_1_offset         308
-#define CAN_AB3_Discharge_key_1_offset      309
-#define CAN_AB3_Charge_key_2_offset	        310
-#define CAN_AB3_Discharge_key_2_offset      311
-#define CAN_AB4_Charge_key_1_offset         312
-#define CAN_AB4_Discharge_key_1_offset      313
-#define CAN_AB4_Charge_key_2_offset	        314
-#define CAN_AB4_Discharge_key_2_offset      315
-
-#define CAN_AB1_Heat_Branch1_offset         332
-#define CAN_AB1_Heat_Branch2_offset         333
-#define CAN_AB2_Heat_Branch1_offset         334
-#define CAN_AB2_Heat_Branch2_offset         335
-#define CAN_AB3_Heat_Branch1_offset         336
-#define CAN_AB3_Heat_Branch2_offset         337
-#define CAN_AB4_Heat_Branch1_offset         338
-#define CAN_AB4_Heat_Branch2_offset         339
+#define CAN_PBM1_Heat_Branch1_offset                332
+#define CAN_PBM1_Heat_Branch2_offset                333
+#define CAN_PBM2_Heat_Branch1_offset                334
+#define CAN_PBM2_Heat_Branch2_offset                335
+#define CAN_PBM3_Heat_Branch1_offset                336
+#define CAN_PBM3_Heat_Branch2_offset                337
+#define CAN_PBM4_Heat_Branch1_offset                338
+#define CAN_PBM4_Heat_Branch2_offset                339
 
 
-#define CAN_PBM1_Emerg_Charge_Key_Branch1_offset 348
-#define CAN_PBM1_Emerg_Charge_Key_Branch2_offset 349
-#define CAN_PBM2_Emerg_Charge_Key_Branch1_offset 350
-#define CAN_PBM2_Emerg_Charge_Key_Branch2_offset 351
-#define CAN_PBM3_Emerg_Charge_Key_Branch1_offset 352
-#define CAN_PBM3_Emerg_Charge_Key_Branch2_offset 353
-#define CAN_PBM4_Emerg_Charge_Key_Branch1_offset 354
-#define CAN_PBM4_Emerg_Charge_Key_Branch2_offset 355
+#define CAN_PBM1_Emerg_Charge_Key_Branch1_offset    348
+#define CAN_PBM1_Emerg_Charge_Key_Branch2_offset    349
+#define CAN_PBM2_Emerg_Charge_Key_Branch1_offset    350
+#define CAN_PBM2_Emerg_Charge_Key_Branch2_offset    351
+#define CAN_PBM3_Emerg_Charge_Key_Branch1_offset    352
+#define CAN_PBM3_Emerg_Charge_Key_Branch2_offset    353
+#define CAN_PBM4_Emerg_Charge_Key_Branch1_offset    354
+#define CAN_PBM4_Emerg_Charge_Key_Branch2_offset    355
 
 #define CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset 364
 #define CAN_PBM1_Auto_Corr_Cap_Level_Branch2_offset 365
@@ -111,23 +110,23 @@ extern "C" {
 #define CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset 370
 #define CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset 371
 
-#define CAN_PBM1_Corr_Cap_Level_Branch1_offset 380
-#define CAN_PBM1_Corr_Cap_Level_Branch2_offset 381
-#define CAN_PBM2_Corr_Cap_Level_Branch1_offset 382
-#define CAN_PBM2_Corr_Cap_Level_Branch2_offset 383
-#define CAN_PBM3_Corr_Cap_Level_Branch1_offset 384
-#define CAN_PBM3_Corr_Cap_Level_Branch2_offset 385
-#define CAN_PBM4_Corr_Cap_Level_Branch1_offset 386
-#define CAN_PBM4_Corr_Cap_Level_Branch2_offset 387
+#define CAN_PBM1_Corr_Cap_Level_Branch1_offset      380
+#define CAN_PBM1_Corr_Cap_Level_Branch2_offset      381
+#define CAN_PBM2_Corr_Cap_Level_Branch1_offset      382
+#define CAN_PBM2_Corr_Cap_Level_Branch2_offset      383
+#define CAN_PBM3_Corr_Cap_Level_Branch1_offset      384
+#define CAN_PBM3_Corr_Cap_Level_Branch2_offset      385
+#define CAN_PBM4_Corr_Cap_Level_Branch1_offset      386
+#define CAN_PBM4_Corr_Cap_Level_Branch2_offset      387
 
-#define CAN_PBM1_Reset_Branch1_offset 396
-#define CAN_PBM1_Reset_Branch2_offset 397
-#define CAN_PBM2_Reset_Branch1_offset 398
-#define CAN_PBM2_Reset_Branch2_offset 399
-#define CAN_PBM3_Reset_Branch1_offset 400
-#define CAN_PBM3_Reset_Branch2_offset 401
-#define CAN_PBM4_Reset_Branch1_offset 402
-#define CAN_PBM4_Reset_Branch2_offset 403
+#define CAN_PBM1_Reset_Branch1_offset               396
+#define CAN_PBM1_Reset_Branch2_offset               397
+#define CAN_PBM2_Reset_Branch1_offset               398
+#define CAN_PBM2_Reset_Branch2_offset               399
+#define CAN_PBM3_Reset_Branch1_offset               400
+#define CAN_PBM3_Reset_Branch2_offset               401
+#define CAN_PBM4_Reset_Branch1_offset               402
+#define CAN_PBM4_Reset_Branch2_offset               403
 
 
 

@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-
+ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr);
 
 
 #ifdef __cplusplus

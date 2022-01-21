@@ -102,8 +102,6 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             //Enable PBM logic power and thermostat.
             PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
 
-
-            // change!!!!!! Morsin A.A.
             //PBM
             for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){
             	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
