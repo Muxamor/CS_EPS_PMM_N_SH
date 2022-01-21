@@ -1640,28 +1640,32 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_2].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_2].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_2].Low_Energy_Flag << 2)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_3].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_3].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_3].Low_Energy_Flag << 2)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_4].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_4].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_4].Low_Energy_Flag << 2)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].ODCP << 3)
@@ -1670,7 +1674,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 15);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].ODCP << 3)
@@ -1679,7 +1683,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].PreqChrg << 9)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 15);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 14);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].ODCP << 3)
@@ -1688,7 +1692,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 15);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].ODCP << 3)
@@ -1697,7 +1701,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].PreqChrg << 9)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 15);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 14);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].ODCP << 3)
@@ -1706,7 +1710,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 15);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].ODCP << 3)
@@ -1715,7 +1719,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].PreqChrg << 9)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 15);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 14);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].ODCP << 3)
@@ -1724,7 +1728,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 15);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].ODCP << 3)
@@ -1733,7 +1737,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].PreqChrg << 9)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 14) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 15);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 14);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
