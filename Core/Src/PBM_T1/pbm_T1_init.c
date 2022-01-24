@@ -28,15 +28,15 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
 
 			pbm[PBM_Number].Branch[Branch_number].Counter_Reset_PreqF = 0;
 
-			Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].ChgEnableBit);
-			Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].DchgEnableBit);
+			Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].ChgEnableCmd);
+			Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].DchgEnableCmd);
 
-    		if ( pbm[PBM_Number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == ENABLE) {
+    		if ( pbm[PBM_Number].Branch[Branch_number].PCA9534_Emerg_Chrg_Cmd == ENABLE) {
                 Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_ON_EMERG_CHRG);
     		} else {
                 Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_OFF_EMERG_CHRG);
     		}
-    		if ( pbm[PBM_Number].Branch[Branch_number].Auto_Corr_Capacity_Key == ENABLE) {
+    		if ( pbm[PBM_Number].Branch[Branch_number].Auto_Corr_Capacity_Cmd == ENABLE) {
     			Error += PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_MAX_BATT_CAP);
     		}
     		if ( Error != SUCCESS){
@@ -109,15 +109,15 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 
 			for( Branch_number = 0; Branch_number < PBM_T1_BRANCH_QUANTITY; Branch_number++){
 
-				Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].ChgEnableBit);
-				Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].DchgEnableBit);
+				Error += PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].ChgEnableCmd);
+				Error += PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, pbm[PBM_Number].Branch[Branch_number].DchgEnableCmd);
 
-	    		if ( pbm[PBM_Number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == ENABLE) {
+	    		if ( pbm[PBM_Number].Branch[Branch_number].PCA9534_Emerg_Chrg_Cmd == ENABLE) {
 	                Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_ON_EMERG_CHRG);
 	    		} else {
 	                Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_OFF_EMERG_CHRG);
 	    		}
-	    		if ( pbm[PBM_Number].Branch[Branch_number].Auto_Corr_Capacity_Key == ENABLE) {
+	    		if ( pbm[PBM_Number].Branch[Branch_number].Auto_Corr_Capacity_Cmd == ENABLE) {
 	    			Error += PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_MAX_BATT_CAP);
 	    		}
 	    		if ( Error != SUCCESS){

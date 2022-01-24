@@ -1572,7 +1572,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask     = 0x0000;
     for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
         for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-           CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableBit << move_bit_pos);
+           CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableCmd << move_bit_pos);
            move_bit_pos++;
            CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgControlFlag << move_bit_pos);
            move_bit_pos++;
@@ -1598,7 +1598,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask    = 0x0000;
     for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
         for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-            CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Key << move_bit_pos);
+            CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd << move_bit_pos);
             move_bit_pos++;
         }
     }
@@ -1606,7 +1606,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask    = 0x0000;
     for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
         for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-            CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Key << move_bit_pos);
+            CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Cmd << move_bit_pos);
             move_bit_pos++;
         }
     }
@@ -2315,22 +2315,22 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PAM_PWR_TM_SP_CH6                                  = eps_p.eps_pam_ptr->PWR_Channel_TM_SP[5].State_eF_out;
 
     // Command of PBM
-    CAN_IVar4_RegCmd.CAN_PBM1_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].ChgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM1_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].DchgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM1_Charge_key_branch_2                           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].ChgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM1_Discharge_key_branch_2                        = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].DchgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM2_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].ChgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM2_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].DchgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM2_Charge_key_branch_2                           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].ChgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM2_Discharge_key_branch_2                        = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].DchgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM3_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].ChgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM3_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].DchgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM3_Charge_key_branch_2                           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].ChgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM3_Discharge_key_branch_2                        = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].DchgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM4_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].ChgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM4_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].DchgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM4_Charge_key_branch_2                           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].ChgEnableBit;
-    CAN_IVar4_RegCmd.CAN_PBM4_Discharge_key_branch_2                        = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].DchgEnableBit;
+    CAN_IVar4_RegCmd.CAN_PBM1_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM1_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].DchgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM1_Charge_key_branch_2                           = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM1_Discharge_key_branch_2                        = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].DchgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM2_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM2_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].DchgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM2_Charge_key_branch_2                           = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM2_Discharge_key_branch_2                        = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].DchgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM3_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM3_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].DchgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM3_Charge_key_branch_2                           = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM3_Discharge_key_branch_2                        = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].DchgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM4_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM4_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].DchgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM4_Charge_key_branch_2                           = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM4_Discharge_key_branch_2                        = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].DchgEnableCmd;
 
     CAN_IVar4_RegCmd.CAN_PBM1_Heat_Branch1                                  = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].PCA9534_ON_Heat_CMD;
     CAN_IVar4_RegCmd.CAN_PBM1_Heat_Branch2                                  = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].PCA9534_ON_Heat_CMD;
@@ -2341,23 +2341,23 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PBM4_Heat_Branch1                                  = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].PCA9534_ON_Heat_CMD;
     CAN_IVar4_RegCmd.CAN_PBM4_Heat_Branch2                                  = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].PCA9534_ON_Heat_CMD;
 
-    CAN_IVar4_RegCmd.CAN_PBM1_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Key;
-    CAN_IVar4_RegCmd.CAN_PBM1_Emerg_Charge_Key_Branch2                      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].PCA9534_Emerg_Chrg_Key;
-    CAN_IVar4_RegCmd.CAN_PBM2_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Key;
-    CAN_IVar4_RegCmd.CAN_PBM2_Emerg_Charge_Key_Branch2                      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].PCA9534_Emerg_Chrg_Key;
-    CAN_IVar4_RegCmd.CAN_PBM3_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Key;
-    CAN_IVar4_RegCmd.CAN_PBM3_Emerg_Charge_Key_Branch2                      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].PCA9534_Emerg_Chrg_Key;
-    CAN_IVar4_RegCmd.CAN_PBM4_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Key;
-    CAN_IVar4_RegCmd.CAN_PBM4_Emerg_Charge_Key_Branch2                      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].PCA9534_Emerg_Chrg_Key;
+    CAN_IVar4_RegCmd.CAN_PBM1_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM1_Emerg_Charge_Key_Branch2                      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].PCA9534_Emerg_Chrg_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM2_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM2_Emerg_Charge_Key_Branch2                      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].PCA9534_Emerg_Chrg_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM3_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM3_Emerg_Charge_Key_Branch2                      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].PCA9534_Emerg_Chrg_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM4_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM4_Emerg_Charge_Key_Branch2                      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].PCA9534_Emerg_Chrg_Cmd;
 
-    CAN_IVar4_RegCmd.CAN_PBM1_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Key;
-    CAN_IVar4_RegCmd.CAN_PBM1_Auto_Corr_Cap_Level_Branch2                   = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Auto_Corr_Capacity_Key;
-    CAN_IVar4_RegCmd.CAN_PBM2_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Key;
-    CAN_IVar4_RegCmd.CAN_PBM2_Auto_Corr_Cap_Level_Branch2                   = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Auto_Corr_Capacity_Key;
-    CAN_IVar4_RegCmd.CAN_PBM3_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Key;
-    CAN_IVar4_RegCmd.CAN_PBM3_Auto_Corr_Cap_Level_Branch2                   = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Auto_Corr_Capacity_Key;
-    CAN_IVar4_RegCmd.CAN_PBM4_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Key;
-    CAN_IVar4_RegCmd.CAN_PBM4_Auto_Corr_Cap_Level_Branch2                   = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Auto_Corr_Capacity_Key;
+    CAN_IVar4_RegCmd.CAN_PBM1_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM1_Auto_Corr_Cap_Level_Branch2                   = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Auto_Corr_Capacity_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM2_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM2_Auto_Corr_Cap_Level_Branch2                   = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Auto_Corr_Capacity_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM3_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM3_Auto_Corr_Cap_Level_Branch2                   = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Auto_Corr_Capacity_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM4_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM4_Auto_Corr_Cap_Level_Branch2                   = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Auto_Corr_Capacity_Cmd;
 
     CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch1                        = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch2                        = 0x00;

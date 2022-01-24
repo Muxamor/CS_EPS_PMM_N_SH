@@ -247,7 +247,7 @@ ErrorStatus PBM_T1_ReadStateEmergChrg(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	if (Error == SUCCESS) {
 
-		if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == (data8)) {
+		if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Cmd == (data8)) {
 			pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = SUCCESS;
 		} else {
 			pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
@@ -839,8 +839,8 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 
 	Error_I2C_MUX = Error;
 
-	if( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key != State ){
-		pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key = State;
+	if( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Cmd != State ){
+		pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Cmd = State;
 		pbm[PBM_number].PBM_save_conf_flag = 1;
 	}
 
@@ -895,7 +895,7 @@ ErrorStatus PBM_T1_SetStateEmergChrg( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t 
 		#endif
 
 	} else {
-	    if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Key == data8 ) {
+	    if ( pbm[PBM_number].Branch[Branch_number].PCA9534_Emerg_Chrg_Cmd == data8 ) {
 	        pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = SUCCESS;
 	    } else {
 	        pbm[PBM_number].Branch[Branch_number].Error_Emerg_Chrg = ERROR;
@@ -942,8 +942,8 @@ ErrorStatus PBM_T1_SetStateChargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8
 
 	Error_I2C_MUX = Error;
 
-	if( pbm[PBM_number].Branch[Branch_number].ChgEnableBit != State){
-	    pbm[PBM_number].Branch[Branch_number].ChgEnableBit = State;
+	if( pbm[PBM_number].Branch[Branch_number].ChgEnableCmd != State){
+	    pbm[PBM_number].Branch[Branch_number].ChgEnableCmd = State;
 	    pbm[PBM_number].PBM_save_conf_flag = 1;
 	}
 
@@ -1034,8 +1034,8 @@ ErrorStatus PBM_T1_SetStateDischargeBranch( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], ui
 
 	Error_I2C_MUX = Error;
 
-	if( pbm[PBM_number].Branch[Branch_number].DchgEnableBit != State){
-	    pbm[PBM_number].Branch[Branch_number].DchgEnableBit = State;
+	if( pbm[PBM_number].Branch[Branch_number].DchgEnableCmd != State){
+	    pbm[PBM_number].Branch[Branch_number].DchgEnableCmd = State;
 	    pbm[PBM_number].PBM_save_conf_flag = 1;
 	}
 
@@ -1105,8 +1105,8 @@ ErrorStatus PBM_T1_SetStateAutoCorrectCapacity(I2C_TypeDef *I2Cx, _PBM_T1 pbm[],
 
 	int8_t Error = 0;
 
-	if( pbm[PBM_number].Branch[Branch_number].Auto_Corr_Capacity_Key != State ){
-		pbm[PBM_number].Branch[Branch_number].Auto_Corr_Capacity_Key = State;
+	if( pbm[PBM_number].Branch[Branch_number].Auto_Corr_Capacity_Cmd != State ){
+		pbm[PBM_number].Branch[Branch_number].Auto_Corr_Capacity_Cmd = State;
 		pbm[PBM_number].PBM_save_conf_flag = 1;
 	}
 
@@ -1168,14 +1168,14 @@ ErrorStatus PBM_T1_CheckChargeDischargeState(_PBM_T1 pbm[], uint8_t PBM_number, 
 
 	uint8_t Error = 0;
 
-	if((pbm[PBM_number].Branch[Branch_number].ChgEnableBit == pbm[PBM_number].Branch[Branch_number].ChgControlFlag) && (pbm[PBM_number].Branch[Branch_number].Error_MAX17320 == SUCCESS)){
+	if((pbm[PBM_number].Branch[Branch_number].ChgEnableCmd == pbm[PBM_number].Branch[Branch_number].ChgControlFlag) && (pbm[PBM_number].Branch[Branch_number].Error_MAX17320 == SUCCESS)){
 
 		pbm[PBM_number].Branch[Branch_number].Error_Charge = SUCCESS;
 	} else {
 		Error = Error + 1;
 		pbm[PBM_number].Branch[Branch_number].Error_Charge = ERROR;
 	}
-	if((pbm[PBM_number].Branch[Branch_number].DchgEnableBit == pbm[PBM_number].Branch[Branch_number].DchgControlFlag) && (pbm[PBM_number].Branch[Branch_number].Error_MAX17320 == SUCCESS)){
+	if((pbm[PBM_number].Branch[Branch_number].DchgEnableCmd == pbm[PBM_number].Branch[Branch_number].DchgControlFlag) && (pbm[PBM_number].Branch[Branch_number].Error_MAX17320 == SUCCESS)){
 
 		pbm[PBM_number].Branch[Branch_number].Error_Discharge = SUCCESS;
 	} else {
