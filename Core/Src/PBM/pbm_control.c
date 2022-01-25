@@ -225,8 +225,8 @@ ErrorStatus PBM_ReadBatteryData(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_numbe
 			count++;
 			continue;
 		}
-		//pbm[PBM_number].Branch_1_DchgEnableBit = Struct.DchgEnableBit;
-		//pbm[PBM_number].Branch_1_ChgEnableBit = Struct.ChgEnableBit;
+		//pbm[PBM_number].Branch_1_DchgEnableBit = Struct.DchgEnableCmd;
+		//pbm[PBM_number].Branch_1_ChgEnableBit = Struct.ChgEnableCmd;
 		pbm[PBM_number].Branch_1_DchgControlFlag = Struct.DchgControlFlag;
 		pbm[PBM_number].Branch_1_ChgControlFlag = Struct.ChgControlFlag;
 		pbm[PBM_number].Branch_1_LrnFlag = Struct.LrnFlag;
@@ -282,8 +282,8 @@ ErrorStatus PBM_ReadBatteryData(I2C_TypeDef *I2Cx, _PBM pbm[], uint8_t PBM_numbe
 			count++;
 			continue;
 		}
-		//pbm[PBM_number].Branch_2_DchgEnableBit = Struct.DchgEnableBit;
-		//pbm[PBM_number].Branch_2_ChgEnableBit = Struct.ChgEnableBit;
+		//pbm[PBM_number].Branch_2_DchgEnableBit = Struct.DchgEnableCmd;
+		//pbm[PBM_number].Branch_2_ChgEnableBit = Struct.ChgEnableCmd;
 		pbm[PBM_number].Branch_2_DchgControlFlag = Struct.DchgControlFlag;
 		pbm[PBM_number].Branch_2_ChgControlFlag = Struct.ChgControlFlag;
 		pbm[PBM_number].Branch_2_LrnFlag = Struct.LrnFlag;

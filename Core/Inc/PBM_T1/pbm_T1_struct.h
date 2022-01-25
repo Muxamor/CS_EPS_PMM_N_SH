@@ -13,8 +13,8 @@ typedef struct  // Structure for PBM data
 	uint16_t UVP :1; 						// Undervoltage faults.
 	uint16_t OCCP :1; 						// Overcharge current faults.
 	uint16_t ODCP :1; 						// Overdischarge current faults.
-	uint16_t DchgEnableBit :1; 				// Discharge Enable Bit must be set 1 to allow the ON state. // Need to save in flash.
-	uint16_t ChgEnableBit :1; 				// Charge Enable Bit must be set 1 to allow the ON state. // Need to save in flash.
+	uint16_t DchgEnableCmd :1; 				// Discharge Enable Bit must be set 1 to allow the ON state. // Need to save in flash.
+	uint16_t ChgEnableCmd :1; 				// Charge Enable Bit must be set 1 to allow the ON state. // Need to save in flash.
 	uint16_t DchgControlFlag :1; 			// Discharge Control Flag indicates the real logic state of the DC pin driver.
 	uint16_t ChgControlFlag :1; 			// Charge Control Flag indicates the logic state of the CC pin driver.
 	uint16_t PreqF :1; 						// Prequal timeout faults.
@@ -23,8 +23,8 @@ typedef struct  // Structure for PBM data
 	uint16_t OD :1;
 	uint16_t SC :1;
 	uint16_t PreqChrg :1;
-	uint16_t Auto_Corr_Capacity_Key :1;    	// Bit for enable/disable correction capacity level in auto mode. // Need to save in flash.
-	uint16_t PCA9534_Emerg_Chrg_Key :1; 	// PCA9534 port. Show and set state emergency charge. // Need to save in flash.
+	uint16_t Auto_Corr_Capacity_Cmd :1;    	// Bit for enable/disable correction capacity level in auto mode. // Need to save in flash.
+	uint16_t PCA9534_Emerg_Chrg_Cmd :1; 	// PCA9534 port. Show and set state emergency charge. // Need to save in flash.
 
 	uint16_t Counter_Reset_PreqF :8; 		// Counter for reset MAX17320 if exist prequal timer error.
 	uint16_t Error_Charge :1; 				// Register error charge branch.
