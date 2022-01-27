@@ -111,7 +111,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
                     eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Cmd = DISABLE;
             	}
             	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
-            		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_ON_Heat_CMD = DISABLE;
+            		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_Heat_CMD = DISABLE;
             	}
             }
 

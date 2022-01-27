@@ -51,7 +51,7 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
 
 			Error += PBM_T1_Init_Heat_INA238(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number);
 
-			if ( pbm[PBM_Number].Heat[Heat_number].PCA9534_ON_Heat_CMD == ENABLE) {
+			if ( pbm[PBM_Number].Heat[Heat_number].PCA9534_Heat_CMD == ENABLE) {
                 Error += PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, PBM_T1_ON_HEAT);
     		} else {
                 Error += PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, PBM_T1_OFF_HEAT);
@@ -132,7 +132,7 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[], _PMM *pmm_ptr) {
 
 				Error += PBM_T1_Init_Heat_INA238(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number);
 
-	           	if ( pbm[PBM_Number].Heat[Heat_number].PCA9534_ON_Heat_CMD == ENABLE) {
+	           	if ( pbm[PBM_Number].Heat[Heat_number].PCA9534_Heat_CMD == ENABLE) {
 	                Error += PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, PBM_T1_ON_HEAT);
 	    		} else {
 	                Error += PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, PBM_T1_OFF_HEAT);

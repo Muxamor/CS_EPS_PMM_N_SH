@@ -161,7 +161,7 @@ ErrorStatus PBM_T1_CheckStateCmdHeat(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t P
 	}
 
 	if (Error == SUCCESS) {
-		if (pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD == (data8)) {
+		if ( pbm[PBM_number].Heat[Heat_number].PCA9534_Heat_CMD == (data8)) {
 			pbm[PBM_number].Heat[Heat_number].Error_Heat = SUCCESS;
 		} else {
 		   pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
@@ -739,8 +739,8 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 
 	Error_I2C_MUX = Error;
 
-	if( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD != State ){
-		pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD = State;
+	if( pbm[PBM_number].Heat[Heat_number].PCA9534_Heat_CMD != State ){
+		pbm[PBM_number].Heat[Heat_number].PCA9534_Heat_CMD = State;
 		pbm[PBM_number].PBM_save_conf_flag = 1;
 	}
 
@@ -792,7 +792,7 @@ ErrorStatus PBM_T1_SetStateHeat( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_n
 		#endif
 
 	} else {
-	    if ( pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD == data8 ) {
+	    if ( pbm[PBM_number].Heat[Heat_number].PCA9534_Heat_CMD == data8 ) {
 	        pbm[PBM_number].Heat[Heat_number].Error_Heat = SUCCESS;
 	    } else {
 	        pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
@@ -1142,7 +1142,7 @@ ErrorStatus PBM_T1_CheckOverHeat(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat
 		if (count >= 1) { // off heat if at least one temp sense dont work right
 			PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_number, Heat_number, PBM_T1_OFF_HEAT);
 			PBM_T1_Init_Heat_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_number, Heat_number, pbm_table.TempSens_Heat_Addr[tempsense]); //TCA9548_CH0
-			pbm[PBM_number].Heat[Heat_number].PCA9534_ON_Heat_CMD = 1;
+			pbm[PBM_number].Heat[Heat_number].PCA9534_Heat_CMD = 1;
 			pbm[PBM_number].Heat[Heat_number].Error_Heat = ERROR;
 
 			Error = ERROR_N;
