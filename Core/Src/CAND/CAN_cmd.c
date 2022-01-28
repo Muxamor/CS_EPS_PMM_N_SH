@@ -1603,10 +1603,10 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
        }
     }
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM_Thermostat_ComReg_BitMask          = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Thermostat_Cmd_BitMask          = 0x0000;
     for (PBM_Number = 0,  move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++) {
         for( Heat_number = 0; Heat_number < PBM_T1_HEAT_QUANTITY; Heat_number++){
-            CAN_IVar5_telemetry.CAN_TMIx_PBM_Thermostat_ComReg_BitMask  =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Thermostat_ComReg_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_number].PCA9534_Heat_CMD << move_bit_pos);
+            CAN_IVar5_telemetry.CAN_TMIx_PBM_Thermostat_Cmd_BitMask  = CAN_IVar5_telemetry.CAN_TMIx_PBM_Thermostat_Cmd_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_number].PCA9534_Heat_CMD << move_bit_pos);
             move_bit_pos++;
         }
     }
@@ -1619,10 +1619,10 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
         }
     }
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask    = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask    = 0x0000;
     for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
         for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-            CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd << move_bit_pos);
+            CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask   = CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd << move_bit_pos);
             move_bit_pos++;
         }
     }
@@ -2084,9 +2084,9 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh            = 0x0807;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent        = 0x09;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask     = 0x0B0A;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM_Thermostat_ComReg_BitMask          = 0x0C;
+	CAN_IVar5_telemetry.CAN_TMIx_PBM_Thermostat_Cmd_BitMask          = 0x0C;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM_Heating_Element_State_BitMask      = 0x0D;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Key_State_BitMask     = 0x0E;
+	CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask     = 0x0E;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask     = 0x0F;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Error_BitMask                     = 0x1110;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Error_BitMask                     = 0x1312;
