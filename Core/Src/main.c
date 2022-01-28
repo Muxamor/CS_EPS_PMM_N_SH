@@ -77,7 +77,15 @@ int main(void){
 	I2C3_Init();
 	I2C4_Init();
 
-   //PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
+    //PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
+
+    //UART5_Init();
+    LPUART1_Init();
+    USART3_Init();
+    SetupInterrupt();
+
+    //IWDG_Init(4000);
+    LL_IWDG_ReloadCounter(IWDG);
 
 	//Restore settings of EPS
     pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
@@ -103,13 +111,6 @@ int main(void){
     pam_ptr->PAM_save_conf_flag = 1; //To properly startup the power supplies
     pdm_ptr->PDM_save_conf_flag = 1; //To properly startup the power supplies
 
-	//UART5_Init();
-   	LPUART1_Init();
-	USART3_Init();
-
-    SetupInterrupt();
-
-   	//IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
 
     //Check Active flag between active and passive CPU.
