@@ -1748,14 +1748,14 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Current;
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Current;
