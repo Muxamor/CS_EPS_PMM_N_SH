@@ -677,3 +677,40 @@ ErrorStatus PAM_Get_PG_PWR_TM_SP_Ch( _PAM *pam_ptr, uint8_t num_pwr_ch ){
 
 	return error_I2C;
 }
+
+
+/** @brief	Erase data for PAM.
+	@param 	pam[] - structure data for PAM.
+ */
+void PAM_EraseData(_PAM *pam_ptr){
+
+    uint8_t  num_pwr_ch = 0;
+    //PAM
+    for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
+        pam_ptr->PWR_IN_Channel[num_pwr_ch].State_ID_In = 0;
+        pam_ptr->PWR_IN_Channel[num_pwr_ch].Voltage_val = 0x0000;
+        pam_ptr->PWR_IN_Channel[num_pwr_ch].Current_val = 0x0000;
+        pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val = 0x0000;
+    }
+
+    if( pam_ptr->Error_temp_sensor_1 == SUCCESS){
+        pam_ptr->Temp_sensor[0] = 0x00;
+    }
+
+    if( pam_ptr->Error_temp_sensor_2 == SUCCESS){
+        pam_ptr->Temp_sensor[1] = 0x00;
+    }
+
+    if( pam_ptr->Error_temp_sensor_3 == SUCCESS){
+        pam_ptr->Temp_sensor[2] = 0x00;
+    }
+
+
+    if( pam_ptr->Error_temp_sensor_4 == SUCCESS){
+        pam_ptr->Temp_sensor[3] = 0x00;
+    }
+
+    for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
+        pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].PG_eF_out = SUCCESS;
+    }
+}
