@@ -128,7 +128,9 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 	}else{
 		DISABLE_TMUX1209_I2C();
         PMM_DeInit_I2C_GPIOExt( pmm_ptr, PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1);
+        PMM_DeInit_I2C_GPIOExt( pmm_ptr, PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2);
 		PMM_HARD_Reset_I2C_GPIOExt( PMM_I2CADDR_GPIOExt1); //If program reset doesn't work use HW reset
+		PMM_HARD_Reset_I2C_GPIOExt( PMM_I2CADDR_GPIOExt2); //If program reset doesn't work use HW reset
 
 		error_status = PMM_Power_Down_TMP1075( pmm_ptr, PMM_I2Cx_TMP1075, PMM_I2CADDR_TMP1075);
 	}

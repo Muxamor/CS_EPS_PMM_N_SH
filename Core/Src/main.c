@@ -194,6 +194,7 @@ int main(void){
                     //Check CAN ports
                     PMM_Damage_Check_CAN_m_b(eps_param);
 
+
                     //Disable PWR SubSystem if reach Zero energy level
                     PMM_ZERO_Energy_PWR_OFF_SubSystem( eps_param );
                     //Protection for off all BRC
