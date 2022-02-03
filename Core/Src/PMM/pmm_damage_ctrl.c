@@ -230,7 +230,6 @@ void PMM_Portecion_PWR_OFF_CAN_m_b( _EPS_Param eps_p ){
 	@retval None.
 */
 void PMM_Portecion_PWR_OFF_BRC_m_b( _EPS_Param eps_p ){
-    //TODO Добавить проверку флага что батареи не заряжены ( в будущем  после первого полета).
     if( ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE ) &&
             ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)){
         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
