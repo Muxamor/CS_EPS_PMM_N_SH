@@ -75,7 +75,8 @@ extern "C" {
 #define PMM_Deploy_Burn_Attempt_2   0x01
 #define PMM_Deploy_Burn_Attempt_3   0x03
 
-
+#define PAM                         0x00
+#define PDM                         0x01
 
 #define CPUmain 					0
 #define CPUbackup					1

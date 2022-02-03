@@ -44,6 +44,8 @@ extern "C" {
 #define CAN_PWR_VBAT2_key1_offset		            26
 #define CAN_PWR_VBAT2_key2_offset		            27
 #define CAN_PMM_PWR_PBM_Logic_offset                28
+#define CAN_PMM_PDM_Reset_offset                    29
+#define CAN_PMM_PAM_Reset_offset                    30
 
 // Offset Command of PDM
 #define CAN_PWR_CH1_offset			                100
@@ -195,8 +197,8 @@ struct CAN_IVar4 {
     uint8_t CAN_PMM_PWR_VBAT2_key1;         //+26           Командный регистр линии VBAT2 (МС)
     uint8_t CAN_PMM_PWR_VBAT2_key2;         //+27           Командный регистр линии VBAT2 (МС)
     uint8_t CAN_PMM_PWR_PBM_Logic;          //+28           Вкл/Выкл питания логики PBM
-    uint8_t CAN_Comd_Reserved_29;           //+29           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_30;           //+30           Командный регистр зарезервирован
+    uint8_t CAN_PMM_PDM_Reset;              //+29           Reset PDM
+    uint8_t CAN_PMM_PAM_Reset;              //+30           Reset PAM
     uint8_t CAN_Comd_Reserved_31;           //+31           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_32;           //+30           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_33;           //+31           Командный регистр зарезервирован

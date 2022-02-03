@@ -847,3 +847,57 @@ ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr ){
 }
 
 
+/** @brief Reset PDM .
+	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
+    @param  modules - modules PAM of PDM.
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+ErrorStatus PMM_Reset_Modules( _PMM *pmm_ptr, uint8_t modules ){
+
+    int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+    uint8_t i = 0;
+    uint16_t pin_number = 0;
+
+
+    if( modules == PDM ){
+        pin_number = TCA9539_IO_P00;
+    } else if( modules == PAM) {
+        pin_number = TCA9539_IO_P10;
+    }else{
+        return ERROR_N;
+    }
+
+    //Write to I2C GPIO Extender.
+    error_I2C = ERROR_N;
+
+    while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+        error_I2C = TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number );
+
+        if( TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number ) == SUCCESS ){
+            if( TCA9539_conf_IO_dir_output(PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number) == SUCCESS ){
+                LL_mDelay(4);
+                error_I2C = TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number);
+            }
+        }
+
+        if( error_I2C != SUCCESS ){
+            i++;
+            LL_mDelay( pmm_i2c_delay_att_conn );
+        }
+    }
+
+	#ifdef DEBUGprintf
+    if (error_I2C == ERROR){
+        Error_Handler();
+    }
+    #endif
+
+    if( error_I2C == SUCCESS ){
+        pmm_ptr->Error_I2C_GPIO_Ext2 = SUCCESS;
+    }else{
+        pmm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
+    }
+
+    return error_I2C;
+}

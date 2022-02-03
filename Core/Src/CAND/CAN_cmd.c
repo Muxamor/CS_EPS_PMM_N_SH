@@ -301,6 +301,20 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     }
                     break;
 
+                case CAN_PMM_PDM_Reset_offset://Reset PDM
+                    #ifdef DEBUGprintf
+                    printf("Reset PDM\n");
+                    #endif
+                    PMM_Reset_Modules( eps_p.eps_pmm_ptr, PDM );
+                    break;
+
+                case CAN_PMM_PAM_Reset_offset://Reset PDM
+                    #ifdef DEBUGprintf
+                    printf("Reset PAM\n");
+                    #endif
+                    PMM_Reset_Modules( eps_p.eps_pmm_ptr, PAM );
+                    break;
+
                 case CAN_PWR_CH1_offset: //Enable/Disable power channel 1 (SOP1)
                     if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1 == 0x01 && PDM_PCB_Assembled_PWR_CH1 ){
                         #ifdef DEBUGprintf
