@@ -44,6 +44,8 @@ extern "C" {
 #define CAN_PWR_VBAT2_key1_offset		            26
 #define CAN_PWR_VBAT2_key2_offset		            27
 #define CAN_PMM_PWR_PBM_Logic_offset                28
+#define CAN_PMM_PDM_Reset_offset                    29
+#define CAN_PMM_PAM_Reset_offset                    30
 
 // Offset Command of PDM
 #define CAN_PWR_CH1_offset			                100
@@ -195,8 +197,8 @@ struct CAN_IVar4 {
     uint8_t CAN_PMM_PWR_VBAT2_key1;         //+26           Командный регистр линии VBAT2 (МС)
     uint8_t CAN_PMM_PWR_VBAT2_key2;         //+27           Командный регистр линии VBAT2 (МС)
     uint8_t CAN_PMM_PWR_PBM_Logic;          //+28           Вкл/Выкл питания логики PBM
-    uint8_t CAN_Comd_Reserved_29;           //+29           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_30;           //+30           Командный регистр зарезервирован
+    uint8_t CAN_PMM_PDM_Reset;              //+29           Reset PDM
+    uint8_t CAN_PMM_PAM_Reset;              //+30           Reset PAM
     uint8_t CAN_Comd_Reserved_31;           //+31           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_32;           //+30           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_33;           //+31           Командный регистр зарезервирован
@@ -779,9 +781,9 @@ struct CAN_IVar5{
     uint16_t CAN_TMIx_PBM_Total_Battery_Level_mAh;			        //+524,525 |  const = 0x                    | Полный уровень заряда АБ в mAh
     uint8_t  CAN_TMIx_PBM_Total_Battery_Level_percent;              //+526     |  const = 0x                    | Полный уровень заряда АБ в %
     uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;           //+527,528 |  const = 0x                    |
-    uint8_t CAN_TMIx_PBM_Thermostat_Cmd_BitMask;                 //+529     |  const = 0x                    | Команда на включение Термостат
+    uint8_t CAN_TMIx_PBM_Thermostat_Cmd_BitMask;                    //+529     |  const = 0x                    | Команда на включение Термостат
     uint8_t CAN_TMIx_PBM_Heating_Element_State_BitMask;             //+530     |  const = 0x                    | Текущее состояние Термостата
-    uint8_t CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask;            //+531     |  const = 0x                    | Ключи аварийной зарядки
+    uint8_t CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask;                  //+531     |  const = 0x                    | Ключи аварийной зарядки
     uint8_t CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask;            //+532     |  const = 0x                    | Ключи аварийной зарядки
     uint16_t CAN_TMIx_PBM1_Error_BitMask;                           //+533,534 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
     uint16_t CAN_TMIx_PBM2_Error_BitMask;                           //+535,536 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска

@@ -27,9 +27,7 @@
 #include "uart_eps_comm.h"
 
 
-/*//TODO
-1. Подумать как включать VBAT eF1 и eF2. Возможно написать автомат переключения ?
-**********************************************************/
+/**********************************************************/
 
 //extern uint32_t SysTick_Counter;
 //extern uint64_t CAN_cmd_mask_status;
@@ -84,6 +82,7 @@ int main(void){
     USART3_Init();
     SetupInterrupt();
 
+    //LL_mDelay(4);
     //IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
 
@@ -193,6 +192,7 @@ int main(void){
                 if( pmm_ptr->Deploy_stage > 6){
                     //Check CAN ports
                     PMM_Damage_Check_CAN_m_b(eps_param);
+
 
                     //Disable PWR SubSystem if reach Zero energy level
                     PMM_ZERO_Energy_PWR_OFF_SubSystem( eps_param );

@@ -157,7 +157,7 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
 
 
     if( eps_p.eps_pmm_ptr->Error_FRAM1 != SUCCESS ){
-        LL_mDelay(50);
+        LL_mDelay(20);
 
         if( FRAM_majority_read_data(I2Cx_fram2, i2c_addr_fram2, fram_data_read_ptr, sizeof(fram_data_read)) == SUCCESS ){
             //if( FRAM_majority_read_data_two_fram(I2Cx_fram1, i2c_addr_fram1, i2c_addr_fram2, (uint8_t*)(&fram_struct_read), sizeof(fram_struct_read)) != SUCCESS ){
@@ -240,7 +240,6 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
     }
 
 
-
     if( eps_p.eps_pmm_ptr->Error_FRAM1 == ERROR || eps_p.eps_pmm_ptr->Error_FRAM2 == ERROR ){
         return ERROR_N;
     }
@@ -254,29 +253,60 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
 */
 ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 
-    int8_t state_FRAM1 = 0;
-    int8_t state_FRAM2 = 0;
-    int8_t error_status = SUCCESS;
+    int8_t I2C_Error_FRAM1 = 0, I2C_Error_FRAM2 = 0, error_status = SUCCESS;
+    uint8_t FRAM1_status = 0, FRAM2_status = 0; // 0 - FRAM empty, 1 - FRAM no empty
 	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_Number = 0;
+    uint8_t i = 0;
 
-    state_FRAM1 = FRAM_Detect_Empty(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
-    state_FRAM2 = FRAM_Detect_Empty(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
+    I2C_Error_FRAM1 = ERROR_N; //0-OK -1-ERROR_N
+    while( ( I2C_Error_FRAM1 != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-    if( state_FRAM1 == -1){
+        I2C_Error_FRAM1 = FRAM_Detect_Empty(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB, &FRAM1_status );
+
+        if( I2C_Error_FRAM1 != SUCCESS ){
+	        i++;
+	        LL_mDelay( pmm_i2c_delay_att_conn );
+	    }
+	}
+
+    I2C_Error_FRAM2 = ERROR_N; //0-OK -1-ERROR_N
+    while( ( I2C_Error_FRAM2 != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+        I2C_Error_FRAM2 = FRAM_Detect_Empty(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB, &FRAM2_status );
+
+        if( I2C_Error_FRAM2 != SUCCESS ){
+	        i++;
+	        LL_mDelay( pmm_i2c_delay_att_conn );
+	    }
+	}
+
+    if( I2C_Error_FRAM1 != SUCCESS){
         eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
-        error_status += ERROR_N;
+    }else{
+        eps_p.eps_pmm_ptr->Error_FRAM1 = SUCCESS;
     }
 
-    if( state_FRAM2 == -1){
+    if( I2C_Error_FRAM2 != SUCCESS){
         eps_p.eps_pmm_ptr->Error_FRAM2 = ERROR;
-        error_status += ERROR_N;
+    }else{
+        eps_p.eps_pmm_ptr->Error_FRAM2 = SUCCESS;
     }
 
-    if( state_FRAM1 == 1 || state_FRAM2 == 1 ){
-        error_status += PMM_FRAM_read_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
+    if( ((FRAM1_status == 1) && ( I2C_Error_FRAM1 == SUCCESS)) || ((FRAM2_status == 1) && ( I2C_Error_FRAM2 == SUCCESS)) ){
+
+        error_status = ERROR_N; //0-OK -1-ERROR_N
+        while( ( error_status != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+            error_status = PMM_FRAM_read_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
+
+            if( error_status != SUCCESS ){
+                i++;
+                LL_mDelay( pmm_i2c_delay_att_conn );
+            }
+        }
     }
 
-    if( eps_p.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_p.eps_pmm_ptr->Error_FRAM2 == ERROR ){
+    if( (eps_p.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_p.eps_pmm_ptr->Error_FRAM2 == ERROR) || (FRAM1_status == 0 && FRAM2_status == 0) || (error_status != SUCCESS) ) {
         eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
         eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
 
@@ -291,7 +321,7 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
         	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableCmd = ENABLE;
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableCmd = ENABLE;
-                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd = DISABLE;
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd = DISABLE; //TODO может включать аварийку так как пошлна нештатка  ?
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Cmd = DISABLE;
         	}
         	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
@@ -301,7 +331,11 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 
     }
 
-    return  error_status;
+    if( I2C_Error_FRAM1 == ERROR_N || I2C_Error_FRAM2 == ERROR_N ||  error_status == ERROR_N ){
+        return  ERROR_N;
+    }
+
+    return  SUCCESS;
 }
 
 

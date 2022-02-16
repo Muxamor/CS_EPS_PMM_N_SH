@@ -39,6 +39,10 @@ ErrorStatus PAM_SP_Get_State_ID(_PAM *pam_ptr, uint8_t number_sp){
                 pam_ptr->Solar_Panel[number_sp].Error_I2C_GPIO_Ext1 = ERROR;
             }
         }
+    }else{
+        for( i = 0; i < pam_sp_table.ID_quantity; i++ ){
+            pam_ptr->Solar_Panel[number_sp].State_ID[i] = 0;
+        }
     }
 
     if(error_count != SUCCESS){
@@ -162,6 +166,12 @@ ErrorStatus PAM_SP_Get_Temperature(_PAM *pam_ptr, uint8_t number_sp){
             error_count =  error_count + error_status;
         }
 
+    }else{
+        for( i = 0; i < pam_sp_table.temp_sensor_quantity; i++ ){
+            if(pam_ptr->Solar_Panel[number_sp].Error_temp_sensor[i] == SUCCESS){
+                pam_ptr->Solar_Panel[number_sp].Temp_value[i] = 0x00;
+            }
+        }
     }
 
     if(error_count != SUCCESS){
@@ -245,4 +255,30 @@ ErrorStatus PAM_SP_Read_Temp_Sensor( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t t
     }
 
     return SUCCESS;
+}
+
+
+/** @brief	Erase data for all Solar panels .
+	@param 	pam[] - structure data for all Solar panels.
+ */
+void PAM_SP_EraseData(_PAM *pam_ptr){
+
+    uint8_t  num_sp = 0;
+    uint8_t  i = 0;
+    _PAM_SP_table pam_sp_table = {0};
+
+    for( num_sp = 0; num_sp < PAM_SP_quantity; num_sp++ ){
+
+        pam_sp_table = PAM_SP_Table(num_sp);
+
+        for( i = 0; i < pam_sp_table.temp_sensor_quantity; i++ ){
+            if(pam_ptr->Solar_Panel[num_sp].Error_temp_sensor[i] == SUCCESS){
+                pam_ptr->Solar_Panel[num_sp].Temp_value[i] = 0x00;
+            }
+        }
+
+        for( i = 0; i < pam_sp_table.ID_quantity; i++ ){
+            pam_ptr->Solar_Panel[num_sp].State_ID[i] = 0;
+        }
+    }
 }

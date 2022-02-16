@@ -18,6 +18,8 @@ ErrorStatus PMM_Get_PWR_Supply_m_b_I( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t 
 
 ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr );
 
+ErrorStatus PMM_Reset_Modules( _PMM *pmm_ptr, uint8_t modules );
+
 #ifdef __cplusplus
 }
 #endif

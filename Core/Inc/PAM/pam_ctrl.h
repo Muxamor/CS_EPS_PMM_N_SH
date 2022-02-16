@@ -16,6 +16,7 @@ ErrorStatus PAM_Get_PWR_CH_IN_I_V_P( _PAM *pam_ptr, uint8_t num_pwr_ch);
 ErrorStatus PAM_Set_state_PWR_TM_SP_CH( _PAM *pam_ptr, uint8_t num_pwr_ch, uint8_t state_channel);
 ErrorStatus PAM_Check_state_PWR_TM_SP_CH( _PAM *pam_ptr, uint8_t num_pwr_ch);
 ErrorStatus PAM_Get_PG_PWR_TM_SP_Ch( _PAM *pam_ptr, uint8_t num_pwr_ch);
+void PAM_EraseData(_PAM *pam_ptr);
 
 
 #ifdef __cplusplus

@@ -267,10 +267,19 @@ ErrorStatus PMM_DeInit_I2C_GPIOExt (_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tc
 	if( error_I2C == ERROR ){
 		#ifdef DEBUGprintf
 			Error_Handler();
-		#endif
-		pmm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
+        #endif
+	    if(tca9539_addr == PMM_I2CADDR_GPIOExt1){
+	        pmm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
+	    }else if(tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+	        pmm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
+	    }
+
 	}else{
-		pmm_ptr->Error_I2C_GPIO_Ext1 = SUCCESS;
+	    if(tca9539_addr == PMM_I2CADDR_GPIOExt1){
+	        pmm_ptr->Error_I2C_GPIO_Ext1 = SUCCESS;
+	    }else if(tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+	        pmm_ptr->Error_I2C_GPIO_Ext2 = SUCCESS;
+	    }
 	}
 
 	return error_I2C;
@@ -304,7 +313,22 @@ void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
 		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-		//TO DO need write
+
+	    GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+	    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+	    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	    LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1);
+	    LL_mDelay(2);
+	    LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_1);
+
+	    GPIO_InitStruct.Pin =  LL_GPIO_PIN_1;
+	    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+	    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 	}
 
 }
