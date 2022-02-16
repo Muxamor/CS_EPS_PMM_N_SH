@@ -81,8 +81,8 @@ int main(void){
     LPUART1_Init();
     USART3_Init();
     SetupInterrupt();
-    
-    LL_mDelay(4);
+
+    //LL_mDelay(4);
     //IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
 

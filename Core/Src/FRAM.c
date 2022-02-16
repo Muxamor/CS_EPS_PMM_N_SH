@@ -38,11 +38,10 @@ ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_s
 	@param  I2C_addr_fram_backup - I2C address backup FRAM
 	@param 	fram_size - size of FRAM in bytes.
 			FRAM_SIZE_64KB : 0x2000
-	@retval 0 - FRAM is empty,
-			1 - FRAM is not empty,
-		   -1 - ERROR_N
+	@fram_status  pointer to show status FRAM :  0 - FRAM is empty, 1 - FRAM is not empty,
+	@retval 0 - SUCCESS, -1 - ERROR
 */
-int8_t FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, uint32_t fram_size ) {
+ErrorStatus FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, uint32_t fram_size, uint8_t *fram_status ) {
 
 	ErrorStatus error_status = SUCCESS;
 	uint32_t i = 0;
@@ -58,7 +57,7 @@ int8_t FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, uint32_
 	}
 
 	if( read_sum == 0 ){
-        return 0;  // FRAM is empty
+	    *fram_status = 0;  // FRAM is empty
 
 	}else if( read_sum == (0xFF * 128) ){ // FRAM is empty bat all 0xFF
 
@@ -66,13 +65,14 @@ int8_t FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, uint32_
         if(error_status != SUCCESS){
             return ERROR_N;
         }else{
-            return 0;  // FRAM empty
+            *fram_status = 0;  // FRAM is empty
         }
 
     }else{
-        return 1;  // FRAM not empty
+	    *fram_status = 1;  // FRAM is no empty
 	}
 
+	return SUCCESS;
 }
 
 
