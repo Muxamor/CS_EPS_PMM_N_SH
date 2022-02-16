@@ -872,12 +872,12 @@ ErrorStatus PMM_Reset_Modules( _PMM *pmm_ptr, uint8_t modules ){
 
     while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-        error_I2C = TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number );
-
         if( TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number ) == SUCCESS ){
             if( TCA9539_conf_IO_dir_output(PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number) == SUCCESS ){
-                LL_mDelay(4);
-                error_I2C = TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number);
+                LL_mDelay(5);
+                if( TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number ) == SUCCESS ){
+                    error_I2C = TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number);
+                }
             }
         }
 
