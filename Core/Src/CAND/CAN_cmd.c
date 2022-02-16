@@ -308,7 +308,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     PMM_Reset_Modules( eps_p.eps_pmm_ptr, PDM );
                     break;
 
-                case CAN_PMM_PAM_Reset_offset://Reset PDM
+                case CAN_PMM_PAM_Reset_offset://Reset PAM
                     #ifdef DEBUGprintf
                         printf("Reset PAM\n");
                     #endif
