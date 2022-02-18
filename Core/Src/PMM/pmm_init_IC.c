@@ -189,6 +189,97 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 	return error_I2C;
 }
 
+
+
+/** @brief  Power down INA231 Power Monitor on PMM module.
+    @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
+	@param  num_pwr_ch - number of channel:
+							PMM_PWR_Ch_VBAT1_eF1
+							PMM_PWR_Ch_VBAT1_eF2
+							PMM_PWR_Ch_VBAT2_eF1
+							PMM_PWR_Ch_VBAT2_eF2
+	@retval 0 - SUCCESS, -1 - ERROR_N
+*/
+ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
+
+
+    uint8_t i = 0;
+    int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
+
+    _PMM_table pmm_table;
+
+    SW_TMUX1209_I2C_main_PMM(); // Switch MUX to pmm I2C bus on PMM
+
+    //Fill pmm_table depends in number power channel.
+    pmm_table = PMM__Table(num_pwr_ch);
+
+    //Setup INA231
+    while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+
+        error_I2C = INA231_Setup_Mode( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, INA231_POWER_DOWN);
+
+        if( error_I2C != SUCCESS ){
+            i++;
+            LL_mDelay( pmm_i2c_delay_att_conn );
+        }
+    }
+
+
+    if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF1 ){
+
+        if( error_I2C == SUCCESS ){
+            pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = SUCCESS;
+
+        }else{
+			#ifdef DEBUGprintf
+            Error_Handler();
+			#endif
+            pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = ERROR;
+        }
+
+    }else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
+
+        if( error_I2C == SUCCESS ){
+            pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS;
+
+        }else{
+			#ifdef DEBUGprintf
+            Error_Handler();
+			#endif
+            pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR;
+        }
+
+    }else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF1 ){
+
+        if( error_I2C == SUCCESS ){
+            pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = SUCCESS;
+
+        }else{
+			#ifdef DEBUGprintf
+            Error_Handler();
+			#endif
+            pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = ERROR;
+        }
+
+    }else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
+
+        if( error_I2C == SUCCESS ){
+            pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS;
+
+        }else{
+			#ifdef DEBUGprintf
+            Error_Handler();
+			#endif
+            pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR;
+        }
+
+    }
+
+    return error_I2C;
+}
+
+
+
 /** @brief  Init ADS1015 on PMM module.
     @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
     @param  *I2Cx - Number I2C bus.

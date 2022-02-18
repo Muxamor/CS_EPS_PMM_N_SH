@@ -8,6 +8,7 @@ extern "C" {
 #include "PDM/pdm_struct.h"
 
 ErrorStatus PDM_init(_PDM *pdm_ptr);
+ErrorStatus PDM_PWR_Down_init(_PDM *pdm_ptr);
 
 #ifdef __cplusplus
 }

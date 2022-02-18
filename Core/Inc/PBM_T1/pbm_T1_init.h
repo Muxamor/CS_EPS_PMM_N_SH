@@ -10,7 +10,7 @@ extern "C" {
 
 ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] );
 
-ErrorStatus PBM_T1_Re_Init( _PBM_T1 pbm[], _PMM *pmm_ptr);
+ErrorStatus PBM_T1_Re_Init( _PBM_T1 pbm[]);
 
 #ifdef __cplusplus
 }
