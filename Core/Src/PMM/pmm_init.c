@@ -114,16 +114,25 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_3_3V_Bus, DISABLE );
 		}
 
-
-		error_status += PMM_init_TMP1075( pmm_ptr, PMM_I2Cx_TMP1075, PMM_I2CADDR_TMP1075 );
-
-		error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF1);
-		error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2);
-		error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1);
-		error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2);
-	
 		error_status += ADS1015_init( pmm_ptr, PMM_I2Cx_PowerADC, PMM_I2CADDR_PowerADC);
-	
+
+		if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 ){
+		    error_status += PMM_Power_Down_TMP1075( pmm_ptr, PMM_I2Cx_TMP1075, PMM_I2CADDR_TMP1075);
+
+		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF1);
+		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2);
+		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1);
+		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2);
+
+		}else{
+		    error_status += PMM_init_TMP1075( pmm_ptr, PMM_I2Cx_TMP1075, PMM_I2CADDR_TMP1075 );
+
+		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF1);
+		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2);
+		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1);
+		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2);
+		}
+
 	//Init Passive CPU and PMM
 	}else{
 		DISABLE_TMUX1209_I2C();

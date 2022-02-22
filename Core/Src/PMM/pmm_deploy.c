@@ -11,7 +11,9 @@
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init_IC.h"
 #include "PMM/pmm_ctrl.h"
+#include "PMM/pmm_init.h"
 #include "PDM/pdm_ctrl.h"
+#include "PDM/pdm_init.h"
 #include "PAM/pam_init.h"
 #include "PAM/pam.h"
 #include "PBM_T1/pbm_T1_config.h"
@@ -115,12 +117,16 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             	}
             }
 
-            PBM_T1_Init( eps_p.eps_pbm_ptr );
-
             //Enable passive CPU
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+           // PWM_DeInit_Ch3_Ch4( );
             eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+
+            PMM_init( eps_p.eps_pmm_ptr );
+            PDM_init( eps_p.eps_pdm_ptr );
+            PAM_init( eps_p.eps_pam_ptr );
+            PBM_T1_Init( eps_p.eps_pbm_ptr );
 
             //Fill Var4
             CAN_Var4_fill(eps_p);

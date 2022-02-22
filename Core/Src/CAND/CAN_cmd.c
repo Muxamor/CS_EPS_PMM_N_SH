@@ -96,7 +96,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                 case  CAN_Reset_to_default_offset: // Switch active CPU (CPUmain active or CPUbackup
                     if( CAN_IVar4_RegCmd.CAN_Reset_to_default == 0x01 ){
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> Reset to default settings\n",  CAN_Reset_to_default_offset);
+                            printf("Get comm. reg. %d -> Reset to default settings\n",  CAN_Reset_to_default_offset);
                         #endif
                         eps_p.eps_pmm_ptr->Deploy_stage = 0;
                         eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1 = DISABLE;
@@ -128,31 +128,31 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
 
                     if( CAN_IVar4_RegCmd.CAN_Perform_Deploy == 0x01 ){
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> Perform Deploy Channel 1\n", CAN_Perform_Deploy_offset );
+                            printf("Get comm. reg. %d -> Perform Deploy Channel 1\n", CAN_Perform_Deploy_offset );
                         #endif
                         PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch1);
 
                     }else if( CAN_IVar4_RegCmd.CAN_Perform_Deploy == 0x02 ){
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> Perform Deploy Channel 2\n", CAN_Perform_Deploy_offset );
+                            printf("Get comm. reg. %d -> Perform Deploy Channel 2\n", CAN_Perform_Deploy_offset );
                         #endif
                         PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch2);
 
                     }else if( CAN_IVar4_RegCmd.CAN_Perform_Deploy == 0x03 ){
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> Perform Deploy Channel 3\n", CAN_Perform_Deploy_offset );
+                            printf("Get comm. reg. %d -> Perform Deploy Channel 3\n", CAN_Perform_Deploy_offset );
                         #endif
                         PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch3);
 
                     }else if( CAN_IVar4_RegCmd.CAN_Perform_Deploy == 0x04 ){
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> Perform Deploy Channel 4\n", CAN_Perform_Deploy_offset );
+                            printf("Get comm. reg. %d -> Perform Deploy Channel 4\n", CAN_Perform_Deploy_offset );
                         #endif
                         PMM_Deploy_Burn_Procedure( eps_p, PMM_PWR_Deploy_Ch4);
 
                     }else if( CAN_IVar4_RegCmd.CAN_Perform_Deploy == 0xFE ){
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> Reset Deploy stage = 0\n", CAN_Perform_Deploy_offset );
+                            printf("Get comm. reg. %d -> Reset Deploy stage = 0\n", CAN_Perform_Deploy_offset );
                         #endif
                         eps_p.eps_pmm_ptr->Deploy_stage = 0;
                     }
@@ -207,7 +207,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
                     }else{
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> DISABLE  power main CAN\n", CAN_PMM_PWR_CAN_main_offset);
+                            printf("Get comm. reg. %d -> DISABLE  power main CAN\n", CAN_PMM_PWR_CAN_main_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
                     }
@@ -244,12 +244,12 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                 case CAN_PWR_VBAT1_key2_offset: //Enable/Disable power channel VBAT1 eF2
                     if( CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT1_key2  == 0x01 ){
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> ENABLE power VBAT1 key2\n", CAN_PWR_VBAT1_key2_offset);
+                            printf("Get comm. reg. %d -> ENABLE power VBAT1 key2\n", CAN_PWR_VBAT1_key2_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, ENABLE );
                     }else{
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> DISABLE power VBAT1 key2\n", CAN_PWR_VBAT1_key2_offset);
+                            printf("Get comm. reg. %d -> DISABLE power VBAT1 key2\n", CAN_PWR_VBAT1_key2_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT1_eF2, DISABLE );
                     }
@@ -274,12 +274,12 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                 case CAN_PWR_VBAT2_key2_offset: //Enable/Disable power channel VBAT2 eF2
                     if( CAN_IVar4_RegCmd.CAN_PMM_PWR_VBAT2_key2 == 0x01 ){
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> ENABLE power VBAT2\n", CAN_PWR_VBAT2_key2_offset);
+                            printf("Get comm. reg. %d -> ENABLE power VBAT2\n", CAN_PWR_VBAT2_key2_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, ENABLE );
                     }else{
                         #ifdef DEBUGprintf
-                        printf("Get comm. reg. %d -> DISABLE power VBAT2\n", CAN_PWR_VBAT2_key2_offset);
+                            printf("Get comm. reg. %d -> DISABLE power VBAT2\n", CAN_PWR_VBAT2_key2_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,  PMM_PWR_Ch_VBAT2_eF2, DISABLE );
                     }
@@ -303,14 +303,14 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
 
                 case CAN_PMM_PDM_Reset_offset://Reset PDM
                     #ifdef DEBUGprintf
-                    printf("Reset PDM\n");
+                        printf("Reset PDM\n");
                     #endif
                     PMM_Reset_Modules( eps_p.eps_pmm_ptr, PDM );
                     break;
 
-                case CAN_PMM_PAM_Reset_offset://Reset PDM
+                case CAN_PMM_PAM_Reset_offset://Reset PAM
                     #ifdef DEBUGprintf
-                    printf("Reset PAM\n");
+                        printf("Reset PAM\n");
                     #endif
                     PMM_Reset_Modules( eps_p.eps_pmm_ptr, PAM );
                     break;

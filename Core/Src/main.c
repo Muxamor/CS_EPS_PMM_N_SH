@@ -83,7 +83,7 @@ int main(void){
     SetupInterrupt();
 
     //LL_mDelay(4);
-    //IWDG_Init(4000);
+    //IWDG_Init(4000);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     LL_IWDG_ReloadCounter(IWDG);
 
 	//Restore settings of EPS
@@ -130,9 +130,16 @@ int main(void){
 
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
-		PDM_init( pdm_ptr );
-		PBM_T1_Init( pbm_mas );
-		PAM_init( pam_ptr );
+
+	    if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 ){
+	        PDM_PWR_Down_init( pdm_ptr);
+	    }else{
+	        PDM_init( pdm_ptr );
+	    }
+	    PAM_init( pam_ptr );
+	    if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
+	        PBM_T1_Init( pbm_mas );
+	    }
 
         if( pmm_ptr->CAN_constatnt_mode == ENABLE){
             CAN_Var5_fill_telemetry_const();
@@ -169,12 +176,20 @@ int main(void){
         LL_IWDG_ReloadCounter(IWDG);
 
         //ActiveCPU branch
-       	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
+        if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
 
-            PMM_Get_Telemetry(pmm_ptr);
-            PDM_Get_Telemetry(pdm_ptr);
-            PAM_Get_Telemetry(pam_ptr);
-            PBM_T1_Get_Telemetry(pbm_mas, pmm_ptr);
+            if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 ){
+                //Empty
+            }else{
+                PMM_Get_Telemetry(pmm_ptr);
+                PDM_Get_Telemetry(pdm_ptr);
+                PAM_Get_Telemetry(pam_ptr);
+                if(pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE){
+                    PBM_T1_Get_Telemetry(pbm_mas);
+                }else{
+                    PBM_T1_EraseData(pbm_mas);
+                }
+            }
 
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
@@ -192,7 +207,6 @@ int main(void){
                 if( pmm_ptr->Deploy_stage > 6){
                     //Check CAN ports
                     PMM_Damage_Check_CAN_m_b(eps_param);
-
 
                     //Disable PWR SubSystem if reach Zero energy level
                     PMM_ZERO_Energy_PWR_OFF_SubSystem( eps_param );

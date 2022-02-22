@@ -861,6 +861,13 @@ void GPIO_Init(void) {
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
+
+	//CPUx_RF_WG1, CPUx_RF_OP1, CPUx_RF_WG2, CPUx_RF_OP2. Not use in Norbi
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_1 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
 }
 
 /** @rief  Init PWM TIM 3 Ch3 and Ch4

@@ -256,13 +256,19 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
         if( (eps_p.eps_pmm_ptr->Active_CPU == CPUmain_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) ||
                 (eps_p.eps_pmm_ptr->Active_CPU == CPUbackup_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
 
-            PDM_init(eps_p.eps_pdm_ptr);
-            PAM_init(eps_p.eps_pam_ptr);
-            PBM_T1_Re_Init(eps_p.eps_pbm_ptr, eps_p.eps_pmm_ptr);
+            if( eps_p.eps_pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && eps_p.eps_pmm_ptr->Deploy_stage == 0 ){
+                PDM_PWR_Down_init( eps_p.eps_pdm_ptr );
+            }else{
+                PDM_init(eps_p.eps_pdm_ptr);
+                PAM_init(eps_p.eps_pam_ptr);
+
+                if( eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ) {
+                    PBM_T1_Re_Init(eps_p.eps_pbm_ptr);
+                }
+            }
 
         //Branch for Passive CPU
         }else{
-
             CAN_DeInit_eps(CAN1);
             CAN_DeInit_eps(CAN2);
 
