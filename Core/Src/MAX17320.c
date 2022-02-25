@@ -1793,7 +1793,27 @@ ErrorStatus MAX17320_Read_Br_ProtStatus_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchD
 		Struct->TooHotC= (Data & 0x4000) >> 14;
 		Struct->ChgWDT = (Data & 0x8000) >> 15;
 
-		return SUCCESS;
+		Data = 0;
+		if (I2C_Read_MAX17320(I2Cx, 0x16, 0xDE, &Data) == 0) {
+			Struct->OC = (Data & 0x0020) >> 5;
+			Struct->OD = (Data & 0x0080) >> 7;
+			Struct->SC = (Data & 0x8000) >> 15;
+
+			Data = 0;
+			if (I2C_Read_MAX17320(I2Cx, 0x6C, 0xF1, &Data) == 0) {
+				Struct->ChgControlFlag = (Data & 0x0001);
+				Struct->DchgControlFlag = (Data & 0x0002) >> 1;
+
+				return SUCCESS;
+
+			} else {
+				return ERROR_N;
+			}
+
+		} else {
+			return ERROR_N;
+		}
+
 	} else {
 		return ERROR_N;
 	}

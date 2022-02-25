@@ -571,6 +571,11 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 		pbm[PBM_number].Branch[Branch_number].ODCP = Struct.ODCP;
 		pbm[PBM_number].Branch[Branch_number].PreqF = Struct.PreqF;
 		pbm[PBM_number].Branch[Branch_number].LDet = Struct.LDet;
+		pbm[PBM_number].Branch[Branch_number].ChgControlFlag = Struct.ChgControlFlag;
+		pbm[PBM_number].Branch[Branch_number].DchgControlFlag = Struct.DchgControlFlag;
+		pbm[PBM_number].Branch[Branch_number].OC = Struct.OC;
+		pbm[PBM_number].Branch[Branch_number].OD = Struct.OD;
+		pbm[PBM_number].Branch[Branch_number].SC = Struct.SC;
 		if(PBM_T1_BRANCH_BAT_QUANTITY == 1){
 			pbm[PBM_number].Branch[Branch_number].Voltage[0] = Struct.Cell1_mV;
 		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 2){
