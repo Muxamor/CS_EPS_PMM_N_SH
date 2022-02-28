@@ -27,7 +27,7 @@ typedef enum {
 ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_size);
 ErrorStatus FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, uint32_t fram_size, uint8_t *fram_status );
 
-ErrorStatus FRAM_set_write_access(uint8_t access_flag);
+ErrorStatus FRAM_control_write_access( uint8_t access_flag);
 
 ErrorStatus FRAM_triple_write_data(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint8_t *ptr_data, uint32_t data_size);
 ErrorStatus FRAM_triple_verif_write_data(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint8_t *ptr_data, uint32_t data_size);

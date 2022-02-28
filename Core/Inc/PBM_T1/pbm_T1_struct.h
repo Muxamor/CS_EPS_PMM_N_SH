@@ -19,9 +19,9 @@ typedef struct  // Structure for PBM data
 	uint16_t ChgControlFlag :1; 			// Charge Control Flag indicates the logic state of the CC pin driver.
 	uint16_t PreqF :1; 						// Prequal timeout faults.
 	uint16_t LDet :1; 						// Leakage Detection Fault. This bit is set when a leakage detection fault has been detected.
-	uint16_t OC :1;
-	uint16_t OD :1;
-	uint16_t SC :1;
+	uint16_t OC :1;							// Flag fast overcurrent comparator Overcharge (OC).
+	uint16_t OD :1;							// Flag fast overcurrent comparator Overdischarge (OD).
+	uint16_t SC :1;							// Flag fast overcurrent comparator Short-Circuit (SC).
 	uint16_t PreqChrg :1;
 	uint16_t Auto_Corr_Capacity_Cmd :1;    	// Bit for enable/disable correction capacity level in auto mode. // Need to save in flash.
 	uint16_t PCA9534_Emerg_Chrg_Cmd :1; 	// PCA9534 port. Show and set state emergency charge. // Need to save in flash.

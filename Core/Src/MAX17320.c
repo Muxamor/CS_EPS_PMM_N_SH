@@ -1774,28 +1774,53 @@ ErrorStatus MAX17320_Read_Br_Data_Reg (I2C_TypeDef *I2Cx) {
 ErrorStatus MAX17320_Read_Br_ProtStatus_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct) {
 
 	uint16_t Data = 0;
+	uint16_t Error = 0;
 
-	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0xD9, &Data) == 0) {
-		Struct->Ship = (Data & 0x0001);
-		Struct->ResDFault = (Data & 0x0002) >> 1;
-		Struct->ODCP = (Data & 0x0004) >> 2;
-		Struct->UVP = (Data & 0x0008) >> 3;
-		Struct->TooHotD = (Data & 0x0010) >> 4;
-		Struct->DieHot = (Data & 0x0020) >> 5;
-		Struct->PermFail = (Data & 0x0040) >> 6;
-		Struct->Imbalance = (Data & 0x0080) >> 7;
-		Struct->PreqF = (Data & 0x0100) >> 8;
-		Struct->Qovflw = (Data & 0x0200) >> 9;
-		Struct->OCCP = (Data & 0x0400) >> 10;
-		Struct->OVP = (Data & 0x0800) >> 11;
-		Struct->TooColdC = (Data & 0x1000) >> 12;
-		Struct->Full = (Data & 0x2000) >> 13;
-		Struct->TooHotC= (Data & 0x4000) >> 14;
-		Struct->ChgWDT = (Data & 0x8000) >> 15;
+	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0xD9, &Data) == SUCCESS) {
+	    Struct->Ship = (Data & 0x0001);
+	    Struct->ResDFault = (Data & 0x0002) >> 1;
+	    Struct->ODCP = (Data & 0x0004) >> 2;
+	    Struct->UVP = (Data & 0x0008) >> 3;
+	    Struct->TooHotD = (Data & 0x0010) >> 4;
+	    Struct->DieHot = (Data & 0x0020) >> 5;
+	    Struct->PermFail = (Data & 0x0040) >> 6;
+	    Struct->Imbalance = (Data & 0x0080) >> 7;
+	    Struct->PreqF = (Data & 0x0100) >> 8;
+	    Struct->Qovflw = (Data & 0x0200) >> 9;
+	    Struct->OCCP = (Data & 0x0400) >> 10;
+	    Struct->OVP = (Data & 0x0800) >> 11;
+	    Struct->TooColdC = (Data & 0x1000) >> 12;
+	    Struct->Full = (Data & 0x2000) >> 13;
+	    Struct->TooHotC= (Data & 0x4000) >> 14;
+	    Struct->ChgWDT = (Data & 0x8000) >> 15;
+	    Error = Error + SUCCESS;
+	}else{
+	    Error = Error + ERROR_N;
+	}
 
-		return SUCCESS;
+	Data = 0;
+	if (I2C_Read_MAX17320(I2Cx, 0x16, 0xDE, &Data) == SUCCESS) {
+	    Struct->OC = (Data & 0x0020) >> 5;
+	    Struct->OD = (Data & 0x0080) >> 7;
+	    Struct->SC = (Data & 0x8000) >> 15;
+	    Error = Error + SUCCESS;
+	}else{
+	    Error = Error + ERROR_N;
+	}
+
+	Data = 0;
+	if (I2C_Read_MAX17320(I2Cx, 0x6C, 0xF1, &Data) == SUCCESS) {
+	    Struct->ChgControlFlag = (Data & 0x0001);
+	    Struct->DchgControlFlag = (Data & 0x0002) >> 1;
+	    Error = Error + SUCCESS;
+    }else{
+        Error = Error + ERROR_N;
+    }
+
+	if (Error == SUCCESS) {
+	    return SUCCESS;
 	} else {
-		return ERROR_N;
+	    return ERROR_N;
 	}
 }
 

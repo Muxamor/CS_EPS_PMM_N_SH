@@ -16,13 +16,13 @@ ErrorStatus FRAM_erase(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, uint32_t fram_s
 	ErrorStatus error_status = 0;
 	uint32_t i = 0;
 
-	FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
+    FRAM_control_write_access(FRAM_WRITE_PROTECTION_DISABLE);
 
 	for(i = 0; i < fram_size; i++){
 		error_status += I2C_Write_byte_St(I2Cx, I2C_fram_addr, I2C_SIZE_REG_ADDR_U16, i, 0x00);
 	}
 
-	FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
+    FRAM_control_write_access(FRAM_WRITE_PROTECTION_ENABLE);
 
 	if(error_status != SUCCESS ){
 		return ERROR_N;
@@ -80,7 +80,7 @@ ErrorStatus FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, ui
 	@param  access_flag - FRAM_WRITE_PROTECTION_ENABLE or FRAM_WRITE_PROTECTION_DISABLE.
 	@retval	0 - SUCCESS, -1 - ERROR
 */
-ErrorStatus FRAM_set_write_access(uint8_t access_flag){
+ErrorStatus FRAM_control_write_access( uint8_t access_flag){
 
 	if(access_flag == FRAM_WRITE_PROTECTION_DISABLE){
 		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_3);

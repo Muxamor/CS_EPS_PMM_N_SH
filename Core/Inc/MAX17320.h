@@ -570,7 +570,13 @@ typedef struct // The Battery Branch Data
 	uint8_t BalCell3 :1;	// Flag balancing cell3.
 	uint8_t BalCell4 :1;	// Flag balancing cell4.
 	uint8_t LDet :1; 		// Leakage Detection Fault. This bit is set when a leakage detection fault has been detected.
-	uint8_t  :3;
+	uint8_t OC :1;			// Flag fast overcurrent comparator Overcharge (OC).
+	uint8_t OD :1;			// Flag fast overcurrent comparator Overdischarge (OD).
+	uint8_t SC :1;			// Flag fast overcurrent comparator Short-Circuit (SC).
+
+	uint8_t DchgControlFlag :1;	// Discharge Control Flag indicates the real logic state of the DC pin driver.
+	uint8_t ChgControlFlag :1;  // Charge Control Flag indicates the logic state of the CC pin driver.
+	uint8_t  :6;
 
 	uint16_t Cell1_Reg; 	// Cell1 Register. Each update cycle, the cell voltage measurement for each cell is placed in  Cell1 register.
 	uint16_t Cell2_Reg; 	// Cell2 Register. Each update cycle, the cell voltage measurement for each cell is placed in  Cell2 register.

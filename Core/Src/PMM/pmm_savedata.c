@@ -99,7 +99,7 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
     fram_data_write.FRAM_DATA_CRC = crc_calc;
     // ------------------------------ //
 
-	FRAM_set_write_access(FRAM_WRITE_PROTECTION_DISABLE);
+    FRAM_control_write_access(FRAM_WRITE_PROTECTION_DISABLE);
 
 	if( FRAM_triple_verif_write_data(I2Cx_fram1, i2c_addr_fram1, fram_data_write_ptr, sizeof(fram_data_write)) != SUCCESS){
 		eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
@@ -117,7 +117,7 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
         error_status = error_status + SUCCESS;
 	}
 
-	FRAM_set_write_access(FRAM_WRITE_PROTECTION_ENABLE);
+    FRAM_control_write_access(FRAM_WRITE_PROTECTION_ENABLE);
 
 	if( error_status != SUCCESS){
        return ERROR_N;
@@ -268,6 +268,10 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 	        LL_mDelay( pmm_i2c_delay_att_conn );
 	    }
 	}
+
+    if( I2C_Error_FRAM1 == ERROR_N){
+        LL_mDelay( 30 );
+    }
 
     I2C_Error_FRAM2 = ERROR_N; //0-OK -1-ERROR_N
     while( ( I2C_Error_FRAM2 != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
