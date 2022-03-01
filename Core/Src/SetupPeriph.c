@@ -663,14 +663,21 @@ void GPIO_Init(void) {
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
+	//Set Reset pin like input because if setup as output pin pull down and will twitch at the time of reboot CPU
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1); // Reset pin down -> GPIOExt2 off, because not yet used in Norbi
+	//If not use IC
+	//GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+	//GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	//GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+	//GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	//GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	//LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	//LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1); // Reset pin down -> GPIOExt2 off, because not yet used in Norbi
 
 	/****************************************************************************************/
 

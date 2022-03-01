@@ -395,7 +395,7 @@ void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
 		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_2);
-		LL_mDelay(2);
+		LL_mDelay(1);
 		LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_2);
 
 		GPIO_InitStruct.Pin =  LL_GPIO_PIN_2;
@@ -413,7 +413,7 @@ void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
 	    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	    LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1);
-	    LL_mDelay(2);
+	    LL_mDelay(1);
 	    LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_1);
 
 	    GPIO_InitStruct.Pin =  LL_GPIO_PIN_1;

@@ -874,7 +874,7 @@ ErrorStatus PMM_Reset_Modules( _PMM *pmm_ptr, uint8_t modules ){
 
         if( TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number ) == SUCCESS ){
             if( TCA9539_conf_IO_dir_output(PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number) == SUCCESS ){
-                LL_mDelay(5);
+                LL_mDelay(3);
                 if( TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number ) == SUCCESS ){
                     error_I2C = TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt2, PMM_I2CADDR_GPIOExt2, pin_number);
                 }
