@@ -9,6 +9,7 @@
 #include "PBM_T1/pbm_T1_init.h"
 #include "PDM/pdm_config.h"
 #include "PDM/pdm_ctrl.h"
+#include "PDM/pdm_init.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_ctrl.h"
 #include "PMM/pmm_deploy.h"
@@ -306,6 +307,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         printf("Reset PDM\n");
                     #endif
                     PMM_Reset_Modules( eps_p.eps_pmm_ptr, PDM );
+                    PDM_init( eps_p.eps_pdm_ptr );
                     break;
 
                 case CAN_PMM_PAM_Reset_offset://Reset PAM
@@ -313,6 +315,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         printf("Reset PAM\n");
                     #endif
                     PMM_Reset_Modules( eps_p.eps_pmm_ptr, PAM );
+                    PAM_init( eps_p.eps_pam_ptr );
                     break;
 
                 case CAN_PWR_CH1_offset: //Enable/Disable power channel 1 (SOP1)

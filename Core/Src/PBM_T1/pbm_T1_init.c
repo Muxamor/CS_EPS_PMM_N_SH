@@ -131,7 +131,7 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[]) {
 	       	    Error += PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, PBM_T1_OFF_HEAT);
 	       	}
 
-	        if( pbm[PBM_Number].Heat[Heat_number].PCA9534_Heat_State == 0 ){
+	        if( pbm[PBM_Number].Heat[Heat_number].PCA9534_Heat_State == DISABLE ){
 	        	for( Heat_TempSens_number = 0; Heat_TempSens_number < PBM_T1_HEAT_TEMPSENS_QUANTITY; Heat_TempSens_number++){
 	        		Error += PBM_T1_Init_Heat_TMP1075(PBM_T1_I2C_PORT, pbm, PBM_Number, Heat_number, Heat_TempSens_number);
 	        	}
