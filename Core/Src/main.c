@@ -1,11 +1,7 @@
 #include  <stdio.h>
-#include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
 #include "stm32l4xx.h"
-#include "stm32l4xx_ll_utils.h"
-#include "stm32l4xx_ll_gpio.h"
 #include "stm32l4xx_ll_iwdg.h"
-#include "SetupPeriph.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
@@ -19,7 +15,6 @@
 #include "PMM/pmm_savedata.h"
 #include "PMM/pmm_damage_ctrl.h"
 #include "PBM_T1/pbm_T1_control.h"
-#include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_init.h"
 #include "PBM_T1/pbm_T1.h"
 #include "PAM/pam_init.h"
@@ -196,7 +191,7 @@ int main(void){
 
                 LL_IWDG_ReloadCounter(IWDG);
                 if( pmm_ptr->Deploy_stage != 9 ){
-                    PMM_Deploy( eps_param );
+                   PMM_Deploy( eps_param );
                 }
 
                 //CAN ports power off protection. ( In combat mode start protection only out from the container )
