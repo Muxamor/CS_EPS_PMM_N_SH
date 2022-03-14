@@ -759,6 +759,8 @@ ErrorStatus MAX17320_Read_Br_GaugeOut_mAh (I2C_TypeDef *I2Cx, MAX17320_BranchDat
 
 ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t AccmCharge, uint8_t Rsense);
 
+ErrorStatus MAX17320_WriteAutoAccmCharge (I2C_TypeDef *I2Cx, uint16_t AccmCharge, uint8_t Rsense);
+
 #ifdef __cplusplus
 }
 #endif
