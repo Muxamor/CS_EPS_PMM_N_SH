@@ -219,6 +219,9 @@ void PMM_Portecion_PWR_OFF_CAN_m_b( _EPS_Param eps_p ){
     if( eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE && eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
         PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
         PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
+        LL_mDelay(50);//TODO need check
+        CAN_init_eps(CAN1);
+        CAN_init_eps(CAN2);
         CAN_Var4_fill(eps_p);
     }
 }
@@ -258,6 +261,7 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
 
             if( eps_p.eps_pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && eps_p.eps_pmm_ptr->Deploy_stage == 0 ){
                 PDM_PWR_Down_init( eps_p.eps_pdm_ptr );
+
             }else{
                 PDM_init(eps_p.eps_pdm_ptr);
                 PAM_init(eps_p.eps_pam_ptr);

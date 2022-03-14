@@ -77,6 +77,7 @@ int main(void){
     USART3_Init();
     SetupInterrupt();
 
+
     //LL_mDelay(4);
     //IWDG_Init(4000);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     LL_IWDG_ReloadCounter(IWDG);
@@ -140,10 +141,21 @@ int main(void){
             CAN_Var5_fill_telemetry_const();
         }
 
-        CAN_init_eps(CAN1);
-		CAN_init_eps(CAN2);
+        if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE ){
+        	CAN_init_eps(CAN1);
+        }
+        if( pmm_ptr->PWR_Ch_State_CANbackup == ENABLE ){
+        	CAN_init_eps(CAN2);
+        }
+
 		CAN_RegisterAllVars();
         PMM_Start_Time_Check_CAN = SysTick_Counter;
+
+        if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
+            LPUART1_DeInit();
+            USART3_DeInit();
+        }
+
 
     //Initialization CAN for passive CPU
 	}else{
