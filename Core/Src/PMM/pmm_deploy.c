@@ -100,6 +100,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         if( (eps_p.eps_pmm_ptr->Deploy_stage == 1) || (eps_p.eps_pmm_ptr->Deploy_stage == 2) ){
             //Enable main CAN
             PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
+            LL_mDelay( 50 );
+            CAN_init_eps(CAN1);
 
             //Enable PBM logic power and thermostat.
             PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
@@ -210,6 +212,9 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         //Enable CAN
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
+        LL_mDelay( 50 );
+        CAN_init_eps(CAN1);
+        CAN_init_eps(CAN2);
         //Enable PAM DC-DC
         eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
         PAM_init( eps_p.eps_pam_ptr );

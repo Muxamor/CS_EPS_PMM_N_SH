@@ -172,6 +172,9 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
                         PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
                         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = ENABLE;
+                        LPUART1_DeInit();
+                        USART3_DeInit();
+
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> Disable power OFF Passive CPU\n", CAN_PMM_PWR_OFF_Passive_CPU_offset);
@@ -180,6 +183,9 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
                         PWM_DeInit_Ch3_Ch4( );
                         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+                        LPUART1_Init();
+                        USART3_Init();
+                        SetupInterrupt();
                     }
                     eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
                     break;
@@ -206,11 +212,14 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power main CAN \n", CAN_PMM_PWR_CAN_main_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
+                        LL_mDelay( 50 );
+                        CAN_init_eps(CAN1);
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE  power main CAN\n", CAN_PMM_PWR_CAN_main_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
+                        CAN_DeInit_eps(CAN1);
                     }
                     break;
 
@@ -220,11 +229,14 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> ENABLE power main CAN \n", CAN_PMM_PWR_CAN_backup_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
+                        LL_mDelay( 50 );
+                        CAN_init_eps(CAN2);
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE  power main CAN\n", CAN_PMM_PWR_CAN_backup_offset);
                         #endif
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,PMM_PWR_Ch_CANbackup, DISABLE);
+                       	CAN_DeInit_eps(CAN2);
                     }
                     break;
 
@@ -1266,8 +1278,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_PWR_Ch_State_BitMask               = (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain) | (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1 << 2) |
 	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF2 << 3) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF1 << 4) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2 << 5) |
 	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic << 6) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic << 7) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power << 8) |
-	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power << 9) | (eps_p.eps_pmm_ptr->PWR_Ch_State_5V_Bus << 10) | (eps_p.eps_pmm_ptr->PWR_Ch_State_3_3V_Bus << 11) |
-	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_State_I2C_Bus << 12);
+	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_State_5V_Bus << 9) | (eps_p.eps_pmm_ptr->PWR_Ch_State_3_3V_Bus << 10) | (eps_p.eps_pmm_ptr->PWR_Ch_State_I2C_Bus << 11);
 
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_PWR_PG_BitMask                     = (eps_p.eps_pmm_ptr->PWR_Ch_PG_CANmain) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_CANbackup << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF1 << 2) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF2 << 3) |
 	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF1 << 4) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF2 << 5) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_PBMs_Logic << 6) |

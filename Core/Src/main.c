@@ -1,11 +1,7 @@
 #include  <stdio.h>
-#include "stm32l4xx_ll_utils.h"
 #include "SetupPeriph.h"
 #include "stm32l4xx.h"
-#include "stm32l4xx_ll_utils.h"
-#include "stm32l4xx_ll_gpio.h"
 #include "stm32l4xx_ll_iwdg.h"
-#include "SetupPeriph.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
@@ -19,7 +15,6 @@
 #include "PMM/pmm_savedata.h"
 #include "PMM/pmm_damage_ctrl.h"
 #include "PBM_T1/pbm_T1_control.h"
-#include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_init.h"
 #include "PBM_T1/pbm_T1.h"
 #include "PAM/pam_init.h"
@@ -81,6 +76,7 @@ int main(void){
     LPUART1_Init();
     USART3_Init();
     SetupInterrupt();
+
 
     //LL_mDelay(4);
     //IWDG_Init(4000);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -145,10 +141,21 @@ int main(void){
             CAN_Var5_fill_telemetry_const();
         }
 
-        CAN_init_eps(CAN1);
-		CAN_init_eps(CAN2);
+        if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE ){
+        	CAN_init_eps(CAN1);
+        }
+        if( pmm_ptr->PWR_Ch_State_CANbackup == ENABLE ){
+        	CAN_init_eps(CAN2);
+        }
+
 		CAN_RegisterAllVars();
         PMM_Start_Time_Check_CAN = SysTick_Counter;
+
+        if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
+            LPUART1_DeInit();
+            USART3_DeInit();
+        }
+
 
     //Initialization CAN for passive CPU
 	}else{
@@ -196,7 +203,7 @@ int main(void){
 
                 LL_IWDG_ReloadCounter(IWDG);
                 if( pmm_ptr->Deploy_stage != 9 ){
-                    PMM_Deploy( eps_param );
+                   PMM_Deploy( eps_param );
                 }
 
                 //CAN ports power off protection. ( In combat mode start protection only out from the container )

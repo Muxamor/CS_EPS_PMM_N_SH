@@ -443,6 +443,38 @@ void LPUART1_Init(void) {
 	LL_LPUART_Enable(LPUART1);
 }
 
+
+/** @brief LPUART1 DeInitialization Function
+ * @param None
+ * @retval None
+ */
+void LPUART1_DeInit(void){
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+    /* Peripheral clock enable */
+    LL_APB1_GRP2_DisableClock(LL_APB1_GRP2_PERIPH_LPUART1);
+
+    //LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+    //LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+    //LL_PWR_DisableVddIO2();
+    /**LPUART1 GPIO Configuration**/
+
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+    LL_LPUART_DeInit(LPUART1);
+    LL_LPUART_Disable(LPUART1);
+}
+
+
 /** @brief USART3 Initialization Function
  * @param None
  * @retval None
@@ -485,6 +517,31 @@ void USART3_Init(void) {
 	LL_USART_ConfigAsyncMode(USART3);
 	LL_USART_Enable(USART3);
 }
+
+
+/** @brief USART3 DeInitialization Function
+ * @param None
+ * @retval None
+ */
+void USART3_DeInit(void){
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+    /* Peripheral clock enable */
+    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_USART3);
+    //LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+    /**USART3 GPIO Configuration**/
+
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_10|LL_GPIO_PIN_11;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    LL_USART_DeInit(USART3);
+    //LL_USART_ConfigAsyncMode(USART3);
+    LL_USART_Disable(USART3);
+}
+
 
 /**
  * @brief UART5 Initialization Function. UART5 use for Terminal or Debug
