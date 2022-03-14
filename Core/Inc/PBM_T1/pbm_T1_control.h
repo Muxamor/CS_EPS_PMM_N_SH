@@ -39,6 +39,8 @@ ErrorStatus PBM_T1_CheckChargeDischargeState(_PBM_T1 pbm[], uint8_t PBM_number, 
 
 ErrorStatus PBM_T1_CorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint16_t Max_cap);
 
+ErrorStatus PBM_T1_AutoCorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Branch_number, uint16_t Max_cap);
+
 void  PBM_T1_CalcTotalCapacity(_PBM_T1 pbm[], uint8_t PBM_number);
 
 void PBM_T1_CheckLowLevelEnergy(_PBM_T1 pbm[], uint8_t PBM_number);

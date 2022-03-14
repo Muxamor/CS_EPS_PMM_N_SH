@@ -37,7 +37,7 @@ ErrorStatus PBM_T1_Init( _PBM_T1 pbm[] ) {
                 Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_OFF_EMERG_CHRG);
     		}
     		if ( pbm[PBM_Number].Branch[Branch_number].Auto_Corr_Capacity_Cmd == ENABLE) {
-    			Error += PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_MAX_BATT_CAP);
+    			Error += PBM_T1_AutoCorrectCapacity(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_MAX_BATT_CAP);
     		}
     		if ( Error != SUCCESS){
 			    #ifdef DEBUGprintf
@@ -111,7 +111,7 @@ ErrorStatus PBM_T1_Re_Init(_PBM_T1 pbm[]) {
 	            Error += PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_OFF_EMERG_CHRG);
 	    	}
 	    	if ( pbm[PBM_Number].Branch[Branch_number].Auto_Corr_Capacity_Cmd == ENABLE) {
-	    		Error += PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_MAX_BATT_CAP);
+	    		Error += PBM_T1_AutoCorrectCapacity(PBM_T1_I2C_PORT, pbm, PBM_Number, Branch_number, PBM_T1_MAX_BATT_CAP);
 	    	}
 	    	if ( Error != SUCCESS){
 			   #ifdef DEBUGprintf

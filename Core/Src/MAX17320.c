@@ -3,6 +3,7 @@
 #include "stm32l4xx_ll_utils.h"
 #include "i2c_comm.h"
 #include "MAX17320.h"
+#include "PBM_T1/pbm_T1_config.h"
 
 
 /** @brief	Reading two byte register from MAX17320. ( St_ReSt - generate Start and Restart )
@@ -2338,6 +2339,8 @@ ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t AccmCharge, ui
 	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
 	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x05, Data);
+	Data = PBM_T1_MAX_BATT_CAP * Rsense / MAX17320_LSB_mAh ;
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x10, Data);
 	Data_key = (Data_key | 0x00F9);
 	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
 	LL_mDelay(1);
@@ -2359,5 +2362,43 @@ ErrorStatus MAX17320_WriteAccmCharge (I2C_TypeDef *I2Cx, uint16_t AccmCharge, ui
 		return ERROR_N;
 	}
 }
+
+/**
+ * @brief  Write Branch ModelGauge m5 Algorithm Output mAh in real values (005h).
+ * 		   This registers contains a ModelGauge m5 Algorithm Output Registers data.
+ * @param  I2Cx - Port I2C
+ * @param  Max_cap - Maximum value of capacity in mAh.
+ * @param  AccmCharge - Value an accumulate charge of battery's in mAh.
+ * @param  Rsense - Value of current shunt in mOhm
+ * @retval 0 - SUCCESS, -1 - ERROR
+ */
+ErrorStatus MAX17320_WriteAutoAccmCharge (I2C_TypeDef *I2Cx, uint16_t AccmCharge, uint8_t Rsense) {
+
+	uint16_t Data_key = 0, Data = 0;
+	int8_t Error = 0;
+
+	Data = AccmCharge * Rsense / MAX17320_LSB_mAh ;
+
+	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0x61, &Data_key);
+
+	Data_key = (uint16_t)(Data_key & 0x0300);
+
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x05, Data);
+	Data_key = (Data_key | 0x00F9);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+	LL_mDelay(1);
+	Error = Error + I2C_Write_MAX17320(I2Cx, 0x6C, I2C_SIZE_REG_ADDR_U8, 0x61, Data_key);
+
+	if (Error == 0) {
+		return SUCCESS;
+	} else {
+		return ERROR_N;
+	}
+}
+
 
 
