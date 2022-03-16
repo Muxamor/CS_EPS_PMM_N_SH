@@ -1339,7 +1339,7 @@ ErrorStatus PBM_T1_AutoCorrectCapacity( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 		Voltage = (float) (Voltage - 2500.0f) * 100.0f / 1650.0f; // in %
 		AbsoluteCapacity = (uint16_t) ((Voltage * Max_cap) / 100);
 		Error_cap = (int8_t)((pbm[PBM_number].Branch[Branch_number].AbcoluteCapacity_mAh * 100 / Max_cap) - Voltage);
-		if((Error_cap > 25) || (Error_cap < -25)){
+		if((Error_cap > 30) || (Error_cap < -30)){
 			Error = Error + MAX17320_WriteAutoAccmCharge(I2Cx, AbsoluteCapacity, PBM_T1_MAX17320_R_SENSE);
 		}
 	}
