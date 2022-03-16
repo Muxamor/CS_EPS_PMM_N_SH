@@ -7,6 +7,7 @@
 #include "PCA9534.h"
 #include "ADS1015.h"
 #include "tim_pwm.h"
+#include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init_IC.h"
@@ -102,6 +103,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
             LL_mDelay( 50 );
             CAN_init_eps(CAN1);
+            CAN_RegisterAllVars();
 
             //Enable PBM logic power and thermostat.
             PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
@@ -118,6 +120,12 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_Heat_CMD = DISABLE;
             	}
             }
+
+            LPUART1_Init();
+            USART3_Init();
+           // NVIC_EnableIRQ(LPUART1_IRQn);
+           // NVIC_EnableIRQ(USART3_IRQn);
+           SetupInterrupt();
 
             //Enable passive CPU
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
@@ -215,6 +223,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         LL_mDelay( 50 );
         CAN_init_eps(CAN1);
         CAN_init_eps(CAN2);
+        CAN_RegisterAllVars();
+
         //Enable PAM DC-DC
         eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
         PAM_init( eps_p.eps_pam_ptr );

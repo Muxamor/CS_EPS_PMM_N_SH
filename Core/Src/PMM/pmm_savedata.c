@@ -270,7 +270,7 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 	}
 
     if( I2C_Error_FRAM1 == ERROR_N){
-        LL_mDelay( 30 );
+        LL_mDelay( 100 );
     }
 
     I2C_Error_FRAM2 = ERROR_N; //0-OK -1-ERROR_N

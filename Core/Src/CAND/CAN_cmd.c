@@ -63,7 +63,9 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> EPS in SERVICE mode\n", CAN_EPS_Mode_offset);
                         #endif
                         eps_p.eps_pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
-                        eps_p.eps_pmm_ptr->Deploy_stage = 0;
+                        //eps_p.eps_pmm_ptr->Deploy_stage = 0;
+                        //eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 0;
+                        //eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
 
                     }else{
                         #ifdef DEBUGprintf
@@ -185,7 +187,8 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
                         LPUART1_Init();
                         USART3_Init();
-                        SetupInterrupt();
+                        NVIC_EnableIRQ(LPUART1_IRQn);
+                        NVIC_EnableIRQ(USART3_IRQn);
                     }
                     eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
                     break;
@@ -214,12 +217,14 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
                         LL_mDelay( 50 );
                         CAN_init_eps(CAN1);
+                        CAN_RegisterAllVars();
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE  power main CAN\n", CAN_PMM_PWR_CAN_main_offset);
                         #endif
-                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
                         CAN_DeInit_eps(CAN1);
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
+
                     }
                     break;
 
@@ -231,12 +236,13 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
                         LL_mDelay( 50 );
                         CAN_init_eps(CAN2);
+                        CAN_RegisterAllVars();
                     }else{
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> DISABLE  power main CAN\n", CAN_PMM_PWR_CAN_backup_offset);
                         #endif
+                        CAN_DeInit_eps(CAN2);
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr,PMM_PWR_Ch_CANbackup, DISABLE);
-                       	CAN_DeInit_eps(CAN2);
                     }
                     break;
 

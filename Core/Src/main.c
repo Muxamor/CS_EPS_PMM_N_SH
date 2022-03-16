@@ -148,14 +148,16 @@ int main(void){
         	CAN_init_eps(CAN2);
         }
 
-		CAN_RegisterAllVars();
+        if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE  || pmm_ptr->PWR_Ch_State_CANbackup == ENABLE  ){
+        	CAN_RegisterAllVars();
+        }
+
         PMM_Start_Time_Check_CAN = SysTick_Counter;
 
         if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
             LPUART1_DeInit();
             USART3_DeInit();
         }
-
 
     //Initialization CAN for passive CPU
 	}else{
@@ -225,7 +227,7 @@ int main(void){
             }else{
                 PMM_Start_Time_Check_CAN = SysTick_Counter;
                 //All CAN ports power off protection.
-                PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
+                PMM_Portecion_PWR_OFF_CANmain(eps_param);
             }
 
             //In case when Backup CPU is Active and Main CPU reboot and findout active CPU

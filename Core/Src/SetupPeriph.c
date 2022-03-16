@@ -450,28 +450,28 @@ void LPUART1_Init(void) {
  */
 void LPUART1_DeInit(void){
 
-    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+//    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-    /* Peripheral clock enable */
+    LL_LPUART_Disable(LPUART1);
+    LL_LPUART_DeInit(LPUART1);
+
+//    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+//    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+//    LL_PWR_EnableVddIO2();
+
+//    GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
+//    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+//    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+//
+//    GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+//    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+//    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//    LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
     LL_APB1_GRP2_DisableClock(LL_APB1_GRP2_PERIPH_LPUART1);
 
-    //LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
-    //LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
-    //LL_PWR_DisableVddIO2();
-    /**LPUART1 GPIO Configuration**/
-
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-    LL_LPUART_DeInit(LPUART1);
-    LL_LPUART_Disable(LPUART1);
+    NVIC_DisableIRQ(LPUART1_IRQn);
 }
 
 
@@ -525,21 +525,23 @@ void USART3_Init(void) {
  */
 void USART3_DeInit(void){
 
-    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+//    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+//
+//	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
 
-    /* Peripheral clock enable */
-    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_USART3);
-    //LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
-    /**USART3 GPIO Configuration**/
-
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_10|LL_GPIO_PIN_11;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    LL_USART_DeInit(USART3);
-    //LL_USART_ConfigAsyncMode(USART3);
     LL_USART_Disable(USART3);
+    LL_USART_DeInit(USART3);
+
+
+
+//    GPIO_InitStruct.Pin = LL_GPIO_PIN_10|LL_GPIO_PIN_11;
+//    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+//    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_USART3);
+
+    NVIC_DisableIRQ(USART3_IRQn);
 }
 
 
@@ -619,7 +621,7 @@ void SetupInterrupt(void) {
 	//LL_USART_DisableIT_RXNE(USART3);
 	//LL_USART_DisableIT_ERROR(USART3);
 	NVIC_EnableIRQ(USART3_IRQn);
-	//NVIC_DisableIRQ(UART3_IRQn);
+	//NVIC_DisableIRQ(USART3_IRQn);
 	/**********************************************/
 
 	/* UART5 interrupt Init */
@@ -638,7 +640,6 @@ void SetupInterrupt(void) {
 	/* CAN2 interrupt Init */
 	//CAN interrupt initialization is in CAN_init_eps in this file.
 	/**********************************************/
-
 }
 
 /** @brief GPIO Initialization Function
