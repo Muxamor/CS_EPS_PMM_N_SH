@@ -22,7 +22,7 @@ void LPUART1_DeInit(void);
 void USART3_Init(void);
 void USART3_DeInit(void);
 void UART5_Init(void);
-void SetupInterrupt(void);
+void Setup_UART_Interrupt( void);
 void GPIO_Init(void);
 void PWM_Init_Ch3_Ch4( uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider);
 void PWM_DeInit_Ch3_Ch4( void );

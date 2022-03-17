@@ -123,9 +123,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
             LPUART1_Init();
             USART3_Init();
-           // NVIC_EnableIRQ(LPUART1_IRQn);
-           // NVIC_EnableIRQ(USART3_IRQn);
-           SetupInterrupt();
+            Setup_UART_Interrupt();
 
             //Enable passive CPU
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);

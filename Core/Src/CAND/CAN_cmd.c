@@ -187,8 +187,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
                         LPUART1_Init();
                         USART3_Init();
-                        NVIC_EnableIRQ(LPUART1_IRQn);
-                        NVIC_EnableIRQ(USART3_IRQn);
+                        Setup_UART_Interrupt();
                     }
                     eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
                     break;

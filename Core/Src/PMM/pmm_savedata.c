@@ -1,4 +1,5 @@
 #include "stm32l4xx_ll_utils.h"
+#include "SetupPeriph.h"
 #include "FRAM.h"
 #include "Fn_CRC16.h"
 #include "uart_eps_comm.h"
@@ -6,6 +7,7 @@
 #include "PBM_T1/pbm_T1_control.h"
 #include "PMM/pmm_damage_ctrl.h"
 #include "PMM/pmm_savedata.h"
+#include  <stdio.h>
 
 
 extern _UART_EPS_COMM *UART_M_eps_comm;
@@ -270,6 +272,10 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 	}
 
     if( I2C_Error_FRAM1 == ERROR_N){
+        #ifdef DEBUGprintf
+            printf("I2C_Error_FRAM1 == ERROR_N\n");
+        #endif
+        I2C_Bus_SoftwareReset(PMM_I2Cx_FRAM1,128);
         LL_mDelay( 100 );
     }
 
@@ -286,12 +292,18 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 
     if( I2C_Error_FRAM1 != SUCCESS){
         eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
+        #ifdef DEBUGprintf
+            printf("I2C_Error_FRAM1 == ERROR_N\n");
+        #endif
     }else{
         eps_p.eps_pmm_ptr->Error_FRAM1 = SUCCESS;
     }
 
     if( I2C_Error_FRAM2 != SUCCESS){
         eps_p.eps_pmm_ptr->Error_FRAM2 = ERROR;
+        #ifdef DEBUGprintf
+            printf("I2C_Error_FRAM2 == ERROR_N\n");
+        #endif
     }else{
         eps_p.eps_pmm_ptr->Error_FRAM2 = SUCCESS;
     }
@@ -349,6 +361,10 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
 
     int8_t error_status = SUCCESS;
+
+    #ifdef DEBUGprintf
+        printf("Enter in PMM_Sync_and_Save_Settings_A_P_CPU\n");
+    #endif
 
     //Check flag save settings for Active and Passive CPU
     if( (eps_p.eps_pmm_ptr->PMM_save_conf_flag == SET) || ( eps_p.eps_pdm_ptr->PDM_save_conf_flag == SET) || ( eps_p.eps_pam_ptr->PAM_save_conf_flag == SET) || (PBM_T1_CheckSaveSetupFlag( eps_p.eps_pbm_ptr ) == SET)){

@@ -597,7 +597,7 @@ void UART5_Init(void) {
  * @param  None
  * @retval None
  */
-void SetupInterrupt(void) {
+void Setup_UART_Interrupt( void) {
 
 	//LL_EXTI_InitTypeDef EXTI_InitStruct;
 
@@ -632,15 +632,15 @@ void SetupInterrupt(void) {
     //For Norbi not need yat NVIC_EnableIRQ(UART5_IRQn);
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
-
-	/* CAN1 interrupt Init */
-	//CAN interrupt initialization is in CAN_init_eps in this file.
-	/**********************************************/
-
-	/* CAN2 interrupt Init */
-	//CAN interrupt initialization is in CAN_init_eps in this file.
-	/**********************************************/
 }
+
+/* CAN1 interrupt Init */
+//CAN interrupt initialization is in CAN_init_eps in this file.
+/**********************************************/
+
+/* CAN2 interrupt Init */
+//CAN interrupt initialization is in CAN_init_eps in this file.
+/**********************************************/
 
 /** @brief GPIO Initialization Function
  * @param None
@@ -728,14 +728,14 @@ void GPIO_Init(void) {
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	//If not use IC
-	//GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
-	//GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-	//GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-	//GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	//GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	//LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-	//LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1); // Reset pin down -> GPIOExt2 off, because not yet used in Norbi
+//	GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+//	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+//	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+//	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+//	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+//
+//	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1); // Reset pin down -> GPIOExt2 off, because not yet used in Norbi
 
 	/****************************************************************************************/
 
@@ -832,7 +832,6 @@ void GPIO_Init(void) {
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-    /*For control pin PBM Energy Level LOW  need use:	*/
     /*PMM_RT_FL_EPS1_Set_pin();     		    		*/
     /*PMM_RT_FL_EPS1_Reset_pin();      		    		*/
     /* PMM_RT_FL_EPS2_Set_pin();      		    		*/

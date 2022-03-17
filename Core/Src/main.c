@@ -75,7 +75,7 @@ int main(void){
     //UART5_Init();
     LPUART1_Init();
     USART3_Init();
-    SetupInterrupt();
+    Setup_UART_Interrupt();
 
 
     //LL_mDelay(4);
