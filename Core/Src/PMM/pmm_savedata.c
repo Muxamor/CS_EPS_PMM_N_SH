@@ -255,60 +255,64 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
 */
 ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 
-    int8_t I2C_Error_FRAM1 = 0, I2C_Error_FRAM2 = 0, error_status = SUCCESS;
-    uint8_t FRAM1_status = 0, FRAM2_status = 0; // 0 - FRAM empty, 1 - FRAM no empty
+    int8_t /*I2C_Error_FRAM1 = 0, I2C_Error_FRAM2 = 0,*/ error_status = SUCCESS;
+   // uint8_t FRAM1_status = 0, FRAM2_status = 0; // 0 - FRAM empty, 1 - FRAM no empty
 	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_Number = 0;
     uint8_t i = 0;
+    /*
+     * It is not importent feature.
+     * Remove because we can get error I2C FRAM when CPU is booting. (meeans nois power)
+        I2C_Error_FRAM1 = ERROR_N; //0-OK -1-ERROR_N
+        while( ( I2C_Error_FRAM1 != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-    I2C_Error_FRAM1 = ERROR_N; //0-OK -1-ERROR_N
-    while( ( I2C_Error_FRAM1 != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+            I2C_Error_FRAM1 = FRAM_Detect_Empty(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB, &FRAM1_status );
 
-        I2C_Error_FRAM1 = FRAM_Detect_Empty(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB, &FRAM1_status );
+            if( I2C_Error_FRAM1 != SUCCESS ){
+                i++;
+                LL_mDelay( pmm_i2c_delay_att_conn );
+            }
+        }
 
-        if( I2C_Error_FRAM1 != SUCCESS ){
-	        i++;
-	        LL_mDelay( pmm_i2c_delay_att_conn );
-	    }
-	}
+        if( I2C_Error_FRAM1 == ERROR_N){
+            #ifdef DEBUGprintf
+                printf("I2C_Error_FRAM1 == ERROR_N\n");
+            #endif
+            I2C3_DeInit();
+            LL_mDelay( 500 );
+            I2C3_Init();
+            LL_mDelay( 400 );
+        }
 
-    if( I2C_Error_FRAM1 == ERROR_N){
-        #ifdef DEBUGprintf
-            printf("I2C_Error_FRAM1 == ERROR_N\n");
-        #endif
-        I2C_Bus_SoftwareReset(PMM_I2Cx_FRAM1,128);
-        LL_mDelay( 100 );
-    }
+            I2C_Error_FRAM2 = ERROR_N; //0-OK -1-ERROR_N
+            while( ( I2C_Error_FRAM2 != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-    I2C_Error_FRAM2 = ERROR_N; //0-OK -1-ERROR_N
-    while( ( I2C_Error_FRAM2 != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+                I2C_Error_FRAM2 = FRAM_Detect_Empty(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB, &FRAM2_status );
 
-        I2C_Error_FRAM2 = FRAM_Detect_Empty(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB, &FRAM2_status );
+                if( I2C_Error_FRAM2 != SUCCESS ){
+                    i++;
+                    LL_mDelay( pmm_i2c_delay_att_conn );
+                }
+            }
 
-        if( I2C_Error_FRAM2 != SUCCESS ){
-	        i++;
-	        LL_mDelay( pmm_i2c_delay_att_conn );
-	    }
-	}
+            if( I2C_Error_FRAM1 != SUCCESS){
+                eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
+                #ifdef DEBUGprintf
+                    printf("I2C_Error_FRAM1 == ERROR_N\n");
+                #endif
+            }else{
+                eps_p.eps_pmm_ptr->Error_FRAM1 = SUCCESS;
+            }
 
-    if( I2C_Error_FRAM1 != SUCCESS){
-        eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
-        #ifdef DEBUGprintf
-            printf("I2C_Error_FRAM1 == ERROR_N\n");
-        #endif
-    }else{
-        eps_p.eps_pmm_ptr->Error_FRAM1 = SUCCESS;
-    }
+            if( I2C_Error_FRAM2 != SUCCESS){
+                eps_p.eps_pmm_ptr->Error_FRAM2 = ERROR;
+                #ifdef DEBUGprintf
+                    printf("I2C_Error_FRAM2 == ERROR_N\n");
+                #endif
+            }else{
+                eps_p.eps_pmm_ptr->Error_FRAM2 = SUCCESS;
+            } */
 
-    if( I2C_Error_FRAM2 != SUCCESS){
-        eps_p.eps_pmm_ptr->Error_FRAM2 = ERROR;
-        #ifdef DEBUGprintf
-            printf("I2C_Error_FRAM2 == ERROR_N\n");
-        #endif
-    }else{
-        eps_p.eps_pmm_ptr->Error_FRAM2 = SUCCESS;
-    }
-
-    if( ((FRAM1_status == 1) && ( I2C_Error_FRAM1 == SUCCESS)) || ((FRAM2_status == 1) && ( I2C_Error_FRAM2 == SUCCESS)) ){
+    //if( ((FRAM1_status == 1) && ( I2C_Error_FRAM1 == SUCCESS)) || ((FRAM2_status == 1) && ( I2C_Error_FRAM2 == SUCCESS)) ){
 
         error_status = ERROR_N; //0-OK -1-ERROR_N
         while( ( error_status != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
@@ -318,13 +322,23 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
             if( error_status != SUCCESS ){
                 i++;
                 LL_mDelay( pmm_i2c_delay_att_conn );
+                if( i >= pmm_i2c_attempt_conn - 1 ){
+                    I2C3_DeInit();
+                    LL_mDelay( 700 );
+                    I2C3_Init();
+                    LL_mDelay( 700 );
+                }
             }
         }
-    }
+   // }
 
-    if( (eps_p.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_p.eps_pmm_ptr->Error_FRAM2 == ERROR) || (FRAM1_status == 0 && FRAM2_status == 0) || (error_status != SUCCESS) ) {
+    if( /*(eps_p.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_p.eps_pmm_ptr->Error_FRAM2 == ERROR) || (FRAM1_status == 0 && FRAM2_status == 0) || */ (error_status != SUCCESS) ) {
         eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
         eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+        eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE;
+        eps_p.eps_pmm_ptr->Deploy_stage = 0;
+        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 0;
+        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
 
         //Enable All BRK
         eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in = ENABLE;
@@ -340,13 +354,13 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd = ENABLE;
                 eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Cmd = DISABLE;
         	}
-        	for(Heat_Number = 0; Heat_Number < PBM_T1_HEAT_QUANTITY; Heat_Number++){
-        		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_Heat_CMD = ENABLE;
-        	}
         }
     }
 
-    if( I2C_Error_FRAM1 == ERROR_N || I2C_Error_FRAM2 == ERROR_N ||  error_status == ERROR_N ){
+    if( /*I2C_Error_FRAM1 == ERROR_N || I2C_Error_FRAM2 == ERROR_N ||*/  error_status == ERROR_N ){
+        #ifdef DEBUGprintf
+            printf("ERROR I2C In Restore settings function\n");
+        #endif
         return  ERROR_N;
     }
 
@@ -404,6 +418,9 @@ ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
     }
 
     if( error_status != SUCCESS ){
+        #ifdef DEBUGprintf
+            printf("Error I2C in save settings\n");
+        #endif
         return ERROR_N;
     }
 

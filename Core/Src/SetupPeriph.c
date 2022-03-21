@@ -145,7 +145,6 @@ void SystemClock_Config(void) {
 	LL_RCC_SetI2CClockSource(LL_RCC_I2C3_CLKSOURCE_PCLK1); // I2C3 comm. inside main and backup block
 	//LL_RCC_SetI2CClockSource(LL_RCC_I2C2_CLKSOURCE_PCLK1);     // Backup I2C1 Comm. with module PAM and PDM and another part of PMM module
 	LL_RCC_SetI2CClockSource(LL_RCC_I2C4_CLKSOURCE_PCLK1); // Main I2C4 Comm. with module PAM and PDM and another part of PMM module
-
 }
 
 /** @brief I2C3 Initialization Function. I2C3 use for communiction inside main and backup block
@@ -202,9 +201,7 @@ void I2C3_Init(void) {
 	I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK;
 	I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
 	LL_I2C_Init(I2C3, &I2C_InitStruct);
-
 	LL_I2C_SetOwnAddress2(I2C3, 0, LL_I2C_OWNADDRESS2_NOMASK);
-
 	LL_I2C_Enable(I2C3);
 }
 
@@ -217,8 +214,10 @@ void I2C3_DeInit(void){
     LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
     LL_I2C_Disable(I2C3);
-
     LL_I2C_DeInit(I2C3);
+
+    /* Peripheral clock disable */
+    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_I2C3);
 
     LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
     LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
@@ -237,8 +236,6 @@ void I2C3_DeInit(void){
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
-    /* Peripheral clock disable */
-    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_I2C3);
 }
 
 /** @brief I2C4 Initialization Function. Main I2C4 communication 
@@ -343,12 +340,20 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 	//period = 42;
 	count = period;
 
-	LL_I2C_DeInit(I2Cx);
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
 	if (I2Cx == I2C3) {
+	    I2C3_DeInit();
 		LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
-		LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_7);
+		LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
+		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+		LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+		LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_8);
 
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
@@ -356,6 +361,7 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 		LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+		LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_7);
 
 		for (i = 0; i <= number_cycle; i++) {
 			while (count > 0) {
@@ -369,19 +375,24 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 			count = period;
 			LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_7);
 		}
+		LL_mDelay( 20 );
 		I2C3_Init();
+		LL_mDelay( 20);
+
 	}
 
 	if (I2Cx == I2C4) {
+	    I2C4_DeInit();
 		LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
-		LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_14);
 
-		GPIO_InitStruct.Pin = LL_GPIO_PIN_14;
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_14|LL_GPIO_PIN_15;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 		LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+		LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_14);
+		LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_15);
 
 		for (i = 0; i <= number_cycle; i++) {
 			while (count > 0) {
@@ -395,7 +406,10 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 			count = period;
 			LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_14);
 		}
+
+		LL_mDelay( 20 );
 		I2C4_Init();
+		LL_mDelay( 20 );
 	}
 }
 

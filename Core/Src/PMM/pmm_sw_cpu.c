@@ -35,11 +35,10 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
 
 
     LL_IWDG_ReloadCounter(IWDG);
-
-	if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CP
+    //TODO Подумать над тем чтобы убрать eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABL
+    if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CP //
 
         save_value_Active_CPU = eps_p.eps_pmm_ptr->Active_CPU;
-
         //Get Active CPU from Main UART port
         UART_EPS_Pars_Get_Package(UART_Backup_eps_comm, eps_p);
         UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p);

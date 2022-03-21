@@ -1,6 +1,7 @@
 #include  <stdio.h>
 #include "SetupPeriph.h"
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_iwdg.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
@@ -77,8 +78,6 @@ int main(void){
     USART3_Init();
     Setup_UART_Interrupt();
 
-
-    //LL_mDelay(4);
     //IWDG_Init(4000);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     LL_IWDG_ReloadCounter(IWDG);
 

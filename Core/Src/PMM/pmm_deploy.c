@@ -128,7 +128,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             //Enable passive CPU
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
             PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-           // PWM_DeInit_Ch3_Ch4( );
+            PWM_DeInit_Ch3_Ch4( );
             eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
 
             PMM_init( eps_p.eps_pmm_ptr );
