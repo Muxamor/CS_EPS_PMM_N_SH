@@ -71,7 +71,9 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
                 if (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
                     PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                     PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                    PWM_DeInit_Ch3_Ch4( );
                     eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+                    LL_mDelay(50);
                 }
 
                 //Switch active CPU because CANm and CANb is ERROR

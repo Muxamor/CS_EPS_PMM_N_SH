@@ -16,6 +16,7 @@
 #include "PMM/pmm_damage_ctrl.h"
 #include "uart_eps_comm.h"
 #include "PMM/pmm_sw_cpu.h"
+#include  <stdio.h>
 
 /** @brief CPU main checking active CPU flag  (pmm_ptr->Active_CPU) between main and backup CPU.
  * 			In case when (pmm_ptr->Active_CPU) the same value in the Main and Backup CPU
@@ -35,8 +36,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
 
 
     LL_IWDG_ReloadCounter(IWDG);
-    //TODO Подумать над тем чтобы убрать eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABL
-    if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CP //
+    if( /* ( */eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain /*) /*&& (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) */) { //Only for Main CP //
 
         save_value_Active_CPU = eps_p.eps_pmm_ptr->Active_CPU;
         //Get Active CPU from Main UART port
@@ -107,6 +107,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
                     eps_p.eps_pmm_ptr->Active_CPU = 1;
                 } else {
                     eps_p.eps_pmm_ptr->Active_CPU = 0;
+                    //eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
                 }
             }
 
@@ -193,6 +194,9 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 			if( error_status != SUCCESS ){
 				i++;
 				LL_mDelay( pmm_uart_delay_att_conn );
+				#ifdef DEBUGprintf
+				    Error_Handler();
+			    #endif
 			}
 		}
 		
@@ -212,6 +216,9 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 				if( error_status != SUCCESS ){
 					i++;
 					LL_mDelay( pmm_uart_delay_att_conn );
+					#ifdef DEBUGprintf
+					    Error_Handler();
+			        #endif
 				}
 			}
 
@@ -254,6 +261,7 @@ void PMM_Reboot_EPS_PassiveCPU( void ){
     //Enable power of passive CPU
     PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
     PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+    PWM_DeInit_Ch3_Ch4( );
 }
 
 

@@ -229,7 +229,7 @@ int main(void){
                 PMM_Portecion_PWR_OFF_CANmain(eps_param);
             }
 
-            //In case when Backup CPU is Active and Main CPU reboot and findout active CPU
+            //In case when Backup CPU is Active and Main CPU reboot and findout who is an active CPU
             if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
                 UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
                 UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
