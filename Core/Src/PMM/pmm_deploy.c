@@ -36,15 +36,16 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     static uint32_t  Exit_LSW_poll_time_delay  = 0;
     static uint16_t  Counter_deploy_exit_LSW_1  = 0;
     static uint16_t  Counter_deploy_exit_LSW_2  = 0;
+    static uint8_t   Error_counter = 0;
 
     deploy_stage = eps_p.eps_pmm_ptr->Deploy_stage;
 
     //Enable power Deploy Logic
     if( eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic == DISABLE ){
-        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
         LL_mDelay( 5 );
     }else{
-        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
     }
 
     //Deploy stage 0 - In delivery container
@@ -53,10 +54,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         uint8_t value_deploy_exit_LSW_2 = 1;
 
         if( ((uint32_t)(SysTick_Counter - Exit_LSW_poll_time_delay)) > ((uint32_t) 1000) ){
-            error_status = ERROR_N;
-            error_status = PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 );
 
-            if(error_status == SUCCESS ){
+            if( PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 ) == SUCCESS ){
                 if( value_deploy_exit_LSW_1 == 0){
                     Counter_deploy_exit_LSW_1++;
                 }else{
@@ -195,6 +194,11 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
                 (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) ){
             eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+        }else if( eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF1 == ERROR && eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF2 == ERROR &&
+                    eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF1 == ERROR &&  eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2 == ERROR ){
+            eps_p.eps_pmm_ptr->Deploy_stage = 4;
+
         }else{
             eps_p.eps_pmm_ptr->Deploy_stage = 3; // waiting for the batteries to charge
         }
@@ -216,8 +220,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     // Deploy stage 6 - Enable BRK1, BRK2, CANm, CANb, PAM DC-DC.
     }else if( deploy_stage == 6 ){
         //Enable CAN
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
+        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
+        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
         LL_mDelay( 50 );
         CAN_init_eps(CAN1);
         CAN_init_eps(CAN2);
@@ -261,8 +265,21 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     }
 
     if( error_status != SUCCESS ){
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+
+        DISABLE_TMUX1209_I2C();
+        LL_mDelay( 50 );
+        ENABLE_TMUX1209_I2C();
+        Error_counter++;
+        if( Error_counter > 3 ){
+            eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
+            Error_counter = 0;
+        }
         return ERROR_N;
     }
+
+    Error_counter = 0;
     return SUCCESS;
 }
 
