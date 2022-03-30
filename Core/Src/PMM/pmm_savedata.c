@@ -481,7 +481,7 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
         }
 
 
-        eps_p.eps_pmm_ptr->PMM_save_conf_flag = SET ;
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = SET;
     }
 
     if( error_status != SUCCESS ){

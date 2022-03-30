@@ -91,10 +91,7 @@ int main(void){
     }
 
     //Restore settings EPS from FRAM
-    //PMM_FRAM_Restore_Settings(eps_param);
-
-    eps_param.eps_pmm_ptr->Error_FRAM1 = ERROR ;
-    eps_param.eps_pmm_ptr->Error_FRAM2 = ERROR ;
+    PMM_FRAM_Restore_Settings(eps_param);
 
     //Get settings from the neighbor CPU if detect errors FRAM1 and FRAM2.
     if( eps_param.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_param.eps_pmm_ptr->Error_FRAM2 == ERROR ){
