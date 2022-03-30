@@ -159,7 +159,7 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 	@param  None
 	@retval 1 - CPU Main mode, 0 - CPU Backup mode.
  */
-uint8_t PMM_Detect_MasterBackupCPU(void){
+uint8_t PMM_Detect_Main_Backup_CPU( void){
 
 	uint8_t mode = 0;
 

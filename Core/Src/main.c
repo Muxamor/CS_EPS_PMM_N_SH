@@ -21,8 +21,6 @@
 #include "PAM/pam_init.h"
 #include "PAM/pam.h"
 #include "uart_eps_comm.h"
-
-
 /**********************************************************/
 
 //extern uint32_t SysTick_Counter;
@@ -81,8 +79,8 @@ int main(void){
     //IWDG_Init(4000);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     LL_IWDG_ReloadCounter(IWDG);
 
-	//Restore settings of EPS
-    pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+    //Restore settings of EPS
+    pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_Main_Backup_CPU();
 
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
         UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
@@ -93,7 +91,10 @@ int main(void){
     }
 
     //Restore settings EPS from FRAM
-    PMM_FRAM_Restore_Settings(eps_param);
+    //PMM_FRAM_Restore_Settings(eps_param);
+
+    eps_param.eps_pmm_ptr->Error_FRAM1 = ERROR ;
+    eps_param.eps_pmm_ptr->Error_FRAM2 = ERROR ;
 
     //Get settings from the neighbor CPU if detect errors FRAM1 and FRAM2.
     if( eps_param.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_param.eps_pmm_ptr->Error_FRAM2 == ERROR ){
@@ -152,7 +153,7 @@ int main(void){
         	CAN_init_eps(CAN2);
         }
 
-        if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE  || pmm_ptr->PWR_Ch_State_CANbackup == ENABLE  ){
+        if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE || pmm_ptr->PWR_Ch_State_CANbackup == ENABLE  ){
         	CAN_RegisterAllVars();
         }
 
@@ -172,7 +173,6 @@ int main(void){
 		CAN_DeInit_eps(CAN2);
         PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 	}
-
 
 	//Infinity Loop
 	while(1){

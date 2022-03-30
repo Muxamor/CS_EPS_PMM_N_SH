@@ -8,7 +8,7 @@ extern "C" {
 #include "PMM/eps_struct.h"
 
 ErrorStatus PMM_init(_PMM *pmm_ptr);
-uint8_t PMM_Detect_MasterBackupCPU(void);
+uint8_t PMM_Detect_Main_Backup_CPU( void);
 
 #ifdef __cplusplus
 }

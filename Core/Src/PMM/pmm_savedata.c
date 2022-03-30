@@ -390,31 +390,11 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
                                   .eps_pbm_ptr = pbm_mas_temp,
                                 };
 
-    eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-   // error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-
-//    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-//    eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-//    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-//    eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-//    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-//    eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-//    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-//    eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-//    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-//    eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-//    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-//    eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-//    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-
-
-
-    //Enable I2C MUX channel
     i=0;
     error_status = ERROR_N;
     while( (  error_status != SUCCESS ) && ( i < 3 ) ){
 
-    	eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+    	eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_Main_Backup_CPU();
         error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
 
         if( error_status != SUCCESS ){
@@ -428,32 +408,80 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
 
     if( ( error_status == SUCCESS ) && ( eps_param_temp.eps_pmm_ptr->Error_FRAM1 == SUCCESS || eps_param_temp.eps_pmm_ptr->Error_FRAM2 == SUCCESS ) ){
 
-        if( (eps_param_temp.eps_pmm_ptr->Active_CPU == CPUmain_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ) ||
-                (eps_param_temp.eps_pmm_ptr->Active_CPU == CPUbackup_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
+//        if( (eps_param_temp.eps_pmm_ptr->Active_CPU == CPUmain_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ) ||
+//                (eps_param_temp.eps_pmm_ptr->Active_CPU == CPUbackup_Active && eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
 
-            eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
-            error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-            error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
-            error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
+        eps_param_temp.eps_pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_Main_Backup_CPU();
+        eps_param_temp.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE; //just in case
+        eps_param_temp.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
+        eps_param_temp.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
+        eps_param_temp.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
+        eps_param_temp.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
+        size_struct = sizeof( pmm_temp );
+        memcpy( eps_p.eps_pmm_ptr, eps_param_temp.eps_pmm_ptr, size_struct );
 
-            if( error_status == SUCCESS ){
+        i=0;
+        error_status = ERROR_N;
+        while( (  error_status != SUCCESS ) && ( i < 3 ) ){
 
-                eps_param_temp.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE; //just in case
-                eps_param_temp.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
-                eps_param_temp.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
-                eps_param_temp.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
-                eps_param_temp.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
+            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
 
-                size_struct = sizeof( pmm_temp );
-                memcpy( eps_p.eps_pmm_ptr, eps_param_temp.eps_pmm_ptr, size_struct );
-                size_struct = sizeof( pam_temp );
-                memcpy( eps_p.eps_pam_ptr, eps_param_temp.eps_pam_ptr, size_struct );
-                size_struct = sizeof( pdm_temp );
-                memcpy( eps_p.eps_pdm_ptr, eps_param_temp.eps_pdm_ptr, size_struct );
-                size_struct = sizeof( pbm_mas_temp );
-                memcpy( eps_p.eps_pbm_ptr, eps_param_temp.eps_pbm_ptr, size_struct );
+            if( error_status != SUCCESS ){
+                i++;
+                LL_mDelay( 500 );
+			    #ifdef DEBUGprintf
+                    Error_Handler();
+    		    #endif
             }
         }
+
+        if( error_status == SUCCESS ){
+            size_struct = sizeof( pam_temp );
+            memcpy( eps_p.eps_pam_ptr, eps_param_temp.eps_pam_ptr, size_struct );
+        }
+
+        i=0;
+        error_status = ERROR_N;
+        while( (  error_status != SUCCESS ) && ( i < 3 ) ){
+
+            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
+
+            if( error_status != SUCCESS ){
+                i++;
+                LL_mDelay( 500 );
+			    #ifdef DEBUGprintf
+                    Error_Handler();
+    		    #endif
+            }
+        }
+
+        if( error_status == SUCCESS ){
+            size_struct = sizeof( pdm_temp );
+            memcpy( eps_p.eps_pdm_ptr, eps_param_temp.eps_pdm_ptr, size_struct );
+        }
+
+        i=0;
+        error_status = ERROR_N;
+        while( (  error_status != SUCCESS ) && ( i < 3 ) ){
+
+            error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
+
+            if( error_status != SUCCESS ){
+                i++;
+                LL_mDelay( 500 );
+			    #ifdef DEBUGprintf
+                Error_Handler();
+    		    #endif
+            }
+        }
+
+        if( error_status == SUCCESS ){
+            size_struct = sizeof( pbm_mas_temp );
+            memcpy( eps_p.eps_pbm_ptr, eps_param_temp.eps_pbm_ptr, size_struct );
+        }
+
+
+        eps_p.eps_pmm_ptr->PMM_save_conf_flag = SET ;
     }
 
     if( error_status != SUCCESS ){
