@@ -87,6 +87,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         }else if( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1) ){
             //Set next deploy stage
             eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge battery if enegy lavel is low
+            SysTick_Counter = 0x00;
             Deploy_start_time_delay = SysTick_Counter;
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
@@ -173,6 +174,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
             if( total_power_gen_pam > PMM_Deploy_Power_Gen_EDGE ){
                 eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
+                SysTick_Counter = 0x00;
                 Deploy_start_time_delay = SysTick_Counter;
                 eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
