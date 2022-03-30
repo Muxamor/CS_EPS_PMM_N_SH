@@ -95,6 +95,11 @@ int main(void){
     //Restore settings EPS from FRAM
     PMM_FRAM_Restore_Settings(eps_param);
 
+    //Get settings from the neighbor CPU if detect errors FRAM1 and FRAM2.
+    if( eps_param.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_param.eps_pmm_ptr->Error_FRAM2 == ERROR ){
+        PMM_Get_Settings_From_NeighborCPU( eps_param );
+    }
+
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
         pmm_ptr->reboot_counter_CPUm++;
     }else{ // CPUbackup
@@ -199,6 +204,18 @@ int main(void){
                 }
             }
 
+            //In case when Backup CPU is Active and Main CPU reboot and findout who is an active CPU
+            //In a case when no Activ CPU read settings if got errors FRAM1 and FRAM2
+            //if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
+            if( UART_M_eps_comm->permit_recv_pack_flag == 1 || UART_M_eps_comm->stop_recv_pack_flag == 1 ||
+                    UART_B_eps_comm->permit_recv_pack_flag == 1 || UART_B_eps_comm->stop_recv_pack_flag == 1 ){
+                UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
+                UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
+                UART_EPS_Pars_Get_Package( UART_M_eps_comm, eps_param );
+                UART_EPS_Pars_Get_Package( UART_B_eps_comm, eps_param );
+            }
+            //}
+
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
 
@@ -228,15 +245,7 @@ int main(void){
                 //All CAN ports power off protection.
                 PMM_Portecion_PWR_OFF_CANmain(eps_param);
             }
-
-            //In case when Backup CPU is Active and Main CPU reboot and findout who is an active CPU
-            if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
-                UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
-                UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
-                UART_EPS_Pars_Get_Package( UART_M_eps_comm, eps_param );
-                UART_EPS_Pars_Get_Package( UART_B_eps_comm, eps_param );
-            }
-
+            
             //Check Errors UART ports and get reboot counter passive CPU.
             PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
@@ -246,7 +255,7 @@ int main(void){
             }
 
             //Fill CAN Var5
-            if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
+            if( pmm_ptr->CAN_constatnt_mode == DISABLE ){ //Constant mode OFF
                 CAN_Var5_fill_telemetry(eps_param);
             }
 

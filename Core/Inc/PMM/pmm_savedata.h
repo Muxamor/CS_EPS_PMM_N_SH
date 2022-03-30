@@ -125,6 +125,7 @@ typedef struct{
 ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
 ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
 ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p );
+ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p );
 ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p );
 ErrorStatus FRAM_Check_Data_CRC( uint8_t *data, uint16_t data_size, uint16_t expected_crc );
 

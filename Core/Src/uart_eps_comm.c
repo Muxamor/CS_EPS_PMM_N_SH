@@ -454,6 +454,18 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
 		 send_buf[0] = UART_EPS_ID_CMD_Get_PMM_struct;
 		 size_send_data = 1;
 
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PAM_struct ){
+	    send_buf[0] = UART_EPS_ID_CMD_Get_PAM_struct;
+	    size_send_data = 1;
+
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PDM_struct ){
+	    send_buf[0] = UART_EPS_ID_CMD_Get_PDM_struct;
+	    size_send_data = 1;
+
+	}else if( cmd_id == UART_EPS_ID_CMD_Get_PBM_struct ){
+	    send_buf[0] = UART_EPS_ID_CMD_Get_PBM_struct;
+	    size_send_data = 1;
+
 	}else if( cmd_id == UART_EPS_ID_CMD_Get_Reboot_count ){
 		send_buf[0] = UART_EPS_ID_CMD_Get_Reboot_count;
 		size_send_data = 1;
