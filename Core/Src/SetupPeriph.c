@@ -692,7 +692,7 @@ void Setup_UART_Interrupt( void) {
 	//LL_EXTI_InitTypeDef EXTI_InitStruct;
 
 	/*Enable interrupt for SysTick */
-    LL_SYSTICK_EnableIT();
+    //LL_SYSTICK_EnableIT();
     //LL_SYSTICK_DisableIT();
     /**********************************************/
 

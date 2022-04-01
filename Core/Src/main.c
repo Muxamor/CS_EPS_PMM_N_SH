@@ -1,6 +1,7 @@
 #include  <stdio.h>
 #include "SetupPeriph.h"
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_cortex.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_iwdg.h"
 #include "stm32l4xx_ll_rcc.h"
@@ -78,6 +79,7 @@ int main(void){
     LPUART1_Init();
     USART3_Init();
     Setup_UART_Interrupt();
+    LL_SYSTICK_EnableIT();
 
     //IWDG_Init(4000);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     LL_IWDG_ReloadCounter(IWDG);
@@ -95,6 +97,9 @@ int main(void){
 
     //Restore settings EPS from FRAM
     PMM_FRAM_Restore_Settings(eps_param);
+
+   // pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
+   // pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
 
     //Get settings from the neighbor CPU if detect errors FRAM1 and FRAM2.
     if( eps_param.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_param.eps_pmm_ptr->Error_FRAM2 == ERROR ){
@@ -160,6 +165,7 @@ int main(void){
         if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 && pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
         	I2C3_DeInit();
         	I2C4_DeInit();
+        	LL_SYSTICK_DisableIT();
         	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
         	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
         	PWM_DeInit_Ch3_Ch4( );
@@ -169,6 +175,7 @@ int main(void){
             PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
             I2C3_Init(CPU_Clock_16MHz);
             I2C4_Init(CPU_Clock_16MHz);
+            LL_SYSTICK_EnableIT();
         }
 
         PMM_Start_Time_Check_CAN = SysTick_Counter;

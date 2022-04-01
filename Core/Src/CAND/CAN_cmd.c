@@ -1,4 +1,5 @@
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_cortex.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_tim.h"
 #include "median_filter.h"
@@ -225,7 +226,8 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, DISABLE);
 
                         if(eps_p.eps_pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && eps_p.eps_pmm_ptr->Deploy_stage == 0 && eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
-                        	I2C3_DeInit();
+                            LL_SYSTICK_DisableIT();
+                            I2C3_DeInit();
                         	I2C4_DeInit();
                         	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                         	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
@@ -236,6 +238,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
                             I2C3_Init(CPU_Clock_16MHz);
                             I2C4_Init(CPU_Clock_16MHz);
+                            LL_SYSTICK_EnableIT();
                         }
                     }
                     break;

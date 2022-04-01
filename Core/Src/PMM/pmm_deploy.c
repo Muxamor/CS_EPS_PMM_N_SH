@@ -1,4 +1,5 @@
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_cortex.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
 #include "stm32l4xx_ll_tim.h"
@@ -113,6 +114,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             LPUART1_Init();
             USART3_Init();
             Setup_UART_Interrupt();
+            LL_SYSTICK_EnableIT();
 
             //Enable main CAN
             PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
