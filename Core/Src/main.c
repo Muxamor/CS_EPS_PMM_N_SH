@@ -3,7 +3,10 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_iwdg.h"
+#include "stm32l4xx_ll_rcc.h"
+#include "stm32l4xx_ll_tim.h"
 #include "PMM/eps_struct.h"
+#include "tim_pwm.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
 #include "PDM/pdm_init.h"
@@ -63,11 +66,11 @@ int main(void){
 
 	/** Initialization Periph. STM32L496*/
 	LL_Init();
-	SystemClock_Config();
+	SystemClock_Config(CPU_Clock_80MHz);
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
 	GPIO_Init();
-	I2C3_Init();
-	I2C4_Init();
+	I2C3_Init(CPU_Clock_80MHz);
+	I2C4_Init(CPU_Clock_80MHz);
 
     //PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
 
@@ -152,6 +155,20 @@ int main(void){
 
         if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE || pmm_ptr->PWR_Ch_State_CANbackup == ENABLE  ){
         	CAN_RegisterAllVars();
+        }
+
+        if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 && pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
+        	I2C3_DeInit();
+        	I2C4_DeInit();
+        	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+        	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+        	PWM_DeInit_Ch3_Ch4( );
+            SystemClock_Config(CPU_Clock_16MHz);
+            PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+            PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
+            PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
+            I2C3_Init(CPU_Clock_16MHz);
+            I2C4_Init(CPU_Clock_16MHz);
         }
 
         PMM_Start_Time_Check_CAN = SysTick_Counter;
@@ -267,6 +284,9 @@ int main(void){
 
 		// Passive CPU branch
 		}else{
+            //TODO Need подумать на счет каунтера
+            PMM_Start_Time_Check_CAN = SysTick_Counter;
+
 
             Passive_CPU_start_time_wait_data = SysTick_Counter;
 		    while( ( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms

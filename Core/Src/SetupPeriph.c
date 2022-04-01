@@ -15,7 +15,7 @@
 #include "stm32l4xx_ll_usart.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
-
+#include "PMM/pmm_config.h"
 #include "canv.h"
 
 //#include  <stdio.h>
@@ -59,99 +59,165 @@ void LL_Init(void) {
 /** @brief System Clock Configuration
  * @retval None
  */
-void SystemClock_Config(void) {
+void SystemClock_Config( uint8_t CPU_Speed) {
 
-	uint8_t HSE_Fault = 0;
-	uint32_t down_counter = 500000;
+    if( CPU_Speed == CPU_Clock_16MHz  ){
+        //    /* Enable HSI - backup clock*/
+        //    LL_RCC_HSI_Enable();
+        //    /* Wait till HSI is ready */
+        //    while (LL_RCC_HSI_IsReady() != 1) {
+        //    }
+        //
+        //    LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
+        //    /* Wait till System clock is ready */
+        //    while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI) {
+        //    }
+        //
+        //	LL_RCC_PLL_DisableDomain_SYS();
+        //	LL_RCC_PLL_Disable();
+        //
+        //	LL_RCC_HSE_DisableBypass();
+        //	LL_RCC_HSE_Disable();
+        //
+        //	LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
+        //
+        //	while (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0);
+        //
+        //	if (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0) {
+        //	    Error_Handler();
+        //	}
+        //
+        //    LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+        //    LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+        //    LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+        //
+        //    LL_Init1msTick(16000000);
+        //    LL_SetSystemCoreClock(16000000);
 
-	LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
+        //	HSE ENABLE
+        LL_RCC_HSE_EnableCSS();
+        LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
+        /* Wait till System clock is ready */
+        while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSE) {
+        }
 
-	if (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_4) {
-		Error_Handler();
-	}
+        LL_RCC_PLL_DisableDomain_SYS();
+        LL_RCC_PLL_Disable();
 
-	LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
+        LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
+        if (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0) {
+            #ifdef DEBUGprintf
+                Error_Handler();
+		    #endif
+        }
 
-	/* Enable HSE */
-	LL_RCC_HSE_EnableBypass();
-	LL_RCC_HSE_Enable();
-	/* Wait till HSE is ready */
-	while ((LL_RCC_HSE_IsReady() != 1) && (down_counter != 0)) {
-		down_counter--;
-	}
+        LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+        LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+        LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
 
-	if (down_counter == 0) {
+        LL_Init1msTick(16000000);
+        LL_SetSystemCoreClock(16000000);
 
-		HSE_Fault = 1;
-		Error_Handler();
+    }else{
 
-		/* Enable HSI - backup clock*/
-		LL_RCC_HSI_Enable();
-		/* Wait till HSI is ready */
-		while (LL_RCC_HSI_IsReady() != 1) {
-		}
-		//LL_RCC_HSI_SetCalibTrimming(64); // Not need.
-	}
+        uint8_t HSE_Fault = 0;
+        uint32_t down_counter = 500000;
 
-	/* Enable LSI */ //????????
-	LL_RCC_LSI_Enable();
-	/* Wait till LSI is ready */
-	while (LL_RCC_LSI_IsReady() != 1) {
-	} ///?????????????
+        LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
 
-	if (HSE_Fault == 0) {
-		/* Enable CSS */
-		LL_RCC_HSE_EnableCSS();
-		LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_1, 10,
-		LL_RCC_PLLR_DIV_2);
-	} else {
-		LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI, LL_RCC_PLLM_DIV_1, 10,
-		LL_RCC_PLLR_DIV_2);
-	}
+        if (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_4) {
+            #ifdef DEBUGprintf
+                Error_Handler();
+		    #endif
+        }
 
-	LL_RCC_PLL_EnableDomain_SYS();
-	LL_RCC_PLL_Enable();
+        LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
 
-	/* Wait till PLL is ready */
-	while (LL_RCC_PLL_IsReady() != 1) {
-	}
+        /* Enable HSE */
+        LL_RCC_HSE_EnableBypass();
+        LL_RCC_HSE_Enable();
+        /* Wait till HSE is ready */
+        while ((LL_RCC_HSE_IsReady() != 1) && (down_counter != 0)) {
+            down_counter--;
+        }
 
-	LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
+        if (down_counter == 0) {
 
-	/* Wait till System clock is ready */
-	while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) {
-	}
+            HSE_Fault = 1;
+            #ifdef DEBUGprintf
+                Error_Handler();
+		    #endif
 
-	LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-	LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-	LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+            /* Enable HSI - backup clock*/
+            LL_RCC_HSI_Enable();
+            /* Wait till HSI is ready */
+            while (LL_RCC_HSI_IsReady() != 1) {
+            }
+            //LL_RCC_HSI_SetCalibTrimming(64); // Not need.
+        }
 
-	LL_Init1msTick(80000000);
+        /* Enable LSI for enable WDG */
+        LL_RCC_LSI_Enable();
+        /* Wait till LSI is ready */
+        while (LL_RCC_LSI_IsReady() != 1) {
+        }
 
-	LL_SetSystemCoreClock(80000000);
+        if (HSE_Fault == 0) {
+            /* Enable CSS */
+            LL_RCC_HSE_EnableCSS();
+            LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_1, 10, LL_RCC_PLLR_DIV_2);
+        } else {
+            LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI, LL_RCC_PLLM_DIV_1, 10, LL_RCC_PLLR_DIV_2);
+        }
 
-	/* Setup RTC clock */
-	//LL_PWR_EnableBkUpAccess();
-	//LL_RCC_ForceBackupDomainReset();
-	//LL_RCC_ReleaseBackupDomainReset();
-	//LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
-	//LL_RCC_EnableRTC();
-	LL_RCC_SetLPUARTClockSource(LL_RCC_LPUART1_CLKSOURCE_PCLK1); // main LPUART1 for comm. CPUm <-> CPUb
-	LL_RCC_SetUSARTClockSource(LL_RCC_USART3_CLKSOURCE_PCLK1); // backup USART3 for comm. CPUm <-> CPUb
-	//LL_RCC_SetUSARTClockSource(LL_RCC_USART2_CLKSOURCE_PCLK1); // Comm. with module
-	//LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2); // Comm. with module
-	LL_RCC_SetUARTClockSource(LL_RCC_UART5_CLKSOURCE_PCLK1); // Terminal or debug UART5
-	//LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_PCLK1); 	 // System I2C1 for comm. with another subsystem CubeSat
-	LL_RCC_SetI2CClockSource(LL_RCC_I2C3_CLKSOURCE_PCLK1); // I2C3 comm. inside main and backup block
-	//LL_RCC_SetI2CClockSource(LL_RCC_I2C2_CLKSOURCE_PCLK1);     // Backup I2C1 Comm. with module PAM and PDM and another part of PMM module
-	LL_RCC_SetI2CClockSource(LL_RCC_I2C4_CLKSOURCE_PCLK1); // Main I2C4 Comm. with module PAM and PDM and another part of PMM module
+        LL_RCC_PLL_EnableDomain_SYS();
+        LL_RCC_PLL_Enable();
+
+        /* Wait till PLL is ready */
+        while (LL_RCC_PLL_IsReady() != 1) {
+        }
+
+        LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
+
+        /* Wait till System clock is ready */
+        while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) {
+        }
+
+        LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+        LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+        LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+
+        LL_Init1msTick(80000000);
+
+        LL_SetSystemCoreClock(80000000);
+
+        /* Setup RTC clock */
+        //LL_PWR_EnableBkUpAccess();
+        //LL_RCC_ForceBackupDomainReset();
+        //LL_RCC_ReleaseBackupDomainReset();
+        //LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
+        //LL_RCC_EnableRTC();
+        LL_RCC_SetLPUARTClockSource(LL_RCC_LPUART1_CLKSOURCE_PCLK1); // main LPUART1 for comm. CPUm <-> CPUb
+        LL_RCC_SetUSARTClockSource(LL_RCC_USART3_CLKSOURCE_PCLK1); // backup USART3 for comm. CPUm <-> CPUb
+        //LL_RCC_SetUSARTClockSource(LL_RCC_USART2_CLKSOURCE_PCLK1); // Comm. with module
+        //LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2); // Comm. with module
+        //LL_RCC_SetUARTClockSource(LL_RCC_UART5_CLKSOURCE_PCLK1); // Terminal or debug UART5
+        //LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_PCLK1); 	 // System I2C1 for comm. with another subsystem CubeSat
+        LL_RCC_SetI2CClockSource(LL_RCC_I2C3_CLKSOURCE_PCLK1); // I2C3 comm. inside main and backup block
+        //LL_RCC_SetI2CClockSource(LL_RCC_I2C2_CLKSOURCE_PCLK1);     // Backup I2C1 Comm. with module PAM and PDM and another part of PMM module
+        LL_RCC_SetI2CClockSource(LL_RCC_I2C4_CLKSOURCE_PCLK1); // Main I2C4 Comm. with module PAM and PDM and another part of PMM module
+    }
+
+
 }
+
+
 
 /** @brief I2C3 Initialization Function. I2C3 use for communiction inside main and backup block
  * @param None
  * @retval None
  */
-void I2C3_Init(void) {
+void I2C3_Init( uint8_t CPU_Speed) {
 
 	LL_I2C_Disable(I2C3);
 	//LL_I2C_Enable(I2C3);
@@ -194,7 +260,12 @@ void I2C3_Init(void) {
 	LL_I2C_EnableClockStretching(I2C3);
 
 	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-	I2C_InitStruct.Timing = 0x00702991;//0x00702991 - 400kHz, 0x10909CEC - 100kHz.
+	if( CPU_Speed == CPU_Clock_16MHz ){
+	    I2C_InitStruct.Timing = 0x00303D5B;
+	}else{
+	    I2C_InitStruct.Timing = 0x00702991;//0x00702991 - 400kHz, 0x10909CEC - 100kHz.
+	}
+
 	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
 	I2C_InitStruct.DigitalFilter = 0;
 	I2C_InitStruct.OwnAddress1 = 0;
@@ -242,7 +313,7 @@ void I2C3_DeInit(void){
  * 		with module PAM and PDM and another part of PMM module.
  * @param None
  * @retval None */
-void I2C4_Init(void) {
+void I2C4_Init( uint8_t CPU_Speed) {
 
 	LL_I2C_Disable(I2C4);
 	//LL_I2C_Enable(I2C4);
@@ -274,7 +345,12 @@ void I2C4_Init(void) {
 	LL_I2C_EnableClockStretching(I2C4);
 
 	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-	I2C_InitStruct.Timing = 0xB0801A1F; //0x00702991 - 400kHz, 0x10909CEC - 100kHz, 0xB0801A1F-100kHz and Rise time=1000ns
+	if( CPU_Speed == CPU_Clock_16MHz ){
+	    I2C_InitStruct.Timing = 0x20601418; //100kHz and Rise time=1000ns
+	}else{
+	    I2C_InitStruct.Timing = 0xB0801A1F; //0x00702991 - 400kHz, 0x10909CEC - 100kHz, 0xB0801A1F-100kHz and Rise time=1000ns
+	}
+
 	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
 	I2C_InitStruct.DigitalFilter = 0;
 	I2C_InitStruct.OwnAddress1 = 0;
@@ -316,14 +392,14 @@ void I2C4_DeInit(void){
  * @param  *I2Cx - pointer to I2C controller, where x is a number (I2C3, I2C4).
  * @retval None
  */
-void I2C_ReInit(I2C_TypeDef *I2Cx) {
+void I2C_ReInit(I2C_TypeDef *I2Cx, uint8_t CPU_Speed) {
 
 	LL_I2C_DeInit(I2Cx);
 
 	if (I2Cx == I2C3) {
-		I2C3_Init();
+		I2C3_Init(CPU_Speed);
 	} else if (I2Cx == I2C4) {
-		I2C4_Init();
+		I2C4_Init(CPU_Speed);
 	}
 }
 
@@ -332,7 +408,7 @@ void I2C_ReInit(I2C_TypeDef *I2Cx) {
  * @param  number_cycle - number of clocks.
  * @retval None
  */
-void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
+void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle, uint8_t CPU_Speed ) {
 
 	uint16_t period = 0, i = 0, count = 0;
 
@@ -376,7 +452,7 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 			LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_7);
 		}
 		LL_mDelay( 20 );
-		I2C3_Init();
+		I2C3_Init(CPU_Speed);
 		LL_mDelay( 20);
 
 	}
@@ -408,7 +484,7 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 		}
 
 		LL_mDelay( 20 );
-		I2C4_Init();
+		I2C4_Init(CPU_Speed);
 		LL_mDelay( 20 );
 	}
 }

@@ -81,6 +81,9 @@ extern "C" {
 #define CPUmain 					0
 #define CPUbackup					1
 
+#define CPU_Clock_80MHz             80
+#define CPU_Clock_16MHz             16
+
 #define CPUmain_Active				0
 #define CPUbackup_Active			1
 

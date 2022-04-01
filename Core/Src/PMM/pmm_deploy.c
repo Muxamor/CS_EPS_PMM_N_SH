@@ -12,6 +12,7 @@
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init_IC.h"
 #include "PMM/pmm_ctrl.h"
+#include "PMM/pmm_damage_ctrl.h"
 #include "PMM/pmm_init.h"
 #include "PDM/pdm_ctrl.h"
 #include "PDM/pdm_init.h"
@@ -99,6 +100,20 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         }
 
         if( (eps_p.eps_pmm_ptr->Deploy_stage == 1) || (eps_p.eps_pmm_ptr->Deploy_stage == 2) ){
+
+            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+            PWM_DeInit_Ch3_Ch4( );
+            eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+            I2C3_DeInit();
+            I2C4_DeInit();
+            SystemClock_Config(CPU_Clock_80MHz);
+            I2C3_Init(CPU_Clock_80MHz);
+            I2C4_Init(CPU_Clock_80MHz);
+            LPUART1_Init();
+            USART3_Init();
+            Setup_UART_Interrupt();
+
             //Enable main CAN
             PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
             LL_mDelay( 50 );
@@ -120,16 +135,6 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             		eps_p.eps_pbm_ptr[PBM_Number].Heat[Heat_Number].PCA9534_Heat_CMD = DISABLE;
             	}
             }
-
-            LPUART1_Init();
-            USART3_Init();
-            Setup_UART_Interrupt();
-
-            //Enable passive CPU
-            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-            PWM_DeInit_Ch3_Ch4( );
-            eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
 
             PMM_init( eps_p.eps_pmm_ptr );
             PDM_init( eps_p.eps_pdm_ptr );
@@ -222,6 +227,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     // Deploy stage 6 - Enable BRK1, BRK2, CANm, CANb, PAM DC-DC.
     }else if( deploy_stage == 6 ){
         //Enable CAN
+        PMM_Start_Time_Check_CAN = SysTick_Counter;
         error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
         error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
         LL_mDelay( 50 );
