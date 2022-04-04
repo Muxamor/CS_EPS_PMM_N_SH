@@ -10,13 +10,13 @@ extern "C" {
 extern uint32_t SysTick_Counter;
 
 void LL_Init(void);
-void SystemClock_Config(uint8_t CPU_Speed);
-void I2C3_Init(uint8_t CPU_Speed);
+void SystemClock_Config(uint32_t CPU_Speed);
+void I2C3_Init(void);
 void I2C3_DeInit(void);
-void I2C4_Init(uint8_t CPU_Speed);
+void I2C4_Init(void);
 void I2C4_DeInit(void);
-void I2C_ReInit(I2C_TypeDef *I2Cx, uint8_t CPU_Speed);
-void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle, uint8_t CPU_Speed);
+void I2C_ReInit(I2C_TypeDef *I2Cx);
+void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle);
 void LPUART1_Init(void);
 void LPUART1_DeInit(void);
 void USART3_Init(void);

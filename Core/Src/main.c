@@ -2,12 +2,8 @@
 #include "SetupPeriph.h"
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_cortex.h"
-#include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_iwdg.h"
-#include "stm32l4xx_ll_rcc.h"
-#include "stm32l4xx_ll_tim.h"
 #include "PMM/eps_struct.h"
-#include "tim_pwm.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
 #include "PDM/pdm_init.h"
@@ -70,8 +66,8 @@ int main(void){
 	SystemClock_Config(CPU_Clock_80MHz);
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
 	GPIO_Init();
-	I2C3_Init(CPU_Clock_80MHz);
-	I2C4_Init(CPU_Clock_80MHz);
+	I2C3_Init();
+	I2C4_Init();
 
     //PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
 
@@ -98,9 +94,6 @@ int main(void){
     //Restore settings EPS from FRAM
     PMM_FRAM_Restore_Settings(eps_param);
 
-   // pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
-   // pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
-
     //Get settings from the neighbor CPU if detect errors FRAM1 and FRAM2.
     if( eps_param.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_param.eps_pmm_ptr->Error_FRAM2 == ERROR ){
         PMM_Get_Settings_From_NeighborCPU( eps_param );
@@ -121,7 +114,7 @@ int main(void){
     //Check Active flag between active and passive CPU.
     PMM_CPUm_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
-    //Turn off to avoid overheating of the resistor on reboot
+    //Turn off to avoid overheat of the resistor on reboot
     pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
@@ -143,6 +136,7 @@ int main(void){
 	        PDM_init( pdm_ptr );
 	    }
 	    PAM_init( pam_ptr );
+
 	    if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
 	        PBM_T1_Init( pbm_mas );
 	    }
@@ -162,28 +156,16 @@ int main(void){
         	CAN_RegisterAllVars();
         }
 
+        if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
+        	LPUART1_DeInit();
+        	USART3_DeInit();
+        }
+
         if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 && pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
-        	I2C3_DeInit();
-        	I2C4_DeInit();
-        	LL_SYSTICK_DisableIT();
-        	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-        	PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-        	PWM_DeInit_Ch3_Ch4( );
-            SystemClock_Config(CPU_Clock_16MHz);
-            PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
-            PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
-            PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
-            I2C3_Init(CPU_Clock_16MHz);
-            I2C4_Init(CPU_Clock_16MHz);
-            LL_SYSTICK_EnableIT();
+            PMM_CPU_SPEED_MODE( pmm_ptr, CPU_Clock_16MHz );
         }
 
         PMM_Start_Time_Check_CAN = SysTick_Counter;
-
-        if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
-            LPUART1_DeInit();
-            USART3_DeInit();
-        }
 
     //Initialization CAN for passive CPU
 	}else{

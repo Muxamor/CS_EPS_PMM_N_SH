@@ -305,8 +305,7 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
     eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
     eps_p.eps_pmm_ptr->Error_CAN_port_B  = SUCCESS;
 
-    I2C4_Init(CPU_Clock_80MHz);
-    // PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
+    I2C4_Init();
 
 	PMM_init( eps_p.eps_pmm_ptr );
 

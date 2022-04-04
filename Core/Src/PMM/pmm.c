@@ -1,5 +1,9 @@
 #include "stm32l4xx.h"
 #include "Error_Handler.h"
+#include "SetupPeriph.h"
+#include "stm32l4xx_ll_cortex.h"
+#include "stm32l4xx_ll_tim.h"
+#include "tim_pwm.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_struct.h"
 #include "PMM/pmm_ctrl.h"
@@ -51,3 +55,32 @@ ErrorStatus PMM_Get_Telemetry( _PMM *pmm_ptr ){
 	return SUCCESS;
 }
 
+/** @brief  Set CPU speed ONLY FOR DEPLOY STAGE = 0 AND POWER MAIN CAN = DISABLE
+	@param  *pmm_ptr - pointer to struct which contain all information about PMM.
+    @param   speed_mode - CPU_Clock_16MHz or CPU_Clock_80MHz
+	@retval 0 - SUCCESS, -1 - ERROR_N.
+*/
+void PMM_CPU_SPEED_MODE( _PMM *pmm_ptr, uint32_t speed_mode ){
+
+    I2C3_DeInit();
+    I2C4_DeInit();
+    LL_SYSTICK_DisableIT();
+    PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+    PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+    PWM_DeInit_Ch3_Ch4( );
+
+    if( speed_mode == CPU_Clock_16MHz ){
+        SystemClock_Config(CPU_Clock_16MHz);
+    }else{
+        SystemClock_Config(CPU_Clock_80MHz);
+    }
+
+    if( pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
+        PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+        PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
+        PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
+    }
+    I2C3_Init();
+    I2C4_Init();
+    LL_SYSTICK_EnableIT();
+}

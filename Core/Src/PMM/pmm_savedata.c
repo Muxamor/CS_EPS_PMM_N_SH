@@ -328,7 +328,7 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
                 if( i >= pmm_i2c_attempt_conn - 1 ){
                     I2C3_DeInit();
                     LL_mDelay( 700 );
-                    I2C3_Init(CPU_Clock_80MHz);
+                    I2C3_Init();
                     LL_mDelay( 700 );
                 }
             }
