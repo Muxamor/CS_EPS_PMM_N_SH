@@ -273,10 +273,7 @@ int main(void){
 
 		// Passive CPU branch
 		}else{
-            //TODO Need подумать на счет каунтера
-            PMM_Start_Time_Check_CAN = SysTick_Counter;
-
-
+            
             Passive_CPU_start_time_wait_data = SysTick_Counter;
 		    while( ( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
                 UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
