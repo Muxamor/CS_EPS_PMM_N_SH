@@ -260,8 +260,7 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 
     int8_t /*I2C_Error_FRAM1 = 0, I2C_Error_FRAM2 = 0,*/ error_status = SUCCESS;
    // uint8_t FRAM1_status = 0, FRAM2_status = 0; // 0 - FRAM empty, 1 - FRAM no empty
-	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_Number = 0;
-    uint8_t i = 0;
+	uint8_t i = 0;
     /*
      * It is not importent feature.
      * Remove because we can get error I2C FRAM when CPU is booting. (meeans nois power)
@@ -335,32 +334,8 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
         }
    // }
 
-    if( /*(eps_p.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_p.eps_pmm_ptr->Error_FRAM2 == ERROR) || (FRAM1_status == 0 && FRAM2_status == 0) || */ (error_status != SUCCESS) ) {
-        eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
-        eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
-        eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE;
-        eps_p.eps_pmm_ptr->Deploy_stage = 0;
-        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 0;
-        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
 
-        //Enable All BRK
-        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out = ENABLE;
-
-        //PBM
-        for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){
-        	for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableCmd = ENABLE;
-                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableCmd = ENABLE;
-                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd = ENABLE;
-                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Cmd = DISABLE;
-        	}
-        }
-    }
-
-    if( /*I2C_Error_FRAM1 == ERROR_N || I2C_Error_FRAM2 == ERROR_N ||*/  error_status == ERROR_N ){
+    if( /*I2C_Error_FRAM1 == ERROR_N || I2C_Error_FRAM2 == ERROR_N ||*/  error_status != SUCCESS ){
         #ifdef DEBUGprintf
             printf("ERROR I2C In Restore settings function\n");
         #endif
@@ -376,9 +351,11 @@ ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
+
     int8_t error_status = SUCCESS;
     uint8_t i = 0;
     uint16_t size_struct = 0;
+    uint8_t PBM_Number = 0, Branch_Number = 0;
     _PDM pdm_temp = {0}, *pdm_ptr_temp = &pdm_temp;
     _PMM pmm_temp = {0}, *pmm_ptr_temp = &pmm_temp;
     _PAM pam_temp = {0}, *pam_ptr_temp = &pam_temp;
@@ -485,6 +462,30 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
     }
 
     if( error_status != SUCCESS ){
+
+        eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+        eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+        eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE;
+        eps_p.eps_pmm_ptr->Deploy_stage = 0;
+        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 0;
+        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
+
+        //Enable All BRK
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out = ENABLE;
+
+        //PBM
+        for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){
+            for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].DchgEnableCmd = ENABLE;
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableCmd = ENABLE;
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd = ENABLE;
+                eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Cmd = DISABLE;
+            }
+        }
+
        	#ifdef DEBUGprintf
             Error_Handler();
         #endif
