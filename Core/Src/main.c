@@ -114,7 +114,7 @@ int main(void){
     //Check Active flag between active and passive CPU.
     PMM_CPUm_Check_Active_CPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
-    //Turn off to avoid overheat of the resistor on reboot
+    //Turn off to avoid overheating of the resistor on reboot
     pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
