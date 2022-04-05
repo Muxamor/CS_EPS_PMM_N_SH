@@ -123,7 +123,7 @@ int main(void){
 
     //Fill VarID4
     CAN_Var4_fill(eps_param);
-    if(pmm_ptr->CAN_constatnt_mode == ENABLE ){
+    if( pmm_ptr->CAN_constatnt_mode == ENABLE){
         CAN_Var5_fill_telemetry_const();
     }
 
@@ -140,10 +140,6 @@ int main(void){
 	    if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
 	        PBM_T1_Init( pbm_mas );
 	    }
-
-        if( pmm_ptr->CAN_constatnt_mode == ENABLE){
-            CAN_Var5_fill_telemetry_const();
-        }
 
         if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE ){
         	CAN_init_eps(CAN1);
@@ -273,7 +269,7 @@ int main(void){
 
 		// Passive CPU branch
 		}else{
-            
+
             Passive_CPU_start_time_wait_data = SysTick_Counter;
 		    while( ( (uint32_t)(SysTick_Counter - Passive_CPU_start_time_wait_data ) ) < ( (uint32_t)250) ){ //wait data from active CPU 250ms
                 UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
