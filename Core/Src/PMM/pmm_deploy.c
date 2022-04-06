@@ -99,6 +99,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
         if( (eps_p.eps_pmm_ptr->Deploy_stage == 1) || (eps_p.eps_pmm_ptr->Deploy_stage == 2) ){
 
+            LL_IWDG_ReloadCounter(IWDG);
+
             eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
 
             PMM_CPU_SPEED_MODE( eps_p.eps_pmm_ptr, CPU_Clock_80MHz );
@@ -128,6 +130,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             	}
             }
 
+            LL_IWDG_ReloadCounter(IWDG);
             PMM_init( eps_p.eps_pmm_ptr );
             PDM_init( eps_p.eps_pdm_ptr );
             PAM_init( eps_p.eps_pam_ptr );
@@ -143,6 +146,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     }else if( deploy_stage == 1 ){
         uint8_t total_error_pwr_mon_pam = 0;
         uint16_t total_power_gen_pam = 0;
+        LL_IWDG_ReloadCounter(IWDG);
 
         //Check Enable state power supply PAM module and get telemetry PAM if PWR supply disable
         if( (eps_p.eps_pam_ptr->State_DC_DC == DISABLE) && (eps_p.eps_pam_ptr->State_LDO == DISABLE) ){
