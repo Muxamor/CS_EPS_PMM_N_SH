@@ -1,4 +1,5 @@
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
 #include "stm32l4xx_ll_cortex.h"
@@ -62,6 +63,7 @@ ErrorStatus PMM_Get_Telemetry( _PMM *pmm_ptr ){
 */
 void PMM_CPU_SPEED_MODE( _PMM *pmm_ptr, uint32_t speed_mode ){
 
+    LL_IWDG_ReloadCounter(IWDG);
     I2C3_DeInit();
     I2C4_DeInit();
     LL_SYSTICK_DisableIT();
@@ -83,4 +85,5 @@ void PMM_CPU_SPEED_MODE( _PMM *pmm_ptr, uint32_t speed_mode ){
     I2C3_Init();
     I2C4_Init();
     LL_SYSTICK_EnableIT();
+    LL_IWDG_ReloadCounter(IWDG);
 }

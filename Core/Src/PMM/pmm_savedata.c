@@ -1,5 +1,6 @@
 #include <string.h>
 #include "stm32l4xx_ll_utils.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "SetupPeriph.h"
 #include "FRAM.h"
 #include "Fn_CRC16.h"
@@ -375,6 +376,7 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
         error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
 
         if( error_status != SUCCESS ){
+            LL_IWDG_ReloadCounter(IWDG);
             i++;
             LL_mDelay( 500 );
 			#ifdef DEBUGprintf
@@ -404,6 +406,7 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
             error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
 
             if( error_status != SUCCESS ){
+                LL_IWDG_ReloadCounter(IWDG);
                 i++;
                 LL_mDelay( 500 );
 			    #ifdef DEBUGprintf
@@ -424,6 +427,7 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
             error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
 
             if( error_status != SUCCESS ){
+                LL_IWDG_ReloadCounter(IWDG);
                 i++;
                 LL_mDelay( 500 );
 			    #ifdef DEBUGprintf
@@ -444,6 +448,7 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
             error_status = UART_EPS_Send_CMD(UART_EPS_ID_CMD_Get_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm,  eps_param_temp);
 
             if( error_status != SUCCESS ){
+                LL_IWDG_ReloadCounter(IWDG);
                 i++;
                 LL_mDelay( 500 );
 			    #ifdef DEBUGprintf

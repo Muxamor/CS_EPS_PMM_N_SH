@@ -99,8 +99,6 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
         if( (eps_p.eps_pmm_ptr->Deploy_stage == 1) || (eps_p.eps_pmm_ptr->Deploy_stage == 2) ){
 
-            LL_IWDG_ReloadCounter(IWDG);
-
             eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
 
             PMM_CPU_SPEED_MODE( eps_p.eps_pmm_ptr, CPU_Clock_80MHz );

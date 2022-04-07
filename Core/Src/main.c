@@ -196,6 +196,7 @@ int main(void){
                 PMM_Get_Telemetry(pmm_ptr);
                 PDM_Get_Telemetry(pdm_ptr);
                 PAM_Get_Telemetry(pam_ptr);
+                LL_IWDG_ReloadCounter(IWDG);
                 if(pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE){
                     PBM_T1_Get_Telemetry(pbm_mas);
                 }else{
@@ -244,7 +245,8 @@ int main(void){
                 //All CAN ports power off protection.
                 PMM_Portecion_PWR_OFF_CANmain(eps_param);
             }
-            
+
+            LL_IWDG_ReloadCounter(IWDG);
             //Check Errors UART ports and get reboot counter passive CPU.
             PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
@@ -254,6 +256,7 @@ int main(void){
             }
 
             //Fill CAN Var5
+            LL_IWDG_ReloadCounter(IWDG);
             if( pmm_ptr->CAN_constatnt_mode == DISABLE ){ //Constant mode OFF
                 CAN_Var5_fill_telemetry(eps_param);
             }

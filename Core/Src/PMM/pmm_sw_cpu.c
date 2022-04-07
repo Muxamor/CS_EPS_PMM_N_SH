@@ -54,6 +54,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             while(  UART_EPS_ACK != get_package_tag ){
 
                 if ( ( (uint32_t)(SysTick_Counter - UART_answer_add_timeout) ) > 700 ){
+                    LL_IWDG_ReloadCounter(IWDG);
                     error_status = ERROR_N;
                     #ifdef DEBUGprintf
                         Error_Handler();
@@ -85,6 +86,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
                 while(  UART_EPS_ACK != get_package_tag ){
 
                     if ( ( (uint32_t)(SysTick_Counter - UART_answer_add_timeout) ) > 700 ){
+                        LL_IWDG_ReloadCounter(IWDG);
                         error_status = ERROR_N;
                         #ifdef DEBUGprintf
                             Error_Handler();
@@ -181,7 +183,7 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 		i = 0;
 		error_status = ERROR_N;
 		while( ( error_status != SUCCESS ) && ( i < pmm_uart_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
-
+		    LL_IWDG_ReloadCounter(IWDG);
 			if( UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p ) == SUCCESS ){
 				if( UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p ) == SUCCESS ){
 					if( UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PAM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p ) == SUCCESS ){
