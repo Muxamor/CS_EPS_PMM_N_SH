@@ -74,7 +74,7 @@ ErrorStatus PAM_Set_state_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num, uin
 	}
 
 	if( (state_channel == ENABLE) && (pam_ptr->PAM_save_conf_flag == 1) ) {
-        LL_mDelay(40); //Delay for startup power supply
+        LL_mDelay(50); //Delay for startup power supply
     }
 
 	if( error_I2C != SUCCESS ){

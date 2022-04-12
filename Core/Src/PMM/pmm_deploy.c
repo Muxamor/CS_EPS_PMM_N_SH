@@ -17,6 +17,7 @@
 #include "PDM/pdm_init.h"
 #include "PAM/pam_init.h"
 #include "PAM/pam.h"
+#include "PAM/pam_ctrl.h"
 #include "PBM_T1/pbm_T1_init.h"
 #include "PMM/pmm_deploy.h"
 
@@ -220,6 +221,9 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 6 - Enable BRK1, BRK2, CANm, CANb, PAM DC-DC.
     }else if( deploy_stage == 6 ){
+
+        LL_IWDG_ReloadCounter(IWDG);
+
         //Enable CAN
         PMM_Start_Time_Check_CAN = SysTick_Counter;
         error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
@@ -231,6 +235,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
         //Enable PAM DC-DC
         eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
+        PAM_Set_state_PWR_Supply( eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE); //
+        LL_mDelay( 300 ); // Whait PG for Pam DC-DC
         PAM_init( eps_p.eps_pam_ptr );
         //Enable BRC
         error_status += PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
