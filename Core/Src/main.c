@@ -19,6 +19,8 @@
 #include "PBM_T1/pbm_T1_init.h"
 #include "PBM_T1/pbm_T1.h"
 #include "PAM/pam_init.h"
+#include "PAM/pam_ctrl.h"
+#include "PAM/pam_sp_ctrl.h"
 #include "PAM/pam.h"
 #include "uart_eps_comm.h"
 /**********************************************************/
@@ -191,7 +193,14 @@ int main(void){
         if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
 
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 ){
-                //Empty
+//                if(pmm_ptr->PWR_Ch_State_PBMs_Logic == DISABLE){
+//                    PBM_T1_EraseData(pbm_mas);
+//                }
+//                if( pam_ptr->State_DC_DC == DISABLE && pam_ptr->State_LDO == DISABLE ){
+//                    PAM_EraseData(pam_ptr);
+//                    PAM_SP_EraseData(pam_ptr);
+//                }
+
             }else{
                 PMM_Get_Telemetry(pmm_ptr);
                 PDM_Get_Telemetry(pdm_ptr);
