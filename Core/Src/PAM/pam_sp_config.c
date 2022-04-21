@@ -127,12 +127,13 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             //Norby1
             /*pam_sp_table.Num_pin_GPIO_Ext_ID[0] = PCA9534_IO_P07;
             pam_sp_table.Num_pin_GPIO_Ext_ID[1] = PCA9534_IO_P06;
-            pam_sp_table.Num_pin_GPIO_Ext_ID[2] = PCA9534_IO_P05;
-            pam_sp_table.PWR_number_ch_TM_SP = PAM_PWR_TM_SP_Ch6;*/
+            pam_sp_table.Num_pin_GPIO_Ext_ID[2] = PCA9534_IO_P05;*/
 
             //Norby2
             pam_sp_table.Num_pin_GPIO_Ext_ID[0] = PCA9534_IO_P00;
             pam_sp_table.Num_pin_GPIO_Ext_ID[1] = PCA9534_IO_P01;
+
+            pam_sp_table.PWR_number_ch_TM_SP = PAM_PWR_TM_SP_Ch6;
 
             pam_sp_table.temp_sensor_quantity = PAM_SP6_temp_sens_quantity;
             pam_sp_table.SP_I2C_addr_temp_senor[0] = PAM_SP6_I2CADDR_TEMP_SENS_1;
