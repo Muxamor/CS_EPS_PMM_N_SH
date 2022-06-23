@@ -1503,7 +1503,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh3_Current                   = eps_p.eps_pam_ptr->PWR_IN_Channel[2].Current_val;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh4_Current                   = eps_p.eps_pam_ptr->PWR_IN_Channel[3].Current_val;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT1_Current    				 = eps_p.eps_pam_ptr->PWR_IN_Channel[4].Current_val;
-    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT1_Current					 = eps_p.eps_pam_ptr->PWR_IN_Channel[5].Current_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT2_Current					 = eps_p.eps_pam_ptr->PWR_IN_Channel[5].Current_val;
 
     //***
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Status_BitMask                = 0x0000;
