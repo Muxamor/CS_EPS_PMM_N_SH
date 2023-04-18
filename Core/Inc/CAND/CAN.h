@@ -133,6 +133,7 @@ extern "C" {
 
 
 extern struct CAN_IVar5 CAN_IVar5_telemetry;
+extern struct CAN_IVar5 CAN_IVar5_ready_telemetry;
 extern struct CAN_IVar4  CAN_IVar4_RegCmd;
 
 
@@ -163,13 +164,10 @@ typedef union {
     }uf;
 }CAN_typeIdxMask;
 
-
+#pragma pack(push, 1)
 struct CAN_IVar4 {
 
-	uint8_t CAN_time_byte0;					//+0
-	uint8_t CAN_time_byte1;					//+1
-	uint8_t CAN_time_byte2;					//+2
-	uint8_t CAN_time_byte3;					//+3
+	uint32_t CAN_Global_Time;   			//+3
     uint8_t CAN_Constant_mode;				//+4			1 - Перейти в режим констант; 0 - штатный режим
     uint8_t CAN_Common_cmd0;				//+5
     uint8_t CAN_Common_cmd1;				//+6
@@ -597,7 +595,7 @@ struct CAN_IVar4 {
     uint8_t CAN_Comd_Reserved_411;                   //+411          Командный регистр зарезервирован
 
 };
-
+#pragma pack(pop)
 
 
 #pragma pack(push, 1)
@@ -629,7 +627,15 @@ struct CAN_IVar5{
                                                                 	//Total 29 byte
 
     // -------------------  ТМИ 0  ------------------ //
-    uint8_t Protaction_GAP_TMI0[65];                                //+93...157|  const = 0x
+    uint8_t Protaction_GAP_TMI0[53];                                //+93...145|  const = 0x
+
+    uint16_t CAN_TMI0_Headr_Start_Mark;                             //146,147
+    uint16_t CAN_TMI0_Headr_Sat_ID;                                 //148,149
+    uint16_t CAN_TMI0_Headr_Loc_ID;                                 //150,151
+    uint16_t CAN_TMI0_Headr_Mas_Number;                             //152,153
+    uint32_t CAN_TMI0_Headr_Time;                                   //154,155,156,157
+
+    //Data TMI0
     uint16_t CAN_TMI0_version;                                  	//+158,159 |  const = 0x                  	|   Версия ТМИ
 
     // PMM //
@@ -699,11 +705,17 @@ struct CAN_IVar5{
     int16_t CAN_TMIx_PDM_PWR_Ch5_Current_Aver_10s;                  //+268,269 |  const = 0x                    |   Ток канал 4 усреднение 10s
     int16_t CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s;                  //+270,271 |  const = 0x                    |   Ток канал 4 усреднение 10s
                                                                     //Total 61 byte
-    uint8_t CAN_TMI0_Reserved[2];                                   //+272,273 |  const = 0x
-                                                                    //Total 116 byte
+    uint16_t CAN_TMI0_CRC;                                          //+272,273 |  const = 0x
 
     // -------------------  ТМИ 1  ------------------ //
-    uint8_t Protaction_GAP_TMI1[64];                                //+274...237
+    uint8_t Protaction_GAP_TMI1[52];                                //+274...325
+
+    uint16_t CAN_TMI1_Headr_Start_Mark;                             //326,327
+    uint16_t CAN_TMI1_Headr_Sat_ID;                                 //328,329
+    uint16_t CAN_TMI1_Headr_Loc_ID;                                 //330,331
+    uint16_t CAN_TMI1_Headr_Mas_Number;                             //332,333
+    uint32_t CAN_TMI1_Headr_Time;                                   //334,335,336,337
+
     uint16_t CAN_TMI1_version;                                  	//+338,339  |  const = 0x                   |   Версия ТМИ
     // PAM //
     uint16_t CAN_TMIx_EPS_Total_PAM_Generation_Power;               //+340,341  |  const = 0x                   |   Полная вырабатываемая мощность PAM
@@ -768,11 +780,19 @@ struct CAN_IVar5{
     int8_t  CAN_TMIx_SP_TM_Ch5_Median_Temp;                         //+421    |  const = 0x                     |   Медианная температура панели  Y+ (SRD) for Norbi,    is Y+ - Norby2
     int8_t  CAN_TMIx_SP_TM_Ch6_Median_Temp;                         //+422    |  const = 0x                     |   Медианная температура панели  Y- for Norbi,          is Y- - Norby2
                                                                     //Total 85 byte
-    uint8_t  CAN_TMI1_Reserved[31];                                 //+423..453  |  const = 0x
+    uint8_t  CAN_TMI1_Reserved[29];                                 //+423..451  |  const = 0x
+    uint16_t CAN_TMI1_CRC;                                          //+452,453|  const = 0x
                                                                     //Total 116 byte
 
     // -------------------  ТМИ 2  ------------------ //
-    uint8_t Protaction_GAP_TMI2[64];                                //+454...517
+    uint8_t Protaction_GAP_TMI2[52];                                //+454...505
+
+    uint16_t CAN_TMI2_Headr_Start_Mark;                             //506,507
+    uint16_t CAN_TMI2_Headr_Sat_ID;                                 //508,509
+    uint16_t CAN_TMI2_Headr_Loc_ID;                                 //510,511
+    uint16_t CAN_TMI2_Headr_Mas_Number;                             //512,513
+    uint32_t CAN_TMI2_Headr_Time;                                   //514,515,516,517
+
     uint16_t CAN_TMI2_version;                                  	//+518,519 |  const = 0x                    | Версия ТМИ
 
     // PBM part1 //
@@ -849,10 +869,17 @@ struct CAN_IVar5{
     int8_t  CAN_PBM4_Temp_Sensor2;                                  //+618     |  const = 0x               		| АБ4 датчик на плате 2
     int8_t  CAN_PBM4_Temp_Sensor3;                                  //+619     |  const = 0x               		| АБ4 датчик на плате 3
     int8_t  CAN_PBM4_Temp_Sensor4;                                  //+620     |  const = 0x               		| АБ4 датчик на плате 4
-    uint8_t  CAN_TMI2_Reserved[13];                                 //+621..633 |  const = 0x
+    uint8_t  CAN_TMI2_Reserved[11];                                 //+621..631|  const = 0x
+    uint16_t CAN_TMI2_CRC;                                          //+632,633 |  const = 0x
 
     // -------------------  ТМИ 3  ------------------ //
-    uint8_t Protaction_GAP_TMI3[64];                                //+634...697
+    uint8_t Protaction_GAP_TMI3[52];                                //+634...685
+
+    uint16_t CAN_TMI3_Headr_Start_Mark;                             //686,687
+    uint16_t CAN_TMI3_Headr_Sat_ID;                                 //688,689
+    uint16_t CAN_TMI3_Headr_Loc_ID;                                 //690,691
+    uint16_t CAN_TMI3_Headr_Mas_Number;                             //692,693
+    uint32_t CAN_TMI3_Headr_Time;                                   //694,695,696,697
 
     uint16_t CAN_TMI3_version;                                  	//+698,699 |  const = 0x               		| Версия ТМИ
     // PBM part2 //
@@ -925,7 +952,7 @@ struct CAN_IVar5{
     uint8_t CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle;                //+809     |  const = 0x                   	| Цмклы заряда/разряда АБ3 ветвь 2
     uint8_t CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle;                //+810     |  const = 0x                   	| Цмклы заряда/разряда АБ4 ветвь 1
     uint8_t CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle;                //+811     |  const = 0x                   	| Цмклы заряда/разряда АБ4 ветвь 2
-    uint8_t CAN_TMI3_Reserved[2];                                   //+812,813 |  const = 0x
+    uint16_t CAN_TMI3_CRC;                                          //+812,813 |  const = 0x
 };
 
 #pragma pack(pop)

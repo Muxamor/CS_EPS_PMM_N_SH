@@ -1,4 +1,5 @@
 #include  <stdio.h>
+#include  <string.h>
 #include "SetupPeriph.h"
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_cortex.h"
@@ -79,7 +80,7 @@ int main(void){
     Setup_UART_Interrupt();
     LL_SYSTICK_EnableIT();
 
-   // IWDG_Init(4000);
+    IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
 
     //Restore settings of EPS
@@ -103,8 +104,14 @@ int main(void){
 
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
         pmm_ptr->reboot_counter_CPUm++;
+		#ifdef DEBUGprintf
+        	printf("Main CPU started\n");
+        #endif
     }else{ // CPUbackup
         pmm_ptr->reboot_counter_CPUb++;
+		#ifdef DEBUGprintf
+        	printf("Backup CPU started\n");
+        #endif
     }
 
     pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
@@ -268,10 +275,12 @@ int main(void){
             LL_IWDG_ReloadCounter(IWDG);
             if( pmm_ptr->CAN_constatnt_mode == DISABLE ){ //Constant mode OFF
                 CAN_Var5_fill_telemetry(eps_param);
+                memcpy(&CAN_IVar5_ready_telemetry, &CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry));
             }
 
 			//Switch active CPU 
 			if( eps_service_ptr->Req_SW_Active_CPU == 1 ){
+
                 if( pmm_ptr->PWR_OFF_Passive_CPU == DISABLE ){
                     PMM_Switch_Active_CPU(eps_service_ptr->Set_Active_CPU, UART_M_eps_comm, UART_B_eps_comm, eps_param); // Need rewrite this function
                 }

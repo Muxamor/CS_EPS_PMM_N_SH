@@ -3,6 +3,7 @@
 #include "stm32l4xx_ll_tim.h"
 #include "median_filter.h"
 #include "SetupPeriph.h"
+#include "Fn_CRC16.h"
 #include "tim_pwm.h"
 #include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_control.h"
@@ -109,14 +110,34 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2 = DISABLE;
                         eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 0;
                         eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
                         eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
                         eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
                         eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
                         eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+
+                       // eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
+                        eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
+
+
+                        uint8_t value_deploy_exit_LSW_1 = 1;
+                        uint8_t value_deploy_exit_LSW_2 = 1;
+
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+                        LL_mDelay( 5 );
+                        PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 );
+
+                        if( value_deploy_exit_LSW_1 == 0){
+                            eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 1;
+                        }
+                        if( value_deploy_exit_LSW_2 == 0){
+                            eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 1;
+                        }
+
+                        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
 
                         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
                         CAN_IVar4_RegCmd.CAN_Reset_to_default = 0x00;
@@ -1274,8 +1295,20 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	uint8_t num_pwr_ch = 0;
 	uint8_t move_bit_pos = 0;
 	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_number = 0;
+    static uint32_t Second_Counter = 0;
+
+    if( ((uint32_t)(SysTick_Counter - Second_Counter)) > ((uint32_t) 1000) ){
+        CAN_IVar4_RegCmd.CAN_Global_Time++;
+        Second_Counter = SysTick_Counter;
+    }
 
 	// -------------------  ТМИ 0  ------------------ //
+    CAN_IVar5_telemetry.CAN_TMI0_Headr_Start_Mark                       = 0x0FF1;
+    CAN_IVar5_telemetry.CAN_TMI0_Headr_Sat_ID                           = 0x0002;
+    CAN_IVar5_telemetry.CAN_TMI0_Headr_Loc_ID                           = 0x3000;
+    CAN_IVar5_telemetry.CAN_TMI0_Headr_Mas_Number                       = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMI0_Headr_Time                             = CAN_IVar4_RegCmd.CAN_Global_Time;
+
 	CAN_IVar5_telemetry.CAN_TMI0_version                                = 0x0002;
 
 	//PMM module
@@ -1445,9 +1478,16 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I5, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s            = 0x0000;
 
+    CAN_IVar5_telemetry.CAN_TMI0_CRC                                     = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI0_Headr_Start_Mark)), 126 );
 
     // -------------------  ТМИ 1  ------------------ //
     //PAM Module
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark                        = 0x0FF1;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Sat_ID                            = 0x0002;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Loc_ID                            = 0x3001;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Mas_Number                        = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Time                              = CAN_IVar4_RegCmd.CAN_Global_Time;
+
     CAN_IVar5_telemetry.CAN_TMI1_version                                 = 0x0002;
 
     //***
@@ -1602,8 +1642,17 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value, PAM_SP5_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value, PAM_SP6_temp_sens_quantity );
 
+    CAN_IVar5_telemetry.CAN_TMI1_CRC                                    = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark)), 126 );
+
     // -------------------  ТМИ 2  ------------------ //
     // PBM part1 //
+
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark                       = 0x0FF1;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Sat_ID                           = 0x0002;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Loc_ID                           = 0x3002;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Mas_Number                       = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Time                             = CAN_IVar4_RegCmd.CAN_Global_Time;
+
     CAN_IVar5_telemetry.CAN_TMI2_version                                = 0x0002;
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power 		 =  0x0000;
@@ -1828,9 +1877,16 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
 
+    CAN_IVar5_telemetry.CAN_TMI2_CRC                                 = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark)), 126 );
 
     // -------------------  ТМИ 3 ------------------ //
     // PBM part2 //
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Start_Mark                    = 0x0FF1;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Sat_ID                        = 0x0002;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Loc_ID                        = 0x3003;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Mas_Number                    = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Time                          = CAN_IVar4_RegCmd.CAN_Global_Time;
+
     CAN_IVar5_telemetry.CAN_TMI3_version                             = 0x0002;
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Voltage[0];
@@ -1903,6 +1959,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].CycleCounter;
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].CycleCounter;
 
+    CAN_IVar5_telemetry.CAN_TMI3_CRC                                   = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI3_Headr_Start_Mark)), 126 );
+
 
     // -------------------  Beacon  ------------------ //
     CAN_IVar5_telemetry.CAN_Beacon_PMM_Switch_Active_CPU               = CAN_IVar5_telemetry.CAN_TMIx_PMM_Switch_Active_CPU;
@@ -1943,6 +2001,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
                                                                             | (eps_p.eps_pam_ptr->Error_State_DC_DC << 3) | (eps_p.eps_pam_ptr->Error_State_LDO << 4) | (eps_p.eps_pam_ptr->Error_I2C_GPIO_Ext << 5)
                                                                             | (eps_p.eps_pam_ptr->Error_I2C_MUX_1 << 6) | (eps_p.eps_pam_ptr->Error_I2C_MUX_2 << 7);
 }
+
+
 
 void CAN_Var5_fill_telemetry_const(void){
 
@@ -2012,8 +2072,6 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current_Aver_10s           = 0x6F6E;
 	CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s           = 0x7170;
 	//Total 61 byte
-	CAN_IVar5_telemetry.CAN_TMI0_Reserved[0]                            = 0x72;
-	CAN_IVar5_telemetry.CAN_TMI0_Reserved[1]                            = 0x73;
 
 	// -------------------  ТМИ 1  ------------------ //
 
@@ -2275,16 +2333,12 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle         = 0xE5;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle         = 0xE6;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle         = 0xE7;
-	CAN_IVar5_telemetry.CAN_TMI3_Reserved[0]                            = 0xE8;
-	CAN_IVar5_telemetry.CAN_TMI3_Reserved[1]                            = 0xE9;
+
 }
 
 void CAN_Var4_fill( _EPS_Param eps_p ){
 
-    CAN_IVar4_RegCmd.CAN_time_byte0                           			= 0x00;
-    CAN_IVar4_RegCmd.CAN_time_byte1                           			= 0x00;
-    CAN_IVar4_RegCmd.CAN_time_byte2                           			= 0x00;
-    CAN_IVar4_RegCmd.CAN_time_byte3                           			= 0x00;
+    CAN_IVar4_RegCmd.CAN_Global_Time                       			    = 0x00;
     CAN_IVar4_RegCmd.CAN_Constant_mode                          		= eps_p.eps_pmm_ptr->CAN_constatnt_mode;
     CAN_IVar4_RegCmd.CAN_Common_cmd0                           			= 0x00;
     CAN_IVar4_RegCmd.CAN_Common_cmd1                           			= 0x00;

@@ -273,6 +273,9 @@ void PMM_Reboot_EPS_PassiveCPU( void ){
 */
 void PMM_Take_Control_EPS_PassiveCPU( _EPS_Param eps_p ){
 
+    #ifdef DEBUGprintf
+        printf("Passive CPU taked control EPS\n");
+    #endif
     //Disable power fo real active CPU
     PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
     PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);

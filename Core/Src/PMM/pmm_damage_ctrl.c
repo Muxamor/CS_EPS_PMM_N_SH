@@ -16,6 +16,8 @@
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
 #include "uart_eps_comm.h"
+#include  <stdio.h>
+
 
 
     uint32_t PMM_Start_Time_Check_CAN;
@@ -31,6 +33,9 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
 
         if( (CAN1_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == ENABLE) ){
             eps_p.eps_pmm_ptr->Error_CAN_port_M = ERROR;
+            #ifdef DEBUGprintf
+                Error_Handler();
+            #endif
         }else{
             eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
         }
@@ -38,6 +43,9 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
         if( ( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == ENABLE) ) ||
                 ( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE) ) ){
             eps_p.eps_pmm_ptr->Error_CAN_port_B = ERROR;
+            #ifdef DEBUGprintf
+                Error_Handler();
+            #endif
         }else{
             eps_p.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
         }
@@ -84,6 +92,10 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
                     eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
                 }
                 eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
+                #ifdef DEBUGprintf
+                    printf("CANx errors CPU change request\n");
+                    Error_Handler();
+                #endif
 
                 eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 0;
             }
@@ -159,6 +171,9 @@ ErrorStatus PMM_Damage_Check_UART_m_b_ActiveCPU( _UART_EPS_COMM *UART_Main_eps_c
         }else if( UART_Main_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold ){
             UART_Main_eps_comm->error_port_counter = UART_EPS_ERROR_Threshold;
             eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
+			#ifdef DEBUGprintf
+               Error_Handler();
+            #endif
         }
 
         if( UART_Backup_eps_comm->error_port_counter == 0 ){
@@ -166,6 +181,9 @@ ErrorStatus PMM_Damage_Check_UART_m_b_ActiveCPU( _UART_EPS_COMM *UART_Main_eps_c
         }else if( UART_Backup_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold ){
             UART_Backup_eps_comm->error_port_counter = UART_EPS_ERROR_Threshold;
             eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
+			#ifdef DEBUGprintf
+               Error_Handler();
+            #endif
         }
 
     }else{
@@ -194,12 +212,18 @@ void PMM_Damage_Check_UART_m_b_PassiveCPU( _UART_EPS_COMM *UART_Main_eps_comm, _
 
         if( UART_Main_eps_comm->data_exchange_flag == 0 ){
             eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
+            #ifdef DEBUGprintf
+                Error_Handler();
+            #endif
         }else{
             eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
         }
 
         if( UART_Backup_eps_comm->data_exchange_flag == 0 ){
             eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
+            #ifdef DEBUGprintf
+                Error_Handler();
+            #endif
         }else{
             eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
         }
@@ -322,8 +346,8 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, DISABLE );
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
 
-        	PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
-        	PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+        	//PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
+        	//PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
 
         	//Disable TM SP power channels.
         	for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){

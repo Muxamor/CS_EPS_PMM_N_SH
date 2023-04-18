@@ -100,8 +100,6 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
         if( (eps_p.eps_pmm_ptr->Deploy_stage == 1) || (eps_p.eps_pmm_ptr->Deploy_stage == 2) ){
 
-            eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
-
             PMM_CPU_SPEED_MODE( eps_p.eps_pmm_ptr, CPU_Clock_80MHz );
             LPUART1_Init();
             USART3_Init();
@@ -129,6 +127,10 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             	}
             }
 
+            //Enable Power possive CPU
+            eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+
+            //Init EPS
             LL_IWDG_ReloadCounter(IWDG);
             PMM_init( eps_p.eps_pmm_ptr );
             PDM_init( eps_p.eps_pdm_ptr );
@@ -185,7 +187,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 2 - waiting timeout before deploy
     }else if( deploy_stage == 2 ){
-    	if( ((uint32_t)(SysTick_Counter - Deploy_start_time_delay)) > ((uint32_t) PMM_Deploy_Time_Delay) ){
+    	if( ((uint32_t)(SysTick_Counter - Deploy_start_time_delay)) > ((uint32_t) PMM_Deploy_Time_Delay) ){ //
             eps_p.eps_pmm_ptr->Deploy_stage = 3; // Next deploy stage 3 - low level energy, check and waiting for charge if battery low.
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
     	}
@@ -218,6 +220,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch2);
         eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 6 - Enable BRC
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
 
     // Deploy stage 6 - Enable BRK1, BRK2, CANm, CANb, PAM DC-DC.
     }else if( deploy_stage == 6 ){
