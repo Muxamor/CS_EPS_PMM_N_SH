@@ -38,8 +38,8 @@ _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_co
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release
 
 int main(void){
-
-    uint32_t Passive_CPU_start_time_wait_data = 0 ;
+    
+   uint32_t Passive_CPU_start_time_wait_data = 0 ;
 
     SysTick_Counter = 0;
     CAN_cmd_Buff.length = 0;
@@ -275,7 +275,7 @@ int main(void){
             LL_IWDG_ReloadCounter(IWDG);
             if( pmm_ptr->CAN_constatnt_mode == DISABLE ){ //Constant mode OFF
                 CAN_Var5_fill_telemetry(eps_param);
-                memcpy(&CAN_IVar5_ready_telemetry, &CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry));
+                memcpy(&CAN_IVar5_ready_telemetry, &CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry)); //Execution time at 80MHz is 61.5us.
             }
 
 			//Switch active CPU 
