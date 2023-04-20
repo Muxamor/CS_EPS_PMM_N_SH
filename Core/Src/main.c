@@ -241,7 +241,7 @@ int main(void){
                 }
 
                 //CAN ports power off protection. ( In combat mode start protection only out from the container )
-                if( pmm_ptr->Deploy_stage >=1 ){
+                if( pmm_ptr->Deploy_stage >= 1 ){
                 	PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
                 }
 
