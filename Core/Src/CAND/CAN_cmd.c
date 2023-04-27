@@ -122,20 +122,20 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                        // eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
                         eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
-
-                        uint8_t value_deploy_exit_LSW_1 = 1;
-                        uint8_t value_deploy_exit_LSW_2 = 1;
+                        uint8_t value_deploy_LSW_1 = 1;
+                        uint8_t value_deploy_LSW_2 = 1;
 
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
                         LL_mDelay( 5 );
-                        PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 );
+                        PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_LSW_1, &value_deploy_LSW_2 );
 
-                        if( value_deploy_exit_LSW_1 == 0){
-                            eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 1;
-                        }
-                        if( value_deploy_exit_LSW_2 == 0){
-                            eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 1;
-                        }
+                        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = !value_deploy_LSW_1;
+                        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = !value_deploy_LSW_2;
+
+                        PMM_Deploy_check_Lim_SW( eps_p, PMM_PWR_Deploy_Ch1, &value_deploy_LSW_1, &value_deploy_LSW_2 );
+                        PMM_Deploy_check_Lim_SW( eps_p, PMM_PWR_Deploy_Ch2, &value_deploy_LSW_1, &value_deploy_LSW_2 );
+                        PMM_Deploy_check_Lim_SW( eps_p, PMM_PWR_Deploy_Ch3, &value_deploy_LSW_1, &value_deploy_LSW_2 );
+                        PMM_Deploy_check_Lim_SW( eps_p, PMM_PWR_Deploy_Ch4, &value_deploy_LSW_1, &value_deploy_LSW_2 );
 
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
 
