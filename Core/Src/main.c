@@ -81,6 +81,7 @@ int main(void){
     LL_SYSTICK_EnableIT();
 
     IWDG_Init(4000);
+
     LL_IWDG_ReloadCounter(IWDG);
 
     //Restore settings of EPS
