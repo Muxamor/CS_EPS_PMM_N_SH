@@ -1295,6 +1295,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	uint8_t num_pwr_ch = 0;
 	uint8_t move_bit_pos = 0;
 	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_number = 0;
+    uint32_t tmp_param = 0;
     static uint32_t Second_Counter = 0;
 
     if( ((uint32_t)(SysTick_Counter - Second_Counter)) > ((uint32_t) 1000) ){
@@ -1675,11 +1676,13 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     }
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent 		 = 0x0000;
+    tmp_param = 0x0000;
     for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
-        CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent     = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent + (uint8_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalRelativeCapacity_Perc / PBM_T1_QUANTITY);
+        tmp_param = tmp_param + eps_p.eps_pbm_ptr[PBM_Number].TotalRelativeCapacity_Perc;
     }
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent         = (uint8_t)(tmp_param / PBM_T1_QUANTITY);
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask     = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask      = 0x0000;
     for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
         for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
            CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].ChgEnableCmd << move_bit_pos);
