@@ -30,7 +30,9 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/times.h>
+#include <sys/types.h>
 #include "stm32l4xx.h"
+
 
 
 /* Variables */
