@@ -83,12 +83,12 @@ ErrorStatus FRAM_Detect_Empty( I2C_TypeDef *I2Cx_fram, uint8_t I2C_addr_fram, ui
 ErrorStatus FRAM_control_write_access( uint8_t access_flag){
 
 	if(access_flag == FRAM_WRITE_PROTECTION_DISABLE){
-		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_3);
-		LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_15);
+		LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_2);
+		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9);
 
 	}else if(access_flag == FRAM_WRITE_PROTECTION_ENABLE){
-		LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_3);
-		LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_15);
+		LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_2);
+		LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);
 
 	}else{
 

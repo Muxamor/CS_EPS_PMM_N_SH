@@ -31,24 +31,24 @@ int8_t CAN_DeInit_eps(CAN_TypeDef *can_ref);
 void IWDG_Init(uint16_t period);
 
 /*For control multiplexor TMUX1209  need use: */
-#define ENABLE_TMUX1209_I2C();        LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_0);
-#define DISABLE_TMUX1209_I2C();       LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_0);
+#define ENABLE_TMUX1209_I2C();        LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_4);
+#define DISABLE_TMUX1209_I2C();       LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_4);
 
-#define SW_TMUX1209_I2C_main_PAM();   LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_12); \
-                                       LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_13);
+#define SW_TMUX1209_I2C_main_PAM();   LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_6); \
+                                       LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_5);
 
-#define SW_TMUX1209_I2C_main_PDM();   LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_12); \
-                                       LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_13);
+#define SW_TMUX1209_I2C_main_PDM();   LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_6); \
+                                       LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_5);
 
-#define SW_TMUX1209_I2C_main_PBM();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
-                                       LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_13);
+#define SW_TMUX1209_I2C_main_PBM();   LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_6); \
+                                       LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_5);
 
-#define SW_TMUX1209_I2C_main_PMM();   LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_12); \
-                                       LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_13);
+#define SW_TMUX1209_I2C_main_PMM();   LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_6); \
+                                       LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_5);
 
 /*For control pin PBM Energy Level LOW  need use:			*/
-#define PBM_Low_Energy_Set_pin();      	    LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_12);
-#define PBM_Low_Energy_Reset_pin();         LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_12);
+#define PBM_Low_Energy_Set_pin();      	    LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_14);
+#define PBM_Low_Energy_Reset_pin();         LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_14);
 
 /* Pins for poll request from BRK */
 #define PMM_RT_FL_EPS1_Set_pin();     	    LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_13);
