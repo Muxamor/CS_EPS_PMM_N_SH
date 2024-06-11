@@ -221,8 +221,8 @@ void I2C3_Init( void ) {
 
 
 	/**I2C3 in Grifon GPIO Configuration
-	 PA7   ------> I2C3_SCL
-	 PG8   ------> I2C3_SDA */
+	 PС0   ------> I2C3_SCL
+	 PС1   ------> I2C3_SDA */
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;

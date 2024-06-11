@@ -63,9 +63,9 @@ typedef struct{
      //PMM
      uint32_t FRAM_PMM_PWR_Ch_State_CANmain			:1;
      uint32_t FRAM_PMM_PWR_Ch_State_CANbackup		:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF1   	:1;
+     uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF   	:1;
      uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF2		:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF1     	:1;
+     uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF     	:1;
      uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF2		:1;
      uint32_t FRAM_PMM_PWR_Ch_State_PBMs_Logic		:1;
      uint32_t FRAM_PMM_PWR_Ch_State_Deploy_Logic 	:1;
@@ -78,14 +78,14 @@ typedef struct{
      uint32_t FRAM_PMM_CAN_constatnt_mode		    :1;
      uint32_t FRAM_PMM_Deploy_Lim_SW_Exit_1         :1;
      uint32_t FRAM_PMM_Deploy_Lim_SW_Exit_2         :1;
-     uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_1_Yp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_2_Yp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_1_Yn       :1;
-     uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_2_Yn       :1;
-     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_1_Zp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zn       :1;
-     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zn       :1;
+     uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_1	        :1;
+     uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_2          :1;
+     uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_1      	:1;
+     uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_2          :1;
+     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_1          :1;
+     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_2          :1;
+     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_1          :1;
+     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2          :1;
      uint32_t :7;
 
      uint32_t Reserved1;

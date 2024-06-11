@@ -95,16 +95,16 @@ extern "C" {
 
 #define PMM_PWR_Ch_CANmain 			0x00
 #define PMM_PWR_Ch_CANbackup		0x01
-#define PMM_PWR_Ch_VBAT1_eF1		0x02
-#define PMM_PWR_Ch_VBAT1_eF2		0x03
-#define PMM_PWR_Ch_VBAT2_eF1		0x04
-#define PMM_PWR_Ch_VBAT2_eF2		0x05
+#define PMM_PWR_Ch_VBAT1_eF			0x02
+//#define PMM_PWR_Ch_VBAT1_eF2		0x03
+#define PMM_PWR_Ch_VBAT2_eF			0x04
+//#define PMM_PWR_Ch_VBAT2_eF2		0x05
 #define PMM_PWR_Ch_PBMs_Logic		0x06
 #define PMM_PWR_Ch_Deploy_Logic		0x07
 #define PMM_PWR_Ch_Deploy_Power		0x08
-#define PMM_PWR_Ch_5V_Bus			0x09
-#define PMM_PWR_Ch_3_3V_Bus			0x0A
-#define PMM_PWR_Ch_I2C_Bus			0x0B
+//#define PMM_PWR_Ch_5V_Bus			0x09
+//#define PMM_PWR_Ch_3_3V_Bus		0x0A
+//#define PMM_PWR_Ch_I2C_Bus		0x0B
 
 #define PMM_PWR_Deploy_Ch1          0x0C
 #define PMM_PWR_Deploy_Ch2          0x0D

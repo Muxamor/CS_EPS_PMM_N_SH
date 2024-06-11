@@ -13,54 +13,56 @@ typedef struct{
 
 	uint32_t PWR_Ch_State_CANmain				:1; //0-DISABLE, 1-ENABLE. State power main CAN. // Need to save in flash.
 	uint32_t PWR_Ch_State_CANbackup				:1; //0-DISABLE, 1-ENABLE. State power backup CAN. // Need to save in flash.
-	uint32_t PWR_Ch_State_Vbat1_eF1   			:1; //0-DISABLE, 1-ENABLE. State power battery bus output 1 eFuse 1 // Need to save in flash.
-	uint32_t PWR_Ch_State_Vbat1_eF2				:1; //0-DISABLE, 1-ENABLE. State power battery bus output 1 eFuse 2 // Need to save in flash.
-	uint32_t PWR_Ch_State_Vbat2_eF1     		:1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 1 // Need to save in flash.
-	uint32_t PWR_Ch_State_Vbat2_eF2				:1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 2 // Need to save in flash.
+	uint32_t PWR_Ch_State_Vbat1_eF  			:1; //0-DISABLE, 1-ENABLE. State power battery bus output 1 eFuse 1 // Need to save in flash.
+	//uint32_t PWR_Ch_State_Vbat1_eF22				:1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 2 // Need to save in flash.
+	uint32_t PWR_Ch_State_Vbat2_eF  	   		:1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 1 // Need to save in flash.
+	//uint32_t PWR_Ch_State_Vbat2_eF2				:1; //0-DISABLE, 1-ENABLE. State power battery bus output 2 eFuse 2 // Need to save in flash.
 	uint32_t PWR_Ch_State_PBMs_Logic			:1; //0-DISABLE, 1-ENABLE. State power PBM -modules logic power // Need to save in flash.
 	uint32_t PWR_Ch_State_Deploy_Logic 			:1; //0-DISABLE, 1-ENABLE. State power Deploy logic // Need to save in flash.
 	uint32_t PWR_Ch_State_Deploy_Power 			:1; //0-DISABLE, 1-ENABLE. State power Deploy power // Need to save in flash.
-	uint32_t PWR_Ch_State_5V_Bus 				:1; //0-DISABLE, 1-ENABLE. State power 5V bus (Norbi not use) // Need to save in flash.
-	uint32_t PWR_Ch_State_3_3V_Bus 				:1; //0-DISABLE, 1-ENABLE. State power 3.3V bus (Norbi not use) // Need to save in flash.
-	uint32_t PWR_Ch_State_I2C_Bus 				:1; //0-DISABLE, 1-ENABLE. State power I2C bus.(Norbi not use) // Need to save in flash.
+	//uint32_t PWR_Ch_State_5V_Bus 				:1; //0-DISABLE, 1-ENABLE. State power 5V bus (Norbi not use) // Need to save in flash.
+	//uint32_t PWR_Ch_State_3_3V_Bus 				:1; //0-DISABLE, 1-ENABLE. State power 3.3V bus (Norbi not use) // Need to save in flash.
+	//uint32_t PWR_Ch_State_I2C_Bus 				:1; //0-DISABLE, 1-ENABLE. State power I2C bus.(Norbi not use) // Need to save in flash.
 
 	uint32_t PWR_Supply_Main_PG 				:1; //0-OK, 1-ERROR. Power good Main power supply 3.3V
 	uint32_t PWR_Supply_Backup_PG 				:1; //0-OK, 1-ERROR. Power good Backup power supply 3.3V
     uint32_t PWR_OFF_Passive_CPU	    		:1; //0-Enable, 1- disable power passive CPU
 	uint32_t PWR_Ch_PG_CANmain					:1; //0-OK, 1-ERROR. Power good main CAN power ch.
 	uint32_t PWR_Ch_PG_CANbackup				:1; //0-OK, 1-ERROR. Power good backup CAN power ch.
-	uint32_t PWR_Ch_PG_Vbat1_eF1 				:1; //0-OK, 1-ERROR. Power good VBAT1 eF1 channel status.
-	uint32_t PWR_Ch_PG_Vbat1_eF2 				:1; //0-OK, 1-ERROR. Power good VBAT1 eF2 channel status.
-	uint32_t PWR_Ch_PG_Vbat2_eF1 				:1; //0-OK, 1-ERROR. Power good VBAT2 eF1 channel status.
-	uint32_t PWR_Ch_PG_Vbat2_eF2 				:1; //0-OK, 1-ERROR. Power good VBAT2 eF2 channel status.
-	uint32_t PWR_Ch_PG_PBMs_Logic 				:1; //0-OK, 1-ERROR. Power good PBM logic power.
-	uint32_t PWR_Ch_PG_Deploy_LP				:1; //0-OK, 1-ERROR. Power good Deploy power. (Norbi burning eFuse)
-	uint32_t PWR_Ch_PG_5V_Bus 					:1; //0-OK, 1-ERROR. Power good 5V power. (Norbi not use)
-	uint32_t PWR_Ch_PG_3_3V_Bus 				:1; //0-OK, 1-ERROR. Power good 3.3V power. (Norbi not use)
-	uint32_t PWR_Ch_PG_I2C_Bus 					:1; //0-OK, 1-ERROR. Power good I2C power. (Norbi not use)
-	uint32_t :6;
+	uint32_t PWR_Ch_PG_Vbat1_eF 				:1; //0-OK, 1-ERROR. Power good VBAT1 eF1 channel status.
+	//uint32_t PWR_Ch_PG_Vbat1_eF2 				:1; //0-OK, 1-ERROR. Power good VBAT1 eF2 channel status.
+	uint32_t PWR_Ch_PG_Vbat2_eF 				:1; //0-OK, 1-ERROR. Power good VBAT2 eF1 channel status.
+	//uint32_t PWR_Ch_PG_Vbat2_eF2 				:1; //0-OK, 1-ERROR. Power good VBAT2 eF2 channel status.
+	uint32_t PWR_Ch_PG_PBMs_Logic1 				:1; //0-OK, 1-ERROR. Power good PBM logic power.
+	uint32_t PWR_Ch_PG_PBMs_Logic2 				:1; //0-OK, 1-ERROR. Power good PBM logic power.
+	uint32_t PWR_Ch_PG_Deploy_L					:1; //0-OK, 1-ERROR. Power good Deploy power. (Norbi burning eFuse)
+	uint32_t PWR_Ch_PG_Deploy_P					:1; //0-OK, 1-ERROR. Power good Deploy power. (Norbi burning eFuse)
+	//uint32_t PWR_Ch_PG_5V_Bus 					:1; //0-OK, 1-ERROR. Power good 5V power. (Norbi not use)
+	//uint32_t PWR_Ch_PG_3_3V_Bus 				:1; //0-OK, 1-ERROR. Power good 3.3V power. (Norbi not use)
+	//uint32_t PWR_Ch_PG_I2C_Bus 					:1; //0-OK, 1-ERROR. Power good I2C power. (Norbi not use)
+	uint32_t :14;
 
 
 	uint32_t Error_TMP1075_sensor				:1;	//=0 -OK, = 1-error temp. sensor TMP1075
 	uint32_t Error_PWR_Ch_State_CANmain			:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_CANbackup		:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_Ch_State_Vbat1_eF1		:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_Ch_State_Vbat1_eF2		:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_Ch_State_Vbat2_eF1		:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_Ch_State_Vbat2_eF2		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_Ch_State_Vbat1_eF		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	//uint32_t Error_PWR_Ch_State_Vbat1_eF2		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_Ch_State_Vbat2_eF		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	//uint32_t Error_PWR_Ch_State_Vbat2_eF2		:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_PBMs_Logic		:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_Deploy_Logic	:1; //=0 -OK, = 1-error at output GPIO Ext1
 	uint32_t Error_PWR_Ch_State_Deploy_Power	:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_Ch_State_5V_Bus			:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_Ch_State_3_3V_Bus		:1; //=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_Ch_State_I2C_Bus			:1;	//=0 -OK, = 1-error at output GPIO Ext1
-	uint32_t Error_PWR_Mon_Vbat1_eF1			:1; //=0 -OK, = 1-error I2C INA231
-	uint32_t Error_PWR_Mon_Vbat1_eF2			:1; //=0 -OK, = 1-error I2C INA231
-	uint32_t Error_PWR_Mon_Vbat2_eF1			:1; //=0 -OK, = 1-error I2C INA231
-	uint32_t Error_PWR_Mon_Vbat2_eF2			:1; //=0 -OK, = 1-error I2C INA231
+	//uint32_t Error_PWR_Ch_State_5V_Bus			:1; //=0 -OK, = 1-error at output GPIO Ext1
+	//uint32_t Error_PWR_Ch_State_3_3V_Bus		:1; //=0 -OK, = 1-error at output GPIO Ext1
+	//uint32_t Error_PWR_Ch_State_I2C_Bus			:1;	//=0 -OK, = 1-error at output GPIO Ext1
+	uint32_t Error_PWR_Mon_Vbat1_eF			:1; //=0 -OK, = 1-error I2C INA231
+	//uint32_t Error_PWR_Mon_Vbat1_eF2			:1; //=0 -OK, = 1-error I2C INA231
+	uint32_t Error_PWR_Mon_Vbat2_eF			:1; //=0 -OK, = 1-error I2C INA231
+	//uint32_t Error_PWR_Mon_Vbat2_eF2			:1; //=0 -OK, = 1-error I2C INA231
 	uint32_t Error_I2C_GPIO_Ext1 				:1;	//=0 -OK, = 1-error I2C GPIO Expander 1 TCA9539 (U3)
-	uint32_t Error_I2C_GPIO_Ext2 				:1;
-	uint32_t Error_PWR_Supply_m_b_Curr_Mon		:1; //=0 -OK, = 1-error I2C Current meas. ADC (U65).
+	//uint32_t Error_I2C_GPIO_Ext2 				:1;
+	//uint32_t Error_PWR_Supply_m_b_Curr_Mon		:1; //=0 -OK, = 1-error I2C Current meas. ADC (U65).
     uint32_t Error_I2C_Deploy_GPIO_Ext			:1;
     uint32_t Error_I2C_Deploy_ADC   			:1;
 	uint32_t Error_FRAM1		 				:1; //=0 -OK, = 1-error FRAM1 no connection
@@ -69,29 +71,18 @@ typedef struct{
 	uint32_t Error_UART_port_B					:1; //=0 -OK, = 1-error UART backup (USART3) port
 	uint32_t Error_CAN_port_M					:1; //=0 -OK, = 1-error CAN main (CAN1) port
 	uint32_t Error_CAN_port_B					:1; //=0 -OK, = 1-error CAN backup (CAN2) port
-	uint32_t :4;
+	uint32_t :13;
 
 	uint32_t reboot_counter_CPUm; 			//increment this counter after each reboot CPUm(power up). // Need to save in flash.
 	uint32_t reboot_counter_CPUb; 			//increment this counter after each reboot CPUb(power up). // Need to save in flash.
 
-	uint16_t PWR_Ch_Vbat1_eF1_Voltage_val;
-	uint16_t PWR_Ch_Vbat1_eF2_Voltage_val;
-	int16_t  PWR_Ch_Vbat1_eF1_Current_val;
-	int16_t  PWR_Ch_Vbat1_eF2_Current_val;
-	uint16_t PWR_Ch_Vbat1_eF1_Power_val;
-	uint16_t PWR_Ch_Vbat1_eF2_Power_val;
+	uint16_t PWR_Ch_Vbat1_eF_Voltage_val;
+	int16_t  PWR_Ch_Vbat1_eF_Current_val;
+	uint16_t PWR_Ch_Vbat1_eF_Power_val;
 
-	uint16_t PWR_Ch_Vbat2_eF1_Voltage_val;
-	uint16_t PWR_Ch_Vbat2_eF2_Voltage_val;
-	int16_t  PWR_Ch_Vbat2_eF1_Current_val;
-	int16_t  PWR_Ch_Vbat2_eF2_Current_val;
-	uint16_t PWR_Ch_Vbat2_eF1_Power_val;
-	uint16_t PWR_Ch_Vbat2_eF2_Power_val; 
-
-	int16_t  PWR_Supply_Main_eF_in_Current_val;
-	int16_t  PWR_Supply_Main_eF_out_Current_val;
-	int16_t  PWR_Supply_Backup_eF_in_Current_val;
-	int16_t  PWR_Supply_Backup_eF_out_Current_val;
+	uint16_t PWR_Ch_Vbat2_eF_Voltage_val;
+	int16_t  PWR_Ch_Vbat2_eF_Current_val;
+	uint16_t PWR_Ch_Vbat2_eF_Power_val;
 
 	uint8_t Main_Backup_mode_CPU 	:1; //= 0-Main, 1-Backup mode CPU.
 	uint8_t Active_CPU		 		:1;	//= 0-Main CPU is active, Backup CPU is passive. // Need to save in flash.
@@ -112,14 +103,14 @@ typedef struct{
 
 	uint16_t Deploy_Lim_SW_Exit_1       :1; //0 - не сработал 1 - сработал. Deploy Limit switch 1 exit from container// Need to save in flash.
     uint16_t Deploy_Lim_SW_Exit_2       :1; //0 - не сработал 1 - сработал. Deploy Limit switch 2 exit from container// Need to save in flash.
-    uint16_t Deploy_Ch4_Lim_SW_1_Yp     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Ch4_Lim_SW_2_Yp     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Ch3_Lim_SW_1_Yn     :1; //0 - не сработал 1 - сработал. Y- Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Ch3_Lim_SW_2_Yn     :1; //0 - не сработал 1 - сработал. Y- Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Ch1_Lim_SW_1_Zp     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Ch1_Lim_SW_2_Zp     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Ch2_Lim_SW_1_Zn     :1; //0 - не сработал 1 - сработал. Z- Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Ch2_Lim_SW_2_Zn     :1; //0 - не сработал 1 - сработал. Z- Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Ch4_Lim_SW_1	    :1; //0 - не сработал 1 - сработал. Y+ Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Ch4_Lim_SW_2	    :1; //0 - не сработал 1 - сработал. Y+ Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Ch3_Lim_SW_1	    :1; //0 - не сработал 1 - сработал. Y- Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Ch3_Lim_SW_2	    :1; //0 - не сработал 1 - сработал. Y- Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Ch1_Lim_SW_1     	:1; //0 - не сработал 1 - сработал. Z+ Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Ch1_Lim_SW_2     	:1; //0 - не сработал 1 - сработал. Z+ Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Ch2_Lim_SW_1    	:1; //0 - не сработал 1 - сработал. Z- Limit switch 1// Need to save in flash.
+    uint16_t Deploy_Ch2_Lim_SW_2	    :1; //0 - не сработал 1 - сработал. Z- Limit switch 2// Need to save in flash.
     uint16_t :6;
 
 	uint16_t Version_FW;  // Version firmware HB.LB

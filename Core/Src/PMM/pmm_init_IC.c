@@ -136,19 +136,19 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 	}
 
 
-	if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF1 ){
+	if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF ){
 
 		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = SUCCESS;
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF = SUCCESS;
 
 		}else{
 			#ifdef DEBUGprintf
 				Error_Handler();
 			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = ERROR;
+			pmm_ptr->Error_PWR_Mon_Vbat1_eF = ERROR;
 		}
 
-	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
+	/*}else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
 
 		if( error_I2C == SUCCESS ){
 			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS;
@@ -158,21 +158,21 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 				Error_Handler();
 			#endif
 			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR;
-		}
+		}*/
 
-	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF1 ){
+	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF ){
 
 		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = SUCCESS;
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF = SUCCESS;
 
 		}else{
 			#ifdef DEBUGprintf
 				Error_Handler();
 			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = ERROR;
+			pmm_ptr->Error_PWR_Mon_Vbat2_eF = ERROR;
 		}
 
-	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
+	}/*else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
 
 		if( error_I2C == SUCCESS ){
 			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS;
@@ -184,7 +184,7 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR;
 		}
 
-	}
+	}*/
 
 	return error_I2C;
 }
@@ -225,19 +225,19 @@ ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
     }
 
 
-    if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF1 ){
+    if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF ){
 
         if( error_I2C == SUCCESS ){
-            pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = SUCCESS;
+            pmm_ptr->Error_PWR_Mon_Vbat1_eF = SUCCESS;
 
         }else{
 			#ifdef DEBUGprintf
             Error_Handler();
 			#endif
-            pmm_ptr->Error_PWR_Mon_Vbat1_eF1 = ERROR;
+            pmm_ptr->Error_PWR_Mon_Vbat1_eF = ERROR;
         }
 
-    }else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
+   /* }else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
 
         if( error_I2C == SUCCESS ){
             pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS;
@@ -247,21 +247,21 @@ ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
             Error_Handler();
 			#endif
             pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR;
-        }
+        }*/
 
-    }else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF1 ){
+    }else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF ){
 
         if( error_I2C == SUCCESS ){
-            pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = SUCCESS;
+            pmm_ptr->Error_PWR_Mon_Vbat2_eF = SUCCESS;
 
         }else{
 			#ifdef DEBUGprintf
             Error_Handler();
 			#endif
-            pmm_ptr->Error_PWR_Mon_Vbat2_eF1 = ERROR;
+            pmm_ptr->Error_PWR_Mon_Vbat2_eF = ERROR;
         }
 
-    }else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
+    }/*else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
 
         if( error_I2C == SUCCESS ){
             pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS;
@@ -273,7 +273,7 @@ ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
             pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR;
         }
 
-    }
+    }*/
 
     return error_I2C;
 }
@@ -286,7 +286,7 @@ ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 	@param  I2C_ADS1015_addr - I2C address
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-ErrorStatus ADS1015_init( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr){
+ErrorStatus ADS1015_init( I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr){
 
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
@@ -323,9 +323,6 @@ ErrorStatus ADS1015_init( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = ERROR;
-	}else{
-		pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon = SUCCESS;
 	}
 
 	return error_I2C;
@@ -359,18 +356,18 @@ ErrorStatus PMM_DeInit_I2C_GPIOExt (_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tc
 		#ifdef DEBUGprintf
 			Error_Handler();
         #endif
-	    if(tca9539_addr == PMM_I2CADDR_GPIOExt1){
+	    //if(tca9539_addr == PMM_I2CADDR_GPIOExt1){
 	        pmm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
-	    }else if(tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-	        pmm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
-	    }
+	   // }else if(tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+	       // pmm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
+	   // }
 
 	}else{
-	    if(tca9539_addr == PMM_I2CADDR_GPIOExt1){
+	  //  if(tca9539_addr == PMM_I2CADDR_GPIOExt1){
 	        pmm_ptr->Error_I2C_GPIO_Ext1 = SUCCESS;
-	    }else if(tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-	        pmm_ptr->Error_I2C_GPIO_Ext2 = SUCCESS;
-	    }
+	   // }else if(tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+	     //   pmm_ptr->Error_I2C_GPIO_Ext2 = SUCCESS;
+	   // }
 	}
 
 	return error_I2C;
@@ -381,11 +378,11 @@ ErrorStatus PMM_DeInit_I2C_GPIOExt (_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tc
     @param 	tca9539_addr - I2C address GPIO Expander.
 	@retval None
 */
-void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
+void PMM_HARD_Reset_I2C_GPIOExt( ){
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
+	/*if( tca9539_addr == PMM_I2CADDR_GPIOExt1){*/
 
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
@@ -402,7 +399,7 @@ void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
+/*
 	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
 
 	    GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
@@ -420,7 +417,7 @@ void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
 	    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 	    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-	}
+	}*/
 
 }
 
@@ -428,11 +425,11 @@ void PMM_HARD_Reset_I2C_GPIOExt( uint8_t tca9539_addr ){
     @param 	tca9539_addr - I2C address GPIO Expander.
 	@retval None
 */
-void PMM_Reset_pin_Pull_Down_I2C_GPIOExt( uint8_t tca9539_addr ){
+void PMM_Reset_pin_Pull_Down_I2C_GPIOExt(  ){
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
+	//if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
 
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
@@ -443,27 +440,27 @@ void PMM_Reset_pin_Pull_Down_I2C_GPIOExt( uint8_t tca9539_addr ){
 
 		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_2);
 
-	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+	/*}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
 		//TO DO need write
-	}
+	}*/
 }
 
 /** @brief  Reset pin TCA9539 GPIOExt no pull is free.
     @param 	tca9539_addr - I2C address GPIO Expander.
 	@retval None
 */
-void PMM_Reset_pin_Free_I2C_GPIOExt( uint8_t tca9539_addr ){
+void PMM_Reset_pin_Free_I2C_GPIOExt(  ){
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
+	//if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
 
 		GPIO_InitStruct.Pin =  LL_GPIO_PIN_2;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
+	/*}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
 		//need write
-	}
+	}*/
 }

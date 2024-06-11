@@ -54,35 +54,29 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_CANbackup, DISABLE );
 		}
 
-		if( pmm_ptr->PWR_Ch_State_Vbat1_eF1 == ENABLE){
-			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, ENABLE );
+		if( pmm_ptr->PWR_Ch_State_Vbat1_eF == ENABLE){
+			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF, ENABLE );
 		}else{
-			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
+			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF, DISABLE );
 		}
 
-		if( pmm_ptr->PWR_Ch_State_Vbat1_eF2 == ENABLE){
-			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, ENABLE );
+	//	if( pmm_ptr->PWR_Ch_State_Vbat1_eF2 == ENABLE){
+	//		error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, ENABLE );
+	//	}else{
+	//		error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
+	//	}
+
+		if( pmm_ptr->PWR_Ch_State_Vbat2_eF == ENABLE){
+			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF, ENABLE );
 		}else{
-			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
+			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF, DISABLE );
 		}
 
-		if( pmm_ptr->PWR_Ch_State_Vbat2_eF1 == ENABLE){
-			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, ENABLE );
-		}else{
-			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, DISABLE );
-		}
-
-		if( pmm_ptr->PWR_Ch_State_Vbat2_eF2 == ENABLE){
+		/*if( pmm_ptr->PWR_Ch_State_Vbat2_eF2 == ENABLE){
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, ENABLE );
 		}else{
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
-		}
-
-		if( pmm_ptr->PWR_Ch_State_Vbat2_eF2 == ENABLE){
-			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, ENABLE );
-		}else{
-			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
-		}
+		}*/
 
 		if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE){
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
@@ -102,7 +96,7 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE );
 		}
 
-		if( pmm_ptr->PWR_Ch_State_5V_Bus == ENABLE){
+		/*if( pmm_ptr->PWR_Ch_State_5V_Bus == ENABLE){
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_5V_Bus, ENABLE );
 		}else{
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_5V_Bus, DISABLE );
@@ -112,25 +106,25 @@ ErrorStatus PMM_init(_PMM *pmm_ptr){
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_3_3V_Bus, ENABLE );
 		}else{
 			error_status += PMM_Set_state_PWR_CH( pmm_ptr, PMM_PWR_Ch_3_3V_Bus, DISABLE );
-		}
+		}*/
 
-		error_status += ADS1015_init( pmm_ptr, PMM_I2Cx_PowerADC, PMM_I2CADDR_PowerADC);
+		error_status += ADS1015_init( PMM_I2Cx_PowerADC, PMM_I2CADDR_PowerADC);
 
 		if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 ){
 		    error_status += PMM_Power_Down_TMP1075( pmm_ptr, PMM_I2Cx_TMP1075, PMM_I2CADDR_TMP1075);
 
-		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF1);
-		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2);
-		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1);
-		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2);
+		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF);
+		   // error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2);
+		    error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF);
+		  //  error_status += PMM_PWR_Down_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2);
 
 		}else{
 		    error_status += PMM_init_TMP1075( pmm_ptr, PMM_I2Cx_TMP1075, PMM_I2CADDR_TMP1075 );
 
-		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF1);
-		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2);
-		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF1);
-		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2);
+		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF);
+		   // error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT1_eF2);
+		    error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF);
+		    //error_status += PMM_init_PWR_Mon_INA231( pmm_ptr, PMM_PWR_Ch_VBAT2_eF2);
 		}
 
 	//Init Passive CPU and PMM

@@ -33,7 +33,7 @@ _PMM_table PMM__Table(uint8_t number_pwr_channel){
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P15;
 			break;
 
-		case PMM_PWR_Ch_VBAT1_eF1:
+		case PMM_PWR_Ch_VBAT1_eF:
             pmm_table.I2Cx_GPIO_Ext = PMM_I2Cx_GPIOExt1;
             pmm_table.I2C_addr_GPIO_Ext = PMM_I2CADDR_GPIOExt1;
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P00;
@@ -41,28 +41,12 @@ _PMM_table PMM__Table(uint8_t number_pwr_channel){
 			pmm_table.I2C_addr_PWR_Mon = PMM_I2CADDR_VBAT1_eF1_INA231;
 			break;
 
-		case PMM_PWR_Ch_VBAT1_eF2:
-            pmm_table.I2Cx_GPIO_Ext = PMM_I2Cx_GPIOExt1;
-            pmm_table.I2C_addr_GPIO_Ext = PMM_I2CADDR_GPIOExt1;
-			pmm_table.pin_GPIO_Ext = TCA9539_IO_P01;
-			pmm_table.I2Cx_PWR_Mon = PMM_I2Cx_VBAT1_eF2_INA231;
-			pmm_table.I2C_addr_PWR_Mon = PMM_I2CADDR_VBAT1_eF2_INA231;
-			break;
-
-		case PMM_PWR_Ch_VBAT2_eF1:
+		case PMM_PWR_Ch_VBAT2_eF:
             pmm_table.I2Cx_GPIO_Ext = PMM_I2Cx_GPIOExt1;
             pmm_table.I2C_addr_GPIO_Ext = PMM_I2CADDR_GPIOExt1;
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P02;
 			pmm_table.I2Cx_PWR_Mon = PMM_I2Cx_VBAT2_eF1_INA231;
 			pmm_table.I2C_addr_PWR_Mon = PMM_I2CADDR_VBAT2_eF1_INA231;
-			break;
-
-		case PMM_PWR_Ch_VBAT2_eF2:
-            pmm_table.I2Cx_GPIO_Ext = PMM_I2Cx_GPIOExt1;
-            pmm_table.I2C_addr_GPIO_Ext = PMM_I2CADDR_GPIOExt1;
-			pmm_table.pin_GPIO_Ext = TCA9539_IO_P03;
-			pmm_table.I2Cx_PWR_Mon = PMM_I2Cx_VBAT2_eF2_INA231;
-			pmm_table.I2C_addr_PWR_Mon = PMM_I2CADDR_VBAT2_eF2_INA231;
 			break;
 
 		case PMM_PWR_Ch_PBMs_Logic:
@@ -83,7 +67,7 @@ _PMM_table PMM__Table(uint8_t number_pwr_channel){
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P11;
 			break;
 
-		case PMM_PWR_Ch_5V_Bus:
+		/*case PMM_PWR_Ch_5V_Bus:
             pmm_table.I2Cx_GPIO_Ext = PMM_I2Cx_GPIOExt1;
             pmm_table.I2C_addr_GPIO_Ext = PMM_I2CADDR_GPIOExt1;
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P05;
@@ -93,7 +77,7 @@ _PMM_table PMM__Table(uint8_t number_pwr_channel){
             pmm_table.I2Cx_GPIO_Ext = PMM_I2Cx_GPIOExt1;
             pmm_table.I2C_addr_GPIO_Ext = PMM_I2CADDR_GPIOExt1;
 			pmm_table.pin_GPIO_Ext = TCA9539_IO_P06;
-			break;
+			break;*/
 
 	    case PMM_PWR_Deploy_Ch1:
             pmm_table.I2Cx_GPIO_Ext =  PMM_I2Cx_DeployGPIOExt;

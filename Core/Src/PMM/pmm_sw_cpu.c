@@ -354,8 +354,6 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
     PWM_DeInit_Ch3_Ch4();
 
     PBM_Low_Energy_Reset_pin();
-    PMM_RT_FL_EPS1_Reset_pin();
-    PMM_RT_FL_EPS2_Reset_pin();
 
 	PMM_init( eps_p.eps_pmm_ptr );
 

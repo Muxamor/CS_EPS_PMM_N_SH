@@ -336,15 +336,15 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
 
     uint8_t num_pwr_ch;
 
-    if( (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF1 != ERROR) && (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2 != ERROR)  ){
+    if( (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF != ERROR) && (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF != ERROR)  ){
 
-    	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_T1_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val != 0 )
-    			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_T1_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val != 0) ){
+    	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val < PBM_T1_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val != 0 )
+    			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Power_val < PBM_T1_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val != 0) ){
 
-        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
-        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
-        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, DISABLE );
-        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
+        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF, DISABLE );
+        	//PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
+        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF, DISABLE );
+        	//PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
 
         	//PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
         	//PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );

@@ -51,10 +51,10 @@ void IWDG_Init(uint16_t period);
 #define PBM_Low_Energy_Reset_pin();         LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_14);
 
 /* Pins for poll request from BRK */
-#define PMM_RT_FL_EPS1_Set_pin();     	    LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_13);
-#define PMM_RT_FL_EPS1_Reset_pin();         LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_13);
-#define PMM_RT_FL_EPS2_Set_pin();      		LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_14);
-#define PMM_RT_FL_EPS2_Reset_pin();     	LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_14);
+//#define PMM_RT_FL_EPS1_Set_pin();     	    LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_13);
+//#define PMM_RT_FL_EPS1_Reset_pin();         LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_13);
+//#define PMM_RT_FL_EPS2_Set_pin();      		LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_14);
+//#define PMM_RT_FL_EPS2_Reset_pin();     	LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_14);
 
 /*The table below gives the allowed values of the pre-emption priority and subpriority according
  to the Priority Grouping configuration performed by NVIC_PriorityGroupConfig function

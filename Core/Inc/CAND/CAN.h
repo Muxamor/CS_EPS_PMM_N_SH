@@ -39,9 +39,9 @@ extern "C" {
 #define CAN_PMM_Reboot_Passive_CPU_offset           21
 #define CAN_PMM_PWR_CAN_main_offset                 22
 #define CAN_PMM_PWR_CAN_backup_offset               23
-#define CAN_PWR_VBAT1_key1_offset		            24
+#define CAN_PWR_VBAT1_key_offset		            24
 #define CAN_PWR_VBAT1_key2_offset		            25
-#define CAN_PWR_VBAT2_key1_offset		            26
+#define CAN_PWR_VBAT2_key_offset		            26
 #define CAN_PWR_VBAT2_key2_offset		            27
 #define CAN_PMM_PWR_PBM_Logic_offset                28
 #define CAN_PMM_PDM_Reset_offset                    29
@@ -190,9 +190,9 @@ struct CAN_IVar4 {
     uint8_t CAN_PMM_Reboot_Passive_CPU;     //+21           Перезагрузить посивный CPU
     uint8_t CAN_PMM_PWR_CAN_main;           //+22           Вкл/Выкл питания основного CAN
     uint8_t CAN_PMM_PWR_CAN_backup;         //+23           Вкл/Выкл питания резервного CAN
-    uint8_t CAN_PMM_PWR_VBAT1_key1;         //+24           Командный регистр линии VBAT1 (МС)
+    uint8_t CAN_PMM_PWR_VBAT1_key;         //+24           Командный регистр линии VBAT1 (МС)
     uint8_t CAN_PMM_PWR_VBAT1_key2;         //+25           Командный регистр линии VBAT1 (МС)
-    uint8_t CAN_PMM_PWR_VBAT2_key1;         //+26           Командный регистр линии VBAT2 (МС)
+    uint8_t CAN_PMM_PWR_VBAT2_key;         //+26           Командный регистр линии VBAT2 (МС)
     uint8_t CAN_PMM_PWR_VBAT2_key2;         //+27           Командный регистр линии VBAT2 (МС)
     uint8_t CAN_PMM_PWR_PBM_Logic;          //+28           Вкл/Выкл питания логики PBM
     uint8_t CAN_PMM_PDM_Reset;              //+29           Reset PDM
