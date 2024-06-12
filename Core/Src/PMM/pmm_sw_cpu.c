@@ -9,7 +9,6 @@
 #include "SetupPeriph.h"
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
-//#include "PBM/pbm_config.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_ctrl.h"
@@ -27,8 +26,8 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
 
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
     int8_t error_status = ERROR_N;
-    uint8_t read_val_CAN_MUX_pin14 = 2;
-    uint8_t read_val_CAN_MUX_pin16 = 2;
+    uint8_t read_val_CAN_MUX_pin05 = 2;
+    uint8_t read_val_CAN_MUX_pin13 = 2;
     uint8_t save_value_Active_CPU;
     uint8_t get_package_tag = 0;
     uint32_t UART_answer_add_timeout = 0;
@@ -119,8 +118,8 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             error_I2C = ERROR_N;
         	while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
 
-        	    if( TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14) == SUCCESS ){
-        	        error_I2C =TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P16);
+        	    if( TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05) == SUCCESS ){
+        	        error_I2C =TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P13);
         	    }
 
         	    if( error_I2C != SUCCESS ){
@@ -133,8 +132,8 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             error_I2C = ERROR_N;
             while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
 
-                if( TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14, &read_val_CAN_MUX_pin14) == SUCCESS ){
-                    error_I2C = TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P16, &read_val_CAN_MUX_pin16);
+                if( TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05, &read_val_CAN_MUX_pin05) == SUCCESS ){
+                    error_I2C = TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P13, &read_val_CAN_MUX_pin13);
                 }
 
                 if( error_I2C != SUCCESS ){
@@ -144,7 +143,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             }
 
             if( error_I2C == SUCCESS ){
-                if((read_val_CAN_MUX_pin14 == 0) && (read_val_CAN_MUX_pin16 == 0)){
+                if((read_val_CAN_MUX_pin05 == 0) && (read_val_CAN_MUX_pin13 == 0)){
                     eps_p.eps_pmm_ptr->Active_CPU = 0;
                     PMM_Reboot_EPS_PassiveCPU( );
                 }else{

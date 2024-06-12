@@ -342,12 +342,7 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
     			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Power_val < PBM_T1_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val != 0) ){
 
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF, DISABLE );
-        	//PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF, DISABLE );
-        	//PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
-
-        	//PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
-        	//PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
 
         	//Disable TM SP power channels.
         	for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){

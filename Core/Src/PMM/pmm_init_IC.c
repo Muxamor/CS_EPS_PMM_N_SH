@@ -5,7 +5,7 @@
 #include "SetupPeriph.h"
 #include "TMP1075.h"
 #include "TCA9539.h"
-#include "INA231.h"
+#include "INA238.h"
 #include "ADS1015.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_struct.h"
@@ -100,7 +100,7 @@ ErrorStatus PMM_Power_Down_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp
 							PMM_PWR_Ch_VBAT2_eF2  
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
+ErrorStatus PMM_init_PWR_Mon_INA238( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 
 	uint8_t i = 0;
@@ -116,13 +116,16 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 	//Setup INA231
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-		if ( INA231_Power_Reset( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon) == SUCCESS ){
-			if ( INA231_Set_Calibration_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, pmm_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
-			    if ( INA231_Setup_AVG( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_aver_mode) == SUCCESS ){
-			        if ( INA231_Setup_VbusCT( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_bus_conv_time ) == SUCCESS ){
-			            if ( INA231_Setup_VshCT( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_shunt_conv_time ) == SUCCESS ){
-
-			                error_I2C = INA231_Setup_Mode( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_work_mode );
+		if( INA238_Hard_Reset( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon) == SUCCESS ){
+			if ( INA238_Setup_Calibration_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, pmm_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
+				if ( INA238_Setup_ADCRANGE( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_ADC_Range) == SUCCESS ){
+					if ( INA238_Setup_VBUSCT( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Convr_Time) == SUCCESS ){
+						if ( INA238_Setup_VSHCT( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Convr_Time) == SUCCESS ){
+							if ( INA238_Setup_VTCT( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Convr_Time) == SUCCESS ){
+								if ( INA238_Setup_AVG( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Aver_Count) == SUCCESS ){
+									error_I2C = INA238_Setup_MODE( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Mode);
+								}
+							}
 						}
 					}
 				}
@@ -148,18 +151,6 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 			pmm_ptr->Error_PWR_Mon_Vbat1_eF = ERROR;
 		}
 
-	/*}else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
-
-		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS;
-
-		}else{
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR;
-		}*/
-
 	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF ){
 
 		if( error_I2C == SUCCESS ){
@@ -172,19 +163,7 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 			pmm_ptr->Error_PWR_Mon_Vbat2_eF = ERROR;
 		}
 
-	}/*else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
-
-		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS;
-
-		}else{
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR;
-		}
-
-	}*/
+	}
 
 	return error_I2C;
 }
@@ -200,7 +179,7 @@ ErrorStatus PMM_init_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 							PMM_PWR_Ch_VBAT2_eF2
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
+ErrorStatus PMM_PWR_Down_PWR_Mon_INA238( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 
     uint8_t i = 0;
@@ -216,7 +195,7 @@ ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
     //Setup INA231
     while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-        error_I2C = INA231_Setup_Mode( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, INA231_POWER_DOWN);
+        error_I2C = INA238_Setup_MODE( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, INA238_SHUTDOWN);
 
         if( error_I2C != SUCCESS ){
             i++;
@@ -237,18 +216,6 @@ ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
             pmm_ptr->Error_PWR_Mon_Vbat1_eF = ERROR;
         }
 
-   /* }else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
-
-        if( error_I2C == SUCCESS ){
-            pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS;
-
-        }else{
-			#ifdef DEBUGprintf
-            Error_Handler();
-			#endif
-            pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR;
-        }*/
-
     }else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF ){
 
         if( error_I2C == SUCCESS ){
@@ -261,19 +228,7 @@ ErrorStatus PMM_PWR_Down_PWR_Mon_INA231( _PMM *pmm_ptr, uint8_t num_pwr_ch){
             pmm_ptr->Error_PWR_Mon_Vbat2_eF = ERROR;
         }
 
-    }/*else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
-
-        if( error_I2C == SUCCESS ){
-            pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS;
-
-        }else{
-			#ifdef DEBUGprintf
-            Error_Handler();
-			#endif
-            pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR;
-        }
-
-    }*/
+    }
 
     return error_I2C;
 }
@@ -356,18 +311,11 @@ ErrorStatus PMM_DeInit_I2C_GPIOExt (_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tc
 		#ifdef DEBUGprintf
 			Error_Handler();
         #endif
-	    //if(tca9539_addr == PMM_I2CADDR_GPIOExt1){
 	        pmm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
-	   // }else if(tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-	       // pmm_ptr->Error_I2C_GPIO_Ext2 = ERROR;
-	   // }
 
 	}else{
-	  //  if(tca9539_addr == PMM_I2CADDR_GPIOExt1){
 	        pmm_ptr->Error_I2C_GPIO_Ext1 = SUCCESS;
-	   // }else if(tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-	     //   pmm_ptr->Error_I2C_GPIO_Ext2 = SUCCESS;
-	   // }
+
 	}
 
 	return error_I2C;
@@ -399,25 +347,6 @@ void PMM_HARD_Reset_I2C_GPIOExt( ){
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-/*
-	}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-
-	    GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
-	    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-	    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-	    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-	    LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1);
-	    LL_mDelay(1);
-	    LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_1);
-
-	    GPIO_InitStruct.Pin =  LL_GPIO_PIN_1;
-	    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-	    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-	}*/
 
 }
 
@@ -429,8 +358,6 @@ void PMM_Reset_pin_Pull_Down_I2C_GPIOExt(  ){
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	//if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
-
 		GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
@@ -440,9 +367,7 @@ void PMM_Reset_pin_Pull_Down_I2C_GPIOExt(  ){
 
 		LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_2);
 
-	/*}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-		//TO DO need write
-	}*/
+
 }
 
 /** @brief  Reset pin TCA9539 GPIOExt no pull is free.
@@ -453,14 +378,9 @@ void PMM_Reset_pin_Free_I2C_GPIOExt(  ){
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	//if( tca9539_addr == PMM_I2CADDR_GPIOExt1){
-
 		GPIO_InitStruct.Pin =  LL_GPIO_PIN_2;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	/*}else if( tca9539_addr == PMM_I2CADDR_GPIOExt2 ){
-		//need write
-	}*/
 }

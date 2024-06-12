@@ -6,7 +6,7 @@
 #include "SetupPeriph.h"
 #include "TMP1075.h"
 #include "TCA9539.h"
-#include "INA231.h"
+#include "INA238.h"
 #include "ADS1015.h"
 #include "PMM/pmm_struct.h"
 #include "PMM/pmm_config.h"
@@ -83,15 +83,6 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}else{
 			pmm_ptr->PWR_Ch_State_Vbat1_eF = DISABLE;
 		}
-/*
-	}else if( num_pwr_channel == PMM_PWR_Ch_VBAT1_eF2 ){
-
-
-		if( state_channel == ENABLE ){
-			pmm_ptr->PWR_Ch_State_Vbat1_eF2 = ENABLE;
-		}else{
-			pmm_ptr->PWR_Ch_State_Vbat1_eF2 = DISABLE;
-		}*/
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_VBAT2_eF ){
         if( pmm_ptr->PWR_Ch_State_Vbat2_eF != state_channel ){
@@ -103,17 +94,6 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 		}else{
 			pmm_ptr->PWR_Ch_State_Vbat2_eF = DISABLE;
 		}
-
-	//}else if( num_pwr_channel == PMM_PWR_Ch_VBAT2_eF2 ){
-    //    if( pmm_ptr->PWR_Ch_State_Vbat2_eF2 != state_channel ){
-    //        pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
-    //    }
-
-		//if( state_channel == ENABLE ){
-		//	pmm_ptr->PWR_Ch_State_Vbat2_eF2 = ENABLE;
-		//}else{
-			//pmm_ptr->PWR_Ch_State_Vbat2_eF2 = DISABLE;
-	//	}
 
 	}else if( num_pwr_channel == PMM_PWR_Ch_PBMs_Logic ){
         if( pmm_ptr->PWR_Ch_State_PBMs_Logic != state_channel ){
@@ -148,39 +128,6 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 			pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 		}
 
-        /*}else if( num_pwr_channel == PMM_PWR_Ch_5V_Bus ){
-        if( pmm_ptr->PWR_Ch_State_5V_Bus != state_channel ){
-            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
-        }
-
-        if( state_channel == ENABLE ){
-			pmm_ptr->PWR_Ch_State_5V_Bus = ENABLE;
-		}else{
-			pmm_ptr->PWR_Ch_State_5V_Bus = DISABLE;
-		}
-
-	}else if( num_pwr_channel == PMM_PWR_Ch_3_3V_Bus ){
-        if( pmm_ptr->PWR_Ch_State_3_3V_Bus != state_channel ){
-            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
-        }
-
-        if( state_channel == ENABLE ){
-			pmm_ptr->PWR_Ch_State_3_3V_Bus = ENABLE;
-		}else{
-			pmm_ptr->PWR_Ch_State_3_3V_Bus = DISABLE;
-		}
-
-	}else if( num_pwr_channel == PMM_PWR_Ch_I2C_Bus ){
-        if( pmm_ptr->PWR_Ch_State_I2C_Bus != state_channel ){
-            pmm_ptr->PMM_save_conf_flag = 1;//Need save configure in FRAM.
-        }
-
-        if( state_channel == ENABLE ){
-			pmm_ptr->PWR_Ch_State_I2C_Bus = ENABLE;
-		}else{
-			pmm_ptr->PWR_Ch_State_I2C_Bus = DISABLE;
-		}*/
-
 	}else{
 		return ERROR_N;
 	}
@@ -188,6 +135,16 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 	//Write to I2C GPIO Extender.
 	i=0;
  	error_I2C = ERROR_N;
+
+ 	//Recursion!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 	//In case PMM_PWR_Ch_CANmain  and PMM_PWR_Ch_CANbackup  we need control RESET  CAN transiver.
+ 	//No check errors. We will check for errors in the next step.
+ 	if(num_pwr_channel == PMM_PWR_Ch_CANmain  ){
+ 		PMM_Set_state_PWR_CH( pmm_ptr, PMM_Reset_CANmain, !state_channel );
+ 	}else if( num_pwr_channel == PMM_PWR_Ch_CANbackup){
+ 		PMM_Set_state_PWR_CH( pmm_ptr, PMM_Reset_CANbackup, !state_channel );
+ 	}
+ 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
@@ -318,30 +275,7 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 				pmm_ptr->Error_PWR_Ch_State_Deploy_Power = ERROR; ///0-ERROR
 			}
 		
-		}/*else if( num_pwr_channel == PMM_PWR_Ch_5V_Bus ){
-
-			if( pmm_ptr->PWR_Ch_State_5V_Bus == read_val_pin_EN ){
-				pmm_ptr->Error_PWR_Ch_State_5V_Bus = SUCCESS; ///0-OK
-			}else{
-				pmm_ptr->Error_PWR_Ch_State_5V_Bus = ERROR; ///0-ERROR
-			}
-
-		}else if( num_pwr_channel == PMM_PWR_Ch_3_3V_Bus ){
-
-			if( pmm_ptr->PWR_Ch_State_3_3V_Bus == read_val_pin_EN ){
-				pmm_ptr->Error_PWR_Ch_State_3_3V_Bus = SUCCESS; ///0-OK
-			}else{
-				pmm_ptr->Error_PWR_Ch_State_3_3V_Bus = ERROR; ///0-ERROR
-			}
-
-		}else if( num_pwr_channel == PMM_PWR_Ch_I2C_Bus ){
-
-			if( pmm_ptr->PWR_Ch_State_I2C_Bus == read_val_pin_EN ){
-				pmm_ptr->Error_PWR_Ch_State_I2C_Bus = SUCCESS; ///0-OK
-			}else{
-				pmm_ptr->Error_PWR_Ch_State_I2C_Bus = ERROR; ///0-ERROR
-			}
-		}*/
+		}
 
 	}else{
 		pmm_ptr->Error_I2C_GPIO_Ext1 = ERROR;
@@ -355,14 +289,8 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 		}else if( num_pwr_channel == PMM_PWR_Ch_VBAT1_eF ){
 			pmm_ptr->Error_PWR_Ch_State_Vbat1_eF = ERROR; ///0-ERROR
 		
-		/*}else if( num_pwr_channel == PMM_PWR_Ch_VBAT1_eF2 ){
-			pmm_ptr->Error_PWR_Ch_State_Vbat1_eF2 = ERROR; ///0-ERROR*/
-	
 		}else if( num_pwr_channel == PMM_PWR_Ch_VBAT2_eF ){
 			pmm_ptr->Error_PWR_Ch_State_Vbat2_eF = ERROR; ///0-ERROR
-
-		/*}else if( num_pwr_channel == PMM_PWR_Ch_VBAT2_eF2 ){
-			pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 = ERROR; ///0-ERROR*/
 
 		}else if( num_pwr_channel == PMM_PWR_Ch_PBMs_Logic ){
 			pmm_ptr->Error_PWR_Ch_State_PBMs_Logic = ERROR; ///0-ERROR
@@ -373,15 +301,7 @@ ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
 		}else if( num_pwr_channel == PMM_PWR_Ch_Deploy_Power ){
 			pmm_ptr->Error_PWR_Ch_State_Deploy_Power = ERROR; ///0-ERROR
 		
-		}/*else if( num_pwr_channel == PMM_PWR_Ch_5V_Bus ){
-			pmm_ptr->Error_PWR_Ch_State_5V_Bus = ERROR; ///0-ERROR
-
-		}else if( num_pwr_channel == PMM_PWR_Ch_3_3V_Bus ){
-			pmm_ptr->Error_PWR_Ch_State_3_3V_Bus = ERROR; ///0-ERROR
-
-		}else if( num_pwr_channel == PMM_PWR_Ch_I2C_Bus ){
-			pmm_ptr->Error_PWR_Ch_State_I2C_Bus = ERROR; ///0-ERROR
-		}*/
+		}
 	}
 	
 	return error_I2C;
@@ -448,24 +368,6 @@ ErrorStatus PMM_Get_PG_all_PWR_CH( _PMM *pmm_ptr ){
 	}else{
 		pmm_ptr->PWR_Ch_PG_CANbackup = SUCCESS;  // OK because power channel is DISABLE
 	}
-/*
-	if( pmm_ptr->PWR_Ch_State_I2C_Bus == ENABLE ){
-		pmm_ptr->PWR_Ch_PG_I2C_Bus = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_13));
-	}else{
-		pmm_ptr->PWR_Ch_PG_I2C_Bus = SUCCESS;  // OK because power channel is DISABLE
-	}
-
-	if( pmm_ptr->PWR_Ch_State_3_3V_Bus == ENABLE ){
-		pmm_ptr->PWR_Ch_PG_3_3V_Bus = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_14));
-	}else{
-		pmm_ptr->PWR_Ch_PG_3_3V_Bus = SUCCESS;  // OK because power channel is DISABLE
-	}
-
-	if( pmm_ptr->PWR_Ch_State_5V_Bus == ENABLE ){
-		pmm_ptr->PWR_Ch_PG_5V_Bus = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_15));
-	}else{
-		pmm_ptr->PWR_Ch_PG_5V_Bus = SUCCESS;  // OK because power channel is DISABLE
-	}*/
 
 	return SUCCESS;
 }
@@ -540,7 +442,7 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){///Read temperature.
 
-		error_I2C = INA231_Get_I_V_P_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
+		error_I2C = INA238_Get_I_V_P_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
 
 		if( error_I2C != SUCCESS ){
 			i++;
@@ -577,21 +479,7 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 			#endif
 			pmm_ptr->Error_PWR_Mon_Vbat1_eF = ERROR;
 		}
-		/*
-	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF2 ){
-		pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val = val_bus_voltage;
-		pmm_ptr->PWR_Ch_Vbat1_eF2_Current_val = val_current; 
-		pmm_ptr->PWR_Ch_Vbat1_eF2_Power_val = val_power; 
 
-		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = SUCCESS; 
-
-		}else{
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat1_eF2 = ERROR; 
-		}*/
 	
 	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF ){
 		pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val = val_bus_voltage;
@@ -607,22 +495,6 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 			#endif
 			pmm_ptr->Error_PWR_Mon_Vbat2_eF = ERROR; 
 		}
-/*
-	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF2 ){
-		pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val = val_bus_voltage;
-		pmm_ptr->PWR_Ch_Vbat2_eF2_Current_val = val_current; 
-		pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val = val_power; 
-
-		if( error_I2C == SUCCESS ){
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = SUCCESS; 
-
-		}else{
-			#ifdef DEBUGprintf
-				Error_Handler();
-			#endif
-			pmm_ptr->Error_PWR_Mon_Vbat2_eF2 = ERROR; 
-		}
-*/
 	}
 
 	return error_I2C;
@@ -812,13 +684,13 @@ ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr ){
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
 		if( pmm_ptr->Active_CPU == 0 && pmm_ptr->Main_Backup_mode_CPU == 0 ){
-			error_I2C = TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			error_I2C = TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05|TCA9539_IO_P13 );
 			TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
 		}else if(  pmm_ptr->Active_CPU == 1 && pmm_ptr->Main_Backup_mode_CPU == 1){
-			error_I2C = TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			error_I2C = TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05|TCA9539_IO_P13 );
 			TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
 		}else{
-			error_I2C = TCA9539_conf_IO_dir_input( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			error_I2C = TCA9539_conf_IO_dir_input( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05|TCA9539_IO_P13 );
 		}
 
 		if( error_I2C != SUCCESS ){
