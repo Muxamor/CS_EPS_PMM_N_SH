@@ -72,8 +72,7 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
     fram_data_write.FRAM_PDM_PDM_ID_module = eps_p.eps_pdm_ptr->PDM_ID_module;
 
     for( i = 0; i < PDM_PWR_Ch_quantity; i++){
-        fram_data_write.FRAM_PDM_PWR_Ch[i].State_eF_in  = eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF_in;
-        fram_data_write.FRAM_PDM_PWR_Ch[i].State_eF_out = eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF_out;
+        fram_data_write.FRAM_PDM_PWR_Ch[i].State_eF_in  = eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF;
     }
 
     //PAM
@@ -218,8 +217,7 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
         eps_p.eps_pdm_ptr->PDM_ID_module = fram_data_read.FRAM_PDM_PDM_ID_module;
 
         for( i = 0; i < PDM_PWR_Ch_quantity; i++ ){
-            eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF_in = fram_data_read.FRAM_PDM_PWR_Ch[i].State_eF_in;
-            eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF_out = fram_data_read.FRAM_PDM_PWR_Ch[i].State_eF_out;
+            eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF = fram_data_read.FRAM_PDM_PWR_Ch[i].State_eF_in;
         }
 
         //PAM
@@ -476,10 +474,8 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
         eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
 
         //Enable All BRK
-        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in = ENABLE;
-        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF = ENABLE;
+        eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF = ENABLE;
 
         //PBM
         for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++  ){

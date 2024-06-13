@@ -17,8 +17,8 @@ typedef enum {
 // Structure PDM
 typedef struct{
     uint8_t State_eF_in  	:1;
-    uint8_t State_eF_out 	:1;
-    uint8_t :6;
+   // uint8_t State_eF_out 	:1;
+    uint8_t :7;
 
  }FRAM_PDM_PWR_CH;
 
@@ -63,16 +63,16 @@ typedef struct{
      //PMM
      uint32_t FRAM_PMM_PWR_Ch_State_CANmain			:1;
      uint32_t FRAM_PMM_PWR_Ch_State_CANbackup		:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF   	:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF2		:1;
+     uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF   		:1;
+    // uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF2		:1;
      uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF     	:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF2		:1;
+    // uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF2		:1;
      uint32_t FRAM_PMM_PWR_Ch_State_PBMs_Logic		:1;
      uint32_t FRAM_PMM_PWR_Ch_State_Deploy_Logic 	:1;
      uint32_t FRAM_PMM_PWR_Ch_State_Deploy_Power 	:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_5V_Bus 			:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_3_3V_Bus 		:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_I2C_Bus 		:1;
+   //  uint32_t FRAM_PMM_PWR_Ch_State_5V_Bus 			:1;
+    // uint32_t FRAM_PMM_PWR_Ch_State_3_3V_Bus 		:1;
+    // uint32_t FRAM_PMM_PWR_Ch_State_I2C_Bus 		:1;
      uint32_t FRAM_PMM_PWR_OFF_Passive_CPU          :1;
      uint32_t FRAM_PMM_Active_CPU		 		    :1;
      uint32_t FRAM_PMM_CAN_constatnt_mode		    :1;
@@ -86,7 +86,7 @@ typedef struct{
      uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_2          :1;
      uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_1          :1;
      uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2          :1;
-     uint32_t :7;
+     uint32_t :12;
 
      uint32_t Reserved1;
      uint32_t Reserved2;

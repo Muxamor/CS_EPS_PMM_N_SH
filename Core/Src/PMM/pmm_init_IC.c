@@ -91,13 +91,11 @@ ErrorStatus PMM_Power_Down_TMP1075(_PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp
 
 
 
-/** @brief  Init INA231 Power Monitor on PMM module.
+/** @brief  Init INA238 Power Monitor on PMM module.
     @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
 	@param  num_pwr_ch - number of channel:
-							PMM_PWR_Ch_VBAT1_eF1
-							PMM_PWR_Ch_VBAT1_eF2 
-							PMM_PWR_Ch_VBAT2_eF1
-							PMM_PWR_Ch_VBAT2_eF2  
+							PMM_PWR_Ch_VBAT1_eF
+							PMM_PWR_Ch_VBAT2_eF
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
 ErrorStatus PMM_init_PWR_Mon_INA238( _PMM *pmm_ptr, uint8_t num_pwr_ch){
@@ -173,10 +171,8 @@ ErrorStatus PMM_init_PWR_Mon_INA238( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 /** @brief  Power down INA231 Power Monitor on PMM module.
     @param 	*pmm_ptr - pointer to struct which contain all information about PMM.
 	@param  num_pwr_ch - number of channel:
-							PMM_PWR_Ch_VBAT1_eF1
-							PMM_PWR_Ch_VBAT1_eF2
-							PMM_PWR_Ch_VBAT2_eF1
-							PMM_PWR_Ch_VBAT2_eF2
+							PMM_PWR_Ch_VBAT1_eF
+							PMM_PWR_Ch_VBAT2_eF
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
 ErrorStatus PMM_PWR_Down_PWR_Mon_INA238( _PMM *pmm_ptr, uint8_t num_pwr_ch){

@@ -1411,20 +1411,20 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask               = 0x0000;
     for( num_pwr_ch = 0, move_bit_pos = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 
-        CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask           = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_in << move_bit_pos );
+        CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask           = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].State_eF << move_bit_pos );
         move_bit_pos = move_bit_pos + 1;
-        CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask           = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out << move_bit_pos );
-        move_bit_pos = move_bit_pos + 1;
+      //  CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask           = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out << move_bit_pos );
+      //  move_bit_pos = move_bit_pos + 1;
     }
 
     // PDM PG bit mask
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask                     = 0x0000;
     for( num_pwr_ch = 0, move_bit_pos = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 
-        CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask                 = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask  | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_in << move_bit_pos );
+        CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask                 = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask  | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF << move_bit_pos );
         move_bit_pos = move_bit_pos + 1;
-        CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask                 = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask  | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out << move_bit_pos );
-        move_bit_pos = move_bit_pos + 1;
+     //   CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask                 = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask  | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out << move_bit_pos );
+     //   move_bit_pos = move_bit_pos + 1;
     }
 
     // PDM Error bit mask
@@ -1435,10 +1435,10 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     for( num_pwr_ch = 0, move_bit_pos = 7; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 
-        CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                   = CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_in << move_bit_pos );
+        CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                   = CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF << move_bit_pos );
         move_bit_pos = move_bit_pos + 1;
-        CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                   = CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out << move_bit_pos );
-        move_bit_pos = move_bit_pos + 1;
+       // CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                   = CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF_out << move_bit_pos );
+       // move_bit_pos = move_bit_pos + 1;
         CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                   = CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon << move_bit_pos );
         move_bit_pos = move_bit_pos + 1;
     }
@@ -2369,31 +2369,31 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PMM_PWR_PBM_Logic                              = eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic;
 
     // Command of PDM
-    if( eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF_out == ENABLE ){
+    if( eps_p.eps_pdm_ptr->PWR_Channel[0].State_eF == ENABLE ){
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1                     				= 0x01;
     }else{
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1                     				= 0x00;
     }
 
-    if( eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF_out == ENABLE ){
+    if( eps_p.eps_pdm_ptr->PWR_Channel[1].State_eF == ENABLE ){
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2                     				= 0x01;
     }else{
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH2                     				= 0x00;
     }
 
-    if( eps_p.eps_pdm_ptr->PWR_Channel[2].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[2].State_eF_out == ENABLE ){
+    if( eps_p.eps_pdm_ptr->PWR_Channel[2].State_eF == ENABLE ){
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3                     				= 0x01;
     }else{
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH3                     				= 0x00;
     }
 
-    if( eps_p.eps_pdm_ptr->PWR_Channel[3].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[3].State_eF_out == ENABLE ){
+    if( eps_p.eps_pdm_ptr->PWR_Channel[3].State_eF == ENABLE ){
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4                     				= 0x01;
     }else{
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH4                     				= 0x00;
     }
 
-    if( eps_p.eps_pdm_ptr->PWR_Channel[4].State_eF_in == ENABLE && eps_p.eps_pdm_ptr->PWR_Channel[4].State_eF_out == ENABLE ){
+    if( eps_p.eps_pdm_ptr->PWR_Channel[4].State_eF == ENABLE ){
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH5                     				= 0x01;
     }else{
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH5                     				= 0x00;

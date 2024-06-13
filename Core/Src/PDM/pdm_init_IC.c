@@ -5,7 +5,7 @@
 #include "SetupPeriph.h"
 #include "TMP1075.h"
 #include "TCA9548.h"
-#include "INA231.h"
+#include "INA238.h"
 #include "PDM/pdm_config.h"
 #include "PDM/pdm_struct.h"
 #include "PDM/pdm_init_IC.h"
@@ -275,7 +275,7 @@ ErrorStatus PDM_Power_Down_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tm
 								PDM_PWR_Channel_6 
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
+ErrorStatus PDM_init_PWR_Mon_INA238( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 
 	uint8_t i = 0;
@@ -318,13 +318,16 @@ ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-			if ( INA231_Power_Reset( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon) == SUCCESS ){
-				if ( INA231_Set_Calibration_int16( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, pdm_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
-				    if ( INA231_Setup_AVG( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_aver_mode) == SUCCESS ){
-				        if ( INA231_Setup_VbusCT( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_bus_conv_time ) == SUCCESS ){
-				            if ( INA231_Setup_VshCT( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_shunt_conv_time ) == SUCCESS ){
-
-				                error_I2C = INA231_Setup_Mode( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_work_mode );
+			if( INA238_Hard_Reset( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon) == SUCCESS ){
+				if ( INA238_Setup_Calibration_int16( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, pdm_table.PWR_Mon_Rshunt_int16) == SUCCESS ){
+					if ( INA238_Setup_ADCRANGE( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_ADC_Range) == SUCCESS ){
+						if ( INA238_Setup_VBUSCT( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Convr_Time) == SUCCESS ){
+							if ( INA238_Setup_VSHCT( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Convr_Time) == SUCCESS ){
+								if ( INA238_Setup_VTCT( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Convr_Time) == SUCCESS ){
+									if ( INA238_Setup_AVG( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Aver_Count) == SUCCESS ){
+										error_I2C = INA238_Setup_MODE( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Mode);
+									}
+								}
 							}
 						}
 					}
@@ -377,7 +380,7 @@ ErrorStatus PDM_init_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 								PDM_PWR_Channel_6
 	@retval 0 - SUCCESS, -1 - ERROR_N
 */
-ErrorStatus PDM_PWR_Down_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
+ErrorStatus PDM_PWR_Down_PWR_Mon_INA238( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 
     uint8_t i = 0;
@@ -420,7 +423,7 @@ ErrorStatus PDM_PWR_Down_PWR_Mon_INA231( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
         while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-            error_I2C = INA231_Setup_Mode( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, INA231_POWER_DOWN );
+            error_I2C = INA238_Setup_MODE( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, INA238_SHUTDOWN );
 
             if( error_I2C != SUCCESS ){
                 i++;

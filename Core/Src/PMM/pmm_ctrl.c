@@ -21,15 +21,10 @@
 								PMM_PWR_Ch_CANmain
 								PMM_PWR_Ch_CANbackup
 								PMM_PWR_Ch_VBAT1_eF1 
-								PMM_PWR_Ch_VBAT1_eF2 
 								PMM_PWR_Ch_VBAT2_eF1 
-								PMM_PWR_Ch_VBAT2_eF2 
 								PMM_PWR_Ch_PBMs_Logic
 								PMM_PWR_Ch_Deploy_Logic
 								PMM_PWR_Ch_Deploy_Power
-								PMM_PWR_Ch_5V_Bus				
-								PMM_PWR_Ch_3_3V_Bus		
-								PMM_PWR_Ch_I2C_Bus	
 	@param  state_channel - 0- DISABLE power channel, 1 - ENABLE power channel.:
 								ENABLE
 								DISABLE
@@ -139,9 +134,9 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
  	//Recursion!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  	//In case PMM_PWR_Ch_CANmain  and PMM_PWR_Ch_CANbackup  we need control RESET  CAN transiver.
  	//No check errors. We will check for errors in the next step.
- 	if(num_pwr_channel == PMM_PWR_Ch_CANmain  ){
+ 	if( num_pwr_channel == PMM_PWR_Ch_CANmain ){
  		PMM_Set_state_PWR_CH( pmm_ptr, PMM_Reset_CANmain, !state_channel );
- 	}else if( num_pwr_channel == PMM_PWR_Ch_CANbackup){
+ 	}else if( num_pwr_channel == PMM_PWR_Ch_CANbackup ){
  		PMM_Set_state_PWR_CH( pmm_ptr, PMM_Reset_CANbackup, !state_channel );
  	}
  	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,15 +176,10 @@ ErrorStatus PMM_Set_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel, uint8_
 								PMM_PWR_Ch_CANmain
 								PMM_PWR_Ch_CANbackup
 								PMM_PWR_Ch_VBAT1_eF1 
-								PMM_PWR_Ch_VBAT1_eF2 
-								PMM_PWR_Ch_VBAT2_eF1 
-								PMM_PWR_Ch_VBAT2_eF2
+								PMM_PWR_Ch_VBAT2_eF1
 								PMM_PWR_Ch_PBMs_Logic
 								PMM_PWR_Ch_Deploy_Logic
 								PMM_PWR_Ch_Deploy_Power
-								PMM_PWR_Ch_5V_Bus				
-								PMM_PWR_Ch_3_3V_Bus	
-								PMM_PWR_Ch_I2C_Bus	
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PMM_Check_state_PWR_CH( _PMM *pmm_ptr, uint8_t num_pwr_channel ){
@@ -415,11 +405,9 @@ ErrorStatus PMM_Get_Temperature( _PMM *pmm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 /** @brief  Get value current, voltage and power of VBAT Power channel
 	@param  *pdm_ptr - pointer to struct which contain all information about PMM.
 	@param  num_pwr_ch - number power channel.
-							PMM_PWR_Ch_VBAT1_eF1
-							PMM_PWR_Ch_VBAT1_eF2
-							PMM_PWR_Ch_VBAT2_eF1
-							PMM_PWR_Ch_VBAT2_eF2
-	@retval 0 - SUCCESS, -1 - ERROR_N.
+							PMM_PWR_Ch_VBAT1_eF
+							PMM_PWR_Ch_VBAT2_eF
+							@retval 0 - SUCCESS, -1 - ERROR_N.
 */
 ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
@@ -685,10 +673,10 @@ ErrorStatus PMM_Set_MUX_CAN_CPUm_CPUb( _PMM *pmm_ptr ){
 
 		if( pmm_ptr->Active_CPU == 0 && pmm_ptr->Main_Backup_mode_CPU == 0 ){
 			error_I2C = TCA9539_Reset_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05|TCA9539_IO_P13 );
-			TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05|TCA9539_IO_P13 );
 		}else if(  pmm_ptr->Active_CPU == 1 && pmm_ptr->Main_Backup_mode_CPU == 1){
 			error_I2C = TCA9539_Set_output_pin( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05|TCA9539_IO_P13 );
-			TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14|TCA9539_IO_P16 );
+			TCA9539_conf_IO_dir_output( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05|TCA9539_IO_P13 );
 		}else{
 			error_I2C = TCA9539_conf_IO_dir_input( PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05|TCA9539_IO_P13 );
 		}

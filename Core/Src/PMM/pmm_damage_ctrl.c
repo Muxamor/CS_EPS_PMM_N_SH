@@ -259,7 +259,7 @@ void PMM_Portecion_PWR_OFF_CAN_m_b( _EPS_Param eps_p ){
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
 */
-void PMM_Portecion_PWR_OFF_CANmain( _EPS_Param eps_p ){
+void PMM_Protecion_PWR_OFF_CANmain( _EPS_Param eps_p ){
     if(  eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE ){
         PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
         LL_mDelay( 50 );
@@ -275,9 +275,8 @@ void PMM_Portecion_PWR_OFF_CANmain( _EPS_Param eps_p ){
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
 */
-void PMM_Portecion_PWR_OFF_BRC_m_b( _EPS_Param eps_p ){
-    if( ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE ) &&
-            ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)){
+void PMM_Protecion_PWR_OFF_BRC_m_b( _EPS_Param eps_p ){
+    if( ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF == DISABLE ) && ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF == DISABLE )){
         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
         CAN_Var4_fill(eps_p);

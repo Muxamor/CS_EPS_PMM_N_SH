@@ -252,14 +252,14 @@ int main(void){
                     //Disable PWR SubSystem if reach Zero energy level
                     PMM_ZERO_Energy_PWR_OFF_SubSystem( eps_param );
                     //Protection for off all BRC
-                    PMM_Portecion_PWR_OFF_BRC_m_b( eps_param );
+                    PMM_Protecion_PWR_OFF_BRC_m_b( eps_param );
                 }
 
             // EPS_SERVICE_MODE
             }else{
                 PMM_Start_Time_Check_CAN = SysTick_Counter;
                 //All CAN ports power off protection.
-                PMM_Portecion_PWR_OFF_CANmain(eps_param);
+                PMM_Protecion_PWR_OFF_CANmain(eps_param);
             }
 
             LL_IWDG_ReloadCounter(IWDG);
