@@ -1429,7 +1429,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     // PDM Error bit mask
     CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                       = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                       = (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1) | (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 << 1) | (eps_p.eps_pdm_ptr->Error_I2C_MUX << 2) |
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                       = (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1) | (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 << 1) /*| (eps_p.eps_pdm_ptr->Error_I2C_MUX << 2) */|
                                                                            (eps_p.eps_pdm_ptr->Error_temp_sensor_1 << 3) | (eps_p.eps_pdm_ptr->Error_temp_sensor_2 << 4) | (eps_p.eps_pdm_ptr->Error_temp_sensor_3 << 5) |
                                                                            (eps_p.eps_pdm_ptr->Error_temp_sensor_4 << 6);
 
@@ -1998,7 +1998,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
                                                                             | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF << 3) /*| (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF2 << 4) */| (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF << 5)
                                                                             | /*(eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 << 6) |*/ (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_PBMs_Logic << 7);
 
-    CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[1] =  (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1) | (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 << 1) | (eps_p.eps_pdm_ptr->Error_I2C_MUX << 2)
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[1] =  (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1) | (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 << 1) /* | (eps_p.eps_pdm_ptr->Error_I2C_MUX << 2)*/
                                                                             | (eps_p.eps_pam_ptr->Error_State_DC_DC << 3) | (eps_p.eps_pam_ptr->Error_State_LDO << 4) | (eps_p.eps_pam_ptr->Error_I2C_GPIO_Ext << 5)
                                                                             | (eps_p.eps_pam_ptr->Error_I2C_MUX_1 << 6) | (eps_p.eps_pam_ptr->Error_I2C_MUX_2 << 7);
 }

@@ -37,8 +37,8 @@ ErrorStatus PDM_Get_Telemetry( _PDM *pdm_ptr ){
 	//Get temperature value.
 	error_status += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_1, PDM_I2CADDR_TMP1075_1, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
 	error_status += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_2, PDM_I2CADDR_TMP1075_2, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
-	error_status += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
-	error_status += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
+	error_status += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX2, TCA9548_CH6 );
+	error_status += PDM_Get_Temperature( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX2, TCA9548_CH6 );
 
 	if(error_status != SUCCESS){
 		return ERROR_N;

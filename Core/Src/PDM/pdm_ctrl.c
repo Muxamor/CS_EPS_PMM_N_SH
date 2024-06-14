@@ -337,9 +337,17 @@ ErrorStatus PDM_Get_Temperature( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pdm_ptr->Error_I2C_MUX = ERROR;
+		if(i2c_mux_addr == PDM_I2CADDR_I2C_MUX1 ){
+			pdm_ptr->Error_I2C_MUX_1 = ERROR;
+		}else if(i2c_mux_addr == PDM_I2CADDR_I2C_MUX2){
+			pdm_ptr->Error_I2C_MUX_2 = ERROR;
+		}
 	}else{
-		pdm_ptr->Error_I2C_MUX = SUCCESS;
+		if(i2c_mux_addr == PDM_I2CADDR_I2C_MUX1 ){
+			pdm_ptr->Error_I2C_MUX_1 = SUCCESS;
+		}else if(i2c_mux_addr == PDM_I2CADDR_I2C_MUX2){
+			pdm_ptr->Error_I2C_MUX_2 = SUCCESS;
+		}
 	}
 
 	switch( tmp1075_addr ){
@@ -473,10 +481,19 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 		#ifdef DEBUGprintf
 			Error_Handler();
 		#endif
-		pdm_ptr->Error_I2C_MUX = ERROR;
+        if( pdm_table.I2C_addr_I2C_MUX == PDM_I2CADDR_I2C_MUX1 ){
+        	pdm_ptr->Error_I2C_MUX_1 = ERROR;
+        }else if(pdm_table.I2C_addr_I2C_MUX == PDM_I2CADDR_I2C_MUX2){
+        	pdm_ptr->Error_I2C_MUX_2 = ERROR;
+        }
 	}else{
-		pdm_ptr->Error_I2C_MUX = SUCCESS;
+		if( pdm_table.I2C_addr_I2C_MUX == PDM_I2CADDR_I2C_MUX1 ){
+			pdm_ptr->Error_I2C_MUX_1 = SUCCESS;
+		}else if(pdm_table.I2C_addr_I2C_MUX == PDM_I2CADDR_I2C_MUX2){
+			pdm_ptr->Error_I2C_MUX_2 = SUCCESS;
+		}
 	}
+
 
 	if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C INA231 or I2C MUX
 		#ifdef DEBUGprintf

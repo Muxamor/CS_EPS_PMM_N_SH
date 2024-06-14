@@ -89,7 +89,7 @@ extern "C" {
 #define PDM_PCB_Assembled_PWR_CH11 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 #define PDM_PCB_Assembled_PWR_CH12 		0x01 // 1 - PWR channel is assembled on the PCB, 0 - no assembled
 
-#define PDM_PWR_Ch_quantity  12 // Total quantity power channels on the PDM
+#define PDM_PWR_Ch_quantity  		12 // Total quantity power channels on the PDM
  
 #define PDM_PWR_Channel_1 			0x00
 #define PDM_PWR_Channel_2 			0x01
@@ -110,7 +110,6 @@ typedef struct{
 	uint8_t I2C_addr_GPIO_Ext;
 	uint16_t pin_EN_eFuse;
 	uint16_t pin_PG_eFuse;
-
 
 	I2C_TypeDef *I2Cx_PWR_Mon;
 	uint8_t I2C_addr_PWR_Mon;

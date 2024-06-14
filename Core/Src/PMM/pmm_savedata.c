@@ -72,7 +72,7 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
     fram_data_write.FRAM_PDM_PDM_ID_module = eps_p.eps_pdm_ptr->PDM_ID_module;
 
     for( i = 0; i < PDM_PWR_Ch_quantity; i++){
-        fram_data_write.FRAM_PDM_PWR_Ch[i].State_eF_in  = eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF;
+        fram_data_write.FRAM_PDM_PWR_Ch[i].State_eF  = eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF;
     }
 
     //PAM
@@ -217,7 +217,7 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
         eps_p.eps_pdm_ptr->PDM_ID_module = fram_data_read.FRAM_PDM_PDM_ID_module;
 
         for( i = 0; i < PDM_PWR_Ch_quantity; i++ ){
-            eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF = fram_data_read.FRAM_PDM_PWR_Ch[i].State_eF_in;
+            eps_p.eps_pdm_ptr->PWR_Channel[i].State_eF = fram_data_read.FRAM_PDM_PWR_Ch[i].State_eF;
         }
 
         //PAM

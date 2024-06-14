@@ -33,14 +33,15 @@ ErrorStatus PDM_init(_PDM *pdm_ptr){
 	//Disable all channels TCA9548 I2C MUX on PDM module.
 	//Note: We don’t check return errors because in any case, trying to configure the chips behind the I2C MUX
 	TCA9548_Disable_I2C_ch( PDM_I2Cx_I2C_MUX1, PDM_I2CADDR_I2C_MUX1, TCA9548_ALL_CHANNELS );
+	TCA9548_Disable_I2C_ch( PDM_I2Cx_I2C_MUX2, PDM_I2CADDR_I2C_MUX2, TCA9548_ALL_CHANNELS );
 
     //Initialization temperature sensors.
 	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_1, PDM_I2CADDR_TMP1075_1, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
 	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_2, PDM_I2CADDR_TMP1075_2, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
-	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
-	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
+	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX2, TCA9548_CH6 );
+	error_status += PDM_init_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX2, TCA9548_CH6 );
 
-	//Initialization Power monitor INA231 power channel
+	//Initialization Power monitor INA238 power channel
 	for(num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++){
 	    error_status += PDM_init_PWR_Mon_INA238( pdm_ptr, num_pwr_ch);
 	}
@@ -78,11 +79,12 @@ ErrorStatus PDM_PWR_Down_init(_PDM *pdm_ptr){
 
     //Disable all channels TCA9548 I2C MUX on PDM module.
     TCA9548_Disable_I2C_ch( PDM_I2Cx_I2C_MUX1, PDM_I2CADDR_I2C_MUX1, TCA9548_ALL_CHANNELS );
+    TCA9548_Disable_I2C_ch( PDM_I2Cx_I2C_MUX1, PDM_I2CADDR_I2C_MUX2, TCA9548_ALL_CHANNELS );
 
     error_status += PDM_Power_Down_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_1, PDM_I2CADDR_TMP1075_1, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
     error_status += PDM_Power_Down_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_2, PDM_I2CADDR_TMP1075_2, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
-    error_status += PDM_Power_Down_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
-    error_status += PDM_Power_Down_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX1, TCA9548_CH6 );
+    error_status += PDM_Power_Down_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_3, PDM_I2CADDR_TMP1075_3, PDM_I2CADDR_I2C_MUX2, TCA9548_CH6 );
+    error_status += PDM_Power_Down_TMP1075( pdm_ptr, PDM_I2Cx_TMP1075_4, PDM_I2CADDR_TMP1075_4, PDM_I2CADDR_I2C_MUX2, TCA9548_CH6 );
 
     for(num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++){
         error_status += PDM_PWR_Down_PWR_Mon_INA238( pdm_ptr, num_pwr_ch);

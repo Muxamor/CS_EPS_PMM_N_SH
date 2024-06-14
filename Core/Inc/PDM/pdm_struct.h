@@ -36,7 +36,7 @@ typedef struct{
 
 	uint8_t Error_I2C_GPIO_Ext1 	:1;
 	uint8_t Error_I2C_GPIO_Ext2 	:1;
-	uint8_t Error_I2C_MUX		 	:1;
+	uint8_t Error_I2C_MUX_1		 	:1;
 	uint8_t Error_I2C_MUX_2		 	:1;
 	uint8_t Error_temp_sensor_1 	:1;
 	uint8_t Error_temp_sensor_2 	:1;

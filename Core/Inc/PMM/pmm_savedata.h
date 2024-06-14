@@ -16,7 +16,7 @@ typedef enum {
 
 // Structure PDM
 typedef struct{
-    uint8_t State_eF_in  	:1;
+    uint8_t State_eF  	:1;
    // uint8_t State_eF_out 	:1;
     uint8_t :7;
 
