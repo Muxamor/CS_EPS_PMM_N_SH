@@ -60,11 +60,11 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 
 		if( state_channel == ENABLE ){
             // Input pin -  because hardware auto-enable
-			error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
+			error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
 
 		}else{ //Disable power channel
-			if ( TCA9539_Reset_output_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse ) == SUCCESS ){
-				error_I2C = TCA9539_conf_IO_dir_output( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
+			if ( TCA9539_Reset_output_pin( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse ) == SUCCESS ){
+				error_I2C = TCA9539_conf_IO_dir_output( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
 			}
 		}
  
@@ -156,7 +156,7 @@ ErrorStatus PDM_Check_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read real value output pin.  
 
-		error_I2C = TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse, &read_val_pin_EN_in_eF);
+		error_I2C = TCA9539_read_input_pin( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse, &read_val_pin_EN_in_eF);
  
 		if( error_I2C != SUCCESS ){
 			i++;
@@ -235,9 +235,9 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read real value input pin PG.  
 
-		if( TCA9539_conf_IO_dir_input( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_eFuse ) == SUCCESS) {
-            if( TCA9539_conf_IO_pol_normal( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_eFuse ) == SUCCESS){
-            	error_I2C = TCA9539_read_input_pin( pdm_table.I2Cx_GPIO_Ext, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_eFuse, &read_val_pin_PG_in_eF );
+		if( TCA9539_conf_IO_dir_input( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_eFuse ) == SUCCESS) {
+            if( TCA9539_conf_IO_pol_normal( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_eFuse ) == SUCCESS){
+            	error_I2C = TCA9539_read_input_pin( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_PG_eFuse, &read_val_pin_PG_in_eF );
 			}
 		}
  
@@ -445,7 +445,7 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 	error_I2C = ERROR_N;
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-		error_I2C = TCA9548_Enable_I2C_ch( pdm_table.I2Cx_I2C_MUX, pdm_table.I2C_addr_I2C_MUX, pdm_table.I2C_MUX_Ch );
+		error_I2C = TCA9548_Enable_I2C_ch( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_I2C_MUX, pdm_table.I2C_MUX_Ch );
 
 		if( error_I2C != SUCCESS ){
 			i++;
@@ -463,7 +463,7 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read temperature.
 
-			error_I2C = INA231_Get_I_V_P_int16( pdm_table.I2Cx_PWR_Mon, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
+			error_I2C = INA231_Get_I_V_P_int16( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
 
 			if( error_I2C != SUCCESS ){
 				i++;
@@ -474,7 +474,7 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 	//Disable I2C MUX channel.
 	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch( pdm_table.I2Cx_I2C_MUX, pdm_table.I2C_addr_I2C_MUX, pdm_table.I2C_MUX_Ch );
+	TCA9548_Disable_I2C_ch( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_I2C_MUX, pdm_table.I2C_MUX_Ch );
 
 	//Parse error
 	if( Error_I2C_MUX == ERROR_N ){

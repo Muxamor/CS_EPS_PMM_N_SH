@@ -55,12 +55,12 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
         //Initialization temperature sensors.
         error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1, PAM_I2CADDR_I2C_MUX_2, TCA9548_CH6);
         error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2, PAM_I2CADDR_I2C_MUX_2, TCA9548_CH6);
-        error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_3, PAM_I2CADDR_I2C_MUX_2, TCA9548_CH6);
-        error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_4, PAM_I2CADDR_I2C_MUX_2, TCA9548_CH6);
+      //error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_3, PAM_I2CADDR_I2C_MUX_2, TCA9548_CH6);
+      //error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_4, PAM_I2CADDR_I2C_MUX_2, TCA9548_CH6);
 
         //Initialization Power monitor INA231 power channel
         for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
-            error_status += PAM_init_PWR_Mon_INA231(pam_ptr, num_pwr_ch);
+            error_status += PAM_init_PWR_Mon_INA238(pam_ptr, num_pwr_ch);
         }
     }
 

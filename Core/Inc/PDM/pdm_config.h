@@ -67,12 +67,13 @@ extern "C" {
 
 typedef struct{
 
-	I2C_TypeDef *I2Cx_GPIO_Ext;
+	I2C_TypeDef *I2Cx_PORT;
+
 	uint8_t I2C_addr_GPIO_Ext;
 	uint16_t pin_EN_eFuse;
 	uint16_t pin_PG_eFuse;
 
-	I2C_TypeDef *I2Cx_PWR_Mon;
+	//I2C_TypeDef *I2Cx_PWR_Mon;
 	uint8_t I2C_addr_PWR_Mon;
 	uint16_t PWR_Mon_Max_Current_int16;
 	float PWR_Mon_Max_Current_float;
@@ -84,7 +85,7 @@ typedef struct{
 	uint8_t PWR_Mon_ADC_Range;
 	uint8_t PWR_Mon_Mode;
 
-	I2C_TypeDef *I2Cx_I2C_MUX;
+	//I2C_TypeDef *I2Cx_I2C_MUX;
 	uint8_t I2C_addr_I2C_MUX;
 	uint8_t I2C_MUX_Ch;
 

@@ -8,9 +8,9 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 
 	_PDM_table pdm_table = {0};
 
-	pdm_table.I2Cx_GPIO_Ext = PDM_I2Cx_PORT;
-	pdm_table.I2Cx_I2C_MUX = PDM_I2Cx_PORT;
-	pdm_table.I2Cx_PWR_Mon = PDM_I2Cx_PORT;
+	pdm_table.I2Cx_PORT = PDM_I2Cx_PORT;
+	//pdm_table.I2Cx_I2C_MUX = PDM_I2Cx_PORT;
+	//pdm_table.I2Cx_PWR_Mon = PDM_I2Cx_PORT;
 
 	switch(number_pwr_channel){
 
@@ -46,7 +46,6 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_I2C_MUX = PDM_I2CADDR_I2C_MUX2;
 			//Config I2C MUX for power channel 1
 			pdm_table.I2C_MUX_Ch = TCA9548_CH0;
-
 
 			//Config I2C GPIO Expander TCA9539 for power channel 2
 			pdm_table.I2C_addr_GPIO_Ext = PDM_I2CADDR_GPIOExt2;
@@ -151,7 +150,6 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_I2C_MUX = PDM_I2CADDR_I2C_MUX2;
 			//Config I2C MUX for power channel 6
 			pdm_table.I2C_MUX_Ch = TCA9548_CH2;
-
 
 			//Config I2C GPIO Expander TCA9539 for power channel 6
 			pdm_table.I2C_addr_GPIO_Ext = PDM_I2CADDR_GPIOExt2;

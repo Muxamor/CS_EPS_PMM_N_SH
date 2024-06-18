@@ -4,6 +4,7 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_cortex.h"
 #include "stm32l4xx_ll_iwdg.h"
+//#include "stm32l4xx_ll_rcc.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
@@ -93,6 +94,7 @@ int main(void){
         UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
         UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
     }
+
 
     //Restore settings EPS from FRAM
     PMM_FRAM_Restore_Settings(eps_param);
@@ -323,6 +325,13 @@ int main(void){
 //	FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
 //	FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
+
+//!!!!!!!!!!!!!!!!!!For first start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+ // pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+//   pmm_ptr->EPS_Mode = 0xFF;
+//   pmm_ptr->Active_CPU = 0x00;
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 

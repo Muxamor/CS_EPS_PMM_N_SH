@@ -6,7 +6,7 @@
 #include "TCA6424A.h"
 #include "TMP1075.h"
 #include "TCA9548.h"
-#include "INA231.h"
+#include "INA238.h"
 #include "PAM/pam_struct.h"
 #include "PAM/pam_ctrl.h"
 
@@ -184,9 +184,9 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
 
-		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
-            if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS){
-                error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF);
+		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF) == SUCCESS) {
+            if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF ) == SUCCESS){
+                error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF, &read_val_pin_PG_eF);
             }
 		}
 
@@ -230,7 +230,7 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 	@param  *pam_ptr - pointer to struct which contain all information about PAM.
 	@param  pwr_source_num - source (PAM_PWR_IN_Ch1 - PAM_PWR_IN_Ch6).
 	@retval 0 - SUCCESS, -1 - ERROR_N.
-*/
+*//*
 ErrorStatus PAM_Get_State_ID_PWR_Ch_In( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
     uint8_t i = 0;
@@ -248,9 +248,9 @@ ErrorStatus PAM_Get_State_ID_PWR_Ch_In( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
     while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
 
-        if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS){
-           if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS){
-               error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_State_ID);
+        if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF ) == SUCCESS){
+           if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF ) == SUCCESS){
+               error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF, &read_val_pin_State_ID);
            }
         }
 
@@ -262,8 +262,8 @@ ErrorStatus PAM_Get_State_ID_PWR_Ch_In( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
     if( error_I2C == SUCCESS  ){
 
-        if((pam_ptr->State_DC_DC == ENABLE) || (pam_ptr->State_LDO == ENABLE)){
-       		pam_ptr->PWR_IN_Channel[pwr_source_num].State_ID_In = read_val_pin_State_ID;
+    	if((pam_ptr->State_DC_DC == ENABLE) || (pam_ptr->State_LDO == ENABLE)){
+    		pam_ptr->PWR_IN_Channel[pwr_source_num].State_ID_In = read_val_pin_State_ID;
        	}
         pam_ptr->Error_I2C_GPIO_Ext = SUCCESS;
 
@@ -276,7 +276,7 @@ ErrorStatus PAM_Get_State_ID_PWR_Ch_In( _PAM *pam_ptr, uint8_t pwr_source_num ){
 
     return error_I2C;
 }
-
+*/
 
 /** @brief  Get temperature from TMP1075 sensor.
 	@param  *pam_ptr - pointer to struct which contain all information about PAM.
@@ -370,7 +370,7 @@ ErrorStatus PAM_Get_Temperature( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 				pam_ptr->Error_temp_sensor_2 = SUCCESS; //No error
 			}
 			break;
-
+/*
 		case PAM_I2CADDR_TMP1075_3:
 			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
 				#ifdef DEBUGprintf
@@ -395,7 +395,7 @@ ErrorStatus PAM_Get_Temperature( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 				pam_ptr->Temp_sensor[3] = temp_value;
 				pam_ptr->Error_temp_sensor_4 = SUCCESS; //No error
 			}
-			break;
+			break; */
 
 		default:
 			break;
@@ -455,7 +455,7 @@ ErrorStatus PAM_Get_PWR_CH_IN_I_V_P( _PAM *pam_ptr, uint8_t num_pwr_ch){
 
 		while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read temperature.
 
-			error_I2C = INA231_Get_I_V_P_int16( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
+			error_I2C = INA238_Get_I_V_P_int16( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
 
 			if( error_I2C != SUCCESS ){
 				i++;
@@ -646,9 +646,9 @@ ErrorStatus PAM_Get_PG_PWR_TM_SP_Ch( _PAM *pam_ptr, uint8_t num_pwr_ch ){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read real value input pin PG.
 
-		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS) {
-            if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID ) == SUCCESS){
-                error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_State_ID, &read_val_pin_PG_eF);
+		if( TCA6424A_conf_IO_dir_input( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF ) == SUCCESS) {
+            if( TCA6424A_conf_IO_pol_normal( pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF ) == SUCCESS){
+                error_I2C = TCA6424A_read_input_pin(pam_table.I2Cx_PORT, pam_table.I2C_addr_GPIO_Ext, pam_table.pin_FLT_eF, &read_val_pin_PG_eF);
             }
 		}
 
@@ -687,7 +687,7 @@ void PAM_EraseData(_PAM *pam_ptr){
     uint8_t  num_pwr_ch = 0;
     //PAM
     for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
-        pam_ptr->PWR_IN_Channel[num_pwr_ch].State_ID_In = 0;
+       // pam_ptr->PWR_IN_Channel[num_pwr_ch].State_ID_In = 0;
         pam_ptr->PWR_IN_Channel[num_pwr_ch].Voltage_val = 0x0000;
         pam_ptr->PWR_IN_Channel[num_pwr_ch].Current_val = 0x0000;
         pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val = 0x0000;
@@ -700,7 +700,7 @@ void PAM_EraseData(_PAM *pam_ptr){
     if( pam_ptr->Error_temp_sensor_2 == SUCCESS){
         pam_ptr->Temp_sensor[1] = 0x00;
     }
-
+/*
     if( pam_ptr->Error_temp_sensor_3 == SUCCESS){
         pam_ptr->Temp_sensor[2] = 0x00;
     }
@@ -709,7 +709,7 @@ void PAM_EraseData(_PAM *pam_ptr){
     if( pam_ptr->Error_temp_sensor_4 == SUCCESS){
         pam_ptr->Temp_sensor[3] = 0x00;
     }
-
+*/
     for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
         pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].PG_eF_out = SUCCESS;
     }

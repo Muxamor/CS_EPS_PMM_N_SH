@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-#define PAM_SP_quantity  			    0x06 // Quantity solar panel on the satellite
-#define PAM_SP_temp_sens_max_quantity   0x04 // Max quantity Temp. sensor per solar panel.
+#define PAM_SP_quantity  			   	6 // Quantity solar panel on the satellite
+#define PAM_SP_temp_sens_max_quantity   4 // Max quantity Temp. sensor per solar panel.
 #define PAM_SP_ID_max_quantity	        0x06 // Max quantity Ideal Diode per solar panel. (Maximal was in Norby1 X panel)
 
 #define PAM_SP1           			    0x00 //Solar panel namber 1 is Folding Y+ - Norbi1, is Folding X- - Norby2
