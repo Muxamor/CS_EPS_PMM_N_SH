@@ -211,6 +211,7 @@ int main(void){
 //                }
 
             }else{
+
                 PMM_Get_Telemetry(pmm_ptr);
                 PDM_Get_Telemetry(pdm_ptr);
                 PAM_Get_Telemetry(pam_ptr);

@@ -566,11 +566,15 @@ ErrorStatus INA238_Get_AVG(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *
 	@param 	Rshunt - value of shunt resistor (Ohm float).
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA238_Setup_Calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float Rshunt_Ohm){
+ErrorStatus INA238_Setup_Calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float Rshunt_Ohm, uint8_t adc_range){
 
     uint16_t calibration = 0;
 
     calibration = (uint16_t)( (819.2*1000000*max_exp_current_A*Rshunt_Ohm)/32768.0f );
+
+    if(adc_range == INA238_ADC_RANGE_40mv){
+    	calibration = calibration *4;
+    }
 
     if(INA238_Write_Reg(I2Cx, I2C_INA238_addr, INA238_SHUNT_CAL_REG_ADDR, calibration) != SUCCESS ){
         return ERROR_N;
@@ -587,11 +591,15 @@ ErrorStatus INA238_Setup_Calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238
 	@param 	Rshunt_mOhm - value of shunt resistor (miliOhm uint16_t).
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA238_Setup_Calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, uint16_t Rshunt_mOhm){
+ErrorStatus INA238_Setup_Calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, uint16_t Rshunt_mOhm, uint8_t adc_range){
 
     uint16_t calibration = 0;
 
     calibration = (uint16_t)( ((uint32_t)(8192*max_exp_current_mA*Rshunt_mOhm))/((uint32_t)327680) );
+
+    if(adc_range == INA238_ADC_RANGE_40mv){
+        	calibration = calibration *4;
+        }
 
     if(INA238_Write_Reg(I2Cx, I2C_INA238_addr, INA238_SHUNT_CAL_REG_ADDR, calibration) != SUCCESS ){
         return ERROR_N;

@@ -85,8 +85,8 @@ ErrorStatus INA238_Setup_AVG(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t
 ErrorStatus INA238_Get_AVG(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint8_t *avg);
 
 //************** Shunt Calibration (SHUNT_CAL) Register (Address = 2h)
-ErrorStatus INA238_Setup_Calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float Rshunt);
-ErrorStatus INA238_Setup_Calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, uint16_t Rshunt);
+ErrorStatus INA238_Setup_Calibration_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float Rshunt, uint8_t adc_range);
+ErrorStatus INA238_Setup_Calibration_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, uint16_t Rshunt, uint8_t adc_range);
 
 //************** Shunt Voltage Measurement (VSHUNT) Register (Address = 4h) [reset = 0h]
 ErrorStatus INA238_Get_Shunt_V_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float *shunt_voltage);

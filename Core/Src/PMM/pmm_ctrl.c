@@ -336,13 +336,13 @@ ErrorStatus PMM_Get_PG_all_PWR_CH( _PMM *pmm_ptr ){
 	}
 
 	if( pmm_ptr->PWR_Ch_State_Vbat1_eF == ENABLE ){
-		pmm_ptr->PWR_Ch_PG_Vbat1_eF = LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_9);
+		pmm_ptr->PWR_Ch_PG_Vbat1_eF = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_9));
 	}else{
 		pmm_ptr->PWR_Ch_PG_Vbat1_eF = SUCCESS;  // OK because power channel is DISABLE
 	}
 
 	if( pmm_ptr->PWR_Ch_State_Vbat2_eF == ENABLE ){
-		pmm_ptr->PWR_Ch_PG_Vbat2_eF = LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_10);
+		pmm_ptr->PWR_Ch_PG_Vbat2_eF = !(LL_GPIO_IsInputPinSet(GPIOE, LL_GPIO_PIN_10));
 	}else{
 		pmm_ptr->PWR_Ch_PG_Vbat2_eF = SUCCESS;  // OK because power channel is DISABLE
 	}
@@ -438,14 +438,18 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 		}
 	}
 
-	if(val_bus_voltage < 5 ){ //If power less than 5mV equate to zero.
+	if(val_bus_voltage < 10 ){ //If power less than 5mV equate to zero.
 		val_bus_voltage = 0;
 	}
 
-	if(val_power < 5 ){ //If power less than 5mW equate to zero.
+	if(val_power < 10 ){ //If power less than 5mW equate to zero.
 		val_power = 0;
 	}
 
+	if(val_current < 40 && val_current > -50 ){
+		val_current = 0;
+		val_power = 0;
+	}
 
 	if( error_I2C == ERROR_N ){//Error I2C INA231 
 		val_current = 0;
