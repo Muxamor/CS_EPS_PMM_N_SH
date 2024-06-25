@@ -138,6 +138,21 @@ int main(void){
         CAN_Var5_fill_telemetry_const();
     }
 
+
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_1].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_2].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_5].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_6].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_7].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_8].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_9].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_10].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_11].State_eF  = ENABLE;
+    pdm_ptr->PWR_Channel[PDM_PWR_Channel_12].State_eF  = ENABLE;
+
+
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
 

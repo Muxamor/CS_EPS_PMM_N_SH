@@ -438,16 +438,11 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 		}
 	}
 
-	if(val_bus_voltage < 10 ){ //If power less than 5mV equate to zero.
+	if(val_bus_voltage < 10 ){ //If power less than 10mV equate to zero.
 		val_bus_voltage = 0;
 	}
 
-	if(val_power < 10 ){ //If power less than 5mW equate to zero.
-		val_power = 0;
-	}
-
-	if(val_current < 40 && val_current > -50 ){
-		val_current = 0;
+	if(val_power < 10 ){ //If power less than 10mW equate to zero.
 		val_power = 0;
 	}
 

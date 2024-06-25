@@ -340,8 +340,9 @@ ErrorStatus PDM_init_PWR_Mon_INA238( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
 			if( INA238_Hard_Reset( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon) == SUCCESS ){
-				if ( INA238_Setup_Calibration_int16( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, pdm_table.PWR_Mon_Rshunt_int16, pdm_table.PWR_Mon_ADC_Range) == SUCCESS ){
+
 					if ( INA238_Setup_ADCRANGE( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_ADC_Range) == SUCCESS ){
+						if ( INA238_Setup_Calibration_int16( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, pdm_table.PWR_Mon_Rshunt_int16, pdm_table.PWR_Mon_ADC_Range) == SUCCESS ){
 						if ( INA238_Setup_VBUSCT( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Convr_Time) == SUCCESS ){
 							if ( INA238_Setup_VSHCT( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Convr_Time) == SUCCESS ){
 								if ( INA238_Setup_VTCT( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Convr_Time) == SUCCESS ){

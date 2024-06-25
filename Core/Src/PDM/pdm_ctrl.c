@@ -6,7 +6,7 @@
 #include "TCA9539.h"
 #include "TMP1075.h"
 #include "TCA9548.h"
-#include "INA231.h"
+#include "INA238.h"
 #include "PDM/pdm_struct.h"
 #include "PDM/pdm_ctrl.h"
 
@@ -58,7 +58,18 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
  	//Enable/Disable INPUT Efuse power channel.
 	while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){
 
+
 		if( state_channel == ENABLE ){
+			error_I2C = TCA9539_Set_output_pin( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
+		}else{
+			error_I2C = TCA9539_Reset_output_pin( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
+		}
+
+		if( error_I2C == SUCCESS ){
+			error_I2C = TCA9539_conf_IO_dir_output( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
+		}
+
+		/*if( state_channel == ENABLE ){
             // Input pin -  because hardware auto-enable
 			error_I2C = TCA9539_conf_IO_dir_input( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
 
@@ -66,7 +77,7 @@ ErrorStatus PDM_Set_state_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch, uint8_t sta
 			if ( TCA9539_Reset_output_pin( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse ) == SUCCESS ){
 				error_I2C = TCA9539_conf_IO_dir_output( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_GPIO_Ext, pdm_table.pin_EN_eFuse );
 			}
-		}
+		}*/
  
 		if( error_I2C != SUCCESS ){
 			i++;
@@ -251,7 +262,7 @@ ErrorStatus PDM_Get_PG_PWR_CH( _PDM *pdm_ptr, uint8_t num_pwr_ch ){
 
 		if( pdm_ptr->PWR_Channel[num_pwr_ch].State_eF == ENABLE ){
 
-			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF = read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
+			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF = !read_val_pin_PG_in_eF;  //0-OK, 1-ERROR. Power good channel status input eFuse
 		}else{
 			pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF = SUCCESS;  // OK because power channel is DISABLE
 		}
@@ -463,7 +474,7 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read temperature.
 
-			error_I2C = INA231_Get_I_V_P_int16( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
+			error_I2C = INA238_Get_I_V_P_int16( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
 
 			if( error_I2C != SUCCESS ){
 				i++;
@@ -505,13 +516,14 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = ERROR;
 
 	}else{
-		if(val_bus_voltage < 5 ){ //If power less than 5mV equate to zero.
+		if(val_bus_voltage < 10 ){ //If power less than 5mV equate to zero.
 			val_bus_voltage = 0;
 		}
 
-		if(val_power < 5 ){ //If power less than 5mW equate to zero.
+		if(val_power < 10 ){ //If power less than 5mW equate to zero.
 			val_power = 0;
 		}
+
 
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = SUCCESS;
 	}
