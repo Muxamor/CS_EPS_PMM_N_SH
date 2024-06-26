@@ -9,8 +9,8 @@ _PMM_table PMM__Table(uint8_t number_pwr_channel){
 	_PMM_table pmm_table = {0};
 
 	//Config Power monitor INA231, same for all power channels
-	pmm_table.PWR_Mon_Max_Current_int16 = 6400; 		//Max current in mA
-	pmm_table.PWR_Mon_Max_Current_float = 6.4f;			//Max current in A
+	pmm_table.PWR_Mon_Max_Current_int16 = 7000; 		//Max current in mA
+	pmm_table.PWR_Mon_Max_Current_float = 7.0f;			//Max current in A
 	pmm_table.PWR_Mon_Rshunt_int16 = 7;					//Rshunt value in mOhm
 	pmm_table.PWR_Mon_Rshunt_float = 0.007f;			//Rshunt value in Ohm
 
