@@ -30,8 +30,8 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch1;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 4000; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 4.0f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
 			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
 
@@ -56,8 +56,8 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch2;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 4000; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 4.0f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
 			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
 
@@ -82,8 +82,8 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch3;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 4000; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 4.0f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
 			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
 
@@ -108,8 +108,8 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch4;
 
 			//Config Power monitor INA231, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 4000; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 4.0f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
 			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
 
@@ -134,8 +134,8 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch5;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 4000; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 4.0f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
 			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
 
@@ -160,8 +160,8 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch6;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 4000; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 4.0f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
 			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
 
@@ -186,8 +186,8 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch7;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 4000; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 4.0f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
 			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
 
