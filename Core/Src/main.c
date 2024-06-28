@@ -63,7 +63,7 @@ int main(void){
 							.eps_serv_ptr = eps_service_ptr
 						    };
 
-    pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
+    pmm_ptr->Version_FW = ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
 
 	/** Initialization Periph. STM32L496*/
 	LL_Init();
@@ -94,7 +94,6 @@ int main(void){
         UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
         UART_B_eps_comm->uart_unit_addr = UART_EPS_CPUb_Addr;
     }
-
 
     //Restore settings EPS from FRAM
     PMM_FRAM_Restore_Settings(eps_param);
@@ -132,26 +131,12 @@ int main(void){
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
 
+
     //Fill VarID4
     CAN_Var4_fill(eps_param);
     if( pmm_ptr->CAN_constatnt_mode == ENABLE){
         CAN_Var5_fill_telemetry_const();
     }
-
-
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_1].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_2].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_5].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_6].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_7].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_8].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_9].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_10].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_11].State_eF  = ENABLE;
-    pdm_ptr->PWR_Channel[PDM_PWR_Channel_12].State_eF  = ENABLE;
-
 
 	//Initialization EPS and CAN for active CPU
 	if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ 
@@ -349,6 +334,22 @@ int main(void){
 //   pmm_ptr->Active_CPU = 0x00;
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+
+/*
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_1].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_2].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_5].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_6].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_7].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_8].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_9].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_10].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_11].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_12].State_eF  = DISABLE;//ENABLE;
+*/
+// pam_ptr->State_DC_DC= ENABLE;
 //printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 
 

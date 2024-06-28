@@ -196,7 +196,7 @@ ErrorStatus PAM_Get_PG_PWR_Supply( _PAM *pam_ptr, uint8_t pwr_source_num ){
 		}
 	}
 
-	if( error_I2C == SUCCESS  ){
+	if( error_I2C == SUCCESS ){
 
         pam_ptr->Error_I2C_GPIO_Ext = SUCCESS;
 
@@ -286,23 +286,19 @@ ErrorStatus PAM_Get_State_ID_PWR_Ch_In( _PAM *pam_ptr, uint8_t pwr_source_num ){
 	@param  i2c_mux_ch  - Number channel MUX
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PAM_Get_Temperature( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr, uint8_t i2c_mux_addr, uint8_t i2c_mux_ch ){
+ErrorStatus PAM_Get_Temperature( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp1075_addr){
 
 	int8_t temp_value = 0;
 	uint8_t i = 0;
-	int8_t Error_I2C_MUX = ERROR_N;
+	//int8_t Error_I2C_MUX = ERROR_N;
 	int8_t error_I2C = ERROR_N;
 
 	// Switch MUX to PAM I2C bus on PMM
 	SW_TMUX1209_I2C_main_PAM();
 
-	//Enable I2C MUX channel
-	i=0;
-	error_I2C = ERROR_N;
+	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read temperature.
 
-	while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
-
-		error_I2C = TCA9548_Enable_I2C_ch( I2Cx, i2c_mux_addr, i2c_mux_ch );
+		error_I2C = TMP1075_read_int8_temperature( I2Cx, tmp1075_addr, &temp_value);
 
 		if( error_I2C != SUCCESS ){
 			i++;
@@ -310,43 +306,10 @@ ErrorStatus PAM_Get_Temperature( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 		}
 	}
 
-	Error_I2C_MUX = error_I2C;
-
-	//Read temperature
-	if( error_I2C == SUCCESS ){
-
-		i=0;
-		error_I2C = ERROR_N;
-
-		while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read temperature.
-
-			error_I2C = TMP1075_read_int8_temperature( I2Cx, tmp1075_addr, &temp_value);
-
-			if( error_I2C != SUCCESS ){
-				i++;
-				LL_mDelay( pam_i2c_delay_att_conn );
-			}
-		}
-	}
-
-	//Disable I2C MUX channel.
-	//Note: Do not check the error since it doesn’t matter anymore.
-	TCA9548_Disable_I2C_ch( I2Cx, i2c_mux_addr, i2c_mux_ch );
-
-	//Parse error
-	if( Error_I2C_MUX == ERROR_N ){
-		#ifdef DEBUGprintf
-			Error_Handler();
-		#endif
-		pam_ptr->Error_I2C_MUX_2 = ERROR;
-	}else{
-		pam_ptr->Error_I2C_MUX_2 = SUCCESS;
-	}
-
 	switch( tmp1075_addr ){
 
 		case PAM_I2CADDR_TMP1075_1:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+			if( error_I2C == ERROR_N ){//Error I2C TMP1075 or I2C MUX
 				#ifdef DEBUGprintf
 					Error_Handler();
 				#endif
@@ -359,7 +322,7 @@ ErrorStatus PAM_Get_Temperature( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 			break;
 
 		case PAM_I2CADDR_TMP1075_2:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
+			if( error_I2C == ERROR_N ){//Error I2C TMP1075 or I2C MUX
 				#ifdef DEBUGprintf
 					Error_Handler();
 				#endif
@@ -370,32 +333,6 @@ ErrorStatus PAM_Get_Temperature( _PAM *pam_ptr, I2C_TypeDef *I2Cx, uint8_t tmp10
 				pam_ptr->Error_temp_sensor_2 = SUCCESS; //No error
 			}
 			break;
-/*
-		case PAM_I2CADDR_TMP1075_3:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
-				#ifdef DEBUGprintf
-					Error_Handler();
-				#endif
-				pam_ptr->Temp_sensor[2] = 0x7F;
-				pam_ptr->Error_temp_sensor_3 = ERROR;
-			}else{
-				pam_ptr->Temp_sensor[2] = temp_value;
-				pam_ptr->Error_temp_sensor_3 = SUCCESS; //No error
-			}
-			break;
-
-		case PAM_I2CADDR_TMP1075_4:
-			if( error_I2C == ERROR_N || Error_I2C_MUX == ERROR_N ){//Error I2C TMP1075 or I2C MUX
-				#ifdef DEBUGprintf
-					Error_Handler();
-				#endif
-				pam_ptr->Temp_sensor[3] = 0x7F;
-				pam_ptr->Error_temp_sensor_4 = ERROR;
-			}else{
-				pam_ptr->Temp_sensor[3] = temp_value;
-				pam_ptr->Error_temp_sensor_4 = SUCCESS; //No error
-			}
-			break; */
 
 		default:
 			break;
