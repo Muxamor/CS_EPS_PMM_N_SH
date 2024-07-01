@@ -16,6 +16,8 @@
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
 #include "uart_eps_comm.h"
+#include  <stdio.h>
+
 
 
     uint32_t PMM_Start_Time_Check_CAN;
@@ -31,6 +33,9 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
 
         if( (CAN1_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == ENABLE) ){
             eps_p.eps_pmm_ptr->Error_CAN_port_M = ERROR;
+            #ifdef DEBUGprintf
+                Error_Handler();
+            #endif
         }else{
             eps_p.eps_pmm_ptr->Error_CAN_port_M = SUCCESS;
         }
@@ -38,6 +43,9 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
         if( ( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->Error_CAN_port_M == ERROR) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == ENABLE) ) ||
                 ( (CAN2_exchange_data_flag == 0) && (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE) ) ){
             eps_p.eps_pmm_ptr->Error_CAN_port_B = ERROR;
+            #ifdef DEBUGprintf
+                Error_Handler();
+            #endif
         }else{
             eps_p.eps_pmm_ptr->Error_CAN_port_B = SUCCESS;
         }
@@ -57,12 +65,13 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
                 LL_mDelay(700);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
                 PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
-                PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
-                PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
-                LL_mDelay(100);
+                LL_mDelay(50);
                 CAN_init_eps(CAN1);
                 CAN_init_eps(CAN2);
                 CAN_RegisterAllVars();
+                PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
+                PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_4, ENABLE);
+                CAN_Var4_fill(eps_p);
                 eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 1;
 
             }else{
@@ -70,7 +79,9 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
                 if (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
                     PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
                     PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                    PWM_DeInit_Ch3_Ch4( );
                     eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+                    LL_mDelay(50);
                 }
 
                 //Switch active CPU because CANm and CANb is ERROR
@@ -81,6 +92,10 @@ void PMM_Damage_Check_CAN_m_b( _EPS_Param eps_p ){
                     eps_p.eps_serv_ptr->Set_Active_CPU = CPUmain_Active;
                 }
                 eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
+                #ifdef DEBUGprintf
+                    printf("CANx errors CPU change request\n");
+                    Error_Handler();
+                #endif
 
                 eps_p.eps_serv_ptr->Was_Reboot_PWR_CAN = 0;
             }
@@ -156,6 +171,9 @@ ErrorStatus PMM_Damage_Check_UART_m_b_ActiveCPU( _UART_EPS_COMM *UART_Main_eps_c
         }else if( UART_Main_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold ){
             UART_Main_eps_comm->error_port_counter = UART_EPS_ERROR_Threshold;
             eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
+			#ifdef DEBUGprintf
+               Error_Handler();
+            #endif
         }
 
         if( UART_Backup_eps_comm->error_port_counter == 0 ){
@@ -163,6 +181,9 @@ ErrorStatus PMM_Damage_Check_UART_m_b_ActiveCPU( _UART_EPS_COMM *UART_Main_eps_c
         }else if( UART_Backup_eps_comm->error_port_counter >= UART_EPS_ERROR_Threshold ){
             UART_Backup_eps_comm->error_port_counter = UART_EPS_ERROR_Threshold;
             eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
+			#ifdef DEBUGprintf
+               Error_Handler();
+            #endif
         }
 
     }else{
@@ -191,12 +212,18 @@ void PMM_Damage_Check_UART_m_b_PassiveCPU( _UART_EPS_COMM *UART_Main_eps_comm, _
 
         if( UART_Main_eps_comm->data_exchange_flag == 0 ){
             eps_p.eps_pmm_ptr->Error_UART_port_M = ERROR;
+            #ifdef DEBUGprintf
+                Error_Handler();
+            #endif
         }else{
             eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
         }
 
         if( UART_Backup_eps_comm->data_exchange_flag == 0 ){
             eps_p.eps_pmm_ptr->Error_UART_port_B = ERROR;
+            #ifdef DEBUGprintf
+                Error_Handler();
+            #endif
         }else{
             eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
         }
@@ -219,9 +246,25 @@ void PMM_Portecion_PWR_OFF_CAN_m_b( _EPS_Param eps_p ){
     if( eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE && eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup == DISABLE ){
         PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
         PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE);
-        LL_mDelay(50);//TODO need check
+        LL_mDelay( 50 );
         CAN_init_eps(CAN1);
         CAN_init_eps(CAN2);
+        CAN_RegisterAllVars();
+        CAN_Var4_fill(eps_p);
+    }
+}
+
+/** @brief CANmain  ports power off protection.
+           Enable power CANmain if power off.
+	@param  eps_p - contain pointer to struct which contain all parameters EPS.
+	@retval None.
+*/
+void PMM_Protecion_PWR_OFF_CANmain( _EPS_Param eps_p ){
+    if(  eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain == DISABLE ){
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
+        LL_mDelay( 50 );
+        CAN_init_eps(CAN1);
+        CAN_RegisterAllVars();
         CAN_Var4_fill(eps_p);
     }
 }
@@ -232,9 +275,8 @@ void PMM_Portecion_PWR_OFF_CAN_m_b( _EPS_Param eps_p ){
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval None.
 */
-void PMM_Portecion_PWR_OFF_BRC_m_b( _EPS_Param eps_p ){
-    if( ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_in == DISABLE || eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF_out == DISABLE ) &&
-            ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_in == DISABLE || eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF_out == DISABLE)){
+void PMM_Protecion_PWR_OFF_BRC_m_b( _EPS_Param eps_p ){
+    if( ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF == DISABLE ) && ( eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF == DISABLE )){
         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr,  PDM_PWR_Channel_3, ENABLE );
         PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr,  PDM_PWR_Channel_4, ENABLE );
         CAN_Var4_fill(eps_p);
@@ -293,18 +335,13 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
 
     uint8_t num_pwr_ch;
 
-    if( (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF1 != ERROR) && (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2 != ERROR)  ){
+    if( (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF != ERROR) && (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF != ERROR)  ){
 
-    	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_T1_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val != 0 )
-    			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_T1_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val != 0) ){
+    	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val < PBM_T1_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val != 0 )
+    			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Power_val < PBM_T1_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val != 0) ){
 
-        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
-        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
-        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF1, DISABLE );
-        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF2, DISABLE );
-
-        	PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_1, DISABLE );
-        	PDM_Set_state_PWR_CH( eps_p.eps_pdm_ptr, PDM_PWR_Channel_2, DISABLE );
+        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF, DISABLE );
+        	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF, DISABLE );
 
         	//Disable TM SP power channels.
         	for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){

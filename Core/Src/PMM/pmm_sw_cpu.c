@@ -9,13 +9,13 @@
 #include "SetupPeriph.h"
 #include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
-//#include "PBM/pbm_config.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_ctrl.h"
 #include "PMM/pmm_damage_ctrl.h"
 #include "uart_eps_comm.h"
 #include "PMM/pmm_sw_cpu.h"
+#include  <stdio.h>
 
 /** @brief CPU main checking active CPU flag  (pmm_ptr->Active_CPU) between main and backup CPU.
  * 			In case when (pmm_ptr->Active_CPU) the same value in the Main and Backup CPU
@@ -26,8 +26,8 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
 
     int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
     int8_t error_status = ERROR_N;
-    uint8_t read_val_CAN_MUX_pin14 = 2;
-    uint8_t read_val_CAN_MUX_pin16 = 2;
+    uint8_t read_val_CAN_MUX_pin05 = 2;
+    uint8_t read_val_CAN_MUX_pin13 = 2;
     uint8_t save_value_Active_CPU;
     uint8_t get_package_tag = 0;
     uint32_t UART_answer_add_timeout = 0;
@@ -35,11 +35,9 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
 
 
     LL_IWDG_ReloadCounter(IWDG);
-
-	if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CP
-
+    //if( (eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain) && (eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE) ) { //Only for Main CPU //
+    if( eps_p.eps_pmm_ptr->Main_Backup_mode_CPU == CPUmain ) { //Only for Main CPU //
         save_value_Active_CPU = eps_p.eps_pmm_ptr->Active_CPU;
-
         //Get Active CPU from Main UART port
         UART_EPS_Pars_Get_Package(UART_Backup_eps_comm, eps_p);
         UART_EPS_Pars_Get_Package(UART_Main_eps_comm, eps_p);
@@ -55,6 +53,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             while(  UART_EPS_ACK != get_package_tag ){
 
                 if ( ( (uint32_t)(SysTick_Counter - UART_answer_add_timeout) ) > 700 ){
+                    LL_IWDG_ReloadCounter(IWDG);
                     error_status = ERROR_N;
                     #ifdef DEBUGprintf
                         Error_Handler();
@@ -86,6 +85,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
                 while(  UART_EPS_ACK != get_package_tag ){
 
                     if ( ( (uint32_t)(SysTick_Counter - UART_answer_add_timeout) ) > 700 ){
+                        LL_IWDG_ReloadCounter(IWDG);
                         error_status = ERROR_N;
                         #ifdef DEBUGprintf
                             Error_Handler();
@@ -108,6 +108,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
                     eps_p.eps_pmm_ptr->Active_CPU = 1;
                 } else {
                     eps_p.eps_pmm_ptr->Active_CPU = 0;
+                    //eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
                 }
             }
 
@@ -117,8 +118,8 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             error_I2C = ERROR_N;
         	while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
 
-        	    if( TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14) == SUCCESS ){
-        	        error_I2C =TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P16);
+        	    if( TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05) == SUCCESS ){
+        	        error_I2C =TCA9539_conf_IO_dir_input(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P13);
         	    }
 
         	    if( error_I2C != SUCCESS ){
@@ -131,8 +132,8 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             error_I2C = ERROR_N;
             while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){//Enable/Disable INPUT Efuse power channel.
 
-                if( TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P14, &read_val_CAN_MUX_pin14) == SUCCESS ){
-                    error_I2C = TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P16, &read_val_CAN_MUX_pin16);
+                if( TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P05, &read_val_CAN_MUX_pin05) == SUCCESS ){
+                    error_I2C = TCA9539_read_input_pin(PMM_I2Cx_GPIOExt1, PMM_I2CADDR_GPIOExt1, TCA9539_IO_P13, &read_val_CAN_MUX_pin13);
                 }
 
                 if( error_I2C != SUCCESS ){
@@ -142,7 +143,7 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
             }
 
             if( error_I2C == SUCCESS ){
-                if((read_val_CAN_MUX_pin14 == 0) && (read_val_CAN_MUX_pin16 == 0)){
+                if((read_val_CAN_MUX_pin05 == 0) && (read_val_CAN_MUX_pin13 == 0)){
                     eps_p.eps_pmm_ptr->Active_CPU = 0;
                     PMM_Reboot_EPS_PassiveCPU( );
                 }else{
@@ -181,7 +182,7 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 		i = 0;
 		error_status = ERROR_N;
 		while( ( error_status != SUCCESS ) && ( i < pmm_uart_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
-
+		    LL_IWDG_ReloadCounter(IWDG);
 			if( UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p ) == SUCCESS ){
 				if( UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p ) == SUCCESS ){
 					if( UART_EPS_Send_CMD( UART_EPS_ID_CMD_SAVE_PAM_struct, 0, UART_Main_eps_comm, UART_Backup_eps_comm, eps_p ) == SUCCESS ){
@@ -194,6 +195,9 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 			if( error_status != SUCCESS ){
 				i++;
 				LL_mDelay( pmm_uart_delay_att_conn );
+				#ifdef DEBUGprintf
+				    Error_Handler();
+			    #endif
 			}
 		}
 		
@@ -213,6 +217,9 @@ ErrorStatus PMM_Switch_Active_CPU(uint8_t set_active_CPU,  _UART_EPS_COMM *UART_
 				if( error_status != SUCCESS ){
 					i++;
 					LL_mDelay( pmm_uart_delay_att_conn );
+					#ifdef DEBUGprintf
+					    Error_Handler();
+			        #endif
 				}
 			}
 
@@ -255,6 +262,7 @@ void PMM_Reboot_EPS_PassiveCPU( void ){
     //Enable power of passive CPU
     PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
     PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+    PWM_DeInit_Ch3_Ch4( );
 }
 
 
@@ -264,6 +272,9 @@ void PMM_Reboot_EPS_PassiveCPU( void ){
 */
 void PMM_Take_Control_EPS_PassiveCPU( _EPS_Param eps_p ){
 
+    #ifdef DEBUGprintf
+        printf("Passive CPU taked control EPS\n");
+    #endif
     //Disable power fo real active CPU
     PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
     PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
@@ -299,7 +310,6 @@ void PMM_Set_mode_Active_CPU( _EPS_Param eps_p ){
     eps_p.eps_pmm_ptr->Error_CAN_port_B  = SUCCESS;
 
     I2C4_Init();
-    // PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0 -  moved to PMM_init
 
 	PMM_init( eps_p.eps_pmm_ptr );
 
@@ -343,8 +353,6 @@ void PMM_Set_mode_Passive_CPU( _EPS_Param eps_p ){
     PWM_DeInit_Ch3_Ch4();
 
     PBM_Low_Energy_Reset_pin();
-    PMM_RT_FL_EPS1_Reset_pin();
-    PMM_RT_FL_EPS2_Reset_pin();
 
 	PMM_init( eps_p.eps_pmm_ptr );
 

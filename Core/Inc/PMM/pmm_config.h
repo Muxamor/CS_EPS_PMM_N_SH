@@ -22,9 +22,6 @@ extern "C" {
 #define PMM_I2Cx_GPIOExt1 				I2C3 //I2C GPIO extender TCA9539 in PMM CPU block
 #define PMM_I2CADDR_GPIOExt1 			0x74 //I2C GPIO extender TCA9539 in PMM CPU block
 
-#define PMM_I2Cx_GPIOExt2 				I2C3 //I2C GPIO extender TCA9539 in PMM CPU block
-#define PMM_I2CADDR_GPIOExt2 			0x75 //I2C GPIO extender TCA9539 in PMM CPU block
-
 #define PMM_I2Cx_FRAM1 					I2C3 //FRAM in PMM CPU block
 #define PMM_I2CADDR_FRAM1 				0x50 //FRAM in PMM CPU block
 
@@ -37,20 +34,12 @@ extern "C" {
 #define PMM_I2Cx_DeployGPIOExt			I2C4 //I2C GPIO extender PCA9534 in PMM Deploy block
 #define PMM_I2CADDR_DeployGPIOExt 		0x38 //I2C GPIO extender PCA9534 in PMM Deploy block
 
-#define PMM_I2Cx_PowerADC				I2C4 //I2C ADC ADS1015 in PMM Power supply block
-#define PMM_I2CADDR_PowerADC 			0x49 //I2C ADC ADS1015 in PMM Power supply block
+#define PMM_I2Cx_VBAT1_eF_INA238		I2C4 //I2C INA231 line VBAT1 Main Efuse
+#define PMM_I2CADDR_VBAT1_eF_INA238 	0x4A //I2C INA231 line VBAT1 Main Efuse
 
-#define PMM_I2Cx_VBAT1_eF1_INA231		I2C4 //I2C INA231 line VBAT1 Main Efuse
-#define PMM_I2CADDR_VBAT1_eF1_INA231 	0x40 //I2C INA231 line VBAT1 Main Efuse
+#define PMM_I2Cx_VBAT2_eF_INA238		I2C4 //I2C INA231 line VBAT2 Main Efuse
+#define PMM_I2CADDR_VBAT2_eF_INA238 	0x4F //I2C INA231 line VBAT2 Main Efuse
 
-#define PMM_I2Cx_VBAT1_eF2_INA231		I2C4 //I2C INA231 line VBAT1 Backup Efuse
-#define PMM_I2CADDR_VBAT1_eF2_INA231 	0x44 //I2C INA231 line VBAT1 Backup Efuse
-
-#define PMM_I2Cx_VBAT2_eF1_INA231		I2C4 //I2C INA231 line VBAT2 Main Efuse
-#define PMM_I2CADDR_VBAT2_eF1_INA231 	0x41 //I2C INA231 line VBAT2 Main Efuse
-
-#define PMM_I2Cx_VBAT2_eF2_INA231		I2C4 //I2C INA231 line VBAT2 Backup Efuse
-#define PMM_I2CADDR_VBAT2_eF2_INA231 	0x45 //I2C INA231 line VBAT2 Backup Efuse
 
 #define FRAM_SIZE_64KB					0x2000
 
@@ -81,6 +70,9 @@ extern "C" {
 #define CPUmain 					0
 #define CPUbackup					1
 
+#define CPU_Clock_80MHz             80000000
+#define CPU_Clock_16MHz             16000000
+
 #define CPUmain_Active				0
 #define CPUbackup_Active			1
 
@@ -92,16 +84,14 @@ extern "C" {
 
 #define PMM_PWR_Ch_CANmain 			0x00
 #define PMM_PWR_Ch_CANbackup		0x01
-#define PMM_PWR_Ch_VBAT1_eF1		0x02
-#define PMM_PWR_Ch_VBAT1_eF2		0x03
-#define PMM_PWR_Ch_VBAT2_eF1		0x04
-#define PMM_PWR_Ch_VBAT2_eF2		0x05
+#define PMM_PWR_Ch_VBAT1_eF			0x02
+#define PMM_PWR_Ch_VBAT2_eF			0x04
 #define PMM_PWR_Ch_PBMs_Logic		0x06
 #define PMM_PWR_Ch_Deploy_Logic		0x07
 #define PMM_PWR_Ch_Deploy_Power		0x08
-#define PMM_PWR_Ch_5V_Bus			0x09
-#define PMM_PWR_Ch_3_3V_Bus			0x0A
-#define PMM_PWR_Ch_I2C_Bus			0x0B
+#define PMM_Reset_CANmain			0x09
+#define PMM_Reset_CANbackup			0x0A
+
 
 #define PMM_PWR_Deploy_Ch1          0x0C
 #define PMM_PWR_Deploy_Ch2          0x0D
@@ -120,10 +110,12 @@ typedef struct{
 	float PWR_Mon_Max_Current_float;
 	uint16_t PWR_Mon_Rshunt_int16;
 	float PWR_Mon_Rshunt_float;
-	uint8_t PWR_Mon_aver_mode;
-	uint8_t PWR_Mon_bus_conv_time;
-	uint8_t PWR_Mon_shunt_conv_time; 
-	uint8_t PWR_Mon_work_mode;
+
+	uint8_t PWR_Mon_Convr_Time;
+	uint8_t PWR_Mon_Aver_Count;
+	uint8_t PWR_Mon_ADC_Range;
+	uint8_t PWR_Mon_Mode;
+
 
 }_PMM_table;
 

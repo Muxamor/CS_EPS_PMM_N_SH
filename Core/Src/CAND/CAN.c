@@ -6,6 +6,7 @@
 //__attribute__((weak)) typeRegistrationRec RegistrationRec[14] = {0};
 
 struct CAN_IVar5 CAN_IVar5_telemetry;
+struct CAN_IVar5 CAN_IVar5_ready_telemetry;
 struct CAN_IVar4  CAN_IVar4_RegCmd;
 struct CAN_IN_Buffer CAN_cmd_Buff;
 
@@ -15,7 +16,7 @@ uint8_t CAN2_exchange_data_flag;
 const CAN_typeRegistrationRec RegistrationRec[] = {
 /*{указатель на IVar, размер IVar, указатель на Callback, id_IVar, доступ}*/
 	{&CAN_IVar4_RegCmd, sizeof(CAN_IVar4_RegCmd), CAN_ProcCallbackCmds, CAN_ID_IVAR_REGCMD, 0},
-	{&CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry), CAN_ProcCallbackTelemetry, CAN_ID_VAR_TELEMETRY, 1},  //256k size, read-only, regarless offset
+    {& CAN_IVar5_ready_telemetry, sizeof(CAN_IVar5_ready_telemetry), CAN_ProcCallbackTelemetry, CAN_ID_VAR_TELEMETRY, 1},  //256k size, read-only, regarless offset
 	{&(*((uint32_t*) CAN_ROM_ADDR)), 4, CAN_ProcCallbackTelemetry, CAN_ID_VAR_ROM, 1},
 	{&(*((uint32_t*) CAN_RAM_ADDR)), 4, CAN_ProcCallbackTelemetry, CAN_ID_VAR_RAM, 1},
 	{&VarCAN_FlashFragment, 0x80008, CallbackCAN_Flash, 14, CAN_AFLG_NOOFFSET}

@@ -224,7 +224,7 @@ ErrorStatus PBM_T1_Init_Heat_INA238(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PB
 		while( ( Error != SUCCESS ) && ( i < PBM_T1_I2C_ATTEMPT_CONN ) ){
 
 			if( INA238_Hard_Reset( I2Cx, pbm_table.PwrMon_Addr) == SUCCESS ){
-				if ( INA238_Setup_Calibration_int16( I2Cx, pbm_table.PwrMon_Addr, PBM_T1_INA238_MAX_CURRENT, PBM_T1_INA238_RSHUNT) == SUCCESS ){
+				if ( INA238_Setup_Calibration_int16( I2Cx, pbm_table.PwrMon_Addr, PBM_T1_INA238_MAX_CURRENT, PBM_T1_INA238_RSHUNT,  pbm_table.INA238_ADC_Range) == SUCCESS ){
 					if ( INA238_Setup_ADCRANGE( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_ADC_Range) == SUCCESS ){
 						if ( INA238_Setup_VBUSCT( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_Convr_Time) == SUCCESS ){
 							if ( INA238_Setup_VSHCT( I2Cx, pbm_table.PwrMon_Addr, pbm_table.INA238_Convr_Time) == SUCCESS ){

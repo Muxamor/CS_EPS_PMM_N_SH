@@ -15,7 +15,7 @@
 #include "stm32l4xx_ll_usart.h"
 #include "Error_Handler.h"
 #include "SetupPeriph.h"
-
+#include "PMM/pmm_config.h"
 #include "canv.h"
 
 //#include  <stdio.h>
@@ -59,100 +59,153 @@ void LL_Init(void) {
 /** @brief System Clock Configuration
  * @retval None
  */
-void SystemClock_Config(void) {
+void SystemClock_Config(uint32_t CPU_Speed) {
 
-	uint8_t HSE_Fault = 0;
-	uint32_t down_counter = 500000;
+    uint8_t HSE_Fault = 0;
+    uint32_t down_counter = 500000;
 
-	LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
+    if( CPU_Speed == CPU_Clock_16MHz  ){
 
-	if (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_4) {
-		Error_Handler();
-	}
+    	if( LL_RCC_PLL_GetMainSource() == LL_RCC_PLLSOURCE_HSE ){
+    		LL_RCC_HSE_EnableCSS();
+    		LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
+    		/* Wait till System clock is ready */
+    		down_counter = 500000;
+    		while((LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSE) && (down_counter != 0)) {
+    			down_counter--;
+    		}
 
-	LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
+    	}else if( LL_RCC_PLL_GetMainSource() == LL_RCC_PLLSOURCE_HSI ){
+    		LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
+    		/* Wait till System clock is ready */
+    		down_counter = 500000;
+    		while((LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI) && (down_counter != 0)) {
+    			down_counter--;
+    		}
 
-	/* Enable HSE */
-	LL_RCC_HSE_EnableBypass();
-	LL_RCC_HSE_Enable();
-	/* Wait till HSE is ready */
-	while ((LL_RCC_HSE_IsReady() != 1) && (down_counter != 0)) {
-		down_counter--;
-	}
+    		LL_RCC_HSE_DisableBypass();
+    		LL_RCC_HSE_Disable();
+    	}
 
-	if (down_counter == 0) {
+    	LL_RCC_PLL_DisableDomain_SYS();
+        LL_RCC_PLL_Disable();
 
-		HSE_Fault = 1;
-		Error_Handler();
+        LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
+        if (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0) {
+            #ifdef DEBUGprintf
+                Error_Handler();
+		    #endif
+        }
 
-		/* Enable HSI - backup clock*/
-		LL_RCC_HSI_Enable();
-		/* Wait till HSI is ready */
-		while (LL_RCC_HSI_IsReady() != 1) {
-		}
-		//LL_RCC_HSI_SetCalibTrimming(64); // Not need.
-	}
+        LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+        LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+        LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
 
-	/* Enable LSI */ //????????
-	LL_RCC_LSI_Enable();
-	/* Wait till LSI is ready */
-	while (LL_RCC_LSI_IsReady() != 1) {
-	} ///?????????????
+        LL_Init1msTick(16000000);
+        LL_SetSystemCoreClock(16000000);
 
-	if (HSE_Fault == 0) {
-		/* Enable CSS */
-		LL_RCC_HSE_EnableCSS();
-		LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_1, 10,
-		LL_RCC_PLLR_DIV_2);
-	} else {
-		LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI, LL_RCC_PLLM_DIV_1, 10,
-		LL_RCC_PLLR_DIV_2);
-	}
+    }else{
 
-	LL_RCC_PLL_EnableDomain_SYS();
-	LL_RCC_PLL_Enable();
+        LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
 
-	/* Wait till PLL is ready */
-	while (LL_RCC_PLL_IsReady() != 1) {
-	}
+        if (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_4) {
+            #ifdef DEBUGprintf
+                Error_Handler();
+		    #endif
+        }
 
-	LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
+        LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
 
-	/* Wait till System clock is ready */
-	while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) {
-	}
+        /* Enable HSE */
+        LL_RCC_HSE_EnableBypass();
+        LL_RCC_HSE_Enable();
+        /* Wait till HSE is ready */
+        down_counter = 500000;
+        while((LL_RCC_HSE_IsReady() != 1) && (down_counter != 0)) {
+            down_counter--;
+        }
 
-	LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-	LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-	LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+        if (down_counter == 0) {
+            HSE_Fault = 1;
 
-	LL_Init1msTick(80000000);
+            /* Enable HSI - backup clock*/
+            LL_RCC_HSI_Enable();
+            /* Wait till HSI is ready */
+            down_counter = 500000;
+            while((LL_RCC_HSI_IsReady() != 1) && (down_counter != 0)) {
+            	down_counter--;
+            }
 
-	LL_SetSystemCoreClock(80000000);
+            //LL_RCC_HSI_SetCalibTrimming(64); // Not need.
+			#ifdef DEBUGprintf
+            	Error_Handler();
+	    	#endif
+        }
 
-	/* Setup RTC clock */
-	//LL_PWR_EnableBkUpAccess();
-	//LL_RCC_ForceBackupDomainReset();
-	//LL_RCC_ReleaseBackupDomainReset();
-	//LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
-	//LL_RCC_EnableRTC();
-	LL_RCC_SetLPUARTClockSource(LL_RCC_LPUART1_CLKSOURCE_PCLK1); // main LPUART1 for comm. CPUm <-> CPUb
-	LL_RCC_SetUSARTClockSource(LL_RCC_USART3_CLKSOURCE_PCLK1); // backup USART3 for comm. CPUm <-> CPUb
-	//LL_RCC_SetUSARTClockSource(LL_RCC_USART2_CLKSOURCE_PCLK1); // Comm. with module
-	//LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2); // Comm. with module
-	LL_RCC_SetUARTClockSource(LL_RCC_UART5_CLKSOURCE_PCLK1); // Terminal or debug UART5
-	//LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_PCLK1); 	 // System I2C1 for comm. with another subsystem CubeSat
-	LL_RCC_SetI2CClockSource(LL_RCC_I2C3_CLKSOURCE_PCLK1); // I2C3 comm. inside main and backup block
-	//LL_RCC_SetI2CClockSource(LL_RCC_I2C2_CLKSOURCE_PCLK1);     // Backup I2C1 Comm. with module PAM and PDM and another part of PMM module
-	LL_RCC_SetI2CClockSource(LL_RCC_I2C4_CLKSOURCE_PCLK1); // Main I2C4 Comm. with module PAM and PDM and another part of PMM module
+        /* Enable LSI for enable WDG */
+        LL_RCC_LSI_Enable();
+        /* Wait till LSI is ready */
+        while (LL_RCC_LSI_IsReady() != 1) {
+        }
+
+        if (HSE_Fault == 0) {
+            /* Enable CSS */
+            LL_RCC_HSE_EnableCSS();
+            LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_1, 10, LL_RCC_PLLR_DIV_2);
+        }else{
+            LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI, LL_RCC_PLLM_DIV_1, 10, LL_RCC_PLLR_DIV_2);
+        }
+
+        LL_RCC_PLL_EnableDomain_SYS();
+        LL_RCC_PLL_Enable();
+
+        /* Wait till PLL is ready */
+        down_counter = 500000;
+        while((LL_RCC_PLL_IsReady() != 1) && (down_counter != 0)) {
+        	down_counter--;
+        }
+
+        LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
+
+        /* Wait till System clock is ready */
+        down_counter = 500000;
+        while((LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) && (down_counter != 0)) {
+            down_counter--;
+        }
+
+        LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+        LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+        LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+
+        LL_Init1msTick(80000000);
+        LL_SetSystemCoreClock(80000000);
+    }
+
+    /* Setup RTC clock */
+    //LL_PWR_EnableBkUpAccess();
+    //LL_RCC_ForceBackupDomainReset();
+    //LL_RCC_ReleaseBackupDomainReset();
+    //LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
+    //LL_RCC_EnableRTC();
+    LL_RCC_SetLPUARTClockSource(LL_RCC_LPUART1_CLKSOURCE_PCLK1); // main LPUART1 for comm. CPUm <-> CPUb
+    LL_RCC_SetUSARTClockSource(LL_RCC_USART3_CLKSOURCE_PCLK1); // backup USART3 for comm. CPUm <-> CPUb
+    //LL_RCC_SetUSARTClockSource(LL_RCC_USART2_CLKSOURCE_PCLK1); // Comm. with module
+    //LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2); // Comm. with module
+    //LL_RCC_SetUARTClockSource(LL_RCC_UART5_CLKSOURCE_PCLK1); // Terminal or debug UART5
+    //LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_PCLK1); 	 // System I2C1 for comm. with another subsystem CubeSat
+    LL_RCC_SetI2CClockSource(LL_RCC_I2C3_CLKSOURCE_PCLK1); // I2C3 comm. inside main and backup block
+    //LL_RCC_SetI2CClockSource(LL_RCC_I2C2_CLKSOURCE_PCLK1);     // Backup I2C1 Comm. with module PAM and PDM and another part of PMM module
+    LL_RCC_SetI2CClockSource(LL_RCC_I2C4_CLKSOURCE_PCLK1); // Main I2C4 Comm. with module PAM and PDM and another part of PMM module
 
 }
+
+
 
 /** @brief I2C3 Initialization Function. I2C3 use for communiction inside main and backup block
  * @param None
  * @retval None
  */
-void I2C3_Init(void) {
+void I2C3_Init( void ) {
 
 	LL_I2C_Disable(I2C3);
 	//LL_I2C_Enable(I2C3);
@@ -162,28 +215,21 @@ void I2C3_Init(void) {
 	LL_I2C_InitTypeDef I2C_InitStruct = { 0 };
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
-	LL_PWR_EnableVddIO2();
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+	//LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+	//LL_PWR_EnableVddIO2();
 
-	/**I2C3 GPIO Configuration  
-	 PA7   ------> I2C3_SCL
-	 PG8   ------> I2C3_SDA */
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+
+	/**I2C3 in Grifon GPIO Configuration
+	 PС0   ------> I2C3_SCL
+	 PС1   ------> I2C3_SDA */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO; //LL_GPIO_PULL_UP;
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
-	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
-	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-	GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
-	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	/* Peripheral clock enable */
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C3);
@@ -195,16 +241,19 @@ void I2C3_Init(void) {
 	LL_I2C_EnableClockStretching(I2C3);
 
 	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-	I2C_InitStruct.Timing = 0x00702991;//0x00702991 - 400kHz, 0x10909CEC - 100kHz.
+	if( SystemCoreClock == CPU_Clock_16MHz ){
+	    I2C_InitStruct.Timing = 0x00303D5B;
+	}else{
+	    I2C_InitStruct.Timing = 0x00702991;//0x00702991 - 400kHz, 0x10909CEC - 100kHz.
+	}
+
 	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
 	I2C_InitStruct.DigitalFilter = 0;
 	I2C_InitStruct.OwnAddress1 = 0;
 	I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK;
 	I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
 	LL_I2C_Init(I2C3, &I2C_InitStruct);
-
 	LL_I2C_SetOwnAddress2(I2C3, 0, LL_I2C_OWNADDRESS2_NOMASK);
-
 	LL_I2C_Enable(I2C3);
 }
 
@@ -217,35 +266,30 @@ void I2C3_DeInit(void){
     LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
     LL_I2C_Disable(I2C3);
-
     LL_I2C_DeInit(I2C3);
-
-    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
-    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
-    LL_PWR_EnableVddIO2();
-
-    /**I2C3 GPIO Configuration
-	 PA7   ------> I2C3_SCL
-	 PG8   ------> I2C3_SDA */
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
     /* Peripheral clock disable */
     LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_I2C3);
+
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+   // LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+    //LL_PWR_EnableVddIO2();
+
+    /**I2C3 GPIO Configuration
+	 PC0   ------> I2C3_SCL
+	 PC1   ------> I2C3_SDA */
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
 }
 
 /** @brief I2C4 Initialization Function. Main I2C4 communication 
  * 		with module PAM and PDM and another part of PMM module.
  * @param None
  * @retval None */
-void I2C4_Init(void) {
+void I2C4_Init( void ) {
 
 	LL_I2C_Disable(I2C4);
 	//LL_I2C_Enable(I2C4);
@@ -255,17 +299,17 @@ void I2C4_Init(void) {
 	LL_I2C_InitTypeDef I2C_InitStruct = { 0 };
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
 	/**I2C4 GPIO Configuration
-	 PF14   ------> I2C4_SCL
-	 PF15   ------> I2C4_SDA */
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_14 | LL_GPIO_PIN_15;
+	 PD12   ------> I2C4_SCL
+	 PD13   ------> I2C4_SDA */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_12 | LL_GPIO_PIN_13;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
-	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 	/* Peripheral clock enable */
 	LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_I2C4);
@@ -277,7 +321,12 @@ void I2C4_Init(void) {
 	LL_I2C_EnableClockStretching(I2C4);
 
 	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-	I2C_InitStruct.Timing = 0xB0801A1F; //0x00702991 - 400kHz, 0x10909CEC - 100kHz, 0xB0801A1F-100kHz and Rise time=1000ns
+	if( SystemCoreClock == CPU_Clock_16MHz ){
+	    I2C_InitStruct.Timing = 0x20601418; //100kHz and Rise time=1000ns
+	}else{
+	    I2C_InitStruct.Timing = 0xB0801A1F; //0x00702991 - 400kHz, 0x10909CEC - 100kHz, 0xB0801A1F-100kHz and Rise time=1000ns
+	}
+
 	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
 	I2C_InitStruct.DigitalFilter = 0;
 	I2C_InitStruct.OwnAddress1 = 0;
@@ -302,14 +351,14 @@ void I2C4_DeInit(void){
 
     LL_I2C_DeInit(I2C4);
 
-    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
     /**I2C4 GPIO Configuration
      PF14   ------> I2C4_SCL
      PF15   ------> I2C4_SDA */
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_14 | LL_GPIO_PIN_15;
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_12 | LL_GPIO_PIN_13;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+    LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* Peripheral clock disable */
     LL_APB1_GRP2_DisableClock(LL_APB1_GRP2_PERIPH_I2C4);
@@ -335,7 +384,7 @@ void I2C_ReInit(I2C_TypeDef *I2Cx) {
  * @param  number_cycle - number of clocks.
  * @retval None
  */
-void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
+void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle ) {
 
 	uint16_t period = 0, i = 0, count = 0;
 
@@ -343,59 +392,67 @@ void I2C_Bus_SoftwareReset(I2C_TypeDef *I2Cx, uint8_t number_cycle) {
 	//period = 42;
 	count = period;
 
-	LL_I2C_DeInit(I2Cx);
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
 	if (I2Cx == I2C3) {
-		LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
-		LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_7);
+	    I2C3_DeInit();
+		LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
 
-		GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-		LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+		LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+		LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_0);
+		LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_1);
 
 		for (i = 0; i <= number_cycle; i++) {
 			while (count > 0) {
 				count--;
 			}
 			count = period;
-			LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_7);
+			LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_0);
 			while (count > 0) {
 				count--;
 			}
 			count = period;
-			LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_7);
+			LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_0);
 		}
+		LL_mDelay( 20 );
 		I2C3_Init();
+		LL_mDelay( 20 );
 	}
 
 	if (I2Cx == I2C4) {
-		LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
-		LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_14);
+	    I2C4_DeInit();
+		LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
 
-		GPIO_InitStruct.Pin = LL_GPIO_PIN_14;
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_12|LL_GPIO_PIN_13;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-		LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+		LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+		LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_12);
+		LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_13);
 
 		for (i = 0; i <= number_cycle; i++) {
 			while (count > 0) {
 				count--;
 			}
 			count = period;
-			LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_14);
+			LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_12);
 			while (count > 0) {
 				count--;
 			}
 			count = period;
-			LL_GPIO_SetOutputPin(GPIOF, LL_GPIO_PIN_14);
+			LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_12);
 		}
+
+		LL_mDelay( 20 );
 		I2C4_Init();
+		LL_mDelay( 20 );
 	}
 }
 
@@ -411,27 +468,18 @@ void LPUART1_Init(void) {
 	/* Peripheral clock enable */
 	LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_LPUART1);
 
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
-	LL_PWR_EnableVddIO2();
-	/**LPUART1 GPIO Configuration
-	 PC0   ------> LPUART1_RX
-	 PG7   ------> LPUART1_TX */
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
-	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP; //Set PULL UP but default set PULL NO
-	GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
-	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
 
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+	/**LPUART1 GPIO Configuration
+	 PA2   ------> LPUART1_RX
+	 PA3   ------> LPUART1_TX */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_2|LL_GPIO_PIN_3;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO; //Set PULL UP but default set PULL NO
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
-	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	LPUART_InitStruct.BaudRate = 1536000; //115200;
 	LPUART_InitStruct.DataWidth = LL_LPUART_DATAWIDTH_8B;
@@ -450,28 +498,28 @@ void LPUART1_Init(void) {
  */
 void LPUART1_DeInit(void){
 
-    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+//    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-    /* Peripheral clock enable */
+    LL_LPUART_Disable(LPUART1);
+    LL_LPUART_DeInit(LPUART1);
+
+//    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+//    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+//    LL_PWR_EnableVddIO2();
+
+//    GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
+//    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+//    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+//
+//    GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+//    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+//    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//    LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
     LL_APB1_GRP2_DisableClock(LL_APB1_GRP2_PERIPH_LPUART1);
 
-    //LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
-    //LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
-    //LL_PWR_DisableVddIO2();
-    /**LPUART1 GPIO Configuration**/
-
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-    LL_LPUART_DeInit(LPUART1);
-    LL_LPUART_Disable(LPUART1);
+    NVIC_DisableIRQ(LPUART1_IRQn);
 }
 
 
@@ -486,25 +534,17 @@ void USART3_Init(void) {
 
 	/* Peripheral clock enable */
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART3);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
 	/**USART3 GPIO Configuration
 	 PB10   ------> USART3_TX
 	 PB11   ------> USART3_RX */
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_10;
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_4|LL_GPIO_PIN_5;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;//Set PULL UP but default set PULL NO
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
-	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_11;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
-	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP; //Set PULL UP but default set PULL NO
-	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
-	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	USART_InitStruct.BaudRate = 1536000; //115200;
 	USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
@@ -525,21 +565,23 @@ void USART3_Init(void) {
  */
 void USART3_DeInit(void){
 
-    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+//    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+//
+//	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
 
-    /* Peripheral clock enable */
-    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_USART3);
-    //LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
-    /**USART3 GPIO Configuration**/
-
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_10|LL_GPIO_PIN_11;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    LL_USART_DeInit(USART3);
-    //LL_USART_ConfigAsyncMode(USART3);
     LL_USART_Disable(USART3);
+    LL_USART_DeInit(USART3);
+
+
+
+//    GPIO_InitStruct.Pin = LL_GPIO_PIN_10|LL_GPIO_PIN_11;
+//    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+//    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_USART3);
+
+    NVIC_DisableIRQ(USART3_IRQn);
 }
 
 
@@ -566,7 +608,7 @@ void UART5_Init(void) {
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;//Set PULL UP but default set PULL NO
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
@@ -574,7 +616,7 @@ void UART5_Init(void) {
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP; //Set PULL UP but default set PULL NO
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;//LL_GPIO_PULL_UP; //Set PULL UP but default set PULL NO
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
 	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
@@ -595,12 +637,12 @@ void UART5_Init(void) {
  * @param  None
  * @retval None
  */
-void SetupInterrupt(void) {
+void Setup_UART_Interrupt( void) {
 
 	//LL_EXTI_InitTypeDef EXTI_InitStruct;
 
 	/*Enable interrupt for SysTick */
-    LL_SYSTICK_EnableIT();
+    //LL_SYSTICK_EnableIT();
     //LL_SYSTICK_DisableIT();
     /**********************************************/
 
@@ -619,7 +661,7 @@ void SetupInterrupt(void) {
 	//LL_USART_DisableIT_RXNE(USART3);
 	//LL_USART_DisableIT_ERROR(USART3);
 	NVIC_EnableIRQ(USART3_IRQn);
-	//NVIC_DisableIRQ(UART3_IRQn);
+	//NVIC_DisableIRQ(USART3_IRQn);
 	/**********************************************/
 
 	/* UART5 interrupt Init */
@@ -630,16 +672,15 @@ void SetupInterrupt(void) {
     //For Norbi not need yat NVIC_EnableIRQ(UART5_IRQn);
 	//NVIC_DisableIRQ(UART5_IRQn);
 	/**********************************************/
-
-	/* CAN1 interrupt Init */
-	//CAN interrupt initialization is in CAN_init_eps in this file.
-	/**********************************************/
-
-	/* CAN2 interrupt Init */
-	//CAN interrupt initialization is in CAN_init_eps in this file.
-	/**********************************************/
-
 }
+
+/* CAN1 interrupt Init */
+//CAN interrupt initialization is in CAN_init_eps in this file.
+/**********************************************/
+
+/* CAN2 interrupt Init */
+//CAN interrupt initialization is in CAN_init_eps in this file.
+/**********************************************/
 
 /** @brief GPIO Initialization Function
  * @param None
@@ -649,37 +690,29 @@ void GPIO_Init(void) {
 
 	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-	LL_PWR_EnableVddIO2();
 
 	/* GPIO Ports Clock Enable */
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOE);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
+	 LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOE);
+	 LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+	 LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
+	 LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+	 LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+
+	// LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
+
 
 	/*-------------------------------------------------------------------------------------*/
 	/* Configure GPIO pin to control I2C bus multiplexor TMUX1209  (U5 and U18) */
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_12 | LL_GPIO_PIN_13;
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	/* Setup default state */
-	LL_GPIO_ResetOutputPin(GPIOG, LL_GPIO_PIN_12 | LL_GPIO_PIN_13);
-	LL_GPIO_ResetOutputPin(GPIOF, LL_GPIO_PIN_0);
+	LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6);
+
 
 	/*For control multiplexor TMUX1209  need use:											*/
 	/*ENABLE_TMUX1209_I2C();       	- Enable multiplexor TMUX1209 							*/
@@ -691,12 +724,7 @@ void GPIO_Init(void) {
 	/****************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/
-	//Setup TCA9539 GPIOExt1 controls pin RESET and INT. at PMM modules.
-	//Control power channel at PMM module.
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+	//Setup TCA9539 GPIOExt1 controls pin RESET. at PMM modules.
 
 	//Set Reset pin like input because if setup as output pin pull down and will twitch at the time of reboot CPU
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
@@ -711,56 +739,34 @@ void GPIO_Init(void) {
 //	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 //	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	/****************************************************************************************/
+	/***************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/
-	//Setup TCA9539 GPIOExt2 controls pin RESET and INT. at PMM modules.
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+	//Setup controls pins RESET. at  PAM PDM modules.
 
 	//Set Reset pin like input because if setup as output pin pull down and will twitch at the time of reboot CPU
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_14 | LL_GPIO_PIN_15;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	//If not use IC
-	//GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
-	//GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-	//GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-	//GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	//GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	//LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	/***************************************************************************************/
 
-	//LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_1); // Reset pin down -> GPIOExt2 off, because not yet used in Norbi
-
-	/****************************************************************************************/
-
-	/*-------------------------------------------------------------------------------------*/
-	//Setup pins CPUx_RF_WG1, CPUx_RF_WG2, CPUx_RF_OP1, CPUx_RF_OP1.
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_1 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4
-			| LL_GPIO_PIN_5;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-	/****************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/
 	/* Configure GPIO pin to control write protection on FRAM1 and FRAM2  FM24Cl64 */
 	/** FRAM write control pin  
-	 PG15 ------> Write control FRAM1 (main)
-	 PC3  ------> Write control FRAM1 (backup)
+	 PB2 ------> Write control FRAM1 (main)
+	 PC9  ------> Write control FRAM1 (backup)
 	 */
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_15;
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_3;
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_9;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
@@ -768,8 +774,8 @@ void GPIO_Init(void) {
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	/* Setup default state */
-	LL_GPIO_SetOutputPin(GPIOG, LL_GPIO_PIN_15); // Disable write to FRAM1
-	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_3);  // Disable write to FRAM2
+	LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_2); // Disable write to FRAM1
+	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);  // Disable write to FRAM2
 	/****************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/
@@ -785,31 +791,39 @@ void GPIO_Init(void) {
 
 	/*-------------------------------------------------------------------------------------*/
 	/* Pins for get Power Good */
-	/** PE2 - Power good for PWR_Supply_Main_PG 
+	/**
+	 PE2 - Power good for PWR_Supply_Main_PG
 	 PE3 - Power good for PWR_Supply_Backup_PG
-	 PE4 - Power good for PWR_Ch_PG_PBMs_Logic
-	 PE5 - Power good for PWR_Ch_PG_Deploy_LP
-	 PE7 - Power good for PWR_Ch_PG_Vbat2_eF2
-	 PE8 - Power good for PWR_Ch_PG_Vbat2_eF1
-	 PE9 - Power good for PWR_Ch_PG_Vbat1_eF2
-	 PE10 - Power good for PWR_Ch_PG_Vbat1_eF1
-	 PE11 - Power good for PWR_Ch_PG_CANmain
-	 PE12 - Power good for PWR_Ch_PG_CANbackup
-	 PE13 - Power good for PWR_Ch_PG_I2C_Bus
-	 PE14 - Power good for PWR_Ch_PG_3_3V_Bus
-	 PE15 - Power good for PWR_Ch_PG_5V_Bus
-	 */
+	 PE4 - Power good for eF_PG_LPBM_1	 (  )
+	 PE5 - Power good for eF_PG_LPBM_2   ( Cleon1 PWR_Ch_PG_Deploy_LP)
+	 PE7 - Power good for eF_PG_Deploy_L ( Cleon1 PWR_Ch_PG_Vbat2_eF2)
+	 PE8 - Power good for eF_PG_Deploy_P ( Cleon1 PWR_Ch_PG_Vbat2_eF1)
+	 PE9 - Power good for eF_PG_Vbat1    ( Cleon1 PWR_Ch_PG_Vbat1_eF2)
+	 PE10 - Power good for eF_PG_Vbat2   ( Cleon1 PWR_Ch_PG_Vbat1_eF1)
+	 PE11 - Power good for PG_Power_CPUm ( Cleon1 PWR_Ch_PG_CANmain)
+	 PE12 - 				             ( Cleon1 PWR_Ch_PG_CANbackup)
+	 PE13 -  							 ( Cleon1 PWR_Ch_PG_I2C_Bus)
+	 PE14 - Power good for PG_DC_5V_CANb ( Cleon1 PWR_Ch_PG_3_3V_Bus)
+	 PE15 - Power good for PG_DC_5V_CANm ( Cleon1 PWR_Ch_PG_5V_Bus)
+	 PD8  - Power good for PG_Power_CPUb ( Cleon1 CPUm_I2C_GPIO_Ext_PMM_INT)
+	  */
+
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_7 | LL_GPIO_PIN_8 | LL_GPIO_PIN_9 | LL_GPIO_PIN_10\
-                            | LL_GPIO_PIN_11 | LL_GPIO_PIN_12 | LL_GPIO_PIN_13 | LL_GPIO_PIN_14 | LL_GPIO_PIN_15;
+                            | LL_GPIO_PIN_11 | LL_GPIO_PIN_14 | LL_GPIO_PIN_15;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	LL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 	/****************************************************************************************/
 
     /*-------------------------------------------------------------------------------------*/
     /* Pins for show  PBM Energy Low*/
-    /** PD12 - PBM Energy level Low pin. Reset pin when PBM Energy level is Low.*/
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_12;
+    /** PD14 - PBM Energy level Low pin. Reset pin when PBM Energy level is Low.*/
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_14;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
@@ -821,116 +835,34 @@ void GPIO_Init(void) {
     PBM_Low_Energy_Reset_pin(); //Set defaule state
     /****************************************************************************************/
 
-    /*-------------------------------------------------------------------------------------*/
-    /* Pins for poll request from BRK */
-    /** PD13 - RT_FL_EPS1*/
-    /** PD14 - RT_FL_EPS2*/
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_13|LL_GPIO_PIN_14;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-    /*For control pin PBM Energy Level LOW  need use:	*/
-    /*PMM_RT_FL_EPS1_Set_pin();     		    		*/
-    /*PMM_RT_FL_EPS1_Reset_pin();      		    		*/
-    /* PMM_RT_FL_EPS2_Set_pin();      		    		*/
-    /*PMM_RT_FL_EPS2_Reset_pin();     		    		*/
-    PMM_RT_FL_EPS1_Reset_pin();
-    PMM_RT_FL_EPS2_Reset_pin();
-    /****************************************************************************************/
 
 	/*-------------------------------------------------------------------------------------*/
 	/* Set analog mode for free pins. */
 	/** Free pins*/
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_6 | LL_GPIO_PIN_8 | LL_GPIO_PIN_9 | LL_GPIO_PIN_10 | LL_GPIO_PIN_11 | LL_GPIO_PIN_12;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_7 | LL_GPIO_PIN_8 | LL_GPIO_PIN_9 | LL_GPIO_PIN_10 | LL_GPIO_PIN_11 | LL_GPIO_PIN_12;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_1 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_5 |LL_GPIO_PIN_6 | LL_GPIO_PIN_7 | LL_GPIO_PIN_10 | LL_GPIO_PIN_11;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_2 | LL_GPIO_PIN_12 | LL_GPIO_PIN_15;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_3 |  LL_GPIO_PIN_6 | LL_GPIO_PIN_7 | LL_GPIO_PIN_8 | LL_GPIO_PIN_10 | LL_GPIO_PIN_11 | LL_GPIO_PIN_13;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6| LL_GPIO_PIN_11;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7 | LL_GPIO_PIN_15;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_7| LL_GPIO_PIN_8 | LL_GPIO_PIN_9 | LL_GPIO_PIN_10 | LL_GPIO_PIN_11;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-	/** Not use pins in Norbi.*/
-	//UART1 PAM
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_9 | LL_GPIO_PIN_10;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-	//UART2 PDM. Not use in Norbi
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_15;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-	//UART2 and UART1 buffer EN. Not use in Norbi
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-
-	//I2C sys bus. Not use in Norbi
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_14;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-	//I2C2 PAM PDM reserved. Not use in Norbi
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_13 | LL_GPIO_PIN_14;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-	//CPUx_OE_Buffer_1, CPUx_OE_Buffer_2, CPUx_OE_Buffer_RF. Not use in Norbi
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_11 | LL_GPIO_PIN_12 | LL_GPIO_PIN_13;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-
-
-	//CPUx_RF_WG1, CPUx_RF_OP1, CPUx_RF_WG2, CPUx_RF_OP2. Not use in Norbi
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_1 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_6 | LL_GPIO_PIN_12 | LL_GPIO_PIN_13;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
 }
 
@@ -950,7 +882,7 @@ void PWM_Init_Ch3_Ch4( uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider)
 	LL_TIM_InitTypeDef TIM_InitStruct = { 0 };
 	LL_TIM_OC_InitTypeDef TIM_OC_InitStruct = { 0 };
 
-	//Setup GPIO TIM3_CH3 ------> PB0 (pin M5)
+	//Setup GPIO TIM3_CH3 ------> PB0
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
@@ -960,7 +892,7 @@ void PWM_Init_Ch3_Ch4( uint32_t freq, uint32_t duty_cycle, uint16_t tim_divider)
 	GPIO_InitStruct.Alternate = LL_GPIO_AF_2;
 	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	//Setup GPIO TIM3_CH4 ------> PB1 (pin M6)
+	//Setup GPIO TIM3_CH4 ------> PB1
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
@@ -1083,20 +1015,12 @@ int8_t CAN_init_eps(CAN_TypeDef *can_ref) {
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	} else if (can_ref == CAN2) {
-		GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_12 | LL_GPIO_PIN_13;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
 		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
 		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-		GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
-		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-		GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
-		GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-		GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
-		GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-		GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-		GPIO_InitStruct.Alternate = LL_GPIO_AF_3;
+		GPIO_InitStruct.Alternate = LL_GPIO_AF_10;
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	} else {
@@ -1168,15 +1092,11 @@ int8_t CAN_DeInit_eps(CAN_TypeDef *can_ref) {
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	} else if (can_ref == CAN2) {
-		GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+		GPIO_InitStruct.Pin = LL_GPIO_PIN_12 | LL_GPIO_PIN_13;
 		GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
 		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-		GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
-		GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-		GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-		LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	} else {
 		return ERROR_N;

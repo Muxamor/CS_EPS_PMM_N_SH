@@ -17,8 +17,8 @@ typedef struct{
 
 
 	uint8_t Error_I2C_GPIO_Ext1:1;								//0-OK, 1-ERROR.
-    uint8_t Error_I2C_GPIO_Ext2:1;								//0-OK, 1-ERROR.
-	uint8_t :6;
+   // uint8_t Error_I2C_GPIO_Ext2:1;								//0-OK, 1-ERROR.
+	uint8_t :7;
 
 	uint8_t PAM_ID_SP;
 
@@ -43,9 +43,9 @@ typedef struct{
 	int16_t Current_val;
 	uint16_t Power_val;
 
-	uint8_t State_ID_In  		:1; //0-Open, 1-Close. Show State power channel input ideal diode.
+	//uint8_t State_ID_In  		:1; //0-Open, 1-Close. Show State power channel input ideal diode.
 	uint8_t Error_PWR_Mon 		:1;
-	uint8_t :6;
+	uint8_t :7;
 
     uint8_t Alignment_structure; 	//Alignment
 
@@ -57,7 +57,7 @@ typedef struct{
 	_PAM_SP Solar_Panel [PAM_SP_quantity];
     _PAM_PWR_CH_TM_SP PWR_Channel_TM_SP[PAM_PWR_TM_SP_Ch_quantity];
 
-	int8_t Temp_sensor[4]; //PAM temperature
+	int8_t Temp_sensor[PAM_TEMP_Sensor_quantity]; //PAM temperature
 
  	uint16_t State_DC_DC 			:1; // Need to save in flash
 	uint16_t State_LDO 				:1; // Need to save in flash
@@ -70,10 +70,8 @@ typedef struct{
 	uint16_t Error_I2C_MUX_2		:1;
 	uint16_t Error_temp_sensor_1 	:1;
 	uint16_t Error_temp_sensor_2 	:1;
-	uint16_t Error_temp_sensor_3 	:1;
-	uint16_t Error_temp_sensor_4	:1;
     uint16_t PAM_save_conf_flag		:1;
-	uint16_t :2;
+	uint16_t :4;
 
 	uint8_t PAM_ID_module;        //identifier of PAM // Need to save in flash
 	uint8_t Alignment_structure; //Alignment

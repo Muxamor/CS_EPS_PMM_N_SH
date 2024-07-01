@@ -1,22 +1,23 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
-#include "stm32l4xx_ll_tim.h"
 #include "stm32l4xx_ll_iwdg.h"
 #include "SetupPeriph.h"
 #include "PCA9534.h"
 #include "ADS1015.h"
-#include "tim_pwm.h"
+#include "CAND/CAN.h"
 #include "CAND/CAN_cmd.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init_IC.h"
 #include "PMM/pmm_ctrl.h"
+#include "PMM/pmm_damage_ctrl.h"
 #include "PMM/pmm_init.h"
+#include "PMM/pmm.h"
 #include "PDM/pdm_ctrl.h"
 #include "PDM/pdm_init.h"
 #include "PAM/pam_init.h"
 #include "PAM/pam.h"
-#include "PBM_T1/pbm_T1_config.h"
+#include "PAM/pam_ctrl.h"
 #include "PBM_T1/pbm_T1_init.h"
 #include "PMM/pmm_deploy.h"
 
@@ -35,15 +36,16 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     static uint32_t  Exit_LSW_poll_time_delay  = 0;
     static uint16_t  Counter_deploy_exit_LSW_1  = 0;
     static uint16_t  Counter_deploy_exit_LSW_2  = 0;
+    static uint8_t   Error_counter = 0;
 
     deploy_stage = eps_p.eps_pmm_ptr->Deploy_stage;
 
     //Enable power Deploy Logic
     if( eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic == DISABLE ){
-        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
         LL_mDelay( 5 );
     }else{
-        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, ENABLE );
     }
 
     //Deploy stage 0 - In delivery container
@@ -52,10 +54,8 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         uint8_t value_deploy_exit_LSW_2 = 1;
 
         if( ((uint32_t)(SysTick_Counter - Exit_LSW_poll_time_delay)) > ((uint32_t) 1000) ){
-            error_status = ERROR_N;
-            error_status = PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 );
 
-            if(error_status == SUCCESS ){
+            if( PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 ) == SUCCESS ){
                 if( value_deploy_exit_LSW_1 == 0){
                     Counter_deploy_exit_LSW_1++;
                 }else{
@@ -87,6 +87,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         }else if( ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 == 1 ) && ( eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 == 1) ){
             //Set next deploy stage
             eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge battery if enegy lavel is low
+            SysTick_Counter = 0x00;
             Deploy_start_time_delay = SysTick_Counter;
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
@@ -98,10 +99,17 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         }
 
         if( (eps_p.eps_pmm_ptr->Deploy_stage == 1) || (eps_p.eps_pmm_ptr->Deploy_stage == 2) ){
+
+            PMM_CPU_SPEED_MODE( eps_p.eps_pmm_ptr, CPU_Clock_80MHz );
+            LPUART1_Init();
+            USART3_Init();
+            Setup_UART_Interrupt();
+
             //Enable main CAN
             PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE);
             LL_mDelay( 50 );
             CAN_init_eps(CAN1);
+            CAN_RegisterAllVars();
 
             //Enable PBM logic power and thermostat.
             PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_PBMs_Logic, ENABLE );
@@ -119,12 +127,11 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
             	}
             }
 
-            //Enable passive CPU
-            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-            PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-           // PWM_DeInit_Ch3_Ch4( );
+            //Enable Power possive CPU
             eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
 
+            //Init EPS
+            LL_IWDG_ReloadCounter(IWDG);
             PMM_init( eps_p.eps_pmm_ptr );
             PDM_init( eps_p.eps_pdm_ptr );
             PAM_init( eps_p.eps_pam_ptr );
@@ -140,6 +147,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     }else if( deploy_stage == 1 ){
         uint8_t total_error_pwr_mon_pam = 0;
         uint16_t total_power_gen_pam = 0;
+        LL_IWDG_ReloadCounter(IWDG);
 
         //Check Enable state power supply PAM module and get telemetry PAM if PWR supply disable
         if( (eps_p.eps_pam_ptr->State_DC_DC == DISABLE) && (eps_p.eps_pam_ptr->State_LDO == DISABLE) ){
@@ -168,6 +176,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
             if( total_power_gen_pam > PMM_Deploy_Power_Gen_EDGE ){
                 eps_p.eps_pmm_ptr->Deploy_stage = 2; // Next deploy stage 2 - low level energy, check and waiting for charge if battery low.
+                SysTick_Counter = 0x00;
                 Deploy_start_time_delay = SysTick_Counter;
                 eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
@@ -178,17 +187,20 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
     // Deploy stage 2 - waiting timeout before deploy
     }else if( deploy_stage == 2 ){
-    	if( ((uint32_t)(SysTick_Counter - Deploy_start_time_delay)) > ((uint32_t) PMM_Deploy_Time_Delay) ){
+    	if( ((uint32_t)(SysTick_Counter - Deploy_start_time_delay)) > ((uint32_t) PMM_Deploy_Time_Delay) ){ //
             eps_p.eps_pmm_ptr->Deploy_stage = 3; // Next deploy stage 3 - low level energy, check and waiting for charge if battery low.
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
     	}
 
     // Deploy stage 3 -  low level energy, check battery level and waiting for charge if battery low.
     }else if(deploy_stage == 3){
-        if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF2_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) ||
-                (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF1_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) ){
+        if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE) || (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val > PBM_T1_NORMAL_ENERGY_EDGE)  ){
             eps_p.eps_pmm_ptr->Deploy_stage = 4; // Next deploy stage 4 - deploy at channel 1
             eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+
+        }else if( eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF == ERROR && eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF == ERROR ){
+            eps_p.eps_pmm_ptr->Deploy_stage = 4;
+
         }else{
             eps_p.eps_pmm_ptr->Deploy_stage = 3; // waiting for the batteries to charge
         }
@@ -207,16 +219,25 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         eps_p.eps_pmm_ptr->Deploy_stage = 6; // Next deploy stage 6 - Enable BRC
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
+
     // Deploy stage 6 - Enable BRK1, BRK2, CANm, CANb, PAM DC-DC.
     }else if( deploy_stage == 6 ){
+
+        LL_IWDG_ReloadCounter(IWDG);
+
         //Enable CAN
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
-        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
+        PMM_Start_Time_Check_CAN = SysTick_Counter;
+        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANmain, ENABLE );
+        error_status += PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_CANbackup, ENABLE );
         LL_mDelay( 50 );
         CAN_init_eps(CAN1);
         CAN_init_eps(CAN2);
+        CAN_RegisterAllVars();
+
         //Enable PAM DC-DC
         eps_p.eps_pam_ptr->State_DC_DC = ENABLE;
+        PAM_Set_state_PWR_Supply( eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE); //
+        LL_mDelay( 300 ); // Whait PG for Pam DC-DC
         PAM_init( eps_p.eps_pam_ptr );
         //Enable BRC
         error_status += PDM_Set_state_PWR_CH(eps_p.eps_pdm_ptr, PDM_PWR_Channel_3, ENABLE);
@@ -253,8 +274,21 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
     }
 
     if( error_status != SUCCESS ){
+        PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
+        PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
+
+        DISABLE_TMUX1209_I2C();
+        LL_mDelay( 50 );
+        ENABLE_TMUX1209_I2C();
+        Error_counter++;
+        if( Error_counter > 3 ){
+            eps_p.eps_serv_ptr->Req_SW_Active_CPU = 1;
+            Error_counter = 0;
+        }
         return ERROR_N;
     }
+
+    Error_counter = 0;
     return SUCCESS;
 }
 
@@ -434,7 +468,7 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
     //Init. deploy ADC
     while((error_I2C != SUCCESS) && (i < pmm_i2c_attempt_conn)){
 
-        error_I2C = ADS1015_init( eps_p.eps_pmm_ptr, PMM_I2Cx_DeployADC, PMM_I2CADDR_DeployADC );
+        error_I2C = ADS1015_init( PMM_I2Cx_DeployADC, PMM_I2CADDR_DeployADC );
 
         if( error_I2C != SUCCESS ){
             i++;
@@ -479,20 +513,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
             *ret_state_limit_switch_2 = 0;
 
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 0;
             }
 
         }else if((ADC_ch_meas > 0.35) && (ADC_ch_meas < 0.7)){
@@ -501,20 +535,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
             *ret_state_limit_switch_2 = 0;
 
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 0;
             }
 
         }else if((ADC_ch_meas > 0.7) && (ADC_ch_meas < 1.1)){
@@ -523,20 +557,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
             *ret_state_limit_switch_2 = 1;
 
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 1;
             }
 
         }else if( ADC_ch_meas > 1.1 ){
@@ -545,20 +579,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
             *ret_state_limit_switch_2 = 1;
 
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 1;
             }
         }
 
@@ -569,20 +603,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
         *ret_state_limit_switch_2 = 0;
 
         if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 0;
 
         }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 0;
 
         }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 0;
 
         }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 0;
         }
     }
 

@@ -16,9 +16,9 @@ typedef enum {
 
 // Structure PDM
 typedef struct{
-    uint8_t State_eF_in  	:1;
-    uint8_t State_eF_out 	:1;
-    uint8_t :6;
+    uint8_t State_eF  	:1;
+   // uint8_t State_eF_out 	:1;
+    uint8_t :7;
 
  }FRAM_PDM_PWR_CH;
 
@@ -63,30 +63,30 @@ typedef struct{
      //PMM
      uint32_t FRAM_PMM_PWR_Ch_State_CANmain			:1;
      uint32_t FRAM_PMM_PWR_Ch_State_CANbackup		:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF1   	:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF2		:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF1     	:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF2		:1;
+     uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF   		:1;
+    // uint32_t FRAM_PMM_PWR_Ch_State_Vbat1_eF2		:1;
+     uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF     	:1;
+    // uint32_t FRAM_PMM_PWR_Ch_State_Vbat2_eF2		:1;
      uint32_t FRAM_PMM_PWR_Ch_State_PBMs_Logic		:1;
      uint32_t FRAM_PMM_PWR_Ch_State_Deploy_Logic 	:1;
      uint32_t FRAM_PMM_PWR_Ch_State_Deploy_Power 	:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_5V_Bus 			:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_3_3V_Bus 		:1;
-     uint32_t FRAM_PMM_PWR_Ch_State_I2C_Bus 		:1;
+   //  uint32_t FRAM_PMM_PWR_Ch_State_5V_Bus 			:1;
+    // uint32_t FRAM_PMM_PWR_Ch_State_3_3V_Bus 		:1;
+    // uint32_t FRAM_PMM_PWR_Ch_State_I2C_Bus 		:1;
      uint32_t FRAM_PMM_PWR_OFF_Passive_CPU          :1;
      uint32_t FRAM_PMM_Active_CPU		 		    :1;
      uint32_t FRAM_PMM_CAN_constatnt_mode		    :1;
      uint32_t FRAM_PMM_Deploy_Lim_SW_Exit_1         :1;
      uint32_t FRAM_PMM_Deploy_Lim_SW_Exit_2         :1;
-     uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_1_Yp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_2_Yp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_1_Yn       :1;
-     uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_2_Yn       :1;
-     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_1_Zp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zn       :1;
-     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zn       :1;
-     uint32_t :7;
+     uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_1	        :1;
+     uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_2          :1;
+     uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_1      	:1;
+     uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_2          :1;
+     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_1          :1;
+     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_2          :1;
+     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_1          :1;
+     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2          :1;
+     uint32_t :12;
 
      uint32_t Reserved1;
      uint32_t Reserved2;
@@ -125,6 +125,7 @@ typedef struct{
 ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
 ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2, uint8_t i2c_addr_fram1, uint8_t i2c_addr_fram2, _EPS_Param eps_p );
 ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p );
+ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p );
 ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p );
 ErrorStatus FRAM_Check_Data_CRC( uint8_t *data, uint16_t data_size, uint16_t expected_crc );
 

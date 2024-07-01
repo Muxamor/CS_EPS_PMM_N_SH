@@ -1,7 +1,10 @@
 #include  <stdio.h>
+#include  <string.h>
 #include "SetupPeriph.h"
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_cortex.h"
 #include "stm32l4xx_ll_iwdg.h"
+//#include "stm32l4xx_ll_rcc.h"
 #include "PMM/eps_struct.h"
 #include "CAND/CAN_cmd.h"
 #include "CAND/CAN.h"
@@ -18,10 +21,10 @@
 #include "PBM_T1/pbm_T1_init.h"
 #include "PBM_T1/pbm_T1.h"
 #include "PAM/pam_init.h"
+#include "PAM/pam_ctrl.h"
+#include "PAM/pam_sp_ctrl.h"
 #include "PAM/pam.h"
 #include "uart_eps_comm.h"
-
-
 /**********************************************************/
 
 //extern uint32_t SysTick_Counter;
@@ -37,7 +40,7 @@ _UART_EPS_COMM uart_b_eps_communication = {0}, *UART_B_eps_comm = &uart_b_eps_co
 
 int main(void){
 
-    uint32_t Passive_CPU_start_time_wait_data = 0 ;
+   uint32_t Passive_CPU_start_time_wait_data = 0 ;
 
     SysTick_Counter = 0;
     CAN_cmd_Buff.length = 0;
@@ -60,11 +63,11 @@ int main(void){
 							.eps_serv_ptr = eps_service_ptr
 						    };
 
-    pmm_ptr->Version_FW =  ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
+    pmm_ptr->Version_FW = ( ((uint16_t)VERSION_FW_MAJOR) << 8 ) |( (uint16_t)VERSION_FW_MINOR ); //Firmware version
 
 	/** Initialization Periph. STM32L496*/
 	LL_Init();
-	SystemClock_Config();
+	SystemClock_Config(CPU_Clock_80MHz);
 	//LL_RCC_GetSystemClocksFreq(CHECK_RCC_CLOCKS); // Only for check setup clock Not need use in release
 	GPIO_Init();
 	I2C3_Init();
@@ -75,15 +78,14 @@ int main(void){
     //UART5_Init();
     LPUART1_Init();
     USART3_Init();
-    SetupInterrupt();
+    Setup_UART_Interrupt();
+    LL_SYSTICK_EnableIT();
 
-
-    //LL_mDelay(4);
-    //IWDG_Init(4000);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   // IWDG_Init(4000);
     LL_IWDG_ReloadCounter(IWDG);
 
-	//Restore settings of EPS
-    pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_MasterBackupCPU();
+    //Restore settings of EPS
+    pmm_ptr->Main_Backup_mode_CPU = PMM_Detect_Main_Backup_CPU();
 
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
         UART_M_eps_comm->uart_unit_addr = UART_EPS_CPUm_Addr;
@@ -96,10 +98,21 @@ int main(void){
     //Restore settings EPS from FRAM
     PMM_FRAM_Restore_Settings(eps_param);
 
+    //Get settings from the neighbor CPU if detect errors FRAM1 and FRAM2.
+    if( eps_param.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_param.eps_pmm_ptr->Error_FRAM2 == ERROR ){
+        PMM_Get_Settings_From_NeighborCPU( eps_param );
+    }
+
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){
         pmm_ptr->reboot_counter_CPUm++;
+		#ifdef DEBUGprintf
+        	printf("Main CPU started\n");
+        #endif
     }else{ // CPUbackup
         pmm_ptr->reboot_counter_CPUb++;
+		#ifdef DEBUGprintf
+        	printf("Backup CPU started\n");
+        #endif
     }
 
     pmm_ptr->PMM_save_conf_flag = 1; // Need to save reboot counter value after reboot.
@@ -118,9 +131,10 @@ int main(void){
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
 
+
     //Fill VarID4
     CAN_Var4_fill(eps_param);
-    if(pmm_ptr->CAN_constatnt_mode == ENABLE ){
+    if( pmm_ptr->CAN_constatnt_mode == ENABLE){
         CAN_Var5_fill_telemetry_const();
     }
 
@@ -133,13 +147,10 @@ int main(void){
 	        PDM_init( pdm_ptr );
 	    }
 	    PAM_init( pam_ptr );
+
 	    if( pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE ){
 	        PBM_T1_Init( pbm_mas );
 	    }
-
-        if( pmm_ptr->CAN_constatnt_mode == ENABLE){
-            CAN_Var5_fill_telemetry_const();
-        }
 
         if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE ){
         	CAN_init_eps(CAN1);
@@ -148,14 +159,20 @@ int main(void){
         	CAN_init_eps(CAN2);
         }
 
-		CAN_RegisterAllVars();
-        PMM_Start_Time_Check_CAN = SysTick_Counter;
-
-        if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
-            LPUART1_DeInit();
-            USART3_DeInit();
+        if( pmm_ptr->PWR_Ch_State_CANmain == ENABLE || pmm_ptr->PWR_Ch_State_CANbackup == ENABLE  ){
+        	CAN_RegisterAllVars();
         }
 
+        if(pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
+        	LPUART1_DeInit();
+        	USART3_DeInit();
+        }
+
+        if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 && pmm_ptr->PWR_Ch_State_CANmain == DISABLE && pmm_ptr->PWR_OFF_Passive_CPU == ENABLE ){
+            PMM_CPU_SPEED_MODE( pmm_ptr, CPU_Clock_16MHz );
+        }
+
+        PMM_Start_Time_Check_CAN = SysTick_Counter;
 
     //Initialization CAN for passive CPU
 	}else{
@@ -166,7 +183,6 @@ int main(void){
 		CAN_DeInit_eps(CAN2);
         PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 	}
-
 
 	//Infinity Loop
 	while(1){
@@ -186,17 +202,38 @@ int main(void){
         if( (pmm_ptr->Active_CPU == CPUmain_Active && pmm_ptr->Main_Backup_mode_CPU == CPUmain) || (pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){ //Initialization Active CPU
 
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE && pmm_ptr->Deploy_stage == 0 ){
-                //Empty
+//                if(pmm_ptr->PWR_Ch_State_PBMs_Logic == DISABLE){
+//                    PBM_T1_EraseData(pbm_mas);
+//                }
+//                if( pam_ptr->State_DC_DC == DISABLE && pam_ptr->State_LDO == DISABLE ){
+//                    PAM_EraseData(pam_ptr);
+//                    PAM_SP_EraseData(pam_ptr);
+//                }
+
             }else{
+
                 PMM_Get_Telemetry(pmm_ptr);
                 PDM_Get_Telemetry(pdm_ptr);
                 PAM_Get_Telemetry(pam_ptr);
+                LL_IWDG_ReloadCounter(IWDG);
                 if(pmm_ptr->PWR_Ch_State_PBMs_Logic == ENABLE){
                     PBM_T1_Get_Telemetry(pbm_mas);
                 }else{
                     PBM_T1_EraseData(pbm_mas);
                 }
             }
+
+            //In case when Backup CPU is Active and Main CPU reboot and findout who is an active CPU
+            //In a case when no Activ CPU read settings if got errors FRAM1 and FRAM2
+            //if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
+            if( UART_M_eps_comm->permit_recv_pack_flag == 1 || UART_M_eps_comm->stop_recv_pack_flag == 1 ||
+                    UART_B_eps_comm->permit_recv_pack_flag == 1 || UART_B_eps_comm->stop_recv_pack_flag == 1 ){
+                UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
+                UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
+                UART_EPS_Pars_Get_Package( UART_M_eps_comm, eps_param );
+                UART_EPS_Pars_Get_Package( UART_B_eps_comm, eps_param );
+            }
+            //}
 
             //EPS_COMBAT_MODE
             if( pmm_ptr->EPS_Mode == EPS_COMBAT_MODE ){
@@ -207,7 +244,7 @@ int main(void){
                 }
 
                 //CAN ports power off protection. ( In combat mode start protection only out from the container )
-                if( pmm_ptr->Deploy_stage >=1 ){
+                if( pmm_ptr->Deploy_stage >= 1 ){
                 	PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
                 }
 
@@ -218,24 +255,17 @@ int main(void){
                     //Disable PWR SubSystem if reach Zero energy level
                     PMM_ZERO_Energy_PWR_OFF_SubSystem( eps_param );
                     //Protection for off all BRC
-                    PMM_Portecion_PWR_OFF_BRC_m_b( eps_param );
+                    PMM_Protecion_PWR_OFF_BRC_m_b( eps_param );
                 }
 
             // EPS_SERVICE_MODE
             }else{
                 PMM_Start_Time_Check_CAN = SysTick_Counter;
                 //All CAN ports power off protection.
-                PMM_Portecion_PWR_OFF_CAN_m_b(eps_param);
+                PMM_Protecion_PWR_OFF_CANmain(eps_param);
             }
 
-            //In case when Backup CPU is Active and Main CPU reboot and findout active CPU
-            if((pmm_ptr->Active_CPU == CPUbackup_Active && pmm_ptr->Main_Backup_mode_CPU == CPUbackup) ){
-                UART_EPS_Check_TimeOut_Receive( UART_M_eps_comm );
-                UART_EPS_Check_TimeOut_Receive( UART_B_eps_comm );
-                UART_EPS_Pars_Get_Package( UART_M_eps_comm, eps_param );
-                UART_EPS_Pars_Get_Package( UART_B_eps_comm, eps_param );
-            }
-
+            LL_IWDG_ReloadCounter(IWDG);
             //Check Errors UART ports and get reboot counter passive CPU.
             PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_param);
 
@@ -245,12 +275,15 @@ int main(void){
             }
 
             //Fill CAN Var5
-            if( pmm_ptr->CAN_constatnt_mode == 0 ){ //Constant mode OFF
+            LL_IWDG_ReloadCounter(IWDG);
+            if( pmm_ptr->CAN_constatnt_mode == DISABLE ){ //Constant mode OFF
                 CAN_Var5_fill_telemetry(eps_param);
+                memcpy(&CAN_IVar5_ready_telemetry, &CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry)); //Execution time at 80MHz is 61.5us.
             }
 
 			//Switch active CPU 
 			if( eps_service_ptr->Req_SW_Active_CPU == 1 ){
+
                 if( pmm_ptr->PWR_OFF_Passive_CPU == DISABLE ){
                     PMM_Switch_Active_CPU(eps_service_ptr->Set_Active_CPU, UART_M_eps_comm, UART_B_eps_comm, eps_param); // Need rewrite this function
                 }
@@ -294,6 +327,29 @@ int main(void){
 //	FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
 //!!!!!!!!!!!!!!!!!!!!Need erase FRAM at flight
 
+//!!!!!!!!!!!!!!!!!!For first start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+ // pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+//   pmm_ptr->EPS_Mode = 0xFF;
+//   pmm_ptr->Active_CPU = 0x00;
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+/*
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_1].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_2].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_5].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_6].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_7].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_8].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_9].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_10].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_11].State_eF  = DISABLE;//ENABLE;
+pdm_ptr->PWR_Channel[PDM_PWR_Channel_12].State_eF  = DISABLE;//ENABLE;
+*/
+// pam_ptr->State_DC_DC= ENABLE;
 //printf("Date: %s  Time: %s \r\n",  __DATE__, __TIME__);
 
 

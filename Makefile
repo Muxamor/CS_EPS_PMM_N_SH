@@ -7,10 +7,10 @@ TARGET = CS_EPS_PMM_N_SH_v
 # version major update  0..255
 VERSION_FIRMWARE_MAJOR = 1
 # version mainor update 0..255
-VERSION_FIRMWARE_MINOR = 4
+VERSION_FIRMWARE_MINOR = 6
 
 # Set the FLAG OS_SYSTEM - LINUX or MAC_OS or WINDOWS it depends which system are you use to build.
-BUILD_OS_SYSTEM = WINDOWS
+BUILD_OS_SYSTEM = LINUX
 
 
 ######################################
@@ -49,7 +49,9 @@ Core/Src/ADS1015.c \
 Core/Src/TCA9548.c \
 Core/Src/TCA6424A.c \
 Core/Src/INA231.c \
+Core/Src/INA238.c \
 Core/Src/DS2777.c \
+Core/Src/MAX17320.c \
 Core/Src/PDM/pdm_config.c \
 Core/Src/PDM/pdm_init_IC.c \
 Core/Src/PDM/pdm_init.c \
@@ -74,11 +76,11 @@ Core/Src/PMM/pmm_sw_cpu.c \
 Core/Src/PMM/pmm.c \
 Core/Src/PMM/pmm_deploy.c \
 Core/Src/PMM/pmm_damage_ctrl.c\
-Core/Src/PBM/pbm_config.c \
-Core/Src/PBM/pbm_init_IC.c \
-Core/Src/PBM/pbm_init.c \
-Core/Src/PBM/pbm_control.c \
-Core/Src/PBM/pbm.c \
+Core/Src/PBM_T1/pbm_T1_config.c \
+Core/Src/PBM_T1/pbm_T1_init_IC.c \
+Core/Src/PBM_T1/pbm_T1_init.c \
+Core/Src/PBM_T1/pbm_T1_control.c \
+Core/Src/PBM_T1/pbm_T1.c \
 Core/Src/CAND/CAN.c \
 Core/Src/CAND/CAN_cmd.c \
 Core/Src/CAND/filter2D.c \
@@ -108,7 +110,7 @@ Core/startup/startup_stm32l496qgix.s
 # binaries
 #######################################
 ifeq ($(BUILD_OS_SYSTEM),LINUX)
-GCC_PATH = /opt/gcc-arm-none-eabi-7-2017-q4-major/bin
+GCC_PATH = /opt/arm-none-eabi/bin
 else ifeq ($(BUILD_OS_SYSTEM),MAC_OS)
 GCC_PATH = /Users/Ivan/Development/opt/gcc-arm-none-eabi-7-2018-q2-update/bin
 else ifeq ($(BUILD_OS_SYSTEM),WINDOWS)
