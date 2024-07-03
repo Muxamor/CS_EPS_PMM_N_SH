@@ -130,8 +130,7 @@ int main(void){
 
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
-
-
+	
     //Fill VarID4
     CAN_Var4_fill(eps_param);
     if( pmm_ptr->CAN_constatnt_mode == ENABLE){
@@ -183,6 +182,7 @@ int main(void){
 		CAN_DeInit_eps(CAN2);
         PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 	}
+
 
 	//Infinity Loop
 	while(1){
