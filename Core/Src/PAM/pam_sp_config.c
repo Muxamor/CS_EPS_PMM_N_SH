@@ -95,6 +95,24 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_temp_senor[3] = PAM_SP6_I2CADDR_TEMP_SENS_4;
             break;
 
+        case PAM_SP7:
+          	pam_sp_table.PWR_number_ch_TM_SP = PAM_PWR_TM_SP_Ch7;
+            pam_sp_table.PAM_I2C_MUX_Ch = TCA9548_CH3;
+
+            pam_sp_table.ID_quantity = PAM_SP7_ID_quantity;
+
+            pam_sp_table.temp_sensor_quantity = PAM_SP7_temp_sens_quantity;
+            break;
+
+        case PAM_SP8:
+          	pam_sp_table.PWR_number_ch_TM_SP = PAM_PWR_TM_SP_Ch8;
+            pam_sp_table.PAM_I2C_MUX_Ch = TCA9548_CH4;
+
+            pam_sp_table.ID_quantity = PAM_SP8_ID_quantity;
+
+            pam_sp_table.temp_sensor_quantity = PAM_SP8_temp_sens_quantity;
+            break;
+
         default:
             break;
     }

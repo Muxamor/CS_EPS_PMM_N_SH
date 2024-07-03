@@ -15,6 +15,9 @@ extern "C" {
 #define PAM_SP4         			    0x03 //Solar panel namber 4 is FSP Xn for G
 #define PAM_SP5          			    0x04 //Solar panel namber 5 is X- for G
 #define PAM_SP6         			    0x05 //Solar panel namber 6 is Y+ for G
+#define PAM_SP7          			    0x06 //empty in G
+#define PAM_SP8         			    0x07 //empty in G
+
 
 #define PAM_SP1_temp_sens_quantity      0x02  // Quantity temp senos on the solar panel
 #define PAM_SP2_temp_sens_quantity      0x04  // Quantity temp senos on the solar panel
@@ -22,6 +25,8 @@ extern "C" {
 #define PAM_SP4_temp_sens_quantity      0x04  // Quantity temp senos on the solar panel
 #define PAM_SP5_temp_sens_quantity      0x04  // Quantity temp senos on the solar panel
 #define PAM_SP6_temp_sens_quantity      0x04  // Quantity temp senos on the solar panel
+#define PAM_SP7_temp_sens_quantity      0x00  // Quantity temp senos on the solar panel
+#define PAM_SP8_temp_sens_quantity      0x00  // Quantity temp senos on the solar panel
 
 #define PAM_SP1_ID_quantity             0x01  // Quantity Ideal Diode on the solar panel
 #define PAM_SP2_ID_quantity             0x02  // Quantity Ideal Diode on the solar panel
@@ -29,6 +34,8 @@ extern "C" {
 #define PAM_SP4_ID_quantity             0x00  // Quantity Ideal Diode on the solar panel
 #define PAM_SP5_ID_quantity             0x02  // Quantity Ideal Diode on the solar panel
 #define PAM_SP6_ID_quantity             0x00  // Quantity Ideal Diode on the solar panel
+#define PAM_SP7_ID_quantity             0x00  // Quantity Ideal Diode on the solar panel
+#define PAM_SP8_ID_quantity             0x00  // Quantity Ideal Diode on the solar panel
 
 
 //I2C address temp senos on the solar panel namber 1 is Folding Y+ - Norbi,     is Folding X- - Norby2
