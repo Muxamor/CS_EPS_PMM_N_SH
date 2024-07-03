@@ -128,6 +128,37 @@ int main(void){
     pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
     pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
 
+    pmm_ptr->PWR_Ch_State_PBMs_Logic = ENABLE;
+
+	pbm_mas[0].Branch[0].ChgEnableCmd = 1;
+	pbm_mas[0].Branch[0].DchgEnableCmd = 1;
+	pbm_mas[1].Branch[0].ChgEnableCmd = 1;
+	pbm_mas[1].Branch[0].DchgEnableCmd = 1;
+	pbm_mas[2].Branch[0].ChgEnableCmd = 1;
+	pbm_mas[2].Branch[0].DchgEnableCmd = 1;
+	pbm_mas[3].Branch[0].ChgEnableCmd = 1;
+	pbm_mas[3].Branch[0].DchgEnableCmd = 1;
+	pbm_mas[4].Branch[0].ChgEnableCmd = 1;
+	pbm_mas[4].Branch[0].DchgEnableCmd = 1;
+
+	pbm_mas[0].Heat[0].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[0].Heat[1].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[1].Heat[0].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[1].Heat[1].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[2].Heat[0].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[2].Heat[1].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[3].Heat[0].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[3].Heat[1].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[4].Heat[0].PCA9534_Heat_CMD = ENABLE;
+	pbm_mas[4].Heat[1].PCA9534_Heat_CMD = ENABLE;
+
+	pbm_mas[0].Branch[0].PCA9534_Emerg_Chrg_Cmd = ENABLE;
+	pbm_mas[1].Branch[0].PCA9534_Emerg_Chrg_Cmd = ENABLE;
+	pbm_mas[2].Branch[0].PCA9534_Emerg_Chrg_Cmd = ENABLE;
+	pbm_mas[3].Branch[0].PCA9534_Emerg_Chrg_Cmd = ENABLE;
+	pbm_mas[4].Branch[0].PCA9534_Emerg_Chrg_Cmd = ENABLE;
+
+
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
 
@@ -183,6 +214,7 @@ int main(void){
 		CAN_DeInit_eps(CAN2);
         PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 	}
+
 
 	//Infinity Loop
 	while(1){
