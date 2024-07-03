@@ -52,6 +52,10 @@ _PBM_T1_table PBM_T1_Table(uint8_t PBM_number, uint8_t Branch, uint8_t Heat) {
 		pbm_T1_table.I2C_MUX_Addr = PBM_T1_4_TCA9548A_ADDR;
 		break;
 
+	case PBM_T1_5:
+		pbm_T1_table.I2C_MUX_Addr = PBM_T1_5_TCA9548A_ADDR;
+		break;
+
 	default:
 		break;
 	}
@@ -64,8 +68,8 @@ _PBM_T1_table PBM_T1_Table(uint8_t PBM_number, uint8_t Branch, uint8_t Heat) {
 		break;
 
 	case PBM_T1_BRANCH_2:
-		pbm_T1_table.GPIO_Pin_EmergChrg = PBM_T1_GPIO_CH_EmergChrg_2;
-		pbm_T1_table.I2C_MUX_Ch_Branch = PBM_T1_I2C_MUX_CH_Br2;
+		/*pbm_T1_table.GPIO_Pin_EmergChrg = PBM_T1_GPIO_CH_EmergChrg_2;
+		pbm_T1_table.I2C_MUX_Ch_Branch = PBM_T1_I2C_MUX_CH_Br2;*/
 		break;
 
 	default:

@@ -40,12 +40,10 @@ extern "C" {
 #define CAN_PMM_PWR_CAN_main_offset                 22
 #define CAN_PMM_PWR_CAN_backup_offset               23
 #define CAN_PWR_VBAT1_key_offset		            24
-#define CAN_PWR_VBAT1_key2_offset		            25
-#define CAN_PWR_VBAT2_key_offset		            26
-#define CAN_PWR_VBAT2_key2_offset		            27
-#define CAN_PMM_PWR_PBM_Logic_offset                28
-#define CAN_PMM_PDM_Reset_offset                    29
-#define CAN_PMM_PAM_Reset_offset                    30
+#define CAN_PWR_VBAT2_key_offset		            25
+#define CAN_PMM_PWR_PBM_Logic_offset                26
+#define CAN_PMM_PDM_Reset_offset                    27
+#define CAN_PMM_PAM_Reset_offset                    28
 
 // Offset Command of PDM
 #define CAN_PWR_CH1_offset			                100
@@ -54,6 +52,12 @@ extern "C" {
 #define CAN_PWR_CH4_offset			                103
 #define CAN_PWR_CH5_offset			                104
 #define CAN_PWR_CH6_offset			                105
+#define CAN_PWR_CH7_offset			                106
+#define CAN_PWR_CH8_offset			                107
+#define CAN_PWR_CH9_offset			                108
+#define CAN_PWR_CH10_offset			                109
+#define CAN_PWR_CH11_offset			                110
+#define CAN_PWR_CH12_offset			                111
 
 
 //Offset Command of PAM
@@ -65,6 +69,8 @@ extern "C" {
 #define CAN_PAM_PWR_TM_SP_CH4_offset                205
 #define CAN_PAM_PWR_TM_SP_CH5_offset                206
 #define CAN_PAM_PWR_TM_SP_CH6_offset                207
+#define CAN_PAM_PWR_TM_SP_CH7_offset                208
+#define CAN_PAM_PWR_TM_SP_CH8_offset                209
 
 //Offset Command of PBMs
 #define CAN_PBM1_Charge_key_branch_1_offset         300
@@ -83,15 +89,22 @@ extern "C" {
 #define CAN_PBM4_Discharge_key_branch_1_offset      313
 #define CAN_PBM4_Charge_key_branch_2_offset         314
 #define CAN_PBM4_Discharge_key_branch_2_offset      315
+#define CAN_PBM5_Charge_key_branch_1_offset         316
+#define CAN_PBM5_Discharge_key_branch_1_offset      317
+#define CAN_PBM5_Charge_key_branch_2_offset         318
+#define CAN_PBM5_Discharge_key_branch_2_offset      319
 
-#define CAN_PBM1_Heat_Branch1_offset                332
-#define CAN_PBM1_Heat_Branch2_offset                333
-#define CAN_PBM2_Heat_Branch1_offset                334
-#define CAN_PBM2_Heat_Branch2_offset                335
-#define CAN_PBM3_Heat_Branch1_offset                336
-#define CAN_PBM3_Heat_Branch2_offset                337
-#define CAN_PBM4_Heat_Branch1_offset                338
-#define CAN_PBM4_Heat_Branch2_offset                339
+
+#define CAN_PBM1_Heat_1_offset                		332
+#define CAN_PBM1_Heat_2_offset                		333
+#define CAN_PBM2_Heat_1_offset                		334
+#define CAN_PBM2_Heat_2_offset                		335
+#define CAN_PBM3_Heat_1_offset                		336
+#define CAN_PBM3_Heat_2_offset                		337
+#define CAN_PBM4_Heat_1_offset                		338
+#define CAN_PBM4_Heat_2_offset                 		339
+#define CAN_PBM5_Heat_1_offset                		340
+#define CAN_PBM5_Heat_2_offset                		341
 
 
 #define CAN_PBM1_Emerg_Charge_Key_Branch1_offset    348
@@ -102,6 +115,9 @@ extern "C" {
 #define CAN_PBM3_Emerg_Charge_Key_Branch2_offset    353
 #define CAN_PBM4_Emerg_Charge_Key_Branch1_offset    354
 #define CAN_PBM4_Emerg_Charge_Key_Branch2_offset    355
+#define CAN_PBM5_Emerg_Charge_Key_Branch1_offset    356
+#define CAN_PBM5_Emerg_Charge_Key_Branch2_offset    357
+
 
 #define CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset 364
 #define CAN_PBM1_Auto_Corr_Cap_Level_Branch2_offset 365
@@ -111,6 +127,9 @@ extern "C" {
 #define CAN_PBM3_Auto_Corr_Cap_Level_Branch2_offset 369
 #define CAN_PBM4_Auto_Corr_Cap_Level_Branch1_offset 370
 #define CAN_PBM4_Auto_Corr_Cap_Level_Branch2_offset 371
+#define CAN_PBM5_Auto_Corr_Cap_Level_Branch1_offset 372
+#define CAN_PBM5_Auto_Corr_Cap_Level_Branch2_offset 373
+
 
 #define CAN_PBM1_Corr_Cap_Level_Branch1_offset      380
 #define CAN_PBM1_Corr_Cap_Level_Branch2_offset      381
@@ -120,6 +139,8 @@ extern "C" {
 #define CAN_PBM3_Corr_Cap_Level_Branch2_offset      385
 #define CAN_PBM4_Corr_Cap_Level_Branch1_offset      386
 #define CAN_PBM4_Corr_Cap_Level_Branch2_offset      387
+#define CAN_PBM5_Corr_Cap_Level_Branch1_offset      388
+#define CAN_PBM5_Corr_Cap_Level_Branch2_offset      389
 
 #define CAN_PBM1_Reset_Branch1_offset               396
 #define CAN_PBM1_Reset_Branch2_offset               397
@@ -129,6 +150,8 @@ extern "C" {
 #define CAN_PBM3_Reset_Branch2_offset               401
 #define CAN_PBM4_Reset_Branch1_offset               402
 #define CAN_PBM4_Reset_Branch2_offset               403
+#define CAN_PBM5_Reset_Branch1_offset               404
+#define CAN_PBM5_Reset_Branch2_offset               405
 
 
 
@@ -190,82 +213,84 @@ struct CAN_IVar4 {
     uint8_t CAN_PMM_Reboot_Passive_CPU;     //+21           Перезагрузить посивный CPU
     uint8_t CAN_PMM_PWR_CAN_main;           //+22           Вкл/Выкл питания основного CAN
     uint8_t CAN_PMM_PWR_CAN_backup;         //+23           Вкл/Выкл питания резервного CAN
-    uint8_t CAN_PMM_PWR_VBAT1_key;         //+24           Командный регистр линии VBAT1 (МС)
-    uint8_t CAN_PMM_PWR_VBAT1_key2;         //+25           Командный регистр линии VBAT1 (МС)
-    uint8_t CAN_PMM_PWR_VBAT2_key;         //+26           Командный регистр линии VBAT2 (МС)
-    uint8_t CAN_PMM_PWR_VBAT2_key2;         //+27           Командный регистр линии VBAT2 (МС)
-    uint8_t CAN_PMM_PWR_PBM_Logic;          //+28           Вкл/Выкл питания логики PBM
-    uint8_t CAN_PMM_PDM_Reset;              //+29           Reset PDM
-    uint8_t CAN_PMM_PAM_Reset;              //+30           Reset PAM
+    uint8_t CAN_PMM_PWR_VBAT1_key;          //+24           Командный регистр линии VBAT1 (МС)
+    uint8_t CAN_PMM_PWR_VBAT2_key;          //+25           Командный регистр линии VBAT2 (МС)
+    uint8_t CAN_PMM_PWR_PBM_Logic;          //+26           Вкл/Выкл питания логики PBM
+    uint8_t CAN_PMM_PDM_Reset;              //+27           Reset PDM
+    uint8_t CAN_PMM_PAM_Reset;              //+28           Reset PAM
+
+    uint8_t CAN_Comd_Reserved_29;           //+29           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_30;           //+30           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_31;           //+31           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_32;           //+30           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_33;           //+31           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_34;           //+32           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_35;           //+33           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_36;           //+34           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_37;           //+35           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_38;           //+36           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_39;           //+37           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_40;           //+38           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_41;           //+39           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_42;           //+40           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_43;           //+41           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_44;           //+42           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_45;           //+43           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_46;           //+44           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_47;           //+45           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_48;           //+46           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_49;           //+47           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_50;           //+48           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_51;           //+49           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_52;           //+50           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_53;           //+51           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_54;           //+52           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_55;           //+53           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_56;           //+54           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_57;           //+55           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_58;           //+56           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_59;           //+57           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_60;           //+58           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_61;           //+59           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_62;           //+60           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_63;           //+61           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_64;           //+62           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_65;           //+63           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_66;           //+64           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_67;           //+65           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_68;           //+66           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_69;           //+67           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_70;           //+68           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_71;           //+69           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_72;           //+70           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_73;           //+71           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_74;           //+72           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_75;           //+73           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_76;           //+74           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_77;           //+75           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_78;           //+76           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_79;           //+77           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_80;           //+78           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_81;           //+79           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_82;           //+80           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_83;           //+81           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_84;           //+82           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_85;           //+83           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_86;           //+84           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_87;           //+85           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_88;           //+86           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_89;           //+87           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_90;           //+88           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_91;           //+89           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_92;           //+90           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_93;           //+91           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_94;           //+92           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_95;           //+93           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_96;           //+94           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_97;           //+95           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_98;           //+96           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_99;           //+97           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_32;           //+32           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_33;           //+33           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_34;           //+34           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_35;           //+35           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_36;           //+36           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_37;           //+37           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_38;           //+38           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_39;           //+39           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_40;           //+40           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_41;           //+41           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_42;           //+42           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_43;           //+43           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_44;           //+44           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_45;           //+45           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_46;           //+46           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_47;           //+47           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_48;           //+48           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_49;           //+49           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_50;           //+50           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_51;           //+51           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_52;           //+52           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_53;           //+53           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_54;           //+54           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_55;           //+55           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_56;           //+56           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_57;           //+57           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_58;           //+58           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_59;           //+59           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_60;           //+60           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_61;           //+61           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_62;           //+62           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_63;           //+63           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_64;           //+64           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_65;           //+65           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_66;           //+66           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_67;           //+67           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_68;           //+68           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_69;           //+69           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_70;           //+70           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_71;           //+71           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_72;           //+72           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_73;           //+73           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_74;           //+74           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_75;           //+75           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_76;           //+76           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_77;           //+77           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_78;           //+78           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_79;           //+79           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_80;           //+80           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_81;           //+81           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_82;           //+82           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_83;           //+83           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_84;           //+84           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_85;           //+85           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_86;           //+86           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_87;           //+87           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_88;           //+88           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_89;           //+89           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_90;           //+90           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_91;           //+91           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_92;           //+92           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_93;           //+93           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_94;           //+94           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_95;           //+95           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_96;           //+96           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_97;           //+97           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_98;           //+98           Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_99;           //+99           Командный регистр зарезервирован
+
 
     // Command of PDM
     uint8_t CAN_PDM_PWR_CH1;                //+100          Командный регистр канал питаня 1
@@ -274,12 +299,12 @@ struct CAN_IVar4 {
     uint8_t CAN_PDM_PWR_CH4;                //+103          Командный регистр канал питаня 4
     uint8_t CAN_PDM_PWR_CH5;                //+104          Командный регистр канал питаня 5
     uint8_t CAN_PDM_PWR_CH6;                //+105          Командный регистр канал питаня 6
-    uint8_t CAN_Comd_Reserved_106;          //+106          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_107;          //+107          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_108;          //+108          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_109;          //+109          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_110;          //+110          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_111;          //+111          Командный регистр зарезервирован
+    uint8_t CAN_PDM_PWR_CH7;                //+106          Командный регистр канал питаня 7
+    uint8_t CAN_PDM_PWR_CH8;                //+107          Командный регистр канал питаня 8 проводной
+    uint8_t CAN_PDM_PWR_CH9;                //+108          Командный регистр канал питаня 9 проводной
+    uint8_t CAN_PDM_PWR_CH10;               //+109          Командный регистр канал питаня 10 проводной
+    uint8_t CAN_PDM_PWR_CH11;               //+110          Командный регистр канал питаня 11 проводной
+    uint8_t CAN_PDM_PWR_CH12;               //+111          Командный регистр канал питаня 12 силовой
     uint8_t CAN_Comd_Reserved_112;          //+112          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_113;          //+113          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_114;          //+114          Командный регистр зарезервирован
@@ -369,6 +394,8 @@ struct CAN_IVar4 {
     uint8_t CAN_Comd_Reserved_198;          //+198          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_199;          //+199          Командный регистр зарезервирован
 
+
+
     // Command of PAM
     uint8_t CAN_PAM_PWR_DC_DC;              //+200          Вкл/Выкл DC_DC источник питания PAM
     uint8_t CAN_PAM_PWR_LDO;           	    //+201          Вкл/Выкл LDO источник питания PAM
@@ -378,8 +405,8 @@ struct CAN_IVar4 {
     uint8_t CAN_PAM_PWR_TM_SP_CH4;          //+205          Вкл/Выкл питания телеметрии солнечных панелей канал №4
     uint8_t CAN_PAM_PWR_TM_SP_CH5;          //+206          Вкл/Выкл питания телеметрии солнечных панелей канал №5
     uint8_t CAN_PAM_PWR_TM_SP_CH6;          //+207          Вкл/Выкл питания телеметрии солнечных панелей канал №6
-    uint8_t CAN_Comd_Reserved_208;          //+208          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_209;          //+209          Командный регистр зарезервирован
+    uint8_t CAN_PAM_PWR_TM_SP_CH7;          //+208          Вкл/Выкл питания телеметрии солнечных панелей канал №7
+    uint8_t CAN_PAM_PWR_TM_SP_CH8;          //+209          Вкл/Выкл питания телеметрии солнечных панелей канал №8
     uint8_t CAN_Comd_Reserved_210;          //+210          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_211;          //+211          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_212;          //+212          Командный регистр зарезервирован
@@ -391,7 +418,7 @@ struct CAN_IVar4 {
     uint8_t CAN_Comd_Reserved_218;          //+218          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_219;          //+219          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_220;          //+220          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_221;          //+221          Командный регистр зарезервирован
+    uint8_t CAN_Comd_Reserved_221;          //+211          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_222;          //+222          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_223;          //+223          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_224;          //+224          Командный регистр зарезервирован
@@ -489,10 +516,10 @@ struct CAN_IVar4 {
     uint8_t CAN_PBM4_Discharge_key_branch_1;   	    //+313          Командный регистр ключа разряда ветви 1 АБ4
     uint8_t CAN_PBM4_Charge_key_branch_2;   	    //+314          Командный регистр ключа заряда ветви 2 АБ4
     uint8_t CAN_PBM4_Discharge_key_branch_2;   	    //+315          Командный регистр ключа разряда ветви 2 АБ4
-    uint8_t CAN_Comd_Reserved_316;                  //+316          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_317;                  //+317          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_318;                  //+318          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_319;                  //+319          Командный регистр зарезервирован
+    uint8_t CAN_PBM5_Charge_key_branch_1;   	    //+316          Командный регистр ключа заряда ветви 1 АБ5
+    uint8_t CAN_PBM5_Discharge_key_branch_1;   	    //+317          Командный регистр ключа разряда ветви 1 АБ5
+    uint8_t CAN_PBM5_Charge_key_branch_2;   	    //+318          Командный регистр ключа заряда ветви 2 АБ5
+    uint8_t CAN_PBM5_Discharge_key_branch_2;   	    //+319          Командный регистр ключа разряда ветви 2 АБ5
     uint8_t CAN_Comd_Reserved_320;                  //+320          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_321;                  //+321          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_322;                  //+322          Командный регистр зарезервирован
@@ -506,16 +533,16 @@ struct CAN_IVar4 {
     uint8_t CAN_Comd_Reserved_330;                  //+330          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_331;                  //+331          Командный регистр зарезервирован
 
-    uint8_t CAN_PBM1_Heat_Branch1;                  //+332          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 1
-    uint8_t CAN_PBM1_Heat_Branch2;                  //+333          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 1
-    uint8_t CAN_PBM2_Heat_Branch1;                  //+334          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 2
-    uint8_t CAN_PBM2_Heat_Branch2;                  //+335          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 2
-    uint8_t CAN_PBM3_Heat_Branch1;                  //+336          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 3
-    uint8_t CAN_PBM3_Heat_Branch2;                  //+337          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 3
-    uint8_t CAN_PBM4_Heat_Branch1;                  //+338          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 4
-    uint8_t CAN_PBM4_Heat_Branch2;                  //+339          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 4
-    uint8_t CAN_Comd_Reserved_340;                  //+340          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_341;                  //+341          Командный регистр зарезервирован
+    uint8_t CAN_PBM1_Heat_1;                  		//+332          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 1
+    uint8_t CAN_PBM1_Heat_2;                  		//+333          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 1
+    uint8_t CAN_PBM2_Heat_1;                		//+334          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 2
+    uint8_t CAN_PBM2_Heat_2;                  		//+335          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 2
+    uint8_t CAN_PBM3_Heat_1;                  		//+336          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 3
+    uint8_t CAN_PBM3_Heat_2;                  		//+337          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 3
+    uint8_t CAN_PBM4_Heat_1;                  		//+338          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 4
+    uint8_t CAN_PBM4_Heat_2;                  		//+339          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 4
+    uint8_t CAN_PBM5_Heat_1;                  		//+340          Вкл/Выкл автонагрев(термостат) ветви 1 батарейного модуля 4
+    uint8_t CAN_PBM5_Heat_2;                  		//+341          Вкл/Выкл автонагрев(термостат) ветви 2 батарейного модуля 4
     uint8_t CAN_Comd_Reserved_342;                  //+342          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_343;                  //+343          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_344;                  //+344          Командный регистр зарезервирован
@@ -531,8 +558,8 @@ struct CAN_IVar4 {
     uint8_t CAN_PBM3_Emerg_Charge_Key_Branch2;      //+353          Вкл/Выкл аварийную зарядки ветви 2 батарейного модуля 3
     uint8_t CAN_PBM4_Emerg_Charge_Key_Branch1;      //+354          Вкл/Выкл аварийную зарядки ветви 1 батарейного модуля 4
     uint8_t CAN_PBM4_Emerg_Charge_Key_Branch2;      //+355          Вкл/Выкл аварийную зарядки ветви 2 батарейного модуля 4
-    uint8_t CAN_Comd_Reserved_356;                  //+356          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_357;                  //+357          Командный регистр зарезервирован
+    uint8_t CAN_PBM5_Emerg_Charge_Key_Branch1;      //+356          Вкл/Выкл аварийную зарядки ветви 1 батарейного модуля 4
+    uint8_t CAN_PBM5_Emerg_Charge_Key_Branch2;      //+357          Вкл/Выкл аварийную зарядки ветви 2 батарейного модуля 4
     uint8_t CAN_Comd_Reserved_358;                  //+358          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_359;                  //+359          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_360;                  //+360          Командный регистр зарезервирован
@@ -549,8 +576,8 @@ struct CAN_IVar4 {
     uint8_t CAN_PBM3_Auto_Corr_Cap_Level_Branch2;   //+369
     uint8_t CAN_PBM4_Auto_Corr_Cap_Level_Branch1;   //+370
     uint8_t CAN_PBM4_Auto_Corr_Cap_Level_Branch2;   //+371
-    uint8_t CAN_Comd_Reserved_372;                  //+372          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_373;                  //+373          Командный регистр зарезервирован
+    uint8_t CAN_PBM5_Auto_Corr_Cap_Level_Branch1;   //+372
+    uint8_t CAN_PBM5_Auto_Corr_Cap_Level_Branch2;   //+373
     uint8_t CAN_Comd_Reserved_374;                  //+374          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_375;                  //+375          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_376;                  //+376          Командный регистр зарезервирован
@@ -567,8 +594,8 @@ struct CAN_IVar4 {
     uint8_t CAN_PBM3_Corr_Cap_Level_Branch2;         //+385
     uint8_t CAN_PBM4_Corr_Cap_Level_Branch1;         //+386
     uint8_t CAN_PBM4_Corr_Cap_Level_Branch2;         //+387
-    uint8_t CAN_Comd_Reserved_388;                   //+388          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_389;                   //+389          Командный регистр зарезервирован
+    uint8_t CAN_PBM5_Corr_Cap_Level_Branch1;         //+388
+    uint8_t CAN_PBM5_Corr_Cap_Level_Branch2;         //+389
     uint8_t CAN_Comd_Reserved_390;                   //+390          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_391;                   //+391          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_392;                   //+392          Командный регистр зарезервирован
@@ -585,8 +612,8 @@ struct CAN_IVar4 {
     uint8_t CAN_PBM3_Reset_Branch2;                  //+401
     uint8_t CAN_PBM4_Reset_Branch1;                  //+402
     uint8_t CAN_PBM4_Reset_Branch2;                  //+403
-    uint8_t CAN_Comd_Reserved_404;                   //+404          Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_405;                   //+405          Командный регистр зарезервирован
+    uint8_t CAN_PBM5_Reset_Branch1;                  //+404
+    uint8_t CAN_PBM5_Reset_Branch2;                  //+405
     uint8_t CAN_Comd_Reserved_406;                   //+406          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_407;                   //+407          Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_408;                   //+408          Командный регистр зарезервирован
