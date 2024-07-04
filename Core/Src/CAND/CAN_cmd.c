@@ -1375,6 +1375,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM1 branch 1\n", CAN_PBM1_Corr_Cap_Level_Branch1_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch1 = 0x00;
                     }
                     break;
 
@@ -1384,6 +1385,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM1 branch 2\n", CAN_PBM1_Corr_Cap_Level_Branch2_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch2 = 0x00;
                     }
                     break;
 
@@ -1393,6 +1395,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM2 branch 1\n", CAN_PBM2_Corr_Cap_Level_Branch1_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM2_Corr_Cap_Level_Branch1 = 0x00;
                     }
                     break;
 
@@ -1402,6 +1405,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM2 branch 2\n", CAN_PBM2_Corr_Cap_Level_Branch2_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM2_Corr_Cap_Level_Branch2 = 0x00;
                     }
                     break;
 
@@ -1411,6 +1415,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM3 branch 1\n", CAN_PBM3_Corr_Cap_Level_Branch1_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM3_Corr_Cap_Level_Branch1 = 0x00;
                     }
                     break;
 
@@ -1420,6 +1425,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM3 branch 2\n", CAN_PBM3_Corr_Cap_Level_Branch2_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM3_Corr_Cap_Level_Branch2 = 0x00;
                     }
                     break;
 
@@ -1429,6 +1435,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM4 branch 1\n", CAN_PBM4_Corr_Cap_Level_Branch1_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM4_Corr_Cap_Level_Branch1 = 0x00;
                     }
                     break;
 
@@ -1438,6 +1445,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM4 branch 2\n", CAN_PBM4_Corr_Cap_Level_Branch2_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM4_Corr_Cap_Level_Branch2 = 0x00;
                     }
                     break;
 
@@ -1447,6 +1455,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM5 branch 1\n", CAN_PBM5_Corr_Cap_Level_Branch1_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM5_Corr_Cap_Level_Branch1 = 0x00;
                     }
                     break;
 
@@ -1456,6 +1465,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM5 branch 2\n", CAN_PBM5_Corr_Cap_Level_Branch2_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM5_Corr_Cap_Level_Branch2 = 0x00;
                     }
                     break;
 
@@ -1465,6 +1475,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM1 branch 1\n", CAN_PBM1_Reset_Branch1_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch1 = 0x00;
                     }
                     break;
 
@@ -1474,6 +1485,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM1 branch 2\n", CAN_PBM1_Reset_Branch2_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2);
+                        CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch2 = 0x00;
                     }
                     break;
 
@@ -1483,6 +1495,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM2 branch 1\n", CAN_PBM2_Reset_Branch1_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM2_Reset_Branch1 = 0x00;
                     }
                     break;
 
@@ -1492,6 +1505,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM2 branch 2\n", CAN_PBM2_Reset_Branch2_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2);
+                        CAN_IVar4_RegCmd.CAN_PBM2_Reset_Branch2 = 0x00;
                     }
                     break;
 
@@ -1501,6 +1515,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM3 branch 1\n", CAN_PBM3_Reset_Branch1_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM3_Reset_Branch1 = 0x00;
                     }
                     break;
 
@@ -1510,6 +1525,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM3 branch 2\n", CAN_PBM3_Reset_Branch2_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2);
+                        CAN_IVar4_RegCmd.CAN_PBM3_Reset_Branch2 = 0x00;
                     }
                     break;
 
@@ -1519,6 +1535,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM4 branch 1\n", CAN_PBM4_Reset_Branch1_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM4_Reset_Branch1 = 0x00;
                     }
                     break;
 
@@ -1528,6 +1545,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM4 branch 2\n", CAN_PBM4_Reset_Branch2_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_4, PBM_T1_BRANCH_2);
+                        CAN_IVar4_RegCmd.CAN_PBM4_Reset_Branch2 = 0x00;
                     }
                     break;
 
@@ -1537,6 +1555,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM5 branch 1\n", CAN_PBM5_Reset_Branch1_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM5_Reset_Branch1 = 0x00;
                     }
                     break;
 
@@ -1546,6 +1565,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM5 branch 2\n", CAN_PBM5_Reset_Branch2_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2);
+                        CAN_IVar4_RegCmd.CAN_PBM5_Reset_Branch2 = 0x00;
                     }
                     break;
 
