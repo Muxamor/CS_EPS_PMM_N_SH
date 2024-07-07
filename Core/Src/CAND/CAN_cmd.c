@@ -514,7 +514,13 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
 
                 case CAN_PAM_PWR_DC_DC_offset: //Enable/Disable PAM Power DC_DC source // PAM_data
                     if ( CAN_IVar4_RegCmd.CAN_PAM_PWR_DC_DC == 0x01) {
-                        #ifdef DEBUGprintf
+                    	if(CAN_IVar4_RegCmd.CAN_PAM_PWR_LDO == 0x01){
+							#ifdef DEBUGprintf
+                            	printf("Get comm. reg. %d -> DISABLE PAM Power LDO source \n", CAN_PAM_PWR_LDO_offset);
+                        	#endif
+                            PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_LDO, DISABLE);
+                    	}
+                    	#ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE PAM Power DC_DC source \n", CAN_PAM_PWR_DC_DC_offset);
                         #endif
                         PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_DC_DC, ENABLE);
@@ -529,6 +535,13 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
 
                 case CAN_PAM_PWR_LDO_offset: //Enable/Disable PAM Power LDO source // PAM_data
                     if ( CAN_IVar4_RegCmd.CAN_PAM_PWR_LDO == 0x01) {
+                    	if(CAN_IVar4_RegCmd.CAN_PAM_PWR_DC_DC == 0x01 ){
+							#ifdef DEBUGprintf
+                            	printf("Get comm. reg. %d -> DISABLE PAM Power DC_DC source \n", CAN_PAM_PWR_DC_DC_offset);
+                        	#endif
+                            PAM_Set_state_PWR_Supply(eps_p.eps_pam_ptr, PAM_PWR_DC_DC, DISABLE);
+                    	}
+
                         #ifdef DEBUGprintf
                             printf("Get comm. reg. %d -> ENABLE PAM Power LDO source \n", CAN_PAM_PWR_LDO_offset);
                         #endif

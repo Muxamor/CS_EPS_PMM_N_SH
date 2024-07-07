@@ -629,7 +629,7 @@ void PAM_EraseData(_PAM *pam_ptr){
         pam_ptr->PWR_IN_Channel[num_pwr_ch].Current_val = 0x0000;
         pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val = 0x0000;
     }
-
+    /*
     if( pam_ptr->Error_temp_sensor_1 == SUCCESS){
         pam_ptr->Temp_sensor[0] = 0x00;
     }
@@ -637,7 +637,7 @@ void PAM_EraseData(_PAM *pam_ptr){
     if( pam_ptr->Error_temp_sensor_2 == SUCCESS){
         pam_ptr->Temp_sensor[1] = 0x00;
     }
-/*
+
     if( pam_ptr->Error_temp_sensor_3 == SUCCESS){
         pam_ptr->Temp_sensor[2] = 0x00;
     }

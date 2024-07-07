@@ -19,9 +19,14 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 	uint8_t num_pwr_ch;
     uint8_t num_sp;
 
+    if( pam_ptr->State_DC_DC == ENABLE && pam_ptr->State_LDO == ENABLE ){
+    		pam_ptr->State_LDO = DISABLE;
+    }
+
 	//Restoring power channels.
 	error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, pam_ptr->State_DC_DC);
 	error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, pam_ptr->State_LDO);
+
 
 	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
 	error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
@@ -29,8 +34,13 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
 	error_status += PAM_Get_PG_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 
+	//Initialization temperature sensors.
+	error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1);
+	error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2);
+
 	//Automatic protection of switching to backup power supply
     if( (pam_ptr->State_DC_DC == ENABLE) && ( (pam_ptr->PG_DC_DC == ERROR) || (pam_ptr->Error_State_DC_DC == ERROR) ) && (pam_ptr->State_LDO == DISABLE) ){
+    	error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, DISABLE);
 	    error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, ENABLE);
         pam_ptr->State_LDO = ENABLE;
 	}
@@ -52,16 +62,11 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
             error_status += PAM_SP_init( pam_ptr, num_sp );
         }
 
-        //Initialization temperature sensors.
-        error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1);
-        error_status += PAM_init_TMP1075(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2);
-
         //Initialization Power monitor INA231 power channel
         for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
             error_status += PAM_init_PWR_Mon_INA238(pam_ptr, num_pwr_ch);
         }
     }
-
 
 	if(error_status != SUCCESS){
 		#ifdef DEBUGprintf

@@ -26,6 +26,10 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
     error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
     error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
 
+    //Get temperature value.
+    error_status += PAM_Get_Temperature(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1);
+    error_status += PAM_Get_Temperature(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2);
+
     //Get state power chaneels for telemetry SP
     for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
         error_status += PAM_Check_state_PWR_TM_SP_CH( pam_ptr, num_pwr_ch );
@@ -46,10 +50,6 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
            // error_status += PAM_Get_State_ID_PWR_Ch_In(pam_ptr, num_pwr_ch);
             error_status += PAM_Get_PWR_CH_IN_I_V_P(pam_ptr, num_pwr_ch);
         }
-
-        //Get temperature value.
-        error_status += PAM_Get_Temperature(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1);
-        error_status += PAM_Get_Temperature(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2);
 
     }else{
         //Erase data if PAM's power supply is off
