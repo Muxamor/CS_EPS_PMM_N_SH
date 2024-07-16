@@ -1614,7 +1614,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMI0_Headr_Mas_Number                       = 0x0000;
     CAN_IVar5_telemetry.CAN_TMI0_Headr_Time                             = CAN_IVar4_RegCmd.CAN_Global_Time;
 
-	CAN_IVar5_telemetry.CAN_TMI0_version                                = 0x0002;
+	CAN_IVar5_telemetry.CAN_TMI0_version                                = 0x0003;
 
 	//PMM module
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_EPS_Const_Mode                     = eps_p.eps_pmm_ptr->CAN_constatnt_mode;
@@ -1622,62 +1622,58 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_Switch_Active_CPU                  = eps_p.eps_pmm_ptr->Active_CPU;
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_OFF_PWR_Passive_CPU                = eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU;
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_Temp_Sensor                        = eps_p.eps_pmm_ptr->Temp_sensor;
-	CAN_IVar5_telemetry.CAN_TMIx_PMM_PWR_Ch_State_BitMask               = (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain) | (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF << 2) |
-	                                                                       (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF << 4) |
-	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic << 6) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic << 7) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power << 8);
-	                                                                      //(eps_p.eps_pmm_ptr->PWR_Ch_State_5V_Bus << 9) | (eps_p.eps_pmm_ptr->PWR_Ch_State_3_3V_Bus << 10) | (eps_p.eps_pmm_ptr->PWR_Ch_State_I2C_Bus << 11);
 
-	CAN_IVar5_telemetry.CAN_TMIx_PMM_PWR_PG_BitMask                     = (eps_p.eps_pmm_ptr->PWR_Ch_PG_CANmain) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_CANbackup << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF << 2) /*| (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF2 << 3) */|
-	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF << 4) /*| (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF2 << 5)*/ | (eps_p.eps_pmm_ptr->PWR_Ch_PG_PBMs_Logic1 << 6) | // (eps_p.eps_pmm_ptr->PWR_Ch_PG_PBMs_Logic2 << ??)  добавить
-	                                                                      (eps_p.eps_pmm_ptr->PWR_Supply_Main_PG << 7) | (eps_p.eps_pmm_ptr->PWR_Supply_Backup_PG << 8) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Deploy_L << 9) ; //добавить (eps_p.eps_pmm_ptr->PWR_Ch_PG_Deploy_P << ??)
-	                                                                      //(eps_p.eps_pmm_ptr->PWR_Ch_PG_5V_Bus << 10) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_3_3V_Bus << 11) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_I2C_Bus  << 12);
+	CAN_IVar5_telemetry.CAN_TMIx_PMM_PWR_Ch_State_BitMask               = (eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain) | (eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF << 2) |
+	                                                                      (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF << 3) | (eps_p.eps_pmm_ptr->PWR_Ch_State_PBMs_Logic << 4) | (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic << 5)
+	                                                                      | (eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power << 6);
+
+	CAN_IVar5_telemetry.CAN_TMIx_PMM_PWR_PG_BitMask                     = (eps_p.eps_pmm_ptr->PWR_Ch_PG_CANmain) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_CANbackup << 1) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat1_eF << 2) |
+																		  (eps_p.eps_pmm_ptr->PWR_Ch_PG_Vbat2_eF << 3) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_PBMs_Logic1 << 4) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_PBMs_Logic2 << 5) |
+																		  (eps_p.eps_pmm_ptr->PWR_Supply_Main_PG << 6) | (eps_p.eps_pmm_ptr->PWR_Supply_Backup_PG << 7) | (eps_p.eps_pmm_ptr->PWR_Ch_PG_Deploy_L << 8) |
+																		  (eps_p.eps_pmm_ptr->PWR_Ch_PG_Deploy_P << 9);
 
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_Error_BitMask                      = (eps_p.eps_pmm_ptr->Error_TMP1075_sensor) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_CANmain << 1) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_CANbackup << 2) |
-	                                                                      (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF << 3)/* | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF2 << 4)*/ | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF << 5) /*|
-	                                                                      (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF2 << 6)*/ | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_PBMs_Logic << 7) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Deploy_Logic << 8) | /*
-	                                                                      (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Deploy_Power << 9) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_5V_Bus << 10) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_3_3V_Bus << 11) |
-	                                                                      (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_I2C_Bus << 12) | (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF << 13) | (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF2 << 14) |*/
-	                                                                      (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF << 15) /*| (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2 << 16) */ |
-	                                                                      (eps_p.eps_pmm_ptr->Error_I2C_GPIO_Ext1 << 18) /*| (eps_p.eps_pmm_ptr->Error_PWR_Supply_m_b_Curr_Mon << 20) */|
-	                                                                      (eps_p.eps_pmm_ptr->Error_I2C_Deploy_GPIO_Ext << 21) | (eps_p.eps_pmm_ptr->Error_I2C_Deploy_ADC << 22) | (eps_p.eps_pmm_ptr->Error_FRAM1 << 23) |
-	                                                                      (eps_p.eps_pmm_ptr->Error_FRAM2 << 24) | (eps_p.eps_pmm_ptr->Error_UART_port_M << 25) | (eps_p.eps_pmm_ptr->Error_UART_port_B << 26) | (eps_p.eps_pmm_ptr->Error_CAN_port_M << 27) |
-	                                                                      (eps_p.eps_pmm_ptr->Error_CAN_port_B << 28);
+	                                                                      (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat1_eF << 3)| (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Vbat2_eF << 4)| (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_PBMs_Logic << 5) |
+	                                                                      (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Deploy_Logic << 6) | (eps_p.eps_pmm_ptr->Error_PWR_Ch_State_Deploy_Power << 7) | (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF << 8) |
+																		  (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF << 9) | (eps_p.eps_pmm_ptr->Error_I2C_GPIO_Ext1 << 16) | (eps_p.eps_pmm_ptr->Error_I2C_Deploy_GPIO_Ext << 17) |
+																		  (eps_p.eps_pmm_ptr->Error_I2C_Deploy_ADC << 18) | (eps_p.eps_pmm_ptr->Error_FRAM1 << 19) | (eps_p.eps_pmm_ptr->Error_FRAM2 << 20) | (eps_p.eps_pmm_ptr->Error_UART_port_M << 21) |
+																		  (eps_p.eps_pmm_ptr->Error_UART_port_B << 22) | (eps_p.eps_pmm_ptr->Error_CAN_port_M << 23) | (eps_p.eps_pmm_ptr->Error_CAN_port_B << 24);
 
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_Reboot_Counter_Main_CPU            =  eps_p.eps_pmm_ptr->reboot_counter_CPUm;
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_Reboot_Counter_Backup_CPU          =  eps_p.eps_pmm_ptr->reboot_counter_CPUb;
 
 	//***
-	if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val < 8000 || eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF == ERROR ){
+	if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val < 10000 || eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF == ERROR ){
 	    CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Voltage                  =  0;
 	}else{
 	    CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Voltage                  =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val;
 	}
 	//***
-	if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val < 8000 || eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF == ERROR ){
+	if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val < 10000 || eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF == ERROR ){
 	    CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Voltage                  =  0;
 	}else{
 	    CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Voltage                  =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val;
 	}
+
 	//---
-	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Voltage_Aver_10s             =  (uint16_t)( Filtr2Step(CHF_U7, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Voltage ) );
-	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Voltage_Aver_10s             =  (uint16_t)( Filtr2Step(CHF_U8, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Voltage ) );
+	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Voltage_Aver_10s             =  (uint16_t)( Filtr2Step(CHF_U13, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Voltage ) );
+	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Voltage_Aver_10s             =  (uint16_t)( Filtr2Step(CHF_U14, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Voltage ) );
 
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Current                      =  (int16_t)( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Current_val);
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current                      =  (int16_t)( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Current_val);
-	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Current_Aver_10s             =  (int16_t)( Filtr2Step(CHF_I7, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Current ) );
-	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current_Aver_10s             =  (int16_t)( Filtr2Step(CHF_I8, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current ) );
 
-	//CAN_IVar5_telemetry.CAN_TMIx_PMM_Own_Current_Consumption            = eps_p.eps_pmm_ptr->PWR_Supply_Main_eF_out_Current_val;
-	//CAN_IVar5_telemetry.CAN_TMIx_PMM_Voltage                            = 3300;
+	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Current_Aver_10s             =  (int16_t)( Filtr2Step(CHF_I13, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Current ) );
+	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current_Aver_10s             =  (int16_t)( Filtr2Step(CHF_I14, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current ) );
 
 	//***
-	if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val < 4000 || eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF == ERROR ){
+	if( eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val < 10000 || eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF == ERROR ){
 	    CAN_IVar5_telemetry.CAN_TMIx_EPS_Main_Bus_Voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val;
 	}else{
 	    CAN_IVar5_telemetry.CAN_TMIx_EPS_Main_Bus_Voltage                =  eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val;
 	}
 
-	//***
+
+	//***Total Cons Power
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power            =  0x0000;
 	for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 	    CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power        =  CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power + eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Power_val;
@@ -1702,10 +1698,10 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 	//---
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_Deploy_Status                       = (eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1) | (eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 << 1) |
-	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 << 2) | (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 << 3) |
-	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 << 4) | (eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 << 5) |
-	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 << 6) | (eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 << 7) |
-	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 << 8) | (eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 << 9) |
+	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 << 2) | (eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 << 3) |
+	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 << 4) | (eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 << 5) |
+	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 << 6) | (eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 << 7) |
+	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 << 8) | (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 << 9) |
 	                                                                       (eps_p.eps_pmm_ptr->Deploy_stage << 12);
 
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_Version_FW                          = eps_p.eps_pmm_ptr->Version_FW;
@@ -1717,8 +1713,6 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
         CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask           = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].State_eF << move_bit_pos );
         move_bit_pos = move_bit_pos + 1;
-      //  CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask           = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch_State_BitsMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].State_eF_out << move_bit_pos );
-      //  move_bit_pos = move_bit_pos + 1;
     }
 
     // PDM PG bit mask
@@ -1727,17 +1721,29 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
         CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask                 = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask  | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF << move_bit_pos );
         move_bit_pos = move_bit_pos + 1;
-     //   CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask                 = CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_PG_BitsMask  | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].PG_eF_out << move_bit_pos );
-     //   move_bit_pos = move_bit_pos + 1;
     }
+
+    CAN_IVar5_telemetry.CAN_TMI0_CRC                                     = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI0_Headr_Start_Mark)), 126 );
+
+
+
+    // -------------------  ТМИ 1  ------------------ //
+
+    //PDM
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark                        = 0x0FF1;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Sat_ID                            = 0x0002;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Loc_ID                            = 0x3001;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Mas_Number                        = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Time                              = CAN_IVar4_RegCmd.CAN_Global_Time;
+
+    CAN_IVar5_telemetry.CAN_TMI1_version                                 = 0x0003;
 
     // PDM Error bit mask
     CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                       = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                       = (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1) | (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 << 1) /*| (eps_p.eps_pdm_ptr->Error_I2C_MUX << 2) */|
-                                                                           (eps_p.eps_pdm_ptr->Error_temp_sensor_1 << 3) | (eps_p.eps_pdm_ptr->Error_temp_sensor_2 << 4) | (eps_p.eps_pdm_ptr->Error_temp_sensor_3 << 5) |
-                                                                           (eps_p.eps_pdm_ptr->Error_temp_sensor_4 << 6);
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                       = (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1) | (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 << 1) | (eps_p.eps_pdm_ptr->Error_I2C_MUX_1 << 2) | (eps_p.eps_pdm_ptr->Error_I2C_MUX_2 << 3) |
+                                                                           (eps_p.eps_pdm_ptr->Error_temp_sensor_1 << 4) | (eps_p.eps_pdm_ptr->Error_temp_sensor_2 << 5) | (eps_p.eps_pdm_ptr->Error_temp_sensor_3 << 6) | (eps_p.eps_pdm_ptr->Error_temp_sensor_4 << 7);
 
-    for( num_pwr_ch = 0, move_bit_pos = 7; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
+    for( num_pwr_ch = 0, move_bit_pos = 8; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 
         CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask                   = CAN_IVar5_telemetry.CAN_TMIx_PDM_Error_BitMask | ( eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Error_State_eF << move_bit_pos );
         move_bit_pos = move_bit_pos + 1;
@@ -1758,55 +1764,79 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Voltage                     = eps_p.eps_pdm_ptr->PWR_Channel[2].Voltage_val;
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Voltage                     = eps_p.eps_pdm_ptr->PWR_Channel[3].Voltage_val;
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage                     = eps_p.eps_pdm_ptr->PWR_Channel[4].Voltage_val;
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Voltage                     = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Voltage                     = eps_p.eps_pdm_ptr->PWR_Channel[5].Voltage_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Voltage                     = eps_p.eps_pdm_ptr->PWR_Channel[6].Voltage_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Voltage                     = eps_p.eps_pdm_ptr->PWR_Channel[7].Voltage_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Voltage                     = eps_p.eps_pdm_ptr->PWR_Channel[8].Voltage_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Voltage                    = eps_p.eps_pdm_ptr->PWR_Channel[9].Voltage_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Voltage                    = eps_p.eps_pdm_ptr->PWR_Channel[10].Voltage_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Voltage                    = eps_p.eps_pdm_ptr->PWR_Channel[11].Voltage_val;
 
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch1_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U1, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch1_Voltage ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch2_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U2, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch2_Voltage ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U3, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Voltage ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U4, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Voltage ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U5, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Voltage_Aver_10s            = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U6, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U7, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U8, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U9, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U10, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U11, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U12, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch1_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[0].Current_val );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch2_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[1].Current_val );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[2].Current_val );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[3].Current_val );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[4].Current_val );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current                     =  0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[5].Current_val );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[6].Current_val );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[7].Current_val );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[8].Current_val );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Current                    = ( eps_p.eps_pdm_ptr->PWR_Channel[9].Current_val );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Current                    = ( eps_p.eps_pdm_ptr->PWR_Channel[10].Current_val );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Current                    = ( eps_p.eps_pdm_ptr->PWR_Channel[11].Current_val );
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch1_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I1, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch1_Current ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch2_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I2, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch2_Current ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I3, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Current ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I4, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Current ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I5, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s            = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I6, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch1_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I7, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch2_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I8, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I9, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I10, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I11, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I12, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
 
-    CAN_IVar5_telemetry.CAN_TMI0_CRC                                     = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI0_Headr_Start_Mark)), 126 );
+    CAN_IVar5_telemetry.CAN_TMI1_CRC                                     = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark)), 126 );
 
-    // -------------------  ТМИ 1  ------------------ //
+
+    // -------------------  ТМИ 2  ------------------ //
+
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark                       = 0x0FF1;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Sat_ID                           = 0x0002;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Loc_ID                           = 0x3002;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Mas_Number                       = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Time                             = CAN_IVar4_RegCmd.CAN_Global_Time;
+
+    CAN_IVar5_telemetry.CAN_TMI2_version                                = 0x0003;
+
     //PAM Module
-    CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark                        = 0x0FF1;
-    CAN_IVar5_telemetry.CAN_TMI1_Headr_Sat_ID                            = 0x0002;
-    CAN_IVar5_telemetry.CAN_TMI1_Headr_Loc_ID                            = 0x3001;
-    CAN_IVar5_telemetry.CAN_TMI1_Headr_Mas_Number                        = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMI1_Headr_Time                              = CAN_IVar4_RegCmd.CAN_Global_Time;
-
-    CAN_IVar5_telemetry.CAN_TMI1_version                                 = 0x0002;
-
     //***
     CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power 		 =  0x0000;
     for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_IN_Ch_quantity; num_pwr_ch++ ){
         CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power      =  CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power + eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val;
     }
-    //---
 
-
-    //***
     CAN_IVar5_telemetry.CAN_TMIx_PAM_PWR_Ch_State_BitMask                = (eps_p.eps_pam_ptr->State_DC_DC) | (eps_p.eps_pam_ptr->State_LDO << 1);
     for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++, move_bit_pos ++ ){
         CAN_IVar5_telemetry.CAN_TMIx_PAM_PWR_Ch_State_BitMask  = CAN_IVar5_telemetry.CAN_TMIx_PAM_PWR_Ch_State_BitMask  | ( eps_p.eps_pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out << move_bit_pos );
     }
-    //---
 
     CAN_IVar5_telemetry.CAN_TMIx_PAM_PWR_PG_BitMask                      = (eps_p.eps_pam_ptr->PG_DC_DC) | (eps_p.eps_pam_ptr->PG_LDO << 1);
     for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1822,9 +1852,13 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     CAN_IVar5_telemetry.CAN_TMIx_PAM_Temp_Sensor1                        = eps_p.eps_pam_ptr->Temp_sensor[0];
     CAN_IVar5_telemetry.CAN_TMIx_PAM_Temp_Sensor2                        = eps_p.eps_pam_ptr->Temp_sensor[1];
-    CAN_IVar5_telemetry.CAN_TMIx_PAM_Temp_Sensor3                        = eps_p.eps_pam_ptr->Temp_sensor[2];
-    CAN_IVar5_telemetry.CAN_TMIx_PAM_Temp_Sensor4                        = eps_p.eps_pam_ptr->Temp_sensor[3];
-    CAN_IVar5_telemetry.CAN_TMIx_PAM_Median_Temp                         = GetMedian(eps_p.eps_pam_ptr->Temp_sensor, 4 );
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_Temp_Sensor3                        = 0x00;//eps_p.eps_pam_ptr->Temp_sensor[2];
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_Temp_Sensor4                        = 0x00;//eps_p.eps_pam_ptr->Temp_sensor[3];
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_Median_Temp                         = GetMedian(eps_p.eps_pam_ptr->Temp_sensor, 2 );
+
+
+
+
 
   //  for( num_pwr_ch = 0, move_bit_pos = 0; num_pwr_ch <PAM_PWR_IN_Ch_quantity; num_pwr_ch++, move_bit_pos ++ ){
     //    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_ID_State_BitsMask      = CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_ID_State_BitsMask | (eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].State_ID_In << move_bit_pos);
@@ -1945,18 +1979,31 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value, PAM_SP5_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value, PAM_SP6_temp_sens_quantity );
 
-    CAN_IVar5_telemetry.CAN_TMI1_CRC                                    = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark)), 126 );
 
-    // -------------------  ТМИ 2  ------------------ //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // PBM part1 //
 
-    CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark                       = 0x0FF1;
-    CAN_IVar5_telemetry.CAN_TMI2_Headr_Sat_ID                           = 0x0002;
-    CAN_IVar5_telemetry.CAN_TMI2_Headr_Loc_ID                           = 0x3002;
-    CAN_IVar5_telemetry.CAN_TMI2_Headr_Mas_Number                       = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMI2_Headr_Time                             = CAN_IVar4_RegCmd.CAN_Global_Time;
 
-    CAN_IVar5_telemetry.CAN_TMI2_version                                = 0x0002;
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power 		 =  0x0000;
     for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
@@ -2332,8 +2379,8 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current                      = 0x2221;
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT1_Current_Aver_10s             = 0x2423;
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_VBAT2_Current_Aver_10s             = 0x2625;
-	CAN_IVar5_telemetry.CAN_TMIx_PMM_Own_Current_Consumption            = 0x2827;
-	CAN_IVar5_telemetry.CAN_TMIx_PMM_Voltage                            = 0x2A29;
+	//CAN_IVar5_telemetry.CAN_TMIx_PMM_Own_Current_Consumption            = 0x2827;
+//	CAN_IVar5_telemetry.CAN_TMIx_PMM_Voltage                            = 0x2A29;
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_Main_Bus_Voltage                   = 0x2C2B;
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power           = 0x2E2D;
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power       = 0x302F;

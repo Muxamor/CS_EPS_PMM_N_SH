@@ -15,6 +15,12 @@ typedef enum {
     CHF_U6,
     CHF_U7,
     CHF_U8,
+	CHF_U9,
+	CHF_U10,
+	CHF_U11,
+	CHF_U12,
+	CHF_U13,
+	CHF_U14,
     CHF_I1,
     CHF_I2,
     CHF_I3,
@@ -22,10 +28,16 @@ typedef enum {
     CHF_I5,
     CHF_I6,
     CHF_I7,
-    CHF_I8
+    CHF_I8,
+	CHF_I9,
+	CHF_I10,
+	CHF_I11,
+	CHF_I12,
+	CHF_I13,
+	CHF_I14
 }typeEnumFiltrChan;
 
-#define MAX_FILTR_CHAN   16
+#define MAX_FILTR_CHAN   28
 
 
 /*постоянная времени ~25 точек, для интервалов 0.5сек это 12сек */
