@@ -638,7 +638,8 @@ struct CAN_IVar5{
     uint16_t CAN_Beacon_EPS_CubeSat_Total_Cons_Power;               //+68,69    |  const = 0x                 	|  Полная потребляемая мощность
     uint16_t CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power;           //+70,71    |  const = 0x                 	|  Потребляемая мощность полезной нагрузкой и подсистемами КА
     uint16_t CAN_Beacon_EPS_Total_PAM_Generation_Power;             //+72,73    |  const = 0x                 	|  Полная вырабатываемая мощность СБ
-    uint8_t  CAN_Beacon_PAM_In_PwrCh_ID_State_BitsMask;             //+74       |  const = 0x                 	|  Ideal Diode
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //uint8_t  CAN_Beacon_PAM_In_PwrCh_ID_State_BitsMask;             //+74       |  const = 0x                 	|  Ideal Diode
     int8_t  CAN_Beacon_SP_TM_Ch1_Median_Temp;                       //+75       |  const = 0x                 	|  Медианная температура панели +X
     int8_t  CAN_Beacon_SP_TM_Ch2_Median_Temp;                       //+76       |  const = 0x                 	|  Медианная температура панели -X
     int8_t  CAN_Beacon_SP_TM_Ch3_Median_Temp;                       //+77       |  const = 0x                 	|  Медианная температура панели +Y
@@ -768,7 +769,7 @@ struct CAN_IVar5{
     int16_t CAN_TMIx_PDM_PWR_Ch11_Current_Aver_10s;                 //+445,446 |  const = 0x                    |   Ток канал 4 усреднение 10s
     int16_t CAN_TMIx_PDM_PWR_Ch12_Current_Aver_10s;                 //+447,448 |  const = 0x                    |   Ток канал 4 усреднение 10s
 
-    uint8_t CAN_TMI1_Reserved [3];                					//+449,450, 451 |  const = 0x                  	|   Ток потребления модуля PMM
+    uint8_t CAN_TMI1_Reserved [3];                					//+449,450,451 |  const = 0x                  	|   Ток потребления модуля PMM
 
     uint16_t CAN_TMI1_CRC;                                          //+452,453|  const = 0x
 
@@ -788,68 +789,72 @@ struct CAN_IVar5{
     uint16_t CAN_TMIx_PAM_PWR_Ch_State_BitMask;                     //+522,523  |  const = 0x                   | State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
     uint16_t CAN_TMIx_PAM_PWR_PG_BitMask;                           //+524,525  |  const = 0x
     uint32_t CAN_TMIx_PAM_PWR_Error_BitMask;                        //+526,527,528,529  |  const = 0x           | Статус ошибок модуля PAM, битовая маска: State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
-    int8_t  CAN_TMIx_PAM_Temp_Sensor1;                              //+530     |  const = 0x                    |   PAM датчик 1
-    int8_t  CAN_TMIx_PAM_Temp_Sensor2;                              //+531     |  const = 0x                    |   PAM датчик 2
-    int8_t  CAN_TMIx_PAM_Temp_Sensor3;                              //+532     |  const = 0x                    |   PAM датчик 3
-    int8_t  CAN_TMIx_PAM_Temp_Sensor4;                              //+533     |  const = 0x                    |   PAM датчик 4
-    int8_t  CAN_TMIx_PAM_Median_Temp;                               //+534     |  const = 0x                    |   Медианная температура PAM
+    int8_t CAN_TMIx_PAM_Temp_Sensor1;                              //+530     |  const = 0x                    |   PAM датчик 1
+    int8_t CAN_TMIx_PAM_Temp_Sensor2;                              //+531     |  const = 0x                    |   PAM датчик 2
+    int8_t CAN_TMIx_PAM_Temp_Sensor3;                              //+532     |  const = 0x                    |   PAM датчик 3
+    int8_t CAN_TMIx_PAM_Temp_Sensor4;                              //+533     |  const = 0x                    |   PAM датчик 4
+    int8_t CAN_TMIx_PAM_Median_Temp;                               //+534     |  const = 0x                    |   Медианная температура PAM
+    uint16_t CAN_TMIx_PAM_In_PwrCh_Error_BitsMask;                 //+535,536 |  const = 0x                    |
 
-    uint8_t  CAN_TMIx_PAM_In_PwrCh_ID_State_BitsMask;               //+355     |  const = 0x                    |   Ideal Diode
-    uint8_t  CAN_TMIx_PAM_In_PwrCh_Error_BitsMask;                  //+356     |  const = 0x                    |
-    uint16_t CAN_TMIx_PAM_In_PwrCh1_Voltage;                        //+357,358 |  const = 0x                    |   Напряжение панели
-    uint16_t CAN_TMIx_PAM_In_PwrCh2_Voltage;                        //+359,360 |  const = 0x                    |   Напряжение панели
-    uint16_t CAN_TMIx_PAM_In_PwrCh3_Voltage;                        //+361,362 |  const = 0x                    |   Напряжение панели
-    uint16_t CAN_TMIx_PAM_In_PwrCh4_Voltage;                        //+363,364 |  const = 0x                    |   Напряжение панели
-    uint16_t CAN_TMIx_PAM_In_PwrLT1_Voltage;           			    //+365,366 |  const = 0x                    |   Напряжение откидных панелей
-    uint16_t CAN_TMIx_PAM_In_PwrLT2_Voltage;                		//+367,368 |  const = 0x                    |   Напряжение откидных панелей
-    int16_t CAN_TMIx_PAM_In_PwrCh1_Current;                         //+369,370 |  const = 0x                    |   Ток панели
-    int16_t CAN_TMIx_PAM_In_PwrCh2_Current;                         //+371,372 |  const = 0x                    |   Ток панели
-    int16_t CAN_TMIx_PAM_In_PwrCh3_Current;                         //+373,374 |  const = 0x                    |   Ток панели
-    int16_t CAN_TMIx_PAM_In_PwrCh4_Current;                         //+375,376 |  const = 0x                    |   Ток панели
-    int16_t CAN_TMIx_PAM_In_PwrLT1_Current;            				//+377,378 |  const = 0x                    |   Ток откидных панелей
-    int16_t CAN_TMIx_PAM_In_PwrLT2_Current;           				//+379,380 |  const = 0x                    |   Ток откидных панелей
+    uint16_t CAN_TMIx_PAM_In_PwrCh1_Voltage;                        //+537,538 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh2_Voltage;                        //+539,540 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh3_Voltage;                        //+541,542 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh4_Voltage;                        //+543,544 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh5_Voltage;                        //+545,546 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh6_Voltage;                        //+547,548 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrLT1_Voltage;           			    //+549,550 |  const = 0x                    |   Напряжение откидных панелей
+    uint16_t CAN_TMIx_PAM_In_PwrLT2_Voltage;                		//+551,552 |  const = 0x                    |   Напряжение откидных панелей
 
-    uint16_t CAN_TMIx_SP_TM_Ch1_Status_BitMask;                     //+381,382 |  const = 0x                    |   Y+ Folding
-    uint16_t CAN_TMIx_SP_TM_Ch2_Status_BitMask;                     //+383,384 |  const = 0x                    |   X-
-    uint16_t CAN_TMIx_SP_TM_Ch3_Status_BitMask;                     //+385,386 |  const = 0x                    |   Y- Folding
-    uint16_t CAN_TMIx_SP_TM_Ch4_Status_BitMask;                     //+387,388 |  const = 0x                    |   X+
-    uint16_t CAN_TMIx_SP_TM_Ch5_Status_BitMask;                     //+389,390 |  const = 0x                    |   Y+
-    uint16_t CAN_TMIx_SP_TM_Ch6_Status_BitMask;                     //+391,392 |  const = 0x                    |   Y-
+    int16_t CAN_TMIx_PAM_In_PwrCh1_Current;                         //+553,554 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrCh2_Current;                         //+555,556 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrCh3_Current;                         //+557,558 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrCh4_Current;                         //+559,560 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrCh5_Current;                         //+561,562 |  const = 0x                    |   Ток панели
+	int16_t CAN_TMIx_PAM_In_PwrCh6_Current;                         //+563,564 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrLT1_Current;            				//+565,566 |  const = 0x                    |   Ток откидных панелей
+    int16_t CAN_TMIx_PAM_In_PwrLT2_Current;           				//+567,568 |  const = 0x                    |   Ток откидных панелей
 
-    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor1;                        //+393    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor2;                        //+394    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor3;                        //+395    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor4;                        //+396    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor1;                        //+397    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor2;                        //+398    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor3;                        //+399    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor4;                        //+400    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor1;                        //+401    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor2;                        //+402    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor3;                        //+403    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor4;                        //+404    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor1;                        //+405    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor2;                        //+406    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor3;                        //+407    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor4;                        //+408    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor1;                        //+409    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor2;                        //+410    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor3;                        //+411    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor4;                        //+412    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor1;                        //+413    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor2;                        //+414    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor3;                        //+415    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor4;                        //+416    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch1_Median_Temp;                         //+417    |  const = 0x                     |   Медианная температура панели  Folding Y+ - Norbi,    is Folding X- - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch2_Median_Temp;                         //+418    |  const = 0x                     |   Медианная температура панели  X- for Norbi,          is X - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch3_Median_Temp;                         //+419    |  const = 0x                     |   Медианная температура панели  Folding Y- for Norbi,  is Folding X+ - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch4_Median_Temp;                         //+420    |  const = 0x                     |   Медианная температура панели  X+ for Norbi,          is X+ - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch5_Median_Temp;                         //+421    |  const = 0x                     |   Медианная температура панели  Y+ (SRD) for Norbi,    is Y+ - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch6_Median_Temp;                         //+422    |  const = 0x                     |   Медианная температура панели  Y- for Norbi,          is Y- - Norby2
-                                                                    //Total 85 byte
-    //uint8_t  CAN_TMI1_Reserved[29];                                 //+423..451  |  const = 0x
+    uint16_t CAN_TMIx_SP_TM_Ch1_Status_BitMask;                     //+569,570 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch2_Status_BitMask;                     //+571,572 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch3_Status_BitMask;                     //+573,574 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch4_Status_BitMask;                     //+575,576 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch5_Status_BitMask;                     //+577,578 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch6_Status_BitMask;                     //+579,580 |  const = 0x                    |
 
-                                                                    //Total 116 byte
+    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor1;                        //+581    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor2;                        //+582    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor3;                        //+583    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor4;                        //+584    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor1;                        //+585    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor2;                        //+586    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor3;                        //+587    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor4;                        //+588    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor1;                        //+589    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor2;                        //+590    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor3;                        //+591    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor4;                        //+592    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor1;                        //+593    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor2;                        //+594    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor3;                        //+595    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor4;                        //+596    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor1;                        //+597    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor2;                        //+598    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor3;                        //+599    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor4;                        //+600    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor1;                        //+601    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor2;                        //+602    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor3;                        //+603    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor4;                        //+604    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch1_Median_Temp;                         //+605    |  const = 0x                     |   Медианная температура панели  Folding Y-
+    int8_t  CAN_TMIx_SP_TM_Ch2_Median_Temp;                         //+606    |  const = 0x                     |   Медианная температура панели  X+
+    int8_t  CAN_TMIx_SP_TM_Ch3_Median_Temp;                         //+607    |  const = 0x                     |   Медианная температура панели  Folding X+
+    int8_t  CAN_TMIx_SP_TM_Ch4_Median_Temp;                         //+608    |  const = 0x                     |   Медианная температура панели  Folding X-
+    int8_t  CAN_TMIx_SP_TM_Ch5_Median_Temp;                         //+609    |  const = 0x                     |   Медианная температура панели  X-
+    int8_t  CAN_TMIx_SP_TM_Ch6_Median_Temp;                         //+610    |  const = 0x                     |   Медианная температура панели  Y+
+
+    uint8_t  CAN_TMI2_Reserved[21];                                 //+611..631  |  const = 0x
+    uint16_t CAN_TMI2_CRC;                                          //+632,633 |  const = 0x
+
 
 
 
@@ -946,8 +951,8 @@ struct CAN_IVar5{
     int8_t  CAN_PBM4_Temp_Sensor2;                                  //+618     |  const = 0x               		| АБ4 датчик на плате 2
     int8_t  CAN_PBM4_Temp_Sensor3;                                  //+619     |  const = 0x               		| АБ4 датчик на плате 3
     int8_t  CAN_PBM4_Temp_Sensor4;                                  //+620     |  const = 0x               		| АБ4 датчик на плате 4
-    uint8_t  CAN_TMI2_Reserved[11];                                 //+621..631|  const = 0x
-    uint16_t CAN_TMI2_CRC;                                          //+632,633 |  const = 0x
+    uint8_t  CAN_TMI23_Reserved[11];                                 //+621..631|  const = 0x
+    uint16_t CAN_TMI23_CRC;                                          //+632,633 |  const = 0x
 
     // -------------------  ТМИ 3  ------------------ //
     uint8_t Protaction_GAP_TMI3[52];                                //+634...685
