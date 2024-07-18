@@ -1943,6 +1943,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
         CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_temp_sensor[num_pwr_ch] << move_bit_pos );
     }
     //---
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch7_Status_BitMask                = 0x0000;
+	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch8_Status_BitMask                = 0x0000;
 
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor1                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[0];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor2                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[1];
@@ -1968,45 +1970,45 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor2                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[1];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor3                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[2];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor4                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[3];
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch7_Temp_Sensor1                 = 0x00;
+	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch7_Temp_Sensor2                 = 0x00;
+	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch7_Temp_Sensor3                 = 0x00;
+	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch7_Temp_Sensor4                 = 0x00;
+	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch8_Temp_Sensor1                 = 0x00;
+	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch8_Temp_Sensor2                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch8_Temp_Sensor3                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch8_Temp_Sensor4                 = 0x00;
+
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value, PAM_SP1_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value, PAM_SP2_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Temp_value, PAM_SP3_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value, PAM_SP4_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value, PAM_SP5_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value, PAM_SP6_temp_sens_quantity );
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch7_Median_Temp                  = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch8_Median_Temp                  = 0x00;
 
+    CAN_IVar5_telemetry.CAN_TMI2_CRC                                    = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark)), 126 );
 
+    //-------------------  ТМИ 3 //PBM part1// ------------------//
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Start_Mark                    	= 0x0FF1;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Sat_ID                        	= 0x0002;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Loc_ID                        	= 0x3003;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Mas_Number                    	= 0x0000;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Time                          	= CAN_IVar4_RegCmd.CAN_Global_Time;
 
+    CAN_IVar5_telemetry.CAN_TMI3_version                             	= 0x0003;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // PBM part1 //
-
-
-
-    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power 		 =  0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power 	 	= 0x0000;
     for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
         for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
             CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power    =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power + (int16_t) (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Power);
         }
     }
+
+
+
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Heating_Elements_Power 		 =  0x0000;
     for (PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++) {
@@ -2225,17 +2227,11 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
 
-    CAN_IVar5_telemetry.CAN_TMI2_CRC                                 = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark)), 126 );
+    CAN_IVar5_telemetry.CAN_TMI3_CRC                                 = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark)), 126 );
 
     // -------------------  ТМИ 3 ------------------ //
     // PBM part2 //
-    CAN_IVar5_telemetry.CAN_TMI3_Headr_Start_Mark                    = 0x0FF1;
-    CAN_IVar5_telemetry.CAN_TMI3_Headr_Sat_ID                        = 0x0002;
-    CAN_IVar5_telemetry.CAN_TMI3_Headr_Loc_ID                        = 0x3003;
-    CAN_IVar5_telemetry.CAN_TMI3_Headr_Mas_Number                    = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMI3_Headr_Time                          = CAN_IVar4_RegCmd.CAN_Global_Time;
 
-    CAN_IVar5_telemetry.CAN_TMI3_version                             = 0x0002;
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Voltage[0];
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Voltage[1];
