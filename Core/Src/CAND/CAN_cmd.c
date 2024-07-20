@@ -2006,10 +2006,6 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
         }
     }
 
-
-
-
-
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Heating_Elements_Power 		 =  0x0000;
     for (PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++) {
         for( Heat_number = 0; Heat_number < PBM_T1_HEAT_QUANTITY; Heat_number++){
@@ -2076,32 +2072,42 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12);
+																					//| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_2].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_2].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_2].Low_Energy_Flag << 2)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12);
+																					//| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_3].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_3].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_3].Low_Energy_Flag << 2)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12);
+																					//| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_4].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_4].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_4].Low_Energy_Flag << 2)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12)
-																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
+																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12);
+																					//| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM5_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_5].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_5].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_5].Low_Energy_Flag << 2)
+        																				| (eps_p.eps_pbm_ptr[PBM_T1_5].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
+    																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
+    																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
+    																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
+    																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12);
+    																					//| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
+
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].ODCP << 3)
@@ -2111,7 +2117,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
-
+/*
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].ODCP << 3)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].LDet << 5)
@@ -2120,7 +2126,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 14);
-
+*/
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].ODCP << 3)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].LDet << 5)
@@ -2129,7 +2135,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
-
+/*
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].ODCP << 3)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].LDet << 5)
@@ -2138,7 +2144,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 14);
-
+*/
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].ODCP << 3)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].LDet << 5)
@@ -2147,7 +2153,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
-
+/*
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].ODCP << 3)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].LDet << 5)
@@ -2156,7 +2162,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 14);
-
+*/
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].ODCP << 3)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].LDet << 5)
@@ -2165,7 +2171,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
-
+/*
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller2_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].OVP | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].UVP << 1)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].ODCP << 3)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].LDet << 5)
@@ -2174,60 +2180,103 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].ChgControlFlag << 11)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_MAX17320 << 14);
+*/
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM5_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].UVP << 1)
+    																				| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].ODCP << 3)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].LDet << 5)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].OD << 7)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
+																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
+    //CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
+  //  CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+  //  CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Current;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Current;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Current;
     CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Current;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Current;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Current;
     CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Current;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Current;
+  //  CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Current;
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Current;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Current;
+ //   CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Current;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Current;
+
 
     CAN_IVar5_telemetry.CAN_PBM1_Temp_Controller1                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Temperature;
-    CAN_IVar5_telemetry.CAN_PBM1_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Temperature;
+   // CAN_IVar5_telemetry.CAN_PBM1_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].Temperature;
     CAN_IVar5_telemetry.CAN_PBM1_Temp_Sensor1                        = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM1_Temp_Sensor2                        = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
     CAN_IVar5_telemetry.CAN_PBM1_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM1_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
     CAN_IVar5_telemetry.CAN_PBM2_Temp_Controller1                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].Temperature;
-    CAN_IVar5_telemetry.CAN_PBM2_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Temperature;
+    //CAN_IVar5_telemetry.CAN_PBM2_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].Temperature;
     CAN_IVar5_telemetry.CAN_PBM2_Temp_Sensor1                        = eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM2_Temp_Sensor2                        = eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
     CAN_IVar5_telemetry.CAN_PBM2_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM2_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_2].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
     CAN_IVar5_telemetry.CAN_PBM3_Temp_Controller1                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].Temperature;
-    CAN_IVar5_telemetry.CAN_PBM3_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Temperature;
+   // CAN_IVar5_telemetry.CAN_PBM3_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].Temperature;
     CAN_IVar5_telemetry.CAN_PBM3_Temp_Sensor1                        = eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM3_Temp_Sensor2                        = eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
     CAN_IVar5_telemetry.CAN_PBM3_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM3_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_3].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Controller1                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Temperature;
-    CAN_IVar5_telemetry.CAN_PBM4_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Temperature;
+    //CAN_IVar5_telemetry.CAN_PBM4_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Temperature;
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor1                        = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor2                        = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
     CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
+    CAN_IVar5_telemetry.CAN_PBM5_Temp_Controller1                    = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Temperature;
+	//CAN_IVar5_telemetry.CAN_PBM5_Temp_Controller2                    = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_2].Temperature;
+	CAN_IVar5_telemetry.CAN_PBM5_Temp_Sensor1                        = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
+	CAN_IVar5_telemetry.CAN_PBM5_Temp_Sensor2                        = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
+	CAN_IVar5_telemetry.CAN_PBM5_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
+	CAN_IVar5_telemetry.CAN_PBM5_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
 
-    CAN_IVar5_telemetry.CAN_TMI3_CRC                                 = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark)), 126 );
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AgeScalar;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].AgeScalar;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].AgeScalar;
+  //  CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AgeScalar;
+ //   CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].AgeScalar;
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].CycleCounter;
+    //CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].CycleCounter;
+    //CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].CycleCounter;
+    //CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].CycleCounter;
+   // CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].CycleCounter;
+
+    CAN_IVar5_telemetry.CAN_TMI3_CRC                                 = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI3_Headr_Start_Mark)), 126 );
 
     // -------------------  ТМИ 3 ------------------ //
     // PBM part2 //
@@ -2285,23 +2334,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_1].HeatCurrent;
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Heat_Current           = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].HeatCurrent;
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AgeScalar;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AgeScalar;
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_1].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_2].Branch[PBM_T1_BRANCH_2].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_1].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].CycleCounter;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].CycleCounter;
 
     CAN_IVar5_telemetry.CAN_TMI3_CRC                                   = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI3_Headr_Start_Mark)), 126 );
 
@@ -2532,61 +2565,61 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Error_BitMask                     = 0x1514;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Error_BitMask                     = 0x1716;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller1_Error_BitMask         = 0x1918;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller2_Error_BitMask         = 0x1B1A;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller2_Error_BitMask         = 0x1B1A;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller1_Error_BitMask         = 0x1D1C;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller2_Error_BitMask         = 0x1F1E;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM2_Controller2_Error_BitMask         = 0x1F1E;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller1_Error_BitMask         = 0x2120;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller2_Error_BitMask         = 0x2322;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM3_Controller2_Error_BitMask         = 0x2322;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller1_Error_BitMask         = 0x2524;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller2_Error_BitMask         = 0x2726;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM4_Controller2_Error_BitMask         = 0x2726;
 
 	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_Percent      = 0x28;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_Percent      = 0x29;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_Percent      = 0x29;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Charge_Level_Percent      = 0x2A;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_Percent      = 0x2B;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_Percent      = 0x2B;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Charge_Level_Percent      = 0x2C;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_Percent      = 0x2D;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_Percent      = 0x2D;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Charge_Level_Percent      = 0x2E;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_Percent      = 0x2F;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_Percent      = 0x2F;
 
 	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_mAh          = 0x3130;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_mAh          = 0x3332;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_mAh          = 0x3332;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Charge_Level_mAh          = 0x3534;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_mAh          = 0x3736;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Charge_Level_mAh          = 0x3736;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Charge_Level_mAh          = 0x3938;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_mAh          = 0x3B3A;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Charge_Level_mAh          = 0x3B3A;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Charge_Level_mAh          = 0x3D3C;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_mAh          = 0x3F3E;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_mAh          = 0x3F3E;
 
 	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Current       = 0x4140;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Current       = 0x4342;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Current       = 0x4342;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Char_Discha_Current       = 0x4544;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Current       = 0x4746;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Current       = 0x4746;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Char_Discha_Current       = 0x4948;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Current       = 0x4B4A;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Current       = 0x4B4A;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Current       = 0x4D4C;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Current       = 0x4F4E;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Current       = 0x4F4E;
 
 	CAN_IVar5_telemetry.CAN_PBM1_Temp_Controller1                       = 0x50;
-	CAN_IVar5_telemetry.CAN_PBM1_Temp_Controller2                       = 0x51;
+	//CAN_IVar5_telemetry.CAN_PBM1_Temp_Controller2                       = 0x51;
 	CAN_IVar5_telemetry.CAN_PBM1_Temp_Sensor1                           = 0x52;
 	CAN_IVar5_telemetry.CAN_PBM1_Temp_Sensor2                           = 0x53;
 	CAN_IVar5_telemetry.CAN_PBM1_Temp_Sensor3                           = 0x54;
 	CAN_IVar5_telemetry.CAN_PBM1_Temp_Sensor4                           = 0x55;
 	CAN_IVar5_telemetry.CAN_PBM2_Temp_Controller1                       = 0x56;
-	CAN_IVar5_telemetry.CAN_PBM2_Temp_Controller2                       = 0x57;
+	//CAN_IVar5_telemetry.CAN_PBM2_Temp_Controller2                       = 0x57;
 	CAN_IVar5_telemetry.CAN_PBM2_Temp_Sensor1                           = 0x58;
 	CAN_IVar5_telemetry.CAN_PBM2_Temp_Sensor2                           = 0x59;
 	CAN_IVar5_telemetry.CAN_PBM2_Temp_Sensor3                           = 0x5A;
 	CAN_IVar5_telemetry.CAN_PBM2_Temp_Sensor4                           = 0x5B;
 	CAN_IVar5_telemetry.CAN_PBM3_Temp_Controller1                       = 0x5C;
-	CAN_IVar5_telemetry.CAN_PBM3_Temp_Controller2                       = 0x5D;
+	//CAN_IVar5_telemetry.CAN_PBM3_Temp_Controller2                       = 0x5D;
 	CAN_IVar5_telemetry.CAN_PBM3_Temp_Sensor1                           = 0x5E;
 	CAN_IVar5_telemetry.CAN_PBM3_Temp_Sensor2                           = 0x5F;
 	CAN_IVar5_telemetry.CAN_PBM3_Temp_Sensor3                           = 0x60;
 	CAN_IVar5_telemetry.CAN_PBM3_Temp_Sensor4                           = 0x61;
 	CAN_IVar5_telemetry.CAN_PBM4_Temp_Controller1                       = 0x62;
-	CAN_IVar5_telemetry.CAN_PBM4_Temp_Controller2                       = 0x63;
+	//CAN_IVar5_telemetry.CAN_PBM4_Temp_Controller2                       = 0x63;
 	CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor1                           = 0x64;
 	CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor2                           = 0x65;
 	CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor3                           = 0x66;
@@ -2661,22 +2694,22 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Heat_Current              = 0x100F;
 
 	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Age                       = 0xD8;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Age                       = 0xD9;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Age                       = 0xD9;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Age                       = 0xDA;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Age                       = 0xDB;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Age                       = 0xDB;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Age                       = 0xDC;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Age                       = 0xDD;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Age                       = 0xDD;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Age                       = 0xDE;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Age                       = 0xDF;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Age                       = 0xDF;
 
 	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle         = 0xE0;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle         = 0xE1;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle         = 0xE1;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch1_Char_Discha_Cycle         = 0xE2;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Cycle         = 0xE3;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM2_Branch2_Char_Discha_Cycle         = 0xE3;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch1_Char_Discha_Cycle         = 0xE4;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle         = 0xE5;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle         = 0xE5;
 	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle         = 0xE6;
-	CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle         = 0xE7;
+	//CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle         = 0xE7;
 
 }
 
