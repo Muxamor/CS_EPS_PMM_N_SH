@@ -2087,16 +2087,16 @@ ErrorStatus MAX17320_Read_Br_Pwr_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *St
  * @param  Rsense - Value of current shunt in mOhm
  * @retval 0 - SUCCESS, -1 - ERROR
  */
-ErrorStatus MAX17320_Read_Br_Pwr_mW (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Rsense) {
+ErrorStatus MAX17320_Read_Br_Pwr_mW (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Count_Battery) {
 
 	uint16_t Data = 0;
 	int8_t Error = 0;
 
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB1, &Data);
-	Struct->Pwr_mW = (int16_t) ((int16_t) Data * 0.16 * Rsense);
+	Struct->Pwr_mW = (int16_t) ((int16_t) Data * 1.6 * Count_Battery);
 	Data = 0;
 	Error = Error + I2C_Read_MAX17320(I2Cx, 0x6C, 0xB3, &Data);
-	Struct->AvgPwr_mW = (int16_t) ((int16_t) Data * 0.16 * Rsense);
+	Struct->AvgPwr_mW = (int16_t) ((int16_t) Data * 1.6 * Count_Battery);
 
 	if (Error == 0) {
 		return SUCCESS;
