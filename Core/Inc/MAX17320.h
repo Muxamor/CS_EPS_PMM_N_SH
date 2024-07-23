@@ -747,7 +747,7 @@ ErrorStatus MAX17320_Read_Br_Current_mA (I2C_TypeDef *I2Cx, MAX17320_BranchData 
 
 ErrorStatus MAX17320_Read_Br_Pwr_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct);
 
-ErrorStatus MAX17320_Read_Br_Pwr_mW (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Rsense);
+ErrorStatus MAX17320_Read_Br_Pwr_mW (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t Count_Battery);
 
 ErrorStatus MAX17320_Read_Br_Temp_Reg (I2C_TypeDef *I2Cx, MAX17320_BranchData *Struct, uint8_t NumTermistors);
 

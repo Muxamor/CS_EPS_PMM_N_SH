@@ -554,7 +554,7 @@ ErrorStatus PBM_T1_ReadBatteryTelemetry(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 			Error = Error + MAX17320_Read_Balancing_Reg (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
 			Error = Error + MAX17320_Read_Br_Voltage_mV (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
 			Error = Error + MAX17320_Read_Br_Current_mA (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
-			Error = Error + MAX17320_Read_Br_Pwr_mW (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
+			Error = Error + MAX17320_Read_Br_Pwr_mW (I2Cx, &Struct, PBM_T1_BRANCH_BAT_QUANTITY);
 			Error = Error + MAX17320_Read_Br_Temp_Dg (I2Cx, &Struct, MAX17320_0_termistors);
 			Error = Error + MAX17320_Read_Br_GaugeOut_mAh (I2Cx, &Struct, PBM_T1_MAX17320_R_SENSE);
 
