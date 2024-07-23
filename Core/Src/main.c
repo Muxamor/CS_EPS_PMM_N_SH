@@ -277,8 +277,8 @@ int main(void){
             //Fill CAN Var5
             LL_IWDG_ReloadCounter(IWDG);
             if( pmm_ptr->CAN_constatnt_mode == DISABLE ){ //Constant mode OFF
-              //  CAN_Var5_fill_telemetry(eps_param);
-             //   memcpy(&CAN_IVar5_ready_telemetry, &CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry)); //Execution time at 80MHz is 61.5us.
+                CAN_Var5_fill_telemetry(eps_param);
+                memcpy(&CAN_IVar5_ready_telemetry, &CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry)); //Execution time at 80MHz is 61.5us.
             }
 
 			//Switch active CPU 
