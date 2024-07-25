@@ -1777,13 +1777,13 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U3, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Voltage ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U4, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Voltage ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U5, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U6, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U7, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U8, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U9, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U10, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U11, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U12, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U6, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U7, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U8, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Voltage_Aver_10s            = (uint16_t)( Filtr2Step(CHF_U9, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U10, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U11, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Voltage ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Voltage_Aver_10s           = (uint16_t)( Filtr2Step(CHF_U12, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Voltage ) );
 
 
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch1_Current                     = ( eps_p.eps_pdm_ptr->PWR_Channel[0].Current_val );
@@ -1805,13 +1805,13 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I3, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Current ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I4, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Current ) );
     CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I5, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I6, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch1_Current ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I7, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch2_Current ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I8, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch3_Current ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I9, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch4_Current ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I10, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I11, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
-    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I12, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch5_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I6, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch6_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I7, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch7_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I8, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch8_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Current_Aver_10s            = (int16_t)( Filtr2Step(CHF_I9, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch9_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I10, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch10_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I11, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch11_Current ) );
+    CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Current_Aver_10s           = (int16_t)( Filtr2Step(CHF_I12, (int16_t)CAN_IVar5_telemetry.CAN_TMIx_PDM_PWR_Ch12_Current ) );
 
     CAN_IVar5_telemetry.CAN_TMI1_CRC                                     = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark)), 126 );
 
