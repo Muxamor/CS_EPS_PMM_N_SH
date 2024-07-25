@@ -16,7 +16,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 	pam_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 	pam_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
 	pam_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_163mv;
-	pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
+
 
 	pam_table.pin_FLT_eF = 0;
 	pam_table.pin_Enable_eF = 0;
@@ -32,6 +32,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
             	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+                pam_table.PWR_Mon_Mode = INA238_BUS_SHUNT_TEMPERATURE_CONTINUOUS;
 
                 //Config Power monitor INA231 for power channel 1
                 pam_table.I2C_addr_PWR_Mon = PAM_I2CADDR_PWR_Mon_SPD_Ch1;
@@ -46,6 +47,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
             	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+                pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
                 //Config Power monitor INA231 for power channel 2
                 pam_table.I2C_addr_PWR_Mon = PAM_I2CADDR_PWR_Mon_SPD_Ch2;
@@ -60,6 +62,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
             	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+                pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
                 //Config Power monitor INA231 for power channel 3
                 pam_table.I2C_addr_PWR_Mon = PAM_I2CADDR_PWR_Mon_SPD_Ch3;
@@ -74,6 +77,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
             	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+                pam_table.PWR_Mon_Mode = INA238_BUS_SHUNT_TEMPERATURE_CONTINUOUS;
 
                 //Config Power monitor INA231 for power channel 4
                 pam_table.I2C_addr_PWR_Mon = PAM_I2CADDR_PWR_Mon_SPD_Ch4;
@@ -88,6 +92,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
             	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+                pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
                 //Config Power monitor INA231 for power channel 5 / LT_1
                 pam_table.I2C_addr_PWR_Mon = PAM_I2CADDR_PWR_Mon_SPD_Ch5;
@@ -102,6 +107,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
             	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+                pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
                 //Config Power monitor INA231 for power channel 6 / LT_2
                 pam_table.I2C_addr_PWR_Mon = PAM_I2CADDR_PWR_Mon_SPD_Ch6;
@@ -116,6 +122,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
             	pam_table.PWR_Mon_Max_Current_float = 6.0f; 			//Max current in A
             	pam_table.PWR_Mon_Rshunt_int16 = 10;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.010f;				//Rshunt value in Ohm
+                pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
                 //Config Power monitor INA231 for power channel 6 / LT_2
                 pam_table.I2C_addr_PWR_Mon =  PAM_I2CADDR_PWR_Mon_SPCC_Ch1;
@@ -130,6 +137,7 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
             	pam_table.PWR_Mon_Max_Current_float = 6.0f; 			//Max current in A
             	pam_table.PWR_Mon_Rshunt_int16 = 10;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.010f;				//Rshunt value in Ohm
+            	pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
                 //Config Power monitor INA231 for power channel 6 / LT_2
                 pam_table.I2C_addr_PWR_Mon =  PAM_I2CADDR_PWR_Mon_SPCC_Ch2;

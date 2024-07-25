@@ -134,7 +134,7 @@ int main(void){
     //Fill VarID4
     CAN_Var4_fill(eps_param);
     if( pmm_ptr->CAN_constatnt_mode == ENABLE){
-        CAN_Var5_fill_telemetry_const();
+    	CAN_Var5_fill_telemetry_const();
     }
 
 	//Initialization EPS and CAN for active CPU
@@ -277,8 +277,8 @@ int main(void){
             //Fill CAN Var5
             LL_IWDG_ReloadCounter(IWDG);
             if( pmm_ptr->CAN_constatnt_mode == DISABLE ){ //Constant mode OFF
-              //  CAN_Var5_fill_telemetry(eps_param);
-             //   memcpy(&CAN_IVar5_ready_telemetry, &CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry)); //Execution time at 80MHz is 61.5us.
+                CAN_Var5_fill_telemetry(eps_param);
+                memcpy(&CAN_IVar5_ready_telemetry, &CAN_IVar5_telemetry, sizeof(CAN_IVar5_telemetry)); //Execution time at 80MHz is 61.5us.
             }
 
 			//Switch active CPU 

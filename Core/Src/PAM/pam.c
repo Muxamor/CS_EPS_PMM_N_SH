@@ -15,6 +15,7 @@
 ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
 
 	int8_t error_status = SUCCESS;
+	float temp_val = 0x7F;
 	uint8_t num_pwr_ch = 0;
     uint8_t num_sp = 0;
 
@@ -25,6 +26,10 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
     // Check state power supply
     error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC);
     error_status += PAM_Check_state_PWR_Supply(pam_ptr, PAM_PWR_LDO);
+
+    //Get temperature value. Will be available in the  version of the board PAM2.1
+    //error_status += PAM_Get_Temperature(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1);
+    //error_status += PAM_Get_Temperature(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2);
 
     //Get state power chaneels for telemetry SP
     for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
@@ -47,9 +52,21 @@ ErrorStatus PAM_Get_Telemetry( _PAM *pam_ptr ){
             error_status += PAM_Get_PWR_CH_IN_I_V_P(pam_ptr, num_pwr_ch);
         }
 
-        //Get temperature value.
-        error_status += PAM_Get_Temperature(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_1);
-        error_status += PAM_Get_Temperature(pam_ptr, PAM_I2C_PORT, PAM_I2CADDR_TMP1075_2);
+        if( PAM_INA238_Get_Temperature( pam_ptr , PAM_TEMP_SENSOR_INA238_1, &temp_val) == ERROR_N ){
+    		pam_ptr->Temp_sensor[0] = 0x7F;
+    		pam_ptr->Error_temp_sensor_1 = ERROR;
+        }else{
+        	pam_ptr->Temp_sensor[0] = (int8_t)temp_val;
+        	pam_ptr->Error_temp_sensor_1 = SUCCESS; //No error
+        }
+
+        if( PAM_INA238_Get_Temperature( pam_ptr , PAM_TEMP_SENSOR_INA238_2, &temp_val) == ERROR_N ){
+    		pam_ptr->Temp_sensor[1] = 0x7F;
+    		pam_ptr->Error_temp_sensor_2 = ERROR;
+        }else{
+        	pam_ptr->Temp_sensor[1] = (int8_t)temp_val;
+        	pam_ptr->Error_temp_sensor_2 = SUCCESS; //No error
+        }
 
     }else{
         //Erase data if PAM's power supply is off

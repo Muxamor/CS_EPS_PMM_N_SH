@@ -7,7 +7,7 @@ extern "C" {
 
 #define PAM_SP_quantity  			   	6 // Quantity solar panel on the satellite
 #define PAM_SP_temp_sens_max_quantity   4 // Max quantity Temp. sensor per solar panel.
-#define PAM_SP_ID_max_quantity	        0x02 // Max quantity Ideal Diode per solar panel. (Maximal was in Norby1 X panel)
+#define PAM_SP_ID_max_quantity	        0x02 // Max quantity Ideal Diode per solar panel.
 
 #define PAM_SP1           			    0x00 //Solar panel namber 1 is Y- for G
 #define PAM_SP2          			    0x01 //Solar panel namber 2 is X+ for G
@@ -38,37 +38,37 @@ extern "C" {
 #define PAM_SP8_ID_quantity             0x00  // Quantity Ideal Diode on the solar panel
 
 
-//I2C address temp senos on the solar panel namber 1 is Folding Y+ - Norbi,     is Folding X- - Norby2
+//I2C address temp senos on the solar panel namber 1
 #define PAM_SP1_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP1_I2CADDR_TEMP_SENS_2 	0x49
 //#define PAM_SP1_I2CADDR_TEMP_SENS_3 	0x4A
 //#define PAM_SP1_I2CADDR_TEMP_SENS_4 	0x4B
 
-//I2C address temp senos on the solar panel namber 2 is X- - Norbi, is X- - Norby2
+//I2C address temp senos on the solar panel namber 2
 #define PAM_SP2_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP2_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP2_I2CADDR_TEMP_SENS_3 	0x4A
 #define PAM_SP2_I2CADDR_TEMP_SENS_4 	0x4B
 
-//I2C address temp senos on the solar panel namber 3 is Folding Y- - Norbi, is Folding X+ - Norby2
+//I2C address temp senos on the solar panel namber 3
 #define PAM_SP3_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP3_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP3_I2CADDR_TEMP_SENS_3 	0x4A
 #define PAM_SP3_I2CADDR_TEMP_SENS_4 	0x4B
 
-//I2C address temp senos on the solar panel namber 4 is X+ - Norbi, is X+ - Norby2
+//I2C address temp senos on the solar panel namber 4
 #define PAM_SP4_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP4_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP4_I2CADDR_TEMP_SENS_3 	0x4A
 #define PAM_SP4_I2CADDR_TEMP_SENS_4 	0x4B
 
-//I2C address temp senos on the solar panel namber 5 is Y+ (SRD) - Norbi, is Y+ - Norby2
+//I2C address temp senos on the solar panel namber 5
 #define PAM_SP5_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP5_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP5_I2CADDR_TEMP_SENS_3 	0x4A
 #define PAM_SP5_I2CADDR_TEMP_SENS_4 	0x4B
 
-//I2C address temp senos on the solar panel namber 5 is Y- for Norbi, is Y- - Norby2
+//I2C address temp senos on the solar panel namber 6
 #define PAM_SP6_I2CADDR_TEMP_SENS_1     0x48
 #define PAM_SP6_I2CADDR_TEMP_SENS_2 	0x49
 #define PAM_SP6_I2CADDR_TEMP_SENS_3 	0x4A

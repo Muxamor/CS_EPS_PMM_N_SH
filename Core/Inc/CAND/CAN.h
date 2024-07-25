@@ -638,22 +638,21 @@ struct CAN_IVar5{
     uint16_t CAN_Beacon_EPS_CubeSat_Total_Cons_Power;               //+68,69    |  const = 0x                 	|  Полная потребляемая мощность
     uint16_t CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power;           //+70,71    |  const = 0x                 	|  Потребляемая мощность полезной нагрузкой и подсистемами КА
     uint16_t CAN_Beacon_EPS_Total_PAM_Generation_Power;             //+72,73    |  const = 0x                 	|  Полная вырабатываемая мощность СБ
-    uint8_t  CAN_Beacon_PAM_In_PwrCh_ID_State_BitsMask;             //+74       |  const = 0x                 	|  Ideal Diode
-    int8_t  CAN_Beacon_SP_TM_Ch1_Median_Temp;                       //+75       |  const = 0x                 	|  Медианная температура панели +X
-    int8_t  CAN_Beacon_SP_TM_Ch2_Median_Temp;                       //+76       |  const = 0x                 	|  Медианная температура панели -X
-    int8_t  CAN_Beacon_SP_TM_Ch3_Median_Temp;                       //+77       |  const = 0x                 	|  Медианная температура панели +Y
-    int8_t  CAN_Beacon_SP_TM_Ch4_Median_Temp;                       //+78       |  const = 0x                 	|  Медианная температура панели -Y
-    int8_t  CAN_Beacon_SP_TM_Ch5_Median_Temp;                       //+79       |  const = 0x                 	|  Медианная температура откидной панели +Y
-    int8_t  CAN_Beacon_SP_TM_Ch6_Median_Temp;                       //+80       |  const = 0x                 	|  Медианная температура откидной панели -Y
-    int16_t CAN_Beacon_PBM_Total_PBM_Char_Dischar_Power;            //+81,82    |  const = 0x                 	|  Полная мощность зарядки/разрядки АБ
-    uint16_t CAN_Beacon_PBM_Total_Heating_Elements_Power;			//+83,84    |  const = 0x                	|  Полная мощность нагревателей АБ
-    uint16_t CAN_Beacon_PBM_Total_Battery_Level_mAh;			    //+85,86    |  const = 0x                 	|  Полный уровень заряда АБ в mAh
-    uint8_t  CAN_Beacon_PBM_Heating_Element_State_BitMask;          //+87       |  const = 0x                 	|  Текущее состояние Термостата
-    uint8_t  CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[3];        //+88,89,90 |  const = 0x                 	|  Статусы отказов (ошибок)АБ, битовая маска (МАЯК)
-    uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[2];        //+91,92    |  const = 0x                 	|  Статус отказов элементов СЭС, битовая маска (МАЯК)
+    int8_t  CAN_Beacon_SP_TM_Ch1_Median_Temp;                       //+74       |  const = 0x                 	|  Медианная температура панели +X
+    int8_t  CAN_Beacon_SP_TM_Ch2_Median_Temp;                       //+75       |  const = 0x                 	|  Медианная температура панели -X
+    int8_t  CAN_Beacon_SP_TM_Ch3_Median_Temp;                       //+76       |  const = 0x                 	|  Медианная температура панели +Y
+    int8_t  CAN_Beacon_SP_TM_Ch4_Median_Temp;                       //+77       |  const = 0x                 	|  Медианная температура панели -Y
+    int8_t  CAN_Beacon_SP_TM_Ch5_Median_Temp;                       //+78       |  const = 0x                 	|  Медианная температура откидной панели +Y
+    int8_t  CAN_Beacon_SP_TM_Ch6_Median_Temp;                       //+79       |  const = 0x                 	|  Медианная температура откидной панели -Y
+    int16_t CAN_Beacon_PBM_Total_PBM_Char_Dischar_Power;            //+80,81    |  const = 0x                 	|  Полная мощность зарядки/разрядки АБ
+    uint16_t CAN_Beacon_PBM_Total_Heating_Elements_Power;			//+82,83    |  const = 0x                	|  Полная мощность нагревателей АБ
+    uint16_t CAN_Beacon_PBM_Total_Battery_Level_mAh;			    //+84,85    |  const = 0x                 	|  Полный уровень заряда АБ в mAh
+    uint16_t  CAN_Beacon_PBM_Heating_Element_State_BitMask;         //+86,87       |  const = 0x                 	|  Текущее состояние Термостата
+    uint8_t  CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[2];        //+88,89 |  const = 0x                 	|  Статусы отказов (ошибок)АБ, битовая маска (МАЯК)
+    uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[3];        //+90,91,92    |  const = 0x                 	|  Статус отказов элементов СЭС, битовая маска (МАЯК)
                                                                 	//Total 29 byte
 
-    // -------------------  ТМИ 0  ------------------ //
+    // -------------------  ТМИ 0 // PMM // ------------------ //
     uint8_t Protaction_GAP_TMI0[53];                                //+93...145|  const = 0x
 
     uint16_t CAN_TMI0_Headr_Start_Mark;                             //146,147
@@ -671,10 +670,8 @@ struct CAN_IVar5{
     uint8_t  CAN_TMIx_PMM_Switch_Active_CPU;                        //+162     |  const = 0x                  	|   Переключатель основной/резервный
     uint8_t  CAN_TMIx_PMM_OFF_PWR_Passive_CPU;                      //+163     |  const = 0x                  	|   Упарвление питанием пассивного CPU
     int8_t  CAN_TMIx_PMM_Temp_Sensor;                               //+164     |  const = 0x                  	|   PMM датчик 1
-    uint16_t CAN_TMIx_PMM_PWR_Ch_State_BitMask;                     //+165,166 |  const = 0x                  	|   Состояние ключа питаня PMM битовая маска: PWR_Ch_State_CANmain, PWR_Ch_State_CANbackup, PWR_Ch_State_Vbat1_eF1, PWR_Ch_State_Vbat1_eF2, PWR_Ch_State_Vbat2_eF1
-                                                                    //                                        	|   PWR_Ch_State_Vbat2_eF2, PWR_Ch_State_PBMs_Logic, PWR_Ch_State_Deploy_Logic, PWR_Ch_State_Deploy_Power,
-    uint16_t CAN_TMIx_PMM_PWR_PG_BitMask;                           //+167,168 |  const = 0x                  	|   Статус PG линий питания PMM битовая маска:PWR_Supply_Main_PG, PWR_Supply_Backup_PG, PWR_Ch_PG_CANmain,PWR_Ch_PG_CANbackup,  PWR_Ch_PG_Vbat1_eF1,  PWR_Ch_PG_Vbat1_eF2
-                                                                    //                                        	|   PWR_Ch_PG_Vbat2_eF1, PWR_Ch_PG_Vbat2_eF2, PWR_Ch_PG_PBMs_Logic, PWR_Ch_PG_Deploy_LP
+    uint16_t CAN_TMIx_PMM_PWR_Ch_State_BitMask;                     //+165,166 |  const = 0x                  	|   Состояние ключа питаня PMM битовая маска:
+    uint16_t CAN_TMIx_PMM_PWR_PG_BitMask;                           //+167,168 |  const = 0x                  	|   Статус PG линий питания PMM битовая маска:
     uint32_t CAN_TMIx_PMM_Error_BitMask;                            //+169,170,171,172 |  const = 0x          	|   Статус ошибок модуля PMM, битовая маска:
     uint32_t CAN_TMIx_PMM_Reboot_Counter_Main_CPU;                  //+173,174,175,176 |  const = 0x          	|   Количество перезапусков основного CPU
     uint32_t CAN_TMIx_PMM_Reboot_Counter_Backup_CPU;                //+177,178,179,180 |  const = 0x          	|   Количество перезапусков резервного CPU
@@ -686,300 +683,345 @@ struct CAN_IVar5{
     int16_t CAN_TMIx_PMM_VBAT2_Current;                             //+191,192 |  const = 0x                  	|   Ток VBAT2
     int16_t CAN_TMIx_PMM_VBAT1_Current_Aver_10s;                    //+193,194 |  const = 0x                  	|   Ток VBAT1 усреднение 10s
     int16_t CAN_TMIx_PMM_VBAT2_Current_Aver_10s;                    //+195,196 |  const = 0x                  	|   Ток VBAT2 усреднение 10s
-    uint16_t CAN_TMIx_PMM_Own_Current_Consumption;                  //+197,198 |  const = 0x                  	|   Ток потребления модуля PMM
-    uint16_t CAN_TMIx_PMM_Voltage;                                  //+199,200 |  const = 0x                  	|   Напряжение питания модуля PMM 3.3V
-    uint16_t CAN_TMIx_EPS_Main_Bus_Voltage;                         //+201,202 |  const = 0x                  	|   Напряжение внутренней шины СЭС
-    uint16_t CAN_TMIx_EPS_CubeSat_Total_Cons_Power;                 //+203,204 |  const = 0x                  	|   Полная мощность потребления КА
-    uint16_t CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power;             //+205,206 |  const = 0x                  	|   Потребляемая мощность  подсистемами и ПН КА
-    uint16_t CAN_TMIx_EPS_Deploy_Status;                            //+207,208 |  const = 0x                  	|  Состояние концевиков раскрыв. элементов, битовая маска
-    uint16_t CAN_TMIx_PMM_Version_FW;                               //+209,210 |  const = 0x                  	|   Firmware version
-                                                                    //Total 53 byte
-    // PDM //
-    uint16_t CAN_TMIx_PDM_PWR_Ch_State_BitsMask;                    //+211,212 |  const = 0x                  	|   Командный регистр PDM линии питания 1..6 State_eF_in State_eF_out
-    uint16_t CAN_TMIx_PDM_PWR_PG_BitsMask;                          //+213,214 |  const = 0x                  	|   Power Good каналов питания PDM 1..6 PG_eF_in PG_eF_out
-    uint32_t CAN_TMIx_PDM_Error_BitMask;                            //+215,216,217,218 | const = 0x           	|   Статус ошибок модуля PDM, битовая маска:Error_State_eF_in, Error_State_eF_out, Error_PWR_Mon, Error_I2C_GPIO_Ext1, Error_I2C_GPIO_Ext2, Error_I2C_MUX,Error_temp_sensor_1
+    uint16_t CAN_TMIx_EPS_Main_Bus_Voltage;                         //+197,198 |  const = 0x                  	|   Напряжение внутренней шины СЭС
+    uint16_t CAN_TMIx_EPS_CubeSat_Total_Cons_Power;                 //+199,200 |  const = 0x                  	|   Полная мощность потребления КА
+    uint16_t CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power;             //+201,202 |  const = 0x                  	|   Потребляемая мощность  подсистемами и ПН КА
+    uint16_t CAN_TMIx_EPS_Deploy_Status;                            //+203,204 |  const = 0x                  	|  Состояние концевиков раскрыв. элементов, битовая маска
+    uint16_t CAN_TMIx_PMM_Version_FW;                               //+205,206 |  const = 0x                  	|   Firmware version
+    																//Total 52 byte
+    uint8_t CAN_TMI0_Reserved [65];                					//+207,208 |  const = 0x                  	|   Ток потребления модуля PMM
 
-    int8_t  CAN_TMIx_PDM_Temp_Sensor1;                              //+219     |  const = 0x                  	|   PDM датчик 1
-    int8_t  CAN_TMIx_PDM_Temp_Sensor2;                              //+220     |  const = 0x                  	|   PDM датчик 2
-    int8_t  CAN_TMIx_PDM_Temp_Sensor3;                              //+221     |  const = 0x                  	|   PDM датчик 3
-    int8_t  CAN_TMIx_PDM_Temp_Sensor4;                              //+222     |  const = 0x                  	|   PDM датчик 4
-    int8_t  CAN_TMIx_PDM_Median_Temp;                               //+223     |  const = 0x                  	|   Медианная температура PDM
-
-    uint16_t CAN_TMIx_PDM_PWR_Ch1_Voltage;                          //+224,225 |  const = 0x                    |  PDM Напряжение канала 1
-    uint16_t CAN_TMIx_PDM_PWR_Ch2_Voltage;                          //+226,227 |  const = 0x                    |  PDM Напряжение канала 2
-    uint16_t CAN_TMIx_PDM_PWR_Ch3_Voltage;                          //+228,229 |  const = 0x                    |  PDM Напряжение канала 3
-    uint16_t CAN_TMIx_PDM_PWR_Ch4_Voltage;                          //+230,231 |  const = 0x                    |  PDM Напряжение канала 4
-    uint16_t CAN_TMIx_PDM_PWR_Ch5_Voltage;                          //+232,233 |  const = 0x                    |  PDM Напряжение канала 5
-    uint16_t CAN_TMIx_PDM_PWR_Ch6_Voltage;                          //+234,235 |  const = 0x                    |  PDM Напряжение канала 6
-    uint16_t CAN_TMIx_PDM_PWR_Ch1_Voltage_Aver_10s;                 //+236,237 |  const = 0x                    |  Напряжение канала 1 СОП1 усреднение 10s
-    uint16_t CAN_TMIx_PDM_PWR_Ch2_Voltage_Aver_10s;                 //+238,239 |  const = 0x                    |  Напряжение канала 2 СОП2 усреднение 10s
-    uint16_t CAN_TMIx_PDM_PWR_Ch3_Voltage_Aver_10s;                 //+240,241 |  const = 0x                    |  Напряжение канала 3 БРК1 усреднение 10s
-    uint16_t CAN_TMIx_PDM_PWR_Ch4_Voltage_Aver_10s;                 //+242,243 |  const = 0x                    |  Напряжение канала 4 БРК2 усреднение 10s
-    uint16_t CAN_TMIx_PDM_PWR_Ch5_Voltage_Aver_10s;                 //+244,245 |  const = 0x                    |  Напряжение канала 4 БРК2 усреднение 10s
-    uint16_t CAN_TMIx_PDM_PWR_Ch6_Voltage_Aver_10s;                 //+246,247 |  const = 0x                    |  Напряжение канала 4 БРК2 усреднение 10s
-
-    int16_t CAN_TMIx_PDM_PWR_Ch1_Current;                           //+248,249 |  const = 0x                    |   Ток канал 1
-    int16_t CAN_TMIx_PDM_PWR_Ch2_Current;                           //+250,251 |  const = 0x                    |   Ток канал 2
-    int16_t CAN_TMIx_PDM_PWR_Ch3_Current;                           //+252,253 |  const = 0x                    |   Ток канал 3
-    int16_t CAN_TMIx_PDM_PWR_Ch4_Current;                           //+254,255 |  const = 0x                    |   Ток канал 4
-    int16_t CAN_TMIx_PDM_PWR_Ch5_Current;                           //+256,257 |  const = 0x                    |   Ток канал 5
-    int16_t CAN_TMIx_PDM_PWR_Ch6_Current;                           //+258,259 |  const = 0x                    |   Ток канал 6
-
-    int16_t CAN_TMIx_PDM_PWR_Ch1_Current_Aver_10s;                  //+260,261 |  const = 0x                    |   Ток канал 1 усреднение 10s
-    int16_t CAN_TMIx_PDM_PWR_Ch2_Current_Aver_10s;                  //+262,263 |  const = 0x                    |   Ток канал 2 усреднение 10s
-    int16_t CAN_TMIx_PDM_PWR_Ch3_Current_Aver_10s;                  //+264,265 |  const = 0x                    |   Ток канал 3 усреднение 10s
-    int16_t CAN_TMIx_PDM_PWR_Ch4_Current_Aver_10s;                  //+266,267 |  const = 0x                    |   Ток канал 4 усреднение 10s
-    int16_t CAN_TMIx_PDM_PWR_Ch5_Current_Aver_10s;                  //+268,269 |  const = 0x                    |   Ток канал 4 усреднение 10s
-    int16_t CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s;                  //+270,271 |  const = 0x                    |   Ток канал 4 усреднение 10s
-                                                                    //Total 61 byte
     uint16_t CAN_TMI0_CRC;                                          //+272,273 |  const = 0x
 
-    // -------------------  ТМИ 1  ------------------ //
+    // -------------------  ТМИ 1 // PDM //  ------------------ //
     uint8_t Protaction_GAP_TMI1[52];                                //+274...325
 
-    uint16_t CAN_TMI1_Headr_Start_Mark;                             //326,327
-    uint16_t CAN_TMI1_Headr_Sat_ID;                                 //328,329
-    uint16_t CAN_TMI1_Headr_Loc_ID;                                 //330,331
-    uint16_t CAN_TMI1_Headr_Mas_Number;                             //332,333
-    uint32_t CAN_TMI1_Headr_Time;                                   //334,335,336,337
+	uint16_t CAN_TMI1_Headr_Start_Mark;                             //326,327
+	uint16_t CAN_TMI1_Headr_Sat_ID;                                 //328,329
+	uint16_t CAN_TMI1_Headr_Loc_ID;                                 //330,331
+	uint16_t CAN_TMI1_Headr_Mas_Number;                             //332,333
+	uint32_t CAN_TMI1_Headr_Time;                                   //334,335,336,337
 
-    uint16_t CAN_TMI1_version;                                  	//+338,339  |  const = 0x                   |   Версия ТМИ
-    // PAM //
-    uint16_t CAN_TMIx_EPS_Total_PAM_Generation_Power;               //+340,341  |  const = 0x                   |   Полная вырабатываемая мощность PAM
-    uint16_t CAN_TMIx_PAM_PWR_Ch_State_BitMask;                     //+342,343  |  const = 0x                   | State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
-    uint16_t CAN_TMIx_PAM_PWR_PG_BitMask;                           //+344,345  |  const = 0x
-    uint32_t CAN_TMIx_PAM_PWR_Error_BitMask;                        //+346,347,348,349  |  const = 0x           | Статус ошибок модуля PAM, битовая маска: State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
-    int8_t  CAN_TMIx_PAM_Temp_Sensor1;                              //+350     |  const = 0x                    |   PAM датчик 1
-    int8_t  CAN_TMIx_PAM_Temp_Sensor2;                              //+351     |  const = 0x                    |   PAM датчик 2
-    int8_t  CAN_TMIx_PAM_Temp_Sensor3;                              //+352     |  const = 0x                    |   PAM датчик 3
-    int8_t  CAN_TMIx_PAM_Temp_Sensor4;                              //+353     |  const = 0x                    |   PAM датчик 4
-    int8_t  CAN_TMIx_PAM_Median_Temp;                               //+354     |  const = 0x                    |   Медианная температура PAM
-    uint8_t  CAN_TMIx_PAM_In_PwrCh_ID_State_BitsMask;               //+355     |  const = 0x                    |   Ideal Diode
-    uint8_t  CAN_TMIx_PAM_In_PwrCh_Error_BitsMask;                  //+356     |  const = 0x                    |
-    uint16_t CAN_TMIx_PAM_In_PwrCh1_Voltage;                        //+357,358 |  const = 0x                    |   Напряжение панели
-    uint16_t CAN_TMIx_PAM_In_PwrCh2_Voltage;                        //+359,360 |  const = 0x                    |   Напряжение панели
-    uint16_t CAN_TMIx_PAM_In_PwrCh3_Voltage;                        //+361,362 |  const = 0x                    |   Напряжение панели
-    uint16_t CAN_TMIx_PAM_In_PwrCh4_Voltage;                        //+363,364 |  const = 0x                    |   Напряжение панели
-    uint16_t CAN_TMIx_PAM_In_PwrLT1_Voltage;           			    //+365,366 |  const = 0x                    |   Напряжение откидных панелей
-    uint16_t CAN_TMIx_PAM_In_PwrLT2_Voltage;                		//+367,368 |  const = 0x                    |   Напряжение откидных панелей
-    int16_t CAN_TMIx_PAM_In_PwrCh1_Current;                         //+369,370 |  const = 0x                    |   Ток панели
-    int16_t CAN_TMIx_PAM_In_PwrCh2_Current;                         //+371,372 |  const = 0x                    |   Ток панели
-    int16_t CAN_TMIx_PAM_In_PwrCh3_Current;                         //+373,374 |  const = 0x                    |   Ток панели
-    int16_t CAN_TMIx_PAM_In_PwrCh4_Current;                         //+375,376 |  const = 0x                    |   Ток панели
-    int16_t CAN_TMIx_PAM_In_PwrLT1_Current;            				//+377,378 |  const = 0x                    |   Ток откидных панелей
-    int16_t CAN_TMIx_PAM_In_PwrLT2_Current;           				//+379,380 |  const = 0x                    |   Ток откидных панелей
+	uint16_t CAN_TMI1_version;                                  	//+338,339  |  const = 0x                   |   Версия ТМИ
 
-    uint16_t CAN_TMIx_SP_TM_Ch1_Status_BitMask;                     //+381,382 |  const = 0x                    |   Y+ Folding
-    uint16_t CAN_TMIx_SP_TM_Ch2_Status_BitMask;                     //+383,384 |  const = 0x                    |   X-
-    uint16_t CAN_TMIx_SP_TM_Ch3_Status_BitMask;                     //+385,386 |  const = 0x                    |   Y- Folding
-    uint16_t CAN_TMIx_SP_TM_Ch4_Status_BitMask;                     //+387,388 |  const = 0x                    |   X+
-    uint16_t CAN_TMIx_SP_TM_Ch5_Status_BitMask;                     //+389,390 |  const = 0x                    |   Y+
-    uint16_t CAN_TMIx_SP_TM_Ch6_Status_BitMask;                     //+391,392 |  const = 0x                    |   Y-
+    // PDM //
+    uint16_t CAN_TMIx_PDM_PWR_Ch_State_BitsMask;                    //+340,341 |  const = 0x                  	|   Командный регистр PDM линии питания 1..6 State_eF_in State_eF_out
+    uint16_t CAN_TMIx_PDM_PWR_PG_BitsMask;                          //+342,343 |  const = 0x                  	|   Power Good каналов питания PDM 1..6 PG_eF_in PG_eF_out
+    uint32_t CAN_TMIx_PDM_Error_BitMask;                            //+344,345,346,347 | const = 0x           	|   Статус ошибок модуля PDM, битовая маска:Error_State_eF_in, Error_State_eF_out, Error_PWR_Mon, Error_I2C_GPIO_Ext1, Error_I2C_GPIO_Ext2, Error_I2C_MUX,Error_temp_sensor_1
 
-    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor1;                        //+393    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor2;                        //+394    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor3;                        //+395    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor4;                        //+396    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor1;                        //+397    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor2;                        //+398    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor3;                        //+399    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor4;                        //+400    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor1;                        //+401    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor2;                        //+402    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor3;                        //+403    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor4;                        //+404    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor1;                        //+405    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor2;                        //+406    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor3;                        //+407    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor4;                        //+408    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor1;                        //+409    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor2;                        //+410    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor3;                        //+411    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor4;                        //+412    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor1;                        //+413    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor2;                        //+414    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor3;                        //+415    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor4;                        //+416    |  const = 0x                     |   Температура панели
-    int8_t  CAN_TMIx_SP_TM_Ch1_Median_Temp;                         //+417    |  const = 0x                     |   Медианная температура панели  Folding Y+ - Norbi,    is Folding X- - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch2_Median_Temp;                         //+418    |  const = 0x                     |   Медианная температура панели  X- for Norbi,          is X - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch3_Median_Temp;                         //+419    |  const = 0x                     |   Медианная температура панели  Folding Y- for Norbi,  is Folding X+ - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch4_Median_Temp;                         //+420    |  const = 0x                     |   Медианная температура панели  X+ for Norbi,          is X+ - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch5_Median_Temp;                         //+421    |  const = 0x                     |   Медианная температура панели  Y+ (SRD) for Norbi,    is Y+ - Norby2
-    int8_t  CAN_TMIx_SP_TM_Ch6_Median_Temp;                         //+422    |  const = 0x                     |   Медианная температура панели  Y- for Norbi,          is Y- - Norby2
-                                                                    //Total 85 byte
-    uint8_t  CAN_TMI1_Reserved[29];                                 //+423..451  |  const = 0x
+    int8_t  CAN_TMIx_PDM_Temp_Sensor1;                              //+348     |  const = 0x                  	|   PDM датчик 1
+    int8_t  CAN_TMIx_PDM_Temp_Sensor2;                              //+349     |  const = 0x                  	|   PDM датчик 2
+    int8_t  CAN_TMIx_PDM_Temp_Sensor3;                              //+350     |  const = 0x                  	|   PDM датчик 3
+    int8_t  CAN_TMIx_PDM_Temp_Sensor4;                              //+351     |  const = 0x                  	|   PDM датчик 4
+    int8_t  CAN_TMIx_PDM_Median_Temp;                               //+352     |  const = 0x                  	|   Медианная температура PDM
+
+    uint16_t CAN_TMIx_PDM_PWR_Ch1_Voltage;                          //+353,354 |  const = 0x                    |  PDM Напряжение канала 1
+    uint16_t CAN_TMIx_PDM_PWR_Ch2_Voltage;                          //+355,356 |  const = 0x                    |  PDM Напряжение канала 2
+    uint16_t CAN_TMIx_PDM_PWR_Ch3_Voltage;                          //+357,358 |  const = 0x                    |  PDM Напряжение канала 3
+    uint16_t CAN_TMIx_PDM_PWR_Ch4_Voltage;                          //+359,360 |  const = 0x                    |  PDM Напряжение канала 4
+    uint16_t CAN_TMIx_PDM_PWR_Ch5_Voltage;                          //+361,362 |  const = 0x                    |  PDM Напряжение канала 5
+    uint16_t CAN_TMIx_PDM_PWR_Ch6_Voltage;                          //+363,364 |  const = 0x                    |  PDM Напряжение канала 6
+    uint16_t CAN_TMIx_PDM_PWR_Ch7_Voltage;                          //+365,366 |  const = 0x                    |  PDM Напряжение канала 7
+    uint16_t CAN_TMIx_PDM_PWR_Ch8_Voltage;                          //+367,368 |  const = 0x                    |  PDM Напряжение канала 8
+    uint16_t CAN_TMIx_PDM_PWR_Ch9_Voltage;                          //+369,370 |  const = 0x                    |  PDM Напряжение канала 9
+    uint16_t CAN_TMIx_PDM_PWR_Ch10_Voltage;                         //+371,372 |  const = 0x                    |  PDM Напряжение канала 10
+    uint16_t CAN_TMIx_PDM_PWR_Ch11_Voltage;                         //+373,374 |  const = 0x                    |  PDM Напряжение канала 11
+    uint16_t CAN_TMIx_PDM_PWR_Ch12_Voltage;                         //+375,376 |  const = 0x                    |  PDM Напряжение канала 12
+
+    uint16_t CAN_TMIx_PDM_PWR_Ch1_Voltage_Aver_10s;                 //+377,378 |  const = 0x                    |  Напряжение канала 1 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch2_Voltage_Aver_10s;                 //+379,380 |  const = 0x                    |  Напряжение канала 2 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch3_Voltage_Aver_10s;                 //+381,382 |  const = 0x                    |  Напряжение канала 3 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch4_Voltage_Aver_10s;                 //+383,384 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch5_Voltage_Aver_10s;                 //+385,386 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch6_Voltage_Aver_10s;                 //+387,388 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch7_Voltage_Aver_10s;                 //+389,390 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch8_Voltage_Aver_10s;                 //+391,392 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch9_Voltage_Aver_10s;                 //+393,394 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch10_Voltage_Aver_10s;                //+395,396 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch11_Voltage_Aver_10s;                //+397,398 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+    uint16_t CAN_TMIx_PDM_PWR_Ch12_Voltage_Aver_10s;                //+399,400 |  const = 0x                    |  Напряжение канала 4 усреднение 10s
+
+    int16_t CAN_TMIx_PDM_PWR_Ch1_Current;                           //+401,402 |  const = 0x                    |   Ток канал 1
+    int16_t CAN_TMIx_PDM_PWR_Ch2_Current;                           //+403,404 |  const = 0x                    |   Ток канал 2
+    int16_t CAN_TMIx_PDM_PWR_Ch3_Current;                           //+405,406 |  const = 0x                    |   Ток канал 3
+    int16_t CAN_TMIx_PDM_PWR_Ch4_Current;                           //+407,408 |  const = 0x                    |   Ток канал 4
+    int16_t CAN_TMIx_PDM_PWR_Ch5_Current;                           //+409,410 |  const = 0x                    |   Ток канал 5
+    int16_t CAN_TMIx_PDM_PWR_Ch6_Current;                           //+411,412 |  const = 0x                    |   Ток канал 6
+    int16_t CAN_TMIx_PDM_PWR_Ch7_Current;                           //+413,414 |  const = 0x                    |   Ток канал 6
+    int16_t CAN_TMIx_PDM_PWR_Ch8_Current;                           //+415,416 |  const = 0x                    |   Ток канал 6
+    int16_t CAN_TMIx_PDM_PWR_Ch9_Current;                           //+417,418 |  const = 0x                    |   Ток канал 6
+    int16_t CAN_TMIx_PDM_PWR_Ch10_Current;                          //+419,420 |  const = 0x                    |   Ток канал 6
+    int16_t CAN_TMIx_PDM_PWR_Ch11_Current;                          //+421,422 |  const = 0x                    |   Ток канал 6
+    int16_t CAN_TMIx_PDM_PWR_Ch12_Current;                          //+423,424 |  const = 0x                    |   Ток канал 6
+
+    int16_t CAN_TMIx_PDM_PWR_Ch1_Current_Aver_10s;                  //+425,426 |  const = 0x                    |   Ток канал 1 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch2_Current_Aver_10s;                  //+427,428 |  const = 0x                    |   Ток канал 2 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch3_Current_Aver_10s;                  //+429,430 |  const = 0x                    |   Ток канал 3 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch4_Current_Aver_10s;                  //+431,432 |  const = 0x                    |   Ток канал 4 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch5_Current_Aver_10s;                  //+433,434 |  const = 0x                    |   Ток канал 4 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch6_Current_Aver_10s;                  //+435,436 |  const = 0x                    |   Ток канал 4 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch7_Current_Aver_10s;                  //+437,438 |  const = 0x                    |   Ток канал 1 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch8_Current_Aver_10s;                  //+439,440 |  const = 0x                    |   Ток канал 2 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch9_Current_Aver_10s;                  //+441,442 |  const = 0x                    |   Ток канал 3 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch10_Current_Aver_10s;                 //+443,444 |  const = 0x                    |   Ток канал 4 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch11_Current_Aver_10s;                 //+445,446 |  const = 0x                    |   Ток канал 4 усреднение 10s
+    int16_t CAN_TMIx_PDM_PWR_Ch12_Current_Aver_10s;                 //+447,448 |  const = 0x                    |   Ток канал 4 усреднение 10s
+
+    uint8_t CAN_TMI1_Reserved [3];                					//+449,450,451 |  const = 0x                  	|   Ток потребления модуля PMM
+
     uint16_t CAN_TMI1_CRC;                                          //+452,453|  const = 0x
-                                                                    //Total 116 byte
 
-    // -------------------  ТМИ 2  ------------------ //
-    uint8_t Protaction_GAP_TMI2[52];                                //+454...505
+    // -------------------  ТМИ 2// PAM //  ------------------ //
+	uint8_t Protaction_GAP_TMI2[52];                                //+454...505
 
-    uint16_t CAN_TMI2_Headr_Start_Mark;                             //506,507
-    uint16_t CAN_TMI2_Headr_Sat_ID;                                 //508,509
-    uint16_t CAN_TMI2_Headr_Loc_ID;                                 //510,511
-    uint16_t CAN_TMI2_Headr_Mas_Number;                             //512,513
-    uint32_t CAN_TMI2_Headr_Time;                                   //514,515,516,517
+	uint16_t CAN_TMI2_Headr_Start_Mark;                             //506,507
+	uint16_t CAN_TMI2_Headr_Sat_ID;                                 //508,509
+	uint16_t CAN_TMI2_Headr_Loc_ID;                                 //510,511
+	uint16_t CAN_TMI2_Headr_Mas_Number;                             //512,513
+	uint32_t CAN_TMI2_Headr_Time;                                   //514,515,516,517
 
-    uint16_t CAN_TMI2_version;                                  	//+518,519 |  const = 0x                    | Версия ТМИ
+	uint16_t CAN_TMI2_version;                                  	//+518,519 |  const = 0x                    | Версия ТМИ
 
-    // PBM part1 //
-    int16_t CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power;              //+520,521 |  const = 0x                    | Полная мощность зарядки/разрядки PBM
-    uint16_t CAN_TMIx_PBM_Total_Heating_Elements_Power;			    //+522,523 |  const = 0x                    |
-    uint16_t CAN_TMIx_PBM_Total_Battery_Level_mAh;			        //+524,525 |  const = 0x                    | Полный уровень заряда АБ в mAh
-    uint8_t  CAN_TMIx_PBM_Total_Battery_Level_percent;              //+526     |  const = 0x                    | Полный уровень заряда АБ в %
-    uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;           //+527,528 |  const = 0x                    |
-    uint8_t CAN_TMIx_PBM_Thermostat_Cmd_BitMask;                    //+529     |  const = 0x                    | Команда на включение Термостат
-    uint8_t CAN_TMIx_PBM_Heating_Element_State_BitMask;             //+530     |  const = 0x                    | Текущее состояние Термостата
-    uint8_t CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask;                  //+531     |  const = 0x                    | Ключи аварийной зарядки
-    uint8_t CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask;            //+532     |  const = 0x                    | Ключи аварийной зарядки
-    uint16_t CAN_TMIx_PBM1_Error_BitMask;                           //+533,534 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM2_Error_BitMask;                           //+535,536 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM3_Error_BitMask;                           //+537,538 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM4_Error_BitMask;                           //+539,540 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM1_Controller1_Error_BitMask;               //+541,542 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM1_Controller2_Error_BitMask;               //+543,544 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM2_Controller1_Error_BitMask;               //+545,546 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM2_Controller2_Error_BitMask;               //+547,548 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM3_Controller1_Error_BitMask;               //+549,550 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM3_Controller2_Error_BitMask;               //+551,552 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM4_Controller1_Error_BitMask;               //+553,554 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
-    uint16_t CAN_TMIx_PBM4_Controller2_Error_BitMask;               //+555,556 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
+	// PAM //
+    uint16_t CAN_TMIx_EPS_Total_PAM_Generation_Power;               //+520,521  |  const = 0x                   |   Полная вырабатываемая мощность PAM
+    uint16_t CAN_TMIx_PAM_PWR_Ch_State_BitMask;                     //+522,523  |  const = 0x                   | State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
+    uint16_t CAN_TMIx_PAM_PWR_PG_BitMask;                           //+524,525  |  const = 0x
+    uint32_t CAN_TMIx_PAM_PWR_Error_BitMask;                        //+526,527,528,529  |  const = 0x           | Статус ошибок модуля PAM, битовая маска: State_DC_DC State_LDO  PAM_SP_State_eF_out1...6
+    int8_t CAN_TMIx_PAM_Temp_Sensor1;                              //+530     |  const = 0x                    |   PAM датчик 1
+    int8_t CAN_TMIx_PAM_Temp_Sensor2;                              //+531     |  const = 0x                    |   PAM датчик 2
+    int8_t CAN_TMIx_PAM_Temp_Sensor3;                              //+532     |  const = 0x                    |   PAM датчик 3
+    int8_t CAN_TMIx_PAM_Temp_Sensor4;                              //+533     |  const = 0x                    |   PAM датчик 4
+    int8_t CAN_TMIx_PAM_Median_Temp;                               //+534     |  const = 0x                    |   Медианная температура PAM
+    uint16_t CAN_TMIx_PAM_In_PwrCh_Error_BitsMask;                 //+535,536 |  const = 0x                    |
 
-    uint8_t  CAN_TMIx_PBM1_Branch1_Charge_Level_Percent;            //+557     |  const = 0x                    | Уровень заряда АБ1 ветвь 1
-    uint8_t  CAN_TMIx_PBM1_Branch2_Charge_Level_Percent;            //+558     |  const = 0x                    | Уровень заряда АБ1 ветвь 2
-    uint8_t  CAN_TMIx_PBM2_Branch1_Charge_Level_Percent;            //+559     |  const = 0x                    | Уровень заряда АБ2 ветвь 1
-    uint8_t  CAN_TMIx_PBM2_Branch2_Charge_Level_Percent;            //+560     |  const = 0x                    | Уровень заряда АБ2 ветвь 2
-    uint8_t  CAN_TMIx_PBM3_Branch1_Charge_Level_Percent;            //+561     |  const = 0x                    | Уровень заряда АБ3 ветвь 1
-    uint8_t  CAN_TMIx_PBM3_Branch2_Charge_Level_Percent;            //+562     |  const = 0x                    | Уровень заряда АБ3 ветвь 2
-    uint8_t  CAN_TMIx_PBM4_Branch1_Charge_Level_Percent;            //+563     |  const = 0x                    | Уровень заряда АБ4 ветвь 1
-    uint8_t  CAN_TMIx_PBM4_Branch2_Charge_Level_Percent;            //+564     |  const = 0x                    | Уровень заряда АБ4 ветвь 2
+    uint16_t CAN_TMIx_PAM_In_PwrCh1_Voltage;                        //+537,538 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh2_Voltage;                        //+539,540 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh3_Voltage;                        //+541,542 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh4_Voltage;                        //+543,544 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh5_Voltage;                        //+545,546 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrCh6_Voltage;                        //+547,548 |  const = 0x                    |   Напряжение панели
+    uint16_t CAN_TMIx_PAM_In_PwrLT1_Voltage;           			    //+549,550 |  const = 0x                    |   Напряжение откидных панелей
+    uint16_t CAN_TMIx_PAM_In_PwrLT2_Voltage;                		//+551,552 |  const = 0x                    |   Напряжение откидных панелей
 
-    uint16_t CAN_TMIx_PBM1_Branch1_Charge_Level_mAh;                //+565,566 |  const = 0x                 	| Уровень заряда АБ1 ветвь 1
-    uint16_t CAN_TMIx_PBM1_Branch2_Charge_Level_mAh;                //+567,568 |  const = 0x                 	| Уровень заряда АБ1 ветвь 1
-    uint16_t CAN_TMIx_PBM2_Branch1_Charge_Level_mAh;                //+569,570 |  const = 0x                 	| Уровень заряда АБ2 ветвь 2
-    uint16_t CAN_TMIx_PBM2_Branch2_Charge_Level_mAh;                //+571,572 |  const = 0x                 	| Уровень заряда АБ2 ветвь 2
-    uint16_t CAN_TMIx_PBM3_Branch1_Charge_Level_mAh;                //+573,574 |  const = 0x                 	| Уровень заряда АБ3 ветвь 2
-    uint16_t CAN_TMIx_PBM3_Branch2_Charge_Level_mAh;                //+575,576 |  const = 0x                 	| Уровень заряда АБ3 ветвь 2
-    uint16_t CAN_TMIx_PBM4_Branch1_Charge_Level_mAh;                //+577,578 |  const = 0x                 	| Уровень заряда АБ4 ветвь 2
-    uint16_t CAN_TMIx_PBM4_Branch2_Charge_Level_mAh;                //+579,580 |  const = 0x                 	| Уровень заряда АБ4 ветвь 2
+    int16_t CAN_TMIx_PAM_In_PwrCh1_Current;                         //+553,554 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrCh2_Current;                         //+555,556 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrCh3_Current;                         //+557,558 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrCh4_Current;                         //+559,560 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrCh5_Current;                         //+561,562 |  const = 0x                    |   Ток панели
+	int16_t CAN_TMIx_PAM_In_PwrCh6_Current;                         //+563,564 |  const = 0x                    |   Ток панели
+    int16_t CAN_TMIx_PAM_In_PwrLT1_Current;            				//+565,566 |  const = 0x                    |   Ток откидных панелей
+    int16_t CAN_TMIx_PAM_In_PwrLT2_Current;           				//+567,568 |  const = 0x                    |   Ток откидных панелей
 
-    int16_t CAN_TMIx_PBM1_Branch1_Char_Discha_Current;              //+581,582 |  const = 0x                	| Ток заряда/разряда АБ1 ветвь 1
-    int16_t CAN_TMIx_PBM1_Branch2_Char_Discha_Current;              //+583,584 |  const = 0x                	| Ток заряда/разряда АБ1 ветвь 2
-    int16_t CAN_TMIx_PBM2_Branch1_Char_Discha_Current;              //+585,586 |  const = 0x                	| Ток заряда/разряда АБ2 ветвь 1
-    int16_t CAN_TMIx_PBM2_Branch2_Char_Discha_Current;              //+587,588 |  const = 0x                	| Ток заряда/разряда АБ2 ветвь 2
-    int16_t CAN_TMIx_PBM3_Branch1_Char_Discha_Current;              //+589,590 |  const = 0x                	| Ток заряда/разряда АБ3 ветвь 1
-    int16_t CAN_TMIx_PBM3_Branch2_Char_Discha_Current;              //+591,592 |  const = 0x                	| Ток заряда/разряда АБ3 ветвь 2
-    int16_t CAN_TMIx_PBM4_Branch1_Char_Discha_Current;              //+593,594 |  const = 0x                	| Ток заряда/разряда АБ4 ветвь 1
-    int16_t CAN_TMIx_PBM4_Branch2_Char_Discha_Current;              //+595,596 |  const = 0x                	| Ток заряда/разряда АБ4 ветвь 2
+    uint16_t CAN_TMIx_SP_TM_Ch1_Status_BitMask;                     //+569,570 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch2_Status_BitMask;                     //+571,572 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch3_Status_BitMask;                     //+573,574 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch4_Status_BitMask;                     //+575,576 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch5_Status_BitMask;                     //+577,578 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch6_Status_BitMask;                     //+579,580 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch7_Status_BitMask;                     //+581,582 |  const = 0x                    |
+    uint16_t CAN_TMIx_SP_TM_Ch8_Status_BitMask;                     //+583,584 |  const = 0x                    |
 
-    int8_t  CAN_PBM1_Temp_Controller1;                              //+597     |  const = 0x               	 	| АБ1 датчик контроллера 1
-    int8_t  CAN_PBM1_Temp_Controller2;                              //+598     |  const = 0x               		| АБ1 датчик контроллера 2
-    int8_t  CAN_PBM1_Temp_Sensor1;                                  //+599     |  const = 0x               		| АБ1 датчик на плате 1
-    int8_t  CAN_PBM1_Temp_Sensor2;                                  //+600     |  const = 0x               		| АБ1 датчик на плате 2
-    int8_t  CAN_PBM1_Temp_Sensor3;                                  //+601     |  const = 0x               		| АБ1 датчик на плате 3
-    int8_t  CAN_PBM1_Temp_Sensor4;                                  //+602     |  const = 0x               		| АБ1 датчик на плате 4
-    int8_t  CAN_PBM2_Temp_Controller1;                              //+603     |  const = 0x               		| АБ2 датчик контроллера 1
-    int8_t  CAN_PBM2_Temp_Controller2;                              //+604     |  const = 0x               		| АБ2 датчик контроллера 2
-    int8_t  CAN_PBM2_Temp_Sensor1;                                  //+605     |  const = 0x               		| АБ2 датчик на плате 1
-    int8_t  CAN_PBM2_Temp_Sensor2;                                  //+606     |  const = 0x               		| АБ2 датчик на плате 2
-    int8_t  CAN_PBM2_Temp_Sensor3;                                  //+607     |  const = 0x               		| АБ2 датчик на плате 3
-    int8_t  CAN_PBM2_Temp_Sensor4;                                  //+608     |  const = 0x               		| АБ2 датчик на плате 4
-    int8_t  CAN_PBM3_Temp_Controller1;                              //+609     |  const = 0x               		| АБ3 датчик контроллера 1
-    int8_t  CAN_PBM3_Temp_Controller2;                              //+610     |  const = 0x               		| АБ3 датчик контроллера 2
-    int8_t  CAN_PBM3_Temp_Sensor1;                                  //+611     |  const = 0x               		| АБ3 датчик на плате 1
-    int8_t  CAN_PBM3_Temp_Sensor2;                                  //+612     |  const = 0x               		| АБ3 датчик на плате 2
-    int8_t  CAN_PBM3_Temp_Sensor3;                                  //+613     |  const = 0x               		| АБ3 датчик на плате 3
-    int8_t  CAN_PBM3_Temp_Sensor4;                                  //+614     |  const = 0x               		| АБ3 датчик на плате 4
-    int8_t  CAN_PBM4_Temp_Controller1;                              //+615     |  const = 0x               		| АБ4 датчик контроллера 1
-    int8_t  CAN_PBM4_Temp_Controller2;                              //+616     |  const = 0x               		| АБ4 датчик контроллера 2
-    int8_t  CAN_PBM4_Temp_Sensor1;                                  //+617     |  const = 0x               		| АБ4 датчик на плате 1
-    int8_t  CAN_PBM4_Temp_Sensor2;                                  //+618     |  const = 0x               		| АБ4 датчик на плате 2
-    int8_t  CAN_PBM4_Temp_Sensor3;                                  //+619     |  const = 0x               		| АБ4 датчик на плате 3
-    int8_t  CAN_PBM4_Temp_Sensor4;                                  //+620     |  const = 0x               		| АБ4 датчик на плате 4
-    uint8_t  CAN_TMI2_Reserved[11];                                 //+621..631|  const = 0x
-    uint16_t CAN_TMI2_CRC;                                          //+632,633 |  const = 0x
+    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor1;                        //+585    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor2;                        //+586    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor3;                        //+587    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch1_Temp_Sensor4;                        //+588    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor1;                        //+589    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor2;                        //+590    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor3;                        //+591    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch2_Temp_Sensor4;                        //+592    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor1;                        //+593    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor2;                        //+594    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor3;                        //+595    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch3_Temp_Sensor4;                        //+596    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor1;                        //+597    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor2;                        //+598    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor3;                        //+599    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch4_Temp_Sensor4;                        //+600    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor1;                        //+601    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor2;                        //+602    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor3;                        //+603    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch5_Temp_Sensor4;                        //+604    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor1;                        //+605    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor2;                        //+606    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor3;                        //+607    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch6_Temp_Sensor4;                        //+608    |  const = 0x                     |   Температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch7_Temp_Sensor1;                        //+609    |  const = 0x                     |   Температура панели
+	int8_t  CAN_TMIx_SP_TM_Ch7_Temp_Sensor2;                        //+610    |  const = 0x                     |   Температура панели
+	int8_t  CAN_TMIx_SP_TM_Ch7_Temp_Sensor3;                        //+611    |  const = 0x                     |   Температура панели
+	int8_t  CAN_TMIx_SP_TM_Ch7_Temp_Sensor4;                        //+612    |  const = 0x                     |   Температура панели
+	int8_t  CAN_TMIx_SP_TM_Ch8_Temp_Sensor1;                        //+613    |  const = 0x                     |   Температура панели
+	int8_t  CAN_TMIx_SP_TM_Ch8_Temp_Sensor2;                        //+614    |  const = 0x                     |   Температура панели
+	int8_t  CAN_TMIx_SP_TM_Ch8_Temp_Sensor3;                        //+615    |  const = 0x                     |   Температура панели
+	int8_t  CAN_TMIx_SP_TM_Ch8_Temp_Sensor4;                        //+616    |  const = 0x                     |   Температура панели
 
-    // -------------------  ТМИ 3  ------------------ //
-    uint8_t Protaction_GAP_TMI3[52];                                //+634...685
+    int8_t  CAN_TMIx_SP_TM_Ch1_Median_Temp;                         //+617    |  const = 0x                     |   Медианная температура панели  Folding Y-
+    int8_t  CAN_TMIx_SP_TM_Ch2_Median_Temp;                         //+618    |  const = 0x                     |   Медианная температура панели  X+
+    int8_t  CAN_TMIx_SP_TM_Ch3_Median_Temp;                         //+619    |  const = 0x                     |   Медианная температура панели  Folding X+
+    int8_t  CAN_TMIx_SP_TM_Ch4_Median_Temp;                         //+620    |  const = 0x                     |   Медианная температура панели  Folding X-
+    int8_t  CAN_TMIx_SP_TM_Ch5_Median_Temp;                         //+621    |  const = 0x                     |   Медианная температура панели  X-
+    int8_t  CAN_TMIx_SP_TM_Ch6_Median_Temp;                         //+622    |  const = 0x                     |   Медианная температура панели  Y+
+    int8_t  CAN_TMIx_SP_TM_Ch7_Median_Temp;                         //+623    |  const = 0x                     |   Медианная температура панели
+    int8_t  CAN_TMIx_SP_TM_Ch8_Median_Temp;                         //+624    |  const = 0x                     |   Медианная температура панели
 
-    uint16_t CAN_TMI3_Headr_Start_Mark;                             //686,687
-    uint16_t CAN_TMI3_Headr_Sat_ID;                                 //688,689
-    uint16_t CAN_TMI3_Headr_Loc_ID;                                 //690,691
-    uint16_t CAN_TMI3_Headr_Mas_Number;                             //692,693
-    uint32_t CAN_TMI3_Headr_Time;                                   //694,695,696,697
+    uint8_t  CAN_TMI2_Reserved[7];                                  //+625..631  |  const = 0x
 
-    uint16_t CAN_TMI3_version;                                  	//+698,699 |  const = 0x               		| Версия ТМИ
+    uint16_t CAN_TMI2_CRC;                                          //+632,633   |  const = 0x
+
+    // -------------------  ТМИ 3 PBM part1 ------------------ //
+	uint8_t Protaction_GAP_TMI3[52];                                //+634...685
+
+	uint16_t CAN_TMI3_Headr_Start_Mark;                             //686,687
+	uint16_t CAN_TMI3_Headr_Sat_ID;                                 //688,689
+	uint16_t CAN_TMI3_Headr_Loc_ID;                                 //690,691
+	uint16_t CAN_TMI3_Headr_Mas_Number;                             //692,693
+	uint32_t CAN_TMI3_Headr_Time;                                   //694,695,696,697
+
+	uint16_t CAN_TMI3_version;                                  	//+698,699 |  const = 0x               		| Версия ТМИ
+
+	    // PBM part1 //
+    int16_t CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power;              //+700,701 |  const = 0x                    | Полная мощность зарядки/разрядки PBM
+    uint16_t CAN_TMIx_PBM_Total_Heating_Elements_Power;			    //+702,703 |  const = 0x                    |
+    uint16_t CAN_TMIx_PBM_Total_Battery_Level_mAh;			        //+704,705 |  const = 0x                    | Полный уровень заряда АБ в mAh
+    uint8_t  CAN_TMIx_PBM_Total_Battery_Level_percent;              //+706     |  const = 0x                    | Полный уровень заряда АБ в %
+    uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;           //+707,708 |  const = 0x                    |
+    uint16_t CAN_TMIx_PBM_Thermostat_Cmd_BitMask;                   //+709,710 |  const = 0x                    | Команда на включение Термостат
+    uint16_t CAN_TMIx_PBM_Heating_Element_State_BitMask;            //+711,712 |  const = 0x                    | Текущее состояние Термостата
+    uint8_t CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask;                  //+713     |  const = 0x                    | Ключи аварийной зарядки
+    uint8_t CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask;            //+714     |  const = 0x                    | Ключи аварийной зарядки
+    uint16_t CAN_TMIx_PBM1_Error_BitMask;                           //+715,716 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
+    uint16_t CAN_TMIx_PBM2_Error_BitMask;                           //+717,718 |  const = 0x                    | Статус ошибок модуля PBM2, битовая маска
+    uint16_t CAN_TMIx_PBM3_Error_BitMask;                           //+719,720 |  const = 0x                    | Статус ошибок модуля PBM3, битовая маска
+    uint16_t CAN_TMIx_PBM4_Error_BitMask;                           //+721,722 |  const = 0x                    | Статус ошибок модуля PBM4, битовая маска
+    uint16_t CAN_TMIx_PBM5_Error_BitMask;                           //+723,724 |  const = 0x                    | Статус ошибок модуля PBM5, битовая маска
+
+    uint16_t CAN_TMIx_PBM1_Controller1_Error_BitMask;               //+725,726 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
+    uint16_t CAN_TMIx_PBM2_Controller1_Error_BitMask;               //+727,728 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
+    uint16_t CAN_TMIx_PBM3_Controller1_Error_BitMask;               //+729,730 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
+    uint16_t CAN_TMIx_PBM4_Controller1_Error_BitMask;               //+731,732 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
+    uint16_t CAN_TMIx_PBM5_Controller1_Error_BitMask;               //+733,734 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
+
+    uint8_t  CAN_TMIx_PBM1_Branch1_Charge_Level_Percent;            //+735     |  const = 0x                    | Уровень заряда АБ1 ветвь 1
+    uint8_t  CAN_TMIx_PBM2_Branch1_Charge_Level_Percent;            //+736     |  const = 0x                    | Уровень заряда АБ2 ветвь 1
+    uint8_t  CAN_TMIx_PBM3_Branch1_Charge_Level_Percent;            //+737     |  const = 0x                    | Уровень заряда АБ3 ветвь 1
+    uint8_t  CAN_TMIx_PBM4_Branch1_Charge_Level_Percent;            //+738     |  const = 0x                    | Уровень заряда АБ4 ветвь 1
+    uint8_t  CAN_TMIx_PBM5_Branch1_Charge_Level_Percent;            //+739     |  const = 0x                    | Уровень заряда АБ4 ветвь 1
+
+    uint16_t CAN_TMIx_PBM1_Branch1_Charge_Level_mAh;                //+740,741 |  const = 0x                 	| Уровень заряда АБ1 ветвь 1
+    uint16_t CAN_TMIx_PBM2_Branch1_Charge_Level_mAh;                //+742,743 |  const = 0x                 	| Уровень заряда АБ2 ветвь 2
+    uint16_t CAN_TMIx_PBM3_Branch1_Charge_Level_mAh;                //+744,745 |  const = 0x                 	| Уровень заряда АБ3 ветвь 2
+    uint16_t CAN_TMIx_PBM4_Branch1_Charge_Level_mAh;                //+746,747 |  const = 0x                 	| Уровень заряда АБ4 ветвь 2
+    uint16_t CAN_TMIx_PBM5_Branch1_Charge_Level_mAh;                //+748,749 |  const = 0x                 	| Уровень заряда АБ4 ветвь 2
+
+    int16_t CAN_TMIx_PBM1_Branch1_Char_Discha_Current;              //+750,751 |  const = 0x                	| Ток заряда/разряда АБ1 ветвь 1
+    int16_t CAN_TMIx_PBM2_Branch1_Char_Discha_Current;              //+752,753 |  const = 0x                	| Ток заряда/разряда АБ2 ветвь 1
+    int16_t CAN_TMIx_PBM3_Branch1_Char_Discha_Current;              //+754,755 |  const = 0x                	| Ток заряда/разряда АБ3 ветвь 1
+    int16_t CAN_TMIx_PBM4_Branch1_Char_Discha_Current;              //+756,757 |  const = 0x                	| Ток заряда/разряда АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM5_Branch1_Char_Discha_Current;              //+758,759 |  const = 0x                	| Ток заряда/разряда АБ4 ветвь 1
+
+    int8_t  CAN_PBM1_Temp_Controller1;                              //+760     |  const = 0x               	 	| АБ1 датчик контроллера 1
+    int8_t  CAN_PBM1_Temp_Sensor1;                                  //+761     |  const = 0x               		| АБ1 датчик на плате 1
+    int8_t  CAN_PBM1_Temp_Sensor2;                                  //+762     |  const = 0x               		| АБ1 датчик на плате 2
+    int8_t  CAN_PBM1_Temp_Sensor3;                                  //+763     |  const = 0x               		| АБ1 датчик на плате 3
+    int8_t  CAN_PBM1_Temp_Sensor4;                                  //+764     |  const = 0x               		| АБ1 датчик на плате 4
+    int8_t  CAN_PBM2_Temp_Controller1;                              //+765     |  const = 0x               		| АБ2 датчик контроллера 1
+    int8_t  CAN_PBM2_Temp_Sensor1;                                  //+766     |  const = 0x               		| АБ2 датчик на плате 1
+    int8_t  CAN_PBM2_Temp_Sensor2;                                  //+767     |  const = 0x               		| АБ2 датчик на плате 2
+    int8_t  CAN_PBM2_Temp_Sensor3;                                  //+768     |  const = 0x               		| АБ2 датчик на плате 3
+    int8_t  CAN_PBM2_Temp_Sensor4;                                  //+769     |  const = 0x               		| АБ2 датчик на плате 4
+    int8_t  CAN_PBM3_Temp_Controller1;                              //+770     |  const = 0x               		| АБ3 датчик контроллера 1
+    int8_t  CAN_PBM3_Temp_Sensor1;                                  //+771     |  const = 0x               		| АБ3 датчик на плате 1
+    int8_t  CAN_PBM3_Temp_Sensor2;                                  //+772     |  const = 0x               		| АБ3 датчик на плате 2
+    int8_t  CAN_PBM3_Temp_Sensor3;                                  //+773     |  const = 0x               		| АБ3 датчик на плате 3
+    int8_t  CAN_PBM3_Temp_Sensor4;                                  //+774     |  const = 0x               		| АБ3 датчик на плате 4
+    int8_t  CAN_PBM4_Temp_Controller1;                              //+775     |  const = 0x               		| АБ4 датчик контроллера 1
+    int8_t  CAN_PBM4_Temp_Sensor1;                                  //+776     |  const = 0x               		| АБ4 датчик на плате 1
+    int8_t  CAN_PBM4_Temp_Sensor2;                                  //+777     |  const = 0x               		| АБ4 датчик на плате 2
+    int8_t  CAN_PBM4_Temp_Sensor3;                                  //+778     |  const = 0x               		| АБ4 датчик на плате 3
+    int8_t  CAN_PBM4_Temp_Sensor4;                                  //+779     |  const = 0x               		| АБ4 датчик на плате 4
+    int8_t  CAN_PBM5_Temp_Controller1;                              //+780     |  const = 0x               		| АБ4 датчик контроллера 1
+    int8_t  CAN_PBM5_Temp_Sensor1;                                  //+781     |  const = 0x               		| АБ4 датчик на плате 1
+    int8_t  CAN_PBM5_Temp_Sensor2;                                  //+782     |  const = 0x               		| АБ4 датчик на плате 2
+    int8_t  CAN_PBM5_Temp_Sensor3;                                  //+783     |  const = 0x               		| АБ4 датчик на плате 3
+    int8_t  CAN_PBM5_Temp_Sensor4;                                  //+784     |  const = 0x               		| АБ4 датчик на плате 4
+
+    uint8_t CAN_TMIx_PBM1_Branch1_Age;                              //+785     |  const = 0x               	   	| Возраст батареи АБ1 ветвь 1
+    uint8_t CAN_TMIx_PBM2_Branch1_Age;                              //+786     |  const = 0x                   	| Возраст батареи АБ2 ветвь 1
+    uint8_t CAN_TMIx_PBM3_Branch1_Age;                              //+787     |  const = 0x                   	| Возраст батареи АБ3 ветвь 1
+    uint8_t CAN_TMIx_PBM4_Branch1_Age;                              //+788     |  const = 0x                   	| Возраст батареи АБ4 ветвь 1
+    uint8_t CAN_TMIx_PBM5_Branch1_Age;                              //+789     |  const = 0x                   	| Возраст батареи АБ4 ветвь 1
+
+    uint8_t CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle;                //+790     |  const = 0x                   	| Цмклы заряда/разряда АБ1 ветвь 1
+    uint8_t CAN_TMIx_PBM2_Branch1_Char_Discha_Cycle;                //+791     |  const = 0x                   	| Цмклы заряда/разряда АБ2 ветвь 1
+    uint8_t CAN_TMIx_PBM3_Branch1_Char_Discha_Cycle;                //+792     |  const = 0x                   	| Цмклы заряда/разряда АБ3 ветвь 1
+    uint8_t CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle;                //+793     |  const = 0x                   	| Цмклы заряда/разряда АБ4 ветвь 1
+    uint8_t CAN_TMIx_PBM5_Branch1_Char_Discha_Cycle;                //+794     |  const = 0x                   	| Цмклы заряда/разряда АБ4 ветвь 1
+
+    uint8_t  CAN_TMI3_Reserved[17];                                 //+795,797,798,799,800|  const = 0x
+    uint16_t CAN_TMI3_CRC;                                          //+812,814 |  const = 0x
+
+
+    // -------------------  ТМИ 4 PBM part2 ------------------ //
+
+   	uint16_t CAN_TMI4_Headr_Start_Mark;                             //815,816
+   	uint16_t CAN_TMI4_Headr_Sat_ID;                                 //817,818
+   	uint16_t CAN_TMI4_Headr_Loc_ID;                                 //819,820
+   	uint16_t CAN_TMI4_Headr_Mas_Number;                             //821,822
+   	uint32_t CAN_TMI4_Headr_Time;                                   //823,824,825,826
+
+   	uint16_t CAN_TMI4_version;                                  	//+827,828 |  const = 0x               		| Версия ТМИ
+
     // PBM part2 //
-    uint16_t CAN_TMIx_PBM1_Branch1_Battery1_Voltage;                //+700,701 |  const = 0x               		| Напряжение АБ1 ветвь 1 аккумулятор 1
-    uint16_t CAN_TMIx_PBM1_Branch1_Battery2_Voltage;                //+702,703 |  const = 0x               		| Напряжение АБ1 ветвь 1 аккумулятор 2
-    uint16_t CAN_TMIx_PBM1_Branch2_Battery1_Voltage;                //+704,705 |  const = 0x               		| Напряжение АБ1 ветвь 2 аккумулятор 1
-    uint16_t CAN_TMIx_PBM1_Branch2_Battery2_Voltage;                //+706,707 |  const = 0x               		| Напряжение АБ1 ветвь 2 аккумулятор 2
-    uint16_t CAN_TMIx_PBM2_Branch1_Battery1_Voltage;                //+708,709 |  const = 0x               		| Напряжение АБ2 ветвь 1 аккумулятор 1
-    uint16_t CAN_TMIx_PBM2_Branch1_Battery2_Voltage;                //+710,711 |  const = 0x               		| Напряжение АБ2 ветвь 1 аккумулятор 2
-    uint16_t CAN_TMIx_PBM2_Branch2_Battery1_Voltage;                //+712,713 |  const = 0x               		| Напряжение АБ2 ветвь 2 аккумулятор 1
-    uint16_t CAN_TMIx_PBM2_Branch2_Battery2_Voltage;                //+714,715 |  const = 0x               		| Напряжение АБ2 ветвь 2 аккумулятор 2
-    uint16_t CAN_TMIx_PBM3_Branch1_Battery1_Voltage;                //+716,717 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 1
-    uint16_t CAN_TMIx_PBM3_Branch1_Battery2_Voltage;                //+718,719 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 2
-    uint16_t CAN_TMIx_PBM3_Branch2_Battery1_Voltage;                //+720,721 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 1
-    uint16_t CAN_TMIx_PBM3_Branch2_Battery2_Voltage;                //+722,723 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 2
-    uint16_t CAN_TMIx_PBM4_Branch1_Battery1_Voltage;                //+724,725 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 1
-    uint16_t CAN_TMIx_PBM4_Branch1_Battery2_Voltage;                //+726,727 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 2
-    uint16_t CAN_TMIx_PBM4_Branch2_Battery1_Voltage;                //+728,729 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 1
-    uint16_t CAN_TMIx_PBM4_Branch2_Battery2_Voltage;                //+730,731 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 2
+    uint16_t CAN_TMIx_PBM1_Branch1_Battery1_Voltage;                //+829,830 |  const = 0x               		| Напряжение АБ1 ветвь 1 аккумулятор 1
+    uint16_t CAN_TMIx_PBM1_Branch1_Battery2_Voltage;                //+831,832 |  const = 0x               		| Напряжение АБ1 ветвь 1 аккумулятор 2
+    uint16_t CAN_TMIx_PBM1_Branch1_Battery3_Voltage;                //+833,834 |  const = 0x               		| Напряжение АБ1 ветвь 2 аккумулятор 1
+    uint16_t CAN_TMIx_PBM1_Branch1_Battery4_Voltage;                //+835,836 |  const = 0x               		| Напряжение АБ1 ветвь 2 аккумулятор 2
+    uint16_t CAN_TMIx_PBM2_Branch1_Battery1_Voltage;                //+837,838 |  const = 0x               		| Напряжение АБ2 ветвь 1 аккумулятор 1
+    uint16_t CAN_TMIx_PBM2_Branch1_Battery2_Voltage;                //+839,840 |  const = 0x               		| Напряжение АБ2 ветвь 1 аккумулятор 2
+    uint16_t CAN_TMIx_PBM2_Branch1_Battery3_Voltage;                //+841,842 |  const = 0x               		| Напряжение АБ2 ветвь 2 аккумулятор 1
+    uint16_t CAN_TMIx_PBM2_Branch1_Battery4_Voltage;                //+843,844 |  const = 0x               		| Напряжение АБ2 ветвь 2 аккумулятор 2
+    uint16_t CAN_TMIx_PBM3_Branch1_Battery1_Voltage;                //+845,846 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 1
+    uint16_t CAN_TMIx_PBM3_Branch1_Battery2_Voltage;                //+847,848 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 2
+    uint16_t CAN_TMIx_PBM3_Branch1_Battery3_Voltage;                //+849,850 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 1
+    uint16_t CAN_TMIx_PBM3_Branch1_Battery4_Voltage;                //+851,852 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 2
+    uint16_t CAN_TMIx_PBM4_Branch1_Battery1_Voltage;                //+853,854 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 1
+    uint16_t CAN_TMIx_PBM4_Branch1_Battery2_Voltage;                //+855,856 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 2
+    uint16_t CAN_TMIx_PBM4_Branch1_Battery3_Voltage;                //+857,858 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 1
+    uint16_t CAN_TMIx_PBM4_Branch1_Battery4_Voltage;                //+859,860 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 2
+    uint16_t CAN_TMIx_PBM5_Branch1_Battery1_Voltage;                //+861,862 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 1
+    uint16_t CAN_TMIx_PBM5_Branch1_Battery2_Voltage;                //+863,864 |  const = 0x               		| Напряжение АБ3 ветвь 1 аккумулятор 2
+    uint16_t CAN_TMIx_PBM5_Branch1_Battery3_Voltage;                //+865,866 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 1
+    uint16_t CAN_TMIx_PBM5_Branch1_Battery4_Voltage;                //+867,868 |  const = 0x               		| Напряжение АБ3 ветвь 2 аккумулятор 2
 
-    int16_t CAN_TMIx_PBM1_Branch1_Max_Current;                      //+732,733 |  const = 0x              		| Максимальный ток АБ1 ветвь 1
-    int16_t CAN_TMIx_PBM1_Branch1_Min_Current;                      //+734,735 |  const = 0x               		| Минимальный ток АБ1 ветвь 1
-    int16_t CAN_TMIx_PBM1_Branch2_Max_Current;                      //+736,737 |  const = 0x               		| Максимальный ток АБ1 ветвь 2
-    int16_t CAN_TMIx_PBM1_Branch2_Min_Current;                      //+738,739 |  const = 0x               		| Минимальный ток АБ1 ветвь 2
-    int16_t CAN_TMIx_PBM2_Branch1_Max_Current;                      //+740,741 |  const = 0x               		| Максимальный ток АБ2 ветвь 1
-    int16_t CAN_TMIx_PBM2_Branch1_Min_Current;                      //+742,743 |  const = 0x               		| Минимальный ток АБ2 ветвь 1
-    int16_t CAN_TMIx_PBM2_Branch2_Max_Current;                      //+744,745 |  const = 0x               		| Максимальный ток АБ2 ветвь 2
-    int16_t CAN_TMIx_PBM2_Branch2_Min_Current;                      //+746,747 |  const = 0x               		| Минимальный ток АБ2 ветвь 2
-    int16_t CAN_TMIx_PBM3_Branch1_Max_Current;                      //+748,749 |  const = 0x               		| Максимальный ток АБ3 ветвь 1
-    int16_t CAN_TMIx_PBM3_Branch1_Min_Current;                      //+750,751 |  const = 0x               		| Минимальный ток АБ3 ветвь 1
-    int16_t CAN_TMIx_PBM3_Branch2_Max_Current;                      //+752,753 |  const = 0x               		| Максимальный ток АБ3 ветвь 2
-    int16_t CAN_TMIx_PBM3_Branch2_Min_Current;                      //+754,755 |  const = 0x               		| Минимальный ток АБ3 ветвь 2
-    int16_t CAN_TMIx_PBM4_Branch1_Max_Current;                      //+756,757 |  const = 0x               		| Максимальный ток АБ4 ветвь 1
-    int16_t CAN_TMIx_PBM4_Branch1_Min_Current;                      //+758,759 |  const = 0x               		| Минимальный ток АБ4 ветвь 1
-    int16_t CAN_TMIx_PBM4_Branch2_Max_Current;                      //+760,761 |  const = 0x               		| Максимальный ток АБ4 ветвь 2
-    int16_t CAN_TMIx_PBM4_Branch2_Min_Current;                      //+762,763 |  const = 0x               		| Минимальный ток АБ4 ветвь 2
+    int16_t CAN_TMIx_PBM1_Branch1_Max_Current;                      //+869,870 |  const = 0x              		| Максимальный ток АБ1 ветвь 1
+    int16_t CAN_TMIx_PBM1_Branch1_Min_Current;                      //+871,872 |  const = 0x               		| Минимальный ток АБ1 ветвь 1
+    int16_t CAN_TMIx_PBM2_Branch1_Max_Current;                      //+873,874 |  const = 0x               		| Максимальный ток АБ2 ветвь 1
+    int16_t CAN_TMIx_PBM2_Branch1_Min_Current;                      //+875,876 |  const = 0x               		| Минимальный ток АБ2 ветвь 1
+    int16_t CAN_TMIx_PBM3_Branch1_Max_Current;                      //+877,878 |  const = 0x               		| Максимальный ток АБ3 ветвь 1
+    int16_t CAN_TMIx_PBM3_Branch1_Min_Current;                      //+879,880 |  const = 0x               		| Минимальный ток АБ3 ветвь 1
+    int16_t CAN_TMIx_PBM4_Branch1_Max_Current;                      //+881,882 |  const = 0x               		| Максимальный ток АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM4_Branch1_Min_Current;                      //+883,884 |  const = 0x               		| Минимальный ток АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM5_Branch1_Max_Current;                      //+885,886 |  const = 0x               		| Максимальный ток АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM5_Branch1_Min_Current;                      //+887,888 |  const = 0x               		| Минимальный ток АБ4 ветвь 1
 
-    uint16_t CAN_TMIx_PBM1_Branch1_Min_Voltage;                     //+764,765 |  const = 0x               		| Минимальное напряжение АБ1 ветвь 1
-    uint16_t CAN_TMIx_PBM1_Branch2_Min_Voltage;                     //+766,767 |  const = 0x               		| Минимальное напряжение АБ1 ветвь 2
-    uint16_t CAN_TMIx_PBM2_Branch1_Min_Voltage;                     //+768,769 |  const = 0x               		| Минимальное напряжение АБ2 ветвь 1
-    uint16_t CAN_TMIx_PBM2_Branch2_Min_Voltage;                     //+770,771 |  const = 0x               		| Минимальное напряжение АБ2 ветвь 2
-    uint16_t CAN_TMIx_PBM3_Branch1_Min_Voltage;                     //+772,773 |  const = 0x               		| Минимальное напряжение АБ3 ветвь 1
-    uint16_t CAN_TMIx_PBM3_Branch2_Min_Voltage;                     //+774,775 |  const = 0x               		| Минимальное напряжение АБ3 ветвь 2
-    uint16_t CAN_TMIx_PBM4_Branch1_Min_Voltage;                     //+776,777 |  const = 0x               		| Минимальное напряжение АБ3 ветвь 1
-    uint16_t CAN_TMIx_PBM4_Branch2_Min_Voltage;                     //+778,779 |  const = 0x               		| Минимальное напряжение АБ3 ветвь 2
+    uint16_t CAN_TMIx_PBM1_Branch1_Min_Voltage;                     //+889,890 |  const = 0x               		| Минимальное напряжение АБ1 ветвь 1
+    uint16_t CAN_TMIx_PBM2_Branch1_Min_Voltage;                     //+891,892 |  const = 0x               		| Минимальное напряжение АБ2 ветвь 1
+    uint16_t CAN_TMIx_PBM3_Branch1_Min_Voltage;                     //+893,894 |  const = 0x               		| Минимальное напряжение АБ3 ветвь 1
+    uint16_t CAN_TMIx_PBM4_Branch1_Min_Voltage;                     //+895,896 |  const = 0x               		| Минимальное напряжение АБ3 ветвь 1
+    uint16_t CAN_TMIx_PBM5_Branch1_Min_Voltage;                     //+897,898 |  const = 0x               		| Минимальное напряжение АБ3 ветвь 1
 
-    int16_t CAN_TMIx_PBM1_Branch1_Heat_Current;                     //+780,781 |  const = 0x               		| Ток нагревателей АБ1 ветвь 1
-    int16_t CAN_TMIx_PBM1_Branch2_Heat_Current;                     //+782,783 |  const = 0x               		| Ток нагревателей АБ1 ветвь 2
-    int16_t CAN_TMIx_PBM2_Branch1_Heat_Current;                     //+784,785 |  const = 0x               		| Ток нагревателей АБ2 ветвь 1
-    int16_t CAN_TMIx_PBM2_Branch2_Heat_Current;                     //+786,787 |  const = 0x               		| Ток нагревателей АБ2 ветвь 2
-    int16_t CAN_TMIx_PBM3_Branch1_Heat_Current;                     //+788,789 |  const = 0x               		| Ток нагревателей АБ3 ветвь 1
-    int16_t CAN_TMIx_PBM3_Branch2_Heat_Current;                     //+790,791 |  const = 0x               		| Ток нагревателей АБ3 ветвь 2
-    int16_t CAN_TMIx_PBM4_Branch1_Heat_Current;                     //+792,793 |  const = 0x               		| Ток нагревателей АБ4 ветвь 1
-    int16_t CAN_TMIx_PBM4_Branch2_Heat_Current;                     //+794,795 |  const = 0x               		| Ток нагревателей АБ4 ветвь 2
+    int16_t CAN_TMIx_PBM1_Heat_1_Current;                     		//+899,900 |  const = 0x               		| Ток нагревателей АБ1 ветвь 1
+    int16_t CAN_TMIx_PBM1_Heat_2_Current;                     		//+901,902 |  const = 0x               		| Ток нагревателей АБ1 ветвь 2
+    int16_t CAN_TMIx_PBM2_Heat_1_Current;                     		//+903,904 |  const = 0x               		| Ток нагревателей АБ2 ветвь 1
+    int16_t CAN_TMIx_PBM2_Heat_2_Current;                     		//+905,906 |  const = 0x               		| Ток нагревателей АБ2 ветвь 2
+    int16_t CAN_TMIx_PBM3_Heat_1_Current;                     		//+907,908 |  const = 0x               		| Ток нагревателей АБ3 ветвь 1
+    int16_t CAN_TMIx_PBM3_Heat_2_Current;                     		//+909,910 |  const = 0x               		| Ток нагревателей АБ3 ветвь 2
+    int16_t CAN_TMIx_PBM4_Heat_1_Current;                     		//+911,912 |  const = 0x               		| Ток нагревателей АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM4_Heat_2_Current;                     		//+913,914 |  const = 0x               		| Ток нагревателей АБ4 ветвь 2
+    int16_t CAN_TMIx_PBM5_Heat_1_Current;                     		//+915,916 |  const = 0x               		| Ток нагревателей АБ4 ветвь 1
+    int16_t CAN_TMIx_PBM5_Heat_2_Current;                     		//+917,918 |  const = 0x               		| Ток нагревателей АБ4 ветвь 2
 
-    uint8_t CAN_TMIx_PBM1_Branch1_Age;                              //+796     |  const = 0x               	   	| Возраст батареи АБ1 ветвь 1
-    uint8_t CAN_TMIx_PBM1_Branch2_Age;                              //+797     |  const = 0x               	   	| Возраст батареи АБ1 ветвь 2
-    uint8_t CAN_TMIx_PBM2_Branch1_Age;                              //+798     |  const = 0x                   	| Возраст батареи АБ2 ветвь 1
-    uint8_t CAN_TMIx_PBM2_Branch2_Age;                              //+799     |  const = 0x                   	| Возраст батареи АБ2 ветвь 2
-    uint8_t CAN_TMIx_PBM3_Branch1_Age;                              //+800     |  const = 0x                   	| Возраст батареи АБ3 ветвь 1
-    uint8_t CAN_TMIx_PBM3_Branch2_Age;                              //+801     |  const = 0x                   	| Возраст батареи АБ3 ветвь 2
-    uint8_t CAN_TMIx_PBM4_Branch1_Age;                              //+802     |  const = 0x                   	| Возраст батареи АБ4 ветвь 1
-    uint8_t CAN_TMIx_PBM4_Branch2_Age;                              //+803     |  const = 0x                   	| Возраст батареи АБ4 ветвь 2
-
-    uint8_t CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle;                //+804     |  const = 0x                   	| Цмклы заряда/разряда АБ1 ветвь 1
-    uint8_t CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle;                //+805     |  const = 0x                   	| Цмклы заряда/разряда АБ1 ветвь 2
-    uint8_t CAN_TMIx_PBM2_Branch1_Char_Discha_Cycle;                //+806     |  const = 0x                   	| Цмклы заряда/разряда АБ2 ветвь 1
-    uint8_t CAN_TMIx_PBM2_Branch2_Char_Discha_Cycle;                //+807     |  const = 0x                   	| Цмклы заряда/разряда АБ2 ветвь 2
-    uint8_t CAN_TMIx_PBM3_Branch1_Char_Discha_Cycle;                //+808     |  const = 0x                   	| Цмклы заряда/разряда АБ3 ветвь 1
-    uint8_t CAN_TMIx_PBM3_Branch2_Char_Discha_Cycle;                //+809     |  const = 0x                   	| Цмклы заряда/разряда АБ3 ветвь 2
-    uint8_t CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle;                //+810     |  const = 0x                   	| Цмклы заряда/разряда АБ4 ветвь 1
-    uint8_t CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle;                //+811     |  const = 0x                   	| Цмклы заряда/разряда АБ4 ветвь 2
-    uint16_t CAN_TMI3_CRC;                                          //+812,813 |  const = 0x
+    uint8_t  CAN_TMI4_Reserved[22];                          		//+919|  const = 0x
+    uint16_t CAN_TMI4_CRC;                                          //+941, 942 |  const = 0x
 };
 
 #pragma pack(pop)

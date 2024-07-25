@@ -35,6 +35,9 @@ extern "C" {
 #define PAM_PWR_TM_SP_Ch_quantity   8 // Total quantity power channel for get telemetry from solar panels
 #define PAM_TEMP_Sensor_quantity 2 // Total quantity
 
+#define PAM_TEMP_SENSOR_INA238_1    0 // Power in ch0
+#define PAM_TEMP_SENSOR_INA238_2    3 // Power in ch3
+
 #define PAM_TYPE_PWR_CH_IN          0x00 //Type of power channel in PAM   0x00 - input power channel from SP
 #define PAM_PWR_IN_SPD_Ch1		    0x00 //Panel
 #define PAM_PWR_IN_SPD_Ch2 		    0x01 //Panel
