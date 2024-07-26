@@ -1878,7 +1878,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT1_Current    				 = eps_p.eps_pam_ptr->PWR_IN_Channel[6].Current_val;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT2_Current					 = eps_p.eps_pam_ptr->PWR_IN_Channel[7].Current_val;
 
-    //*** Y- for G
+    //***Y- for G
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Status_BitMask                = 0x0000;
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Status_BitMask                = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_I2C_GPIO_Ext1;
     for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1900,7 +1900,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     }
     //---
 
-    //***FSP X+ forG
+    //***FSP X+ for G
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Status_BitMask                = 0x0000;
     //CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_I2C_GPIO_Ext1);
    // for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1911,7 +1911,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     }
     //---
 
-    //***FSP X- forG
+    //***FSP X- for G
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Status_BitMask                = 0x0000;
    // CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_I2C_GPIO_Ext1);
    // for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1922,7 +1922,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     }
     //---
 
-    //***
+    //***X- for G
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Status_BitMask                = 0x0000;
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_I2C_GPIO_Ext1);
     for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1933,7 +1933,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     }
     //---
 
-    //***
+    //***Y+ for G
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask                = 0x0000;
    // CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_I2C_GPIO_Ext1);
    // for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1948,8 +1948,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor1                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[0];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor2                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[1];
-    // CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor3                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[2];
-    // CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor4                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[3];
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor3              	= 0; // = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[2];
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor4                 = 0; //	= eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[3];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Temp_Sensor1                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[0];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Temp_Sensor2                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[1];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Temp_Sensor3                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value[2];
@@ -2329,7 +2329,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
    // CAN_IVar5_telemetry.CAN_TMIx_PBM3_Branch2_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_3].Branch[PBM_T1_BRANCH_2].MinVCELL;
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MinVCELL;
    // CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].MinVCELL;
-    CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].MinVCELL;
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Heat_1_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].HeatCurrent;
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Heat_2_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].HeatCurrent;
