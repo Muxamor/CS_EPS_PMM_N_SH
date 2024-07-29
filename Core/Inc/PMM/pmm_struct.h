@@ -82,7 +82,7 @@ typedef struct{
 
 	uint16_t PWR_Ch_Vbat2_eF_Voltage_val;
 	int16_t  PWR_Ch_Vbat2_eF_Current_val;
-	uint16_t PWR_Ch_Vbat2_eF_Power_val;
+	uint32_t PWR_Ch_Vbat2_eF_Power_val;
 
 	uint8_t Main_Backup_mode_CPU 	:1; //= 0-Main, 1-Backup mode CPU.
 	uint8_t Active_CPU		 		:1;	//= 0-Main CPU is active, Backup CPU is passive. // Need to save in flash.
