@@ -33,7 +33,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
 			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.01518f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
@@ -59,7 +59,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
 			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.01518f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
@@ -85,7 +85,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
 			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.01518f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
@@ -111,7 +111,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
 			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.01518f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
@@ -137,7 +137,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
 			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.01518f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
@@ -163,7 +163,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
 			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.01518f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
@@ -189,7 +189,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
 			pdm_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.01518f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
@@ -317,9 +317,9 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 
 			//Config Power monitor INA231, same for all power channels
 			pdm_table.PWR_Mon_Max_Current_int16 = 25000; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 25.0f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_float = 25.0f; 		//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 3;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.00296f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.00296f;			//A 2.5 Ohm shunt is installed on the board; to ensure correct measurement of INA238 (error 17%), we introduce a correction and set it to 2.96 Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
