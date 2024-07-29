@@ -413,9 +413,9 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 	uint8_t i = 0;
 	int8_t error_I2C = ERROR_N;
-	float val_current = 0;
-	float val_bus_voltage = 0;
-	float val_power = 0;
+	int16_t val_current = 0;
+	uint16_t val_bus_voltage = 0;
+	uint32_t val_power = 0;
 	_PMM_table pmm_table;
 	
 	
@@ -430,7 +430,7 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 	while( ( error_I2C != SUCCESS ) && ( i < pmm_i2c_attempt_conn ) ){///Read temperature.
 
-		error_I2C = INA238_Get_I_V_P_float( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_float, &val_current, &val_bus_voltage, &val_power );
+		error_I2C = INA238_Get_I_V_P_int16( pmm_table.I2Cx_PWR_Mon, pmm_table.I2C_addr_PWR_Mon, pmm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
 
 		if( error_I2C != SUCCESS ){
 			i++;
@@ -453,9 +453,9 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 	}
 
 	if( num_pwr_ch == PMM_PWR_Ch_VBAT1_eF ){
-		pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val = (uint16_t)val_bus_voltage;
-		pmm_ptr->PWR_Ch_Vbat1_eF_Current_val = (int16_t)val_current;
-		pmm_ptr->PWR_Ch_Vbat1_eF_Power_val = (uint32_t)val_power;
+		pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val = val_bus_voltage;
+		pmm_ptr->PWR_Ch_Vbat1_eF_Current_val = val_current;
+		pmm_ptr->PWR_Ch_Vbat1_eF_Power_val = val_power;
 
 		if( error_I2C == SUCCESS ){
 			pmm_ptr->Error_PWR_Mon_Vbat1_eF = SUCCESS;
@@ -469,9 +469,9 @@ ErrorStatus PMM_Get_PWR_CH_VBAT_I_V_P( _PMM *pmm_ptr, uint8_t num_pwr_ch){
 
 	
 	}else if( num_pwr_ch == PMM_PWR_Ch_VBAT2_eF ){
-		pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val = (uint16_t)val_bus_voltage;
-		pmm_ptr->PWR_Ch_Vbat2_eF_Current_val = (int16_t)val_current;
-		pmm_ptr->PWR_Ch_Vbat2_eF_Power_val = (uint32_t)val_power;
+		pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val = val_bus_voltage;
+		pmm_ptr->PWR_Ch_Vbat2_eF_Current_val = val_current;
+		pmm_ptr->PWR_Ch_Vbat2_eF_Power_val = val_power;
 
 		if( error_I2C == SUCCESS ){
 			pmm_ptr->Error_PWR_Mon_Vbat2_eF = SUCCESS; 

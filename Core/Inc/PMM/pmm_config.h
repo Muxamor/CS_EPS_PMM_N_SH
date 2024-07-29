@@ -106,7 +106,7 @@ typedef struct{
 
 	I2C_TypeDef *I2Cx_PWR_Mon;
 	uint8_t I2C_addr_PWR_Mon;
-	//uint16_t PWR_Mon_Max_Current_int16;
+	uint16_t PWR_Mon_Max_Current_int16;
 	float PWR_Mon_Max_Current_float;
 	//uint16_t PWR_Mon_Rshunt_int16;
 	float PWR_Mon_Rshunt_float;
