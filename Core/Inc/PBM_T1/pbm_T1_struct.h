@@ -60,7 +60,7 @@ typedef struct  // Structure for heat data
 
 	uint16_t HeatVoltage; 					// Voltage on heat branch in mV.
 	int16_t HeatCurrent;					// Current on heat branch in mA.
-	uint16_t HeatPower; 					// Power on heat branch in mW.
+	uint32_t HeatPower; 					// Power on heat branch in mW.
 
 	uint16_t PCA9534_Heat_CMD :1; 		// PCA9534 port. State permission bit auto heat branch. // Need to save in flash.
 	uint16_t PCA9534_Heat_State :1; 		// PCA9534 port. Show state auto heat branch.

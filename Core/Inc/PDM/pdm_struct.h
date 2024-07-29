@@ -13,7 +13,7 @@ typedef struct{
 	
 	uint16_t Voltage_val;
 	int16_t Current_val;
-	uint16_t Power_val;
+	uint32_t Power_val;
 
 	uint8_t State_eF  		:1; //0-DISABLE, 1-ENABLE. State power channel input Efuse // Need to save in flash.
 	//uint8_t State_eF_out 		:1; //0-DISABLE, 1-ENABLE. State power channel output Efuse // Need to save in flash.

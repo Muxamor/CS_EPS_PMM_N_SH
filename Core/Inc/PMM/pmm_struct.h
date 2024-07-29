@@ -78,7 +78,7 @@ typedef struct{
 
 	uint16_t PWR_Ch_Vbat1_eF_Voltage_val;
 	int16_t  PWR_Ch_Vbat1_eF_Current_val;
-	uint16_t PWR_Ch_Vbat1_eF_Power_val;
+	uint32_t PWR_Ch_Vbat1_eF_Power_val;
 
 	uint16_t PWR_Ch_Vbat2_eF_Voltage_val;
 	int16_t  PWR_Ch_Vbat2_eF_Current_val;

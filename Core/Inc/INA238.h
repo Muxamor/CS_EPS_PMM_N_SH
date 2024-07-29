@@ -144,7 +144,7 @@ ErrorStatus INA238_Get_POL_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, flo
 
 
 ErrorStatus INA238_Get_I_V_P_float(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, float max_exp_current_A, float *current, float *bus_voltage, float *power );
-ErrorStatus INA238_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, int16_t *current, uint16_t *bus_voltage, uint16_t *power);
+ErrorStatus INA238_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, int16_t *current, uint16_t *bus_voltage, uint32_t *power);
 
 
 #ifdef __cplusplus

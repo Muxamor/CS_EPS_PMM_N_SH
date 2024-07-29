@@ -433,9 +433,9 @@ ErrorStatus PAM_Get_PWR_CH_IN_I_V_P( _PAM *pam_ptr, uint8_t num_pwr_ch){
 	uint8_t i = 0;
 	int8_t Error_I2C_MUX = ERROR_N;
 	int8_t error_I2C = ERROR_N;
-	int16_t val_current = 0;
-	uint16_t val_bus_voltage = 0;
-	uint16_t val_power = 0;
+	float val_current = 0;
+	float val_bus_voltage = 0;
+	float val_power = 0;
 	_PAM_table pam_table;
 
 
@@ -474,7 +474,7 @@ ErrorStatus PAM_Get_PWR_CH_IN_I_V_P( _PAM *pam_ptr, uint8_t num_pwr_ch){
 
 		while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){///Read temperature.
 
-			error_I2C = INA238_Get_I_V_P_int16( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
+			error_I2C = INA238_Get_I_V_P_float( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Max_Current_float, &val_current, &val_bus_voltage, &val_power );
 
 			if( error_I2C != SUCCESS ){
 				i++;
@@ -518,9 +518,9 @@ ErrorStatus PAM_Get_PWR_CH_IN_I_V_P( _PAM *pam_ptr, uint8_t num_pwr_ch){
 		pam_ptr->PWR_IN_Channel[num_pwr_ch].Error_PWR_Mon = SUCCESS;
 	}
 
-	pam_ptr->PWR_IN_Channel[num_pwr_ch].Voltage_val = val_bus_voltage;
-	pam_ptr->PWR_IN_Channel[num_pwr_ch].Current_val = val_current;
-	pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val = val_power;
+	pam_ptr->PWR_IN_Channel[num_pwr_ch].Voltage_val = (uint16_t)val_bus_voltage;
+	pam_ptr->PWR_IN_Channel[num_pwr_ch].Current_val = (int16_t)val_current;
+	pam_ptr->PWR_IN_Channel[num_pwr_ch].Power_val = (uint32_t)val_power;
 
 	return error_I2C;
 }

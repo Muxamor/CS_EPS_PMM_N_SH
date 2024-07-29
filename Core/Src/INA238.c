@@ -1478,7 +1478,7 @@ ErrorStatus INA238_Get_I_V_P_float( I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, 
 	@param 	*power_mW - pointer to store measured power value in milliWatts.
 	@retval 0-OK, -1-ERROR_N
 */
-ErrorStatus INA238_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, int16_t *current_mA, uint16_t *bus_voltage_mV, uint16_t *power_mW){
+ErrorStatus INA238_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, uint16_t max_exp_current_mA, int16_t *current_mA, uint16_t *bus_voltage_mV, uint32_t *power_mW){
 
     uint16_t current_reg = 0;
     int16_t sign_current_reg = 0;
@@ -1507,7 +1507,7 @@ ErrorStatus INA238_Get_I_V_P_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, u
     if(I2C_Read_word_u24_St_ReSt(I2Cx, I2C_INA238_addr, I2C_SIZE_REG_ADDR_U8, INA238_POWER_REG_ADDR, &power_reg) != SUCCESS){
         return ERROR_N;
     }
-    *power_mW = (uint16_t)( power_lsb * ( (float)power_reg) );
+    *power_mW = (uint32_t)( power_lsb * ( (float)power_reg) );
 
     return SUCCESS;
 }

@@ -28,9 +28,9 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 
             case PAM_PWR_IN_SPD_Ch1:
             	//Config Power monitor INA238, same for all power channels
-            	pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+            	//pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
-            	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
+            	//pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
                 pam_table.PWR_Mon_Mode = INA238_BUS_SHUNT_TEMPERATURE_CONTINUOUS;
 
@@ -43,9 +43,9 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 
             case PAM_PWR_IN_SPD_Ch2:
             	//Config Power monitor INA238, same for all power channels
-            	pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+            	//pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
-            	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
+            	//pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
                 pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
@@ -58,9 +58,9 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 
             case PAM_PWR_IN_SPD_Ch3:
             	//Config Power monitor INA238, same for all power channels
-            	pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+            	//pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
-            	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
+            	//pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
                 pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
@@ -73,9 +73,9 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 
             case PAM_PWR_IN_SPD_Ch4:
             	//Config Power monitor INA238, same for all power channels
-            	pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+            	//pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
-            	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
+            	//pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
                 pam_table.PWR_Mon_Mode = INA238_BUS_SHUNT_TEMPERATURE_CONTINUOUS;
 
@@ -88,9 +88,9 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 
             case PAM_PWR_IN_SPD_Ch5:
             	//Config Power monitor INA238, same for all power channels
-            	pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+            	//pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
-            	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
+            	//pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
                 pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
@@ -103,9 +103,9 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 
             case PAM_PWR_IN_SPD_Ch6:
             	//Config Power monitor INA238, same for all power channels
-            	pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
+            	//pam_table.PWR_Mon_Max_Current_int16 = 3500; 		//Max current in mA
             	pam_table.PWR_Mon_Max_Current_float = 3.5f; 			//Max current in A
-            	pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
+            	//pam_table.PWR_Mon_Rshunt_int16 = 15;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.015f;				//Rshunt value in Ohm
                 pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
@@ -118,9 +118,9 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 
             case PAM_PWR_IN_SPCC_Ch1:
             	//Config Power monitor INA238, same for all power channels
-            	pam_table.PWR_Mon_Max_Current_int16 = 6000; 		//Max current in mA
+            	//pam_table.PWR_Mon_Max_Current_int16 = 6000; 		//Max current in mA
             	pam_table.PWR_Mon_Max_Current_float = 6.0f; 			//Max current in A
-            	pam_table.PWR_Mon_Rshunt_int16 = 10;				//Rshunt value in mOhm
+            	//pam_table.PWR_Mon_Rshunt_int16 = 10;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.010f;				//Rshunt value in Ohm
                 pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 
@@ -133,9 +133,9 @@ _PAM_table PAM__Table( uint8_t number_pwr_channel, uint8_t type_pwr_ch ) {
 
             case PAM_PWR_IN_SPCC_Ch2:
             	//Config Power monitor INA238, same for all power channels
-            	pam_table.PWR_Mon_Max_Current_int16 = 6000; 		//Max current in mA
+            	//pam_table.PWR_Mon_Max_Current_int16 = 6000; 		//Max current in mA
             	pam_table.PWR_Mon_Max_Current_float = 6.0f; 			//Max current in A
-            	pam_table.PWR_Mon_Rshunt_int16 = 10;				//Rshunt value in mOhm
+            	//pam_table.PWR_Mon_Rshunt_int16 = 10;				//Rshunt value in mOhm
             	pam_table.PWR_Mon_Rshunt_float = 0.010f;				//Rshunt value in Ohm
             	pam_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 

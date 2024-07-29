@@ -433,7 +433,8 @@ ErrorStatus PBM_T1_ReadHeatTempSensors( I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_
 ErrorStatus PBM_T1_ReadHeatPwrMon(I2C_TypeDef *I2Cx, _PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat_number) {
 
 	int16_t current = 0;
-	uint16_t bus_voltage = 0, power = 0, alert_flags = 0;
+	uint16_t bus_voltage = 0, alert_flags = 0;
+	uint32_t power = 0;
 	uint8_t count = 0;
 	int8_t Error = ERROR_N;
 	int8_t Error_I2C_MUX = ERROR_N;

@@ -129,7 +129,7 @@ ErrorStatus PAM_init_PWR_Mon_INA238(_PAM *pam_ptr, uint8_t num_pwr_ch){
 		while( ( error_I2C != SUCCESS ) && ( i < pam_i2c_attempt_conn ) ){
 
 			if( INA238_Hard_Reset( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon) == SUCCESS ){
-				if ( INA238_Setup_Calibration_int16( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Max_Current_int16, pam_table.PWR_Mon_Rshunt_int16, pam_table.PWR_Mon_ADC_Range) == SUCCESS ){
+				if ( INA238_Setup_Calibration_float( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Max_Current_float, pam_table.PWR_Mon_Rshunt_float, pam_table.PWR_Mon_ADC_Range) == SUCCESS ){
 					if ( INA238_Setup_ADCRANGE( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_ADC_Range) == SUCCESS ){
 						if ( INA238_Setup_VBUSCT( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Convr_Time) == SUCCESS ){
 							if ( INA238_Setup_VSHCT( pam_table.I2Cx_PORT, pam_table.I2C_addr_PWR_Mon, pam_table.PWR_Mon_Convr_Time) == SUCCESS ){

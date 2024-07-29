@@ -41,7 +41,7 @@ typedef struct{
 	
 	uint16_t Voltage_val;
 	int16_t Current_val;
-	uint16_t Power_val;
+	uint32_t Power_val;
 
 	//uint8_t State_ID_In  		:1; //0-Open, 1-Close. Show State power channel input ideal diode.
 	uint8_t Error_PWR_Mon 		:1;
