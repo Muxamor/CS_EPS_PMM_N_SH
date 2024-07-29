@@ -633,8 +633,8 @@ struct CAN_IVar5{
     uint8_t CAN_Beacon_PMM_Switch_Active_CPU;				        //+0       |  const = 0x                 	|  Переключатель основной/резервный МАЯК
     int8_t  CAN_Beacon_PMM_Temp_Sensor;                             //+1       |  const = 0x                 	|  PMM датчик 1
     uint16_t CAN_Beacon_EPS_Main_Bus_Voltage;				        //+2,3    |  const = 0x                 	|  Напряжение внутренней силовой шины СЭС
-    uint16_t CAN_Beacon_EPS_CubeSat_Total_Cons_Power;               //+4,5    |  const = 0x                 	|  Полная потребляемая мощность
-    uint16_t CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power;           //+6,7    |  const = 0x                 	|  Потребляемая мощность полезной нагрузкой и подсистемами КА
+    uint32_t CAN_Beacon_EPS_CubeSat_Total_Cons_Power;               //+4,5,6,7    |  const = 0x                 	|  Полная потребляемая мощность
+    //uint16_t CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power;           //+6,7    |  const = 0x                 	|  Потребляемая мощность полезной нагрузкой и подсистемами КА
     uint16_t CAN_Beacon_EPS_Total_PAM_Generation_Power;             //+8,9    |  const = 0x                 	|  Полная вырабатываемая мощность СБ
     int8_t  CAN_Beacon_SP_TM_Ch1_Median_Temp;                       //+10       |  const = 0x                 	|  Медианная температура панели +X
     int8_t  CAN_Beacon_SP_TM_Ch2_Median_Temp;                       //+11       |  const = 0x                 	|  Медианная температура панели -X
@@ -683,12 +683,12 @@ struct CAN_IVar5{
     int16_t CAN_TMIx_PMM_VBAT1_Current_Aver_10s;                    //+193,194 |  const = 0x                  	|   Ток VBAT1 усреднение 10s
     int16_t CAN_TMIx_PMM_VBAT2_Current_Aver_10s;                    //+195,196 |  const = 0x                  	|   Ток VBAT2 усреднение 10s
     uint16_t CAN_TMIx_EPS_Main_Bus_Voltage;                         //+197,198 |  const = 0x                  	|   Напряжение внутренней шины СЭС
-    uint16_t CAN_TMIx_EPS_CubeSat_Total_Cons_Power;                 //+199,200 |  const = 0x                  	|   Полная мощность потребления КА
-    uint16_t CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power;             //+201,202 |  const = 0x                  	|   Потребляемая мощность  подсистемами и ПН КА
-    uint16_t CAN_TMIx_EPS_Deploy_Status;                            //+203,204 |  const = 0x                  	|  Состояние концевиков раскрыв. элементов, битовая маска
-    uint16_t CAN_TMIx_PMM_Version_FW;                               //+205,206 |  const = 0x                  	|   Firmware version
+    uint32_t CAN_TMIx_EPS_CubeSat_Total_Cons_Power;                 //+199,200,201,202 |  const = 0x                  	|   Полная мощность потребления КА
+    uint32_t CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power;             //+203,204,205,206 |  const = 0x                  	|   Потребляемая мощность  подсистемами и ПН КА
+    uint16_t CAN_TMIx_EPS_Deploy_Status;                            //+207,208 |  const = 0x                  	|  Состояние концевиков раскрыв. элементов, битовая маска
+    uint16_t CAN_TMIx_PMM_Version_FW;                               //+209,210 |  const = 0x                  	|   Firmware version
     																//Total 52 byte
-    uint8_t CAN_TMI0_Reserved [65];                					//+207,208 |  const = 0x                  	|   Ток потребления модуля PMM
+    uint8_t CAN_TMI0_Reserved [61];                					//+211,212 |  const = 0x                  	|   Ток потребления модуля PMM
 
     uint16_t CAN_TMI0_CRC;                                          //+272,273 |  const = 0x
 

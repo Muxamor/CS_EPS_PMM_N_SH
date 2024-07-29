@@ -2351,7 +2351,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_Beacon_PMM_Temp_Sensor                     = CAN_IVar5_telemetry.CAN_TMIx_PMM_Temp_Sensor;
     CAN_IVar5_telemetry.CAN_Beacon_EPS_Main_Bus_Voltage                = CAN_IVar5_telemetry.CAN_TMIx_EPS_Main_Bus_Voltage;
     CAN_IVar5_telemetry.CAN_Beacon_EPS_CubeSat_Total_Cons_Power        = CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_Total_Cons_Power;
-    CAN_IVar5_telemetry.CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power    = CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power;
+    //CAN_IVar5_telemetry.CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power    = CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power;
     CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_PAM_Generation_Power      = CAN_IVar5_telemetry.CAN_TMIx_EPS_Total_PAM_Generation_Power;
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch1_Median_Temp               = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Median_Temp;
     CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch2_Median_Temp               = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Median_Temp;
