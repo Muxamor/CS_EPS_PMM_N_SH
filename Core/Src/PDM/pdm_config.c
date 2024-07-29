@@ -319,7 +319,7 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.PWR_Mon_Max_Current_int16 = 25000; 		//Max current in mA
 			pdm_table.PWR_Mon_Max_Current_float = 25.0f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 3;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.0025f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.00296f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;

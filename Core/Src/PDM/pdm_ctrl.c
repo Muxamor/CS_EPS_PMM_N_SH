@@ -474,7 +474,7 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read temperature.
 
-			error_I2C = INA238_Get_I_V_P_int16( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_float, &val_current, &val_bus_voltage, &val_power );
+			error_I2C = INA238_Get_I_V_P_int16( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_int16, &val_current, &val_bus_voltage, &val_power );
 
 			if( error_I2C != SUCCESS ){
 				i++;
