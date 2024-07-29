@@ -433,9 +433,9 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 	uint8_t i = 0;
 	int8_t Error_I2C_MUX = ERROR_N;
 	int8_t error_I2C = ERROR_N;
-	float val_current = 0;
-	float val_bus_voltage = 0;
-	float val_power = 0;
+	int16_t val_current = 0;
+	uint16_t val_bus_voltage = 0;
+	uint32_t val_power = 0;
 	_PDM_table pdm_table;
 	
 	
@@ -474,7 +474,7 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 
 		while( ( error_I2C != SUCCESS ) && ( i < pdm_i2c_attempt_conn ) ){///Read temperature.
 
-			error_I2C = INA238_Get_I_V_P_float( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_float, &val_current, &val_bus_voltage, &val_power );
+			error_I2C = INA238_Get_I_V_P_int16( pdm_table.I2Cx_PORT, pdm_table.I2C_addr_PWR_Mon, pdm_table.PWR_Mon_Max_Current_float, &val_current, &val_bus_voltage, &val_power );
 
 			if( error_I2C != SUCCESS ){
 				i++;
@@ -528,9 +528,9 @@ ErrorStatus PDM_Get_PWR_CH_I_V_P( _PDM *pdm_ptr, uint8_t num_pwr_ch){
 		pdm_ptr->PWR_Channel[num_pwr_ch].Error_PWR_Mon = SUCCESS;
 	}
 
-	pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = (uint16_t)val_bus_voltage;
-	pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = (int16_t)val_current;
-	pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = (uint32_t)val_power;
+	pdm_ptr->PWR_Channel[num_pwr_ch].Voltage_val = val_bus_voltage;
+	pdm_ptr->PWR_Channel[num_pwr_ch].Current_val = val_current;
+	pdm_ptr->PWR_Channel[num_pwr_ch].Power_val = val_power;
 
 	return error_I2C;
 }
