@@ -715,7 +715,7 @@ ErrorStatus PMM_Reset_Modules( uint8_t modules ){
     	LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_15);
 
     	GPIO_InitStruct.Pin =  LL_GPIO_PIN_15;
-    	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+    	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;//LL_GPIO_MODE_INPUT;
     	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -733,7 +733,7 @@ ErrorStatus PMM_Reset_Modules( uint8_t modules ){
     	LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_14);
 
     	GPIO_InitStruct.Pin =  LL_GPIO_PIN_14;
-    	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+    	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;//LL_GPIO_MODE_INPUT;
     	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
     }else{

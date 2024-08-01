@@ -746,7 +746,7 @@ void GPIO_Init(void) {
 
 	//Set Reset pin like input because if setup as output pin pull down and will twitch at the time of reboot CPU
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_14 | LL_GPIO_PIN_15;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;//LL_GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
