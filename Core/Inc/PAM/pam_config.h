@@ -29,28 +29,28 @@ extern "C" {
 #define pam_i2c_attempt_conn		3 	 // Quantity attempt to connection through I2C
 #define pam_i2c_delay_att_conn		3 	 //ms Delay between attempts connection through I2C in millisecond
 
-#define PAM_PWR_IN_Ch_quantity  	0x06 // Total quantity input power channels on the PAM
-#define PAM_PWR_TM_SP_Ch_quantity   0x06 // Total quantity power channel for get telemetry from solar panels
+#define PAM_PWR_IN_Ch_quantity  	0x04 // Total quantity input power channels on the PAM
+#define PAM_PWR_TM_SP_Ch_quantity   0x04 // Total quantity power channel for get telemetry from solar panels
 
 #define PAM_TYPE_PWR_CH_IN          0x00 //Type of power channel in PAM   0x00 - input power channel from SP
-#define PAM_PWR_IN_Ch1 		        0x00 //Panel Y+ (PAM 1.0 socket X1), Y+ - Norbi2
-#define PAM_PWR_IN_Ch2 		        0x01 //Panel X- (PAM 1.0 socket X2), X- - Norbi2
-#define PAM_PWR_IN_Ch3 		        0x02 //Panel Y- (PAM 1.0 socket X3), Y- - Norbi2
-#define PAM_PWR_IN_Ch4 		        0x03 //Panel X+ (PAM 1.0 socket X2), X+ - Norbi2
-#define PAM_PWR_IN_Ch5 		        0x04 //Folding Panel LT8490_1 (PAM 1.0 socket X5 and X6), X- Folding - Norbi2
-#define PAM_PWR_IN_Ch6 		        0x05 //Folding Panel LT8490_2 (PAM 1.0 socket X7 and X8), X+ Folding - Norbi2
+#define PAM_PWR_IN_Ch1 		        0x00 //Panel Y+ - Mule
+#define PAM_PWR_IN_Ch2 		        0x01 //Panel X- - Mule
+#define PAM_PWR_IN_Ch3 		        0x02 //Panel Y- - Mule
+#define PAM_PWR_IN_Ch4 		        0x03 //Panel X+ - Mule
+//#define PAM_PWR_IN_Ch5 		        0x04 //Folding Panel LT8490_1 (PAM 1.0 socket X5 and X6), X- Folding - Norbi2
+//#define PAM_PWR_IN_Ch6 		        0x05 //Folding Panel LT8490_2 (PAM 1.0 socket X7 and X8), X+ Folding - Norbi2
 
 #define PAM_TYPE_PWR_CH_Supply      0x01 //Type of power channel in PAM, 0x01 - Power supply at PAM
 #define PAM_PWR_DC_DC 				0x06
 #define PAM_PWR_LDO 				0x07
 
 #define PAM_TYPE_PWR_CH_TM_SP       0x02 //Type of power channel in PAM, 0x02 - power supply to turn on SP for get telemetry
-#define PAM_PWR_TM_SP_Ch1			0x00 //Power channel telemetry ,  is Folding X- - Norby2
-#define PAM_PWR_TM_SP_Ch2 			0x01 //Power channel telemetry ,  is X- - Norby2
-#define PAM_PWR_TM_SP_Ch3			0x02 //Power channel telemetry ,  is Folding X+ - Norby2
-#define PAM_PWR_TM_SP_Ch4			0x03 //Power channel telemetry ,  is X+ - Norby2
-#define PAM_PWR_TM_SP_Ch5 			0x04 //Power channel telemetry ,  is Y+ - Norby2
-#define PAM_PWR_TM_SP_Ch6			0x05 //Power channel telemetry ,  is Y- - Norby2
+#define PAM_PWR_TM_SP_Ch1			0x00 //Panel Y+ - Mule
+#define PAM_PWR_TM_SP_Ch2 			0x01 //Panel X- - Mule
+#define PAM_PWR_TM_SP_Ch3			0x02 //Panel Y- - Mule
+#define PAM_PWR_TM_SP_Ch4			0x03 //Panel X+ - Mule
+//#define PAM_PWR_TM_SP_Ch5 			0x04 //Power channel telemetry ,  is Y+ - Norby2
+//#define PAM_PWR_TM_SP_Ch6			0x05 //Power channel telemetry ,  is Y- - Norby2
 
 typedef struct{
 
