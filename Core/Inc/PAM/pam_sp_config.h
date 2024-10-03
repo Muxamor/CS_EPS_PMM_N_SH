@@ -25,8 +25,8 @@ extern "C" {
 
 #define PAM_SP1_ID_quantity             0x03  // Quantity Ideal Diode on the solar panel namber 1 is Y+ Mule
 #define PAM_SP2_ID_quantity             0x02  // Quantity Ideal Diode on the solar panel namber 2 is X- Mule
-#define PAM_SP3_ID_quantity             0x02  // Quantity Ideal Diode on the solar panel namber 3 is Y- Mule
-#define PAM_SP4_ID_quantity             0x03  // Quantity Ideal Diode on the solar panel namber 4 is X+ Mule
+#define PAM_SP3_ID_quantity             0x03  // Quantity Ideal Diode on the solar panel namber 3 is Y- Mule
+#define PAM_SP4_ID_quantity             0x02  // Quantity Ideal Diode on the solar panel namber 4 is X+ Mule
 //#define PAM_SP5_ID_quantity             0x02  // Quantity Ideal Diode on the solar panel namber 5 is 0x02 Y+ (SRD) for Norbi,    is Y+ - Norby2
 //#define PAM_SP6_ID_quantity             0x02  // Quantity Ideal Diode on the solar panel namber 6 is 0x03 Y- for Norbi,          is Y- - Norby2
 

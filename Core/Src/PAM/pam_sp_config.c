@@ -51,7 +51,7 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_temp_senor[3] = PAM_SP2_I2CADDR_TEMP_SENS_4;
             break;
 
-        case PAM_SP3:
+        case PAM_SP3://SP Y-
             pam_sp_table.PAM_I2C_MUX_Ch = TCA9548_CH4;
 
             //Mule
@@ -69,7 +69,7 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_temp_senor[3] = PAM_SP3_I2CADDR_TEMP_SENS_4;
             break;
 
-        case PAM_SP4:
+        case PAM_SP4://SP X+
             pam_sp_table.PAM_I2C_MUX_Ch = TCA9548_CH3;
 
             pam_sp_table.ID_quantity = PAM_SP4_ID_quantity;
