@@ -1535,20 +1535,20 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh2_Voltage                   = eps_p.eps_pam_ptr->PWR_IN_Channel[1].Voltage_val;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh3_Voltage                   = eps_p.eps_pam_ptr->PWR_IN_Channel[2].Voltage_val;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh4_Voltage                   = eps_p.eps_pam_ptr->PWR_IN_Channel[3].Voltage_val;
-    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT1_Voltage    				 = eps_p.eps_pam_ptr->PWR_IN_Channel[4].Voltage_val;
-    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT2_Voltage					 = eps_p.eps_pam_ptr->PWR_IN_Channel[5].Voltage_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT1_Voltage    				 = 0;
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT2_Voltage					 = 0;
 
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh1_Current                   = eps_p.eps_pam_ptr->PWR_IN_Channel[0].Current_val;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh2_Current                   = eps_p.eps_pam_ptr->PWR_IN_Channel[1].Current_val;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh3_Current                   = eps_p.eps_pam_ptr->PWR_IN_Channel[2].Current_val;
     CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh4_Current                   = eps_p.eps_pam_ptr->PWR_IN_Channel[3].Current_val;
-    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT1_Current    				 = eps_p.eps_pam_ptr->PWR_IN_Channel[4].Current_val;
-    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT2_Current					 = eps_p.eps_pam_ptr->PWR_IN_Channel[5].Current_val;
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT1_Current    				 = 0;
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrLT2_Current					 = 0;
 
     //***
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Status_BitMask                = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_I2C_GPIO_Ext1) | (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_I2C_GPIO_Ext2 << 1);
-    for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Status_BitMask                = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Error_I2C_GPIO_Ext1;
+    for( num_pwr_ch = 0, move_bit_pos = 1; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
         CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].State_ID[num_pwr_ch] << move_bit_pos );
     }
     for( num_pwr_ch = 0; num_pwr_ch < PAM_SP_temp_sens_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1558,8 +1558,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     //***
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Status_BitMask                = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_I2C_GPIO_Ext1) | (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_I2C_GPIO_Ext2 << 1);
-    for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Error_I2C_GPIO_Ext1);
+    for( num_pwr_ch = 0, move_bit_pos = 1; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
         CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].State_ID[num_pwr_ch] << move_bit_pos );
     }
     for( num_pwr_ch = 0; num_pwr_ch < PAM_SP_temp_sens_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1569,8 +1569,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     //***
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Status_BitMask                = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_I2C_GPIO_Ext1) | (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_I2C_GPIO_Ext2 << 1);
-    for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Error_I2C_GPIO_Ext1);
+    for( num_pwr_ch = 0, move_bit_pos = 1; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
         CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].State_ID[num_pwr_ch] << move_bit_pos );
     }
     for( num_pwr_ch = 0; num_pwr_ch < PAM_SP_temp_sens_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1580,8 +1580,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     //***
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Status_BitMask                = 0x0000;
-    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_I2C_GPIO_Ext1) | (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_I2C_GPIO_Ext2 << 1);
-    for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Error_I2C_GPIO_Ext1);
+    for( num_pwr_ch = 0, move_bit_pos = 1; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
         CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].State_ID[num_pwr_ch] << move_bit_pos );
     }
     for( num_pwr_ch = 0; num_pwr_ch < PAM_SP_temp_sens_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
@@ -1591,24 +1591,10 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     //***
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Status_BitMask                = 0x0000;
-    //Доправить под  MUle CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_I2C_GPIO_Ext1) | (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_I2C_GPIO_Ext2 << 1);
-    /* Доправить под MULE for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
-        CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].State_ID[num_pwr_ch] << move_bit_pos );
-    }
-    for( num_pwr_ch = 0; num_pwr_ch < PAM_SP_temp_sens_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
-        CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Error_temp_sensor[num_pwr_ch] << move_bit_pos );
-    }*/
     //---
 
     //***
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask                = 0x0000;
-    //Доправить под MUle CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask                = (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_I2C_GPIO_Ext1) | (eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_I2C_GPIO_Ext2 << 1);
-    /* Доправить под MULE for( num_pwr_ch = 0, move_bit_pos = 2; num_pwr_ch < PAM_SP_ID_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
-        CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].State_ID[num_pwr_ch] << move_bit_pos );
-    }
-    for( num_pwr_ch = 0; num_pwr_ch < PAM_SP_temp_sens_max_quantity; num_pwr_ch++, move_bit_pos ++ ){
-        CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask            = CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Status_BitMask | ( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Error_temp_sensor[num_pwr_ch] << move_bit_pos );
-    } */
     //---
 
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Temp_Sensor1                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value[0];
@@ -1627,20 +1613,21 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Temp_Sensor2                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[1];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Temp_Sensor3                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[2];
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Temp_Sensor4                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value[3];
-   //Доправить под MULE CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Temp_Sensor1                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[0];
-    //Доправить под CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Temp_Sensor2                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[1];
-    //Доправить под CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Temp_Sensor3                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[2];
-    //Доправить под  CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Temp_Sensor4                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value[3];
-    //Доправить под MULE CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor1                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[0];
-    //Доправить под CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor2                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[1];
-    //Доправить под  CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor3                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[2];
-    //Доправить под CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor4                 = eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value[3];
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Temp_Sensor1                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Temp_Sensor2                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Temp_Sensor3                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Temp_Sensor4                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor1                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor2                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor3                 = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Temp_Sensor4                 = 0x00;
+
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch1_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP1].Temp_value, PAM_SP1_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch2_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP2].Temp_value, PAM_SP2_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch3_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP3].Temp_value, PAM_SP3_temp_sens_quantity );
     CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch4_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP4].Temp_value, PAM_SP4_temp_sens_quantity );
-    //Доправить под MULECAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP5].Temp_value, PAM_SP5_temp_sens_quantity );
-    //Доправить под MULE CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp                  = GetMedian( eps_p.eps_pam_ptr->Solar_Panel[PAM_SP6].Temp_value, PAM_SP6_temp_sens_quantity );
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp                  = 0x00;
+    CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp                  = 0x00;
 
     CAN_IVar5_telemetry.CAN_TMI1_CRC                                    = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark)), 126 );
 
