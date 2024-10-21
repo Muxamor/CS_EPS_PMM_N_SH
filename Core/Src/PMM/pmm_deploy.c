@@ -251,17 +251,17 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         eps_p.eps_pmm_ptr->Deploy_stage = 7; // Next deploy stage 7 - deploy at channel 3
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-    // Deploy stage 7 -  burn channel 3. NOT USE IN THE MULE
+    // Deploy stage 7 -  burn channel 3.
     }else if( deploy_stage == 7 ){
-        //error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-        //error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
+        error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch3);
         eps_p.eps_pmm_ptr->Deploy_stage = 8; // Next deploy stage 8 - deploy at channel 4
         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
 
-    // Deploy stage 8 -  burn channel 4. NOT USE IN THE MULE
+    // Deploy stage 8 -  burn channel 4.
     }else if( deploy_stage == 8 ){
-        //error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
-       // error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
+        error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, ENABLE);
+        error_status += PMM_Deploy_Burn_Procedure(eps_p, PMM_PWR_Deploy_Ch4);
 
         error_status += PMM_Set_state_PWR_CH(eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Power, DISABLE);
 
@@ -515,20 +515,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
             *ret_state_limit_switch_2 = 0;
 
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 0;
             }
 
         }else if((ADC_ch_meas > 0.35) && (ADC_ch_meas < 0.7)){
@@ -537,20 +537,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
             *ret_state_limit_switch_2 = 0;
 
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 0;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 0;
             }
 
         }else if((ADC_ch_meas > 0.7) && (ADC_ch_meas < 1.1)){
@@ -559,20 +559,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
             *ret_state_limit_switch_2 = 1;
 
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 0;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 1;
             }
 
         }else if( ADC_ch_meas > 1.1 ){
@@ -581,20 +581,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
             *ret_state_limit_switch_2 = 1;
 
             if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 1;
 
             }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 1;
-                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 1;
+                eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 1;
             }
         }
 
@@ -605,20 +605,20 @@ ErrorStatus PMM_Deploy_check_Lim_SW( _EPS_Param eps_p, uint8_t burn_pwr_ch_num, 
         *ret_state_limit_switch_2 = 0;
 
         if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch1 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 0;
 
         }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch2 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 0;
 
         }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch3 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 0;
 
         }else if( burn_pwr_ch_num == PMM_PWR_Deploy_Ch4 ){
-            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
-            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 0;
+            eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 0;
         }
     }
 

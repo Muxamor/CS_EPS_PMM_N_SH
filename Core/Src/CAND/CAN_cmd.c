@@ -110,14 +110,14 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2 = DISABLE;
                         eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 0;
                         eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp = 0;
-                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 = 0;
+                        eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = 0;
 
                        // eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Logic = DISABLE;
                         eps_p.eps_pmm_ptr->PWR_Ch_State_Deploy_Power = DISABLE;
@@ -1399,10 +1399,10 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 
 	CAN_IVar5_telemetry.CAN_TMIx_EPS_Deploy_Status                       = (eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1) | (eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 << 1) |
-	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1_Yp << 2) | (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2_Yp << 3) |
-	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1_Yn << 4) | (eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2_Yn << 5) |
-	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1_Zp << 6) | (eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2_Zp << 7) |
-	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1_Zn << 8) | (eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2_Zn << 9) |
+	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_1 << 2) | (eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 << 3) |
+	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 << 4) | (eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 << 5) |
+	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 << 6) | (eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 << 7) |
+	                                                                       (eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 << 8) | (eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 << 9) |
 	                                                                       (eps_p.eps_pmm_ptr->Deploy_stage << 12);
 
 	CAN_IVar5_telemetry.CAN_TMIx_PMM_Version_FW                          = eps_p.eps_pmm_ptr->Version_FW;

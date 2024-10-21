@@ -112,14 +112,14 @@ typedef struct{
 
 	uint16_t Deploy_Lim_SW_Exit_1       :1; //0 - не сработал 1 - сработал. Deploy Limit switch 1 exit from container// Need to save in flash.
     uint16_t Deploy_Lim_SW_Exit_2       :1; //0 - не сработал 1 - сработал. Deploy Limit switch 2 exit from container// Need to save in flash.
-    uint16_t Deploy_Ch4_Lim_SW_1_Yp     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Ch4_Lim_SW_2_Yp     :1; //0 - не сработал 1 - сработал. Y+ Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Ch3_Lim_SW_1_Yn     :1; //0 - не сработал 1 - сработал. Y- Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Ch3_Lim_SW_2_Yn     :1; //0 - не сработал 1 - сработал. Y- Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Ch1_Lim_SW_1_Zp     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Ch1_Lim_SW_2_Zp     :1; //0 - не сработал 1 - сработал. Z+ Limit switch 2// Need to save in flash.
-    uint16_t Deploy_Ch2_Lim_SW_1_Zn     :1; //0 - не сработал 1 - сработал. Z- Limit switch 1// Need to save in flash.
-    uint16_t Deploy_Ch2_Lim_SW_2_Zn     :1; //0 - не сработал 1 - сработал. Z- Limit switch 2// Need to save in flash.
+    uint16_t Deploy_Ch4_Lim_SW_1     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch4_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch3_Lim_SW_1     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch3_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch1_Lim_SW_1     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch1_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch2_Lim_SW_1     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch2_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
     uint16_t :6;
 
 	uint16_t Version_FW;  // Version firmware HB.LB
