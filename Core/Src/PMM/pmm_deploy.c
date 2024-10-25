@@ -56,13 +56,13 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         if( ((uint32_t)(SysTick_Counter - Exit_LSW_poll_time_delay)) > ((uint32_t) 1000) ){
 
             if( PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_exit_LSW_1, &value_deploy_exit_LSW_2 ) == SUCCESS ){
-                if( value_deploy_exit_LSW_1 == 0){
+                if( value_deploy_exit_LSW_1 == 1){
                     Counter_deploy_exit_LSW_1++;
                 }else{
                     Counter_deploy_exit_LSW_1 = 0;
                 }
 
-                if( value_deploy_exit_LSW_2 == 0){
+                if( value_deploy_exit_LSW_2 == 1){
                     Counter_deploy_exit_LSW_2++;
                 }else{
                     Counter_deploy_exit_LSW_2 = 0;
