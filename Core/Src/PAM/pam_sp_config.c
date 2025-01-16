@@ -13,7 +13,7 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
 
     switch( number_SP ){
 
-        case PAM_SP1:  //SP Y+
+        case PAM_SP1:  //SP X+
             pam_sp_table.PAM_I2C_MUX_Ch = TCA9548_CH1;
 
             pam_sp_table.ID_quantity = PAM_SP1_ID_quantity;
@@ -21,7 +21,7 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_GPIO_Ext =  PAM_SP1_I2CADDR_GPIO_Ext_1;
             pam_sp_table.Num_pin_GPIO_Ext_ID[0] = PCA9534_IO_P00;
             pam_sp_table.Num_pin_GPIO_Ext_ID[1] = PCA9534_IO_P01;
-            pam_sp_table.Num_pin_GPIO_Ext_ID[2] = PCA9534_IO_P02;
+
 
 
             pam_sp_table.PWR_number_ch_TM_SP = PAM_PWR_TM_SP_Ch1;
@@ -33,7 +33,7 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_temp_senor[3] = PAM_SP1_I2CADDR_TEMP_SENS_4;
             break;
 
-        case PAM_SP2: //SP X-
+        case PAM_SP2: //SP Y+
             pam_sp_table.PAM_I2C_MUX_Ch = TCA9548_CH0;
 
             pam_sp_table.ID_quantity = PAM_SP2_ID_quantity;
@@ -41,6 +41,7 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_GPIO_Ext = PAM_SP2_I2CADDR_GPIO_Ext_1;
             pam_sp_table.Num_pin_GPIO_Ext_ID[0] = PCA9534_IO_P00;
             pam_sp_table.Num_pin_GPIO_Ext_ID[1] = PCA9534_IO_P01;
+            pam_sp_table.Num_pin_GPIO_Ext_ID[2] = PCA9534_IO_P02;
 
             pam_sp_table.PWR_number_ch_TM_SP = PAM_PWR_TM_SP_Ch2;
 
@@ -51,14 +52,15 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_temp_senor[3] = PAM_SP2_I2CADDR_TEMP_SENS_4;
             break;
 
-        case PAM_SP3://SP Y-
+        case PAM_SP3://SP X-
             pam_sp_table.PAM_I2C_MUX_Ch = TCA9548_CH4;
+
+            pam_sp_table.ID_quantity = PAM_SP3_ID_quantity;
 
             //Mule
             pam_sp_table.SP_I2C_addr_GPIO_Ext =  PAM_SP3_I2CADDR_GPIO_Ext_1;
             pam_sp_table.Num_pin_GPIO_Ext_ID[0] = PCA9534_IO_P00;
             pam_sp_table.Num_pin_GPIO_Ext_ID[1] = PCA9534_IO_P01;
-            pam_sp_table.Num_pin_GPIO_Ext_ID[2] = PCA9534_IO_P02;
 
             pam_sp_table.PWR_number_ch_TM_SP = PAM_PWR_TM_SP_Ch3;
 
@@ -69,7 +71,7 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_temp_senor[3] = PAM_SP3_I2CADDR_TEMP_SENS_4;
             break;
 
-        case PAM_SP4://SP X+
+        case PAM_SP4://SP Y-
             pam_sp_table.PAM_I2C_MUX_Ch = TCA9548_CH3;
 
             pam_sp_table.ID_quantity = PAM_SP4_ID_quantity;
@@ -77,6 +79,7 @@ _PAM_SP_table PAM_SP_Table( uint8_t number_SP){
             pam_sp_table.SP_I2C_addr_GPIO_Ext = PAM_SP4_I2CADDR_GPIO_Ext_1;
             pam_sp_table.Num_pin_GPIO_Ext_ID[0] = PCA9534_IO_P00;
             pam_sp_table.Num_pin_GPIO_Ext_ID[1] = PCA9534_IO_P01;
+            pam_sp_table.Num_pin_GPIO_Ext_ID[2] = PCA9534_IO_P02;
 
             pam_sp_table.PWR_number_ch_TM_SP = PAM_PWR_TM_SP_Ch4;
 
