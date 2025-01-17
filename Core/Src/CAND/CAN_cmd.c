@@ -129,8 +129,8 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         LL_mDelay( 5 );
                         PMM_Deploy_Get_Exit_LSW( eps_p, &value_deploy_LSW_1, &value_deploy_LSW_2 );
 
-                        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = !value_deploy_LSW_1;
-                        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = !value_deploy_LSW_2;
+                        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = value_deploy_LSW_1;
+                        eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = value_deploy_LSW_2;
 
                         PMM_Deploy_check_Lim_SW( eps_p, PMM_PWR_Deploy_Ch1, &value_deploy_LSW_1, &value_deploy_LSW_2 );
                         PMM_Deploy_check_Lim_SW( eps_p, PMM_PWR_Deploy_Ch2, &value_deploy_LSW_1, &value_deploy_LSW_2 );
