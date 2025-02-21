@@ -82,10 +82,10 @@ typedef struct{
      uint32_t FRAM_PMM_Deploy_Ch4_Lim_SW_2_Yp       :1;
      uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_1_Yn       :1;
      uint32_t FRAM_PMM_Deploy_Ch3_Lim_SW_2_Yn       :1;
-     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_1_Zp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zp       :1;
-     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zn       :1;
-     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zn       :1;
+     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zp       :1;
+     uint32_t FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zp       :1;
+     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_1_Zn       :1;
+     uint32_t FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zn       :1;
      uint32_t :7;
 
      uint32_t Reserved1;

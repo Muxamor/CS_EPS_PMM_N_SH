@@ -57,10 +57,10 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
     fram_data_write.FRAM_PMM_Deploy_Ch4_Lim_SW_2_Yp     = eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2;
     fram_data_write.FRAM_PMM_Deploy_Ch3_Lim_SW_1_Yn     = eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1;
     fram_data_write.FRAM_PMM_Deploy_Ch3_Lim_SW_2_Yn     = eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2;
-    fram_data_write.FRAM_PMM_Deploy_Ch1_Lim_SW_1_Zp     = eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1;
-    fram_data_write.FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zp     = eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2;
-    fram_data_write.FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zn     = eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1;
-    fram_data_write.FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zn     = eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2;
+    fram_data_write.FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zp     = eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1;
+    fram_data_write.FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zp     = eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2;
+    fram_data_write.FRAM_PMM_Deploy_Ch1_Lim_SW_1_Zn     = eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1;
+    fram_data_write.FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zn     = eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2;
 
     fram_data_write.FRAM_PMM_reboot_counter_CPUm        = eps_p.eps_pmm_ptr->reboot_counter_CPUm;
     fram_data_write.FRAM_PMM_reboot_counter_CPUb        = eps_p.eps_pmm_ptr->reboot_counter_CPUb;
@@ -203,10 +203,10 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
         eps_p.eps_pmm_ptr->Deploy_Ch4_Lim_SW_2 = fram_data_read.FRAM_PMM_Deploy_Ch4_Lim_SW_2_Yp;
         eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_1 = fram_data_read.FRAM_PMM_Deploy_Ch3_Lim_SW_1_Yn;
         eps_p.eps_pmm_ptr->Deploy_Ch3_Lim_SW_2 = fram_data_read.FRAM_PMM_Deploy_Ch3_Lim_SW_2_Yn;
-        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = fram_data_read.FRAM_PMM_Deploy_Ch1_Lim_SW_1_Zp;
-        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = fram_data_read.FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zp;
-        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = fram_data_read.FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zn;
-        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = fram_data_read.FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zn;
+        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_1 = fram_data_read.FRAM_PMM_Deploy_Ch2_Lim_SW_1_Zp;
+        eps_p.eps_pmm_ptr->Deploy_Ch2_Lim_SW_2 = fram_data_read.FRAM_PMM_Deploy_Ch2_Lim_SW_2_Zp;
+        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_1 = fram_data_read.FRAM_PMM_Deploy_Ch1_Lim_SW_1_Zn;
+        eps_p.eps_pmm_ptr->Deploy_Ch1_Lim_SW_2 = fram_data_read.FRAM_PMM_Deploy_Ch1_Lim_SW_2_Zn;
 
         eps_p.eps_pmm_ptr->reboot_counter_CPUm = fram_data_read.FRAM_PMM_reboot_counter_CPUm;
         eps_p.eps_pmm_ptr->reboot_counter_CPUb = fram_data_read.FRAM_PMM_reboot_counter_CPUb;

@@ -116,10 +116,10 @@ typedef struct{
     uint16_t Deploy_Ch4_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
     uint16_t Deploy_Ch3_Lim_SW_1     :1; //0 - не сработал 1 - сработал.
     uint16_t Deploy_Ch3_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
-    uint16_t Deploy_Ch1_Lim_SW_1     :1; //0 - не сработал 1 - сработал.
-    uint16_t Deploy_Ch1_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
     uint16_t Deploy_Ch2_Lim_SW_1     :1; //0 - не сработал 1 - сработал.
     uint16_t Deploy_Ch2_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch1_Lim_SW_1     :1; //0 - не сработал 1 - сработал.
+    uint16_t Deploy_Ch1_Lim_SW_2     :1; //0 - не сработал 1 - сработал.
     uint16_t :6;
 
 	uint16_t Version_FW;  // Version firmware HB.LB
