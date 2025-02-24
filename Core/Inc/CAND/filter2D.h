@@ -54,6 +54,7 @@ extern typeFiltrCoeff FiltrCoeff[];
 
 
 int16_t Filtr2Step( typeEnumFiltrChan chan, int16_t  v );
+uint16_t Filtr2StepUnsigned( typeEnumFiltrChan chan, uint16_t  v );
 
 #ifdef __cplusplus
 }
