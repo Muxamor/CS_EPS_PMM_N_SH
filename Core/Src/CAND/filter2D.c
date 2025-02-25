@@ -13,12 +13,15 @@ int16_t Filtr2Step( typeEnumFiltrChan chan, int16_t  v ){
   x1 = (int32_t)(((int64_t)FiltrCoeff[chan].a[1] * IIR_A1) >> 16);
   x0 = (int32_t)(((int64_t)FiltrCoeff[chan].a[0] * IIR_A0) >> 16);
 
-  y = ((x2 + x1 + x0) != -1) ? (x2 + x1 + x0) : 0;
-
+  //y = ((x2 + x1 + x0) != -1) ? (x2 + x1 + x0) : 0;
+  y = (x2 + x1 + x0);
   FiltrCoeff[chan].a[0] = FiltrCoeff[chan].a[1];
   FiltrCoeff[chan].a[1] = y;
 
-  return (int16_t)(y >> 16);
+  y = y >> 16;
+  y = ( y != -1) ? y : 0;
+
+  return (int16_t)(y);
 }
 
 
