@@ -2018,7 +2018,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
         CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh		 = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh + (uint16_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalAbcoluteCapacity_mAh);
     }
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent 		 = 0x0000;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent 		 = 0x00;
     tmp_param = 0x0000;
     for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
         tmp_param = tmp_param + eps_p.eps_pbm_ptr[PBM_Number].TotalRelativeCapacity_Perc;
