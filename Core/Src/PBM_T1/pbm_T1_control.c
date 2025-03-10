@@ -1384,6 +1384,7 @@ void PBM_T1_CalcTotalCapacity(_PBM_T1 pbm[], uint8_t PBM_number) {
 	pbm[PBM_number].TotalAbcoluteCapacity_mAh = TotalAbsCapacity;
 }
 
+
 /** @brief	Check level battery energy for selected PBM.
 	@param 	pbm[] - structure data for all PBM modules.
 	@param 	PBM_number - select PBM (PBM_T1_1, PBM_T1_2, PBM_T1_3, PBM_T1_4).

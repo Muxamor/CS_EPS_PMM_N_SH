@@ -1140,6 +1140,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM1 branch 1\n", CAN_PBM1_Corr_Cap_Level_Branch1_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch1 = 0x00;
                     }
                     break;
 
@@ -1149,6 +1150,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM1 branch 2\n", CAN_PBM1_Corr_Cap_Level_Branch2_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch2 = 0x00;
                     }
                     break;
 
@@ -1158,6 +1160,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM2 branch 1\n", CAN_PBM2_Corr_Cap_Level_Branch1_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM2_Corr_Cap_Level_Branch1 = 0x00;
                     }
                     break;
 
@@ -1167,6 +1170,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM2 branch 2\n", CAN_PBM2_Corr_Cap_Level_Branch2_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM2_Corr_Cap_Level_Branch2 = 0x00;
                     }
                     break;
 
@@ -1176,6 +1180,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM3 branch 1\n", CAN_PBM3_Corr_Cap_Level_Branch1_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM3_Corr_Cap_Level_Branch1  = 0x00;
                     }
                     break;
 
@@ -1185,6 +1190,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Perform once time correction capacity level PBM3 branch 2\n", CAN_PBM3_Corr_Cap_Level_Branch2_offset);
                         #endif
                         PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2, PBM_T1_MAX_BATT_CAP);
+                        CAN_IVar4_RegCmd.CAN_PBM3_Corr_Cap_Level_Branch2 = 0x00;
                     }
                     break;
 /*
@@ -1212,6 +1218,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM1 branch 1\n", CAN_PBM1_Reset_Branch1_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch1 = 0x00;
                     }
                     break;
 
@@ -1221,6 +1228,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM1 branch 2\n", CAN_PBM1_Reset_Branch2_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_1, PBM_T1_BRANCH_2);
+                        CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch2 = 0x00;
                     }
                     break;
 
@@ -1230,6 +1238,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM2 branch 1\n", CAN_PBM2_Reset_Branch1_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM2_Reset_Branch1 = 0x00;
                     }
                     break;
 
@@ -1239,6 +1248,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM2 branch 2\n", CAN_PBM2_Reset_Branch2_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_2, PBM_T1_BRANCH_2);
+                        CAN_IVar4_RegCmd.CAN_PBM2_Reset_Branch2 = 0x00;
                     }
                     break;
 
@@ -1248,6 +1258,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM3 branch 1\n", CAN_PBM3_Reset_Branch1_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM3_Reset_Branch1 = 0x00;
                     }
                     break;
 
@@ -1257,6 +1268,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> Reset PBM3 branch 2\n", CAN_PBM3_Reset_Branch2_offset);
                         #endif
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_3, PBM_T1_BRANCH_2);
+                        CAN_IVar4_RegCmd.CAN_PBM3_Reset_Branch2 = 0x00;
                     }
                     break;
 /*
@@ -1660,10 +1672,12 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
         CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh		 = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_mAh + (uint16_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalAbcoluteCapacity_mAh);
     }
 
+    uint16_t tmp=0;
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent 		 = 0x0000;
     for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
-        CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent     = CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent + (uint8_t)(eps_p.eps_pbm_ptr[PBM_Number].TotalRelativeCapacity_Perc / PBM_T1_QUANTITY);
+        tmp = tmp + eps_p.eps_pbm_ptr[PBM_Number].TotalRelativeCapacity_Perc;
     }
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_Battery_Level_percent = (uint8_t)(tmp/PBM_T1_QUANTITY);
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask     = 0x0000;
     for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
