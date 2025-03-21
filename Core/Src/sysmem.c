@@ -24,6 +24,7 @@
 /* Includes */
 #include <errno.h>
 #include <stdio.h>
+#include <sys/types.h>
 
 /* Variables */
 extern int errno;
@@ -55,4 +56,3 @@ caddr_t _sbrk(int incr)
 
 	return (caddr_t) prev_heap_end;
 }
-
