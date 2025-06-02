@@ -1983,6 +1983,29 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[1] =  (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext1) | (eps_p.eps_pdm_ptr->Error_I2C_GPIO_Ext2 << 1) | (eps_p.eps_pdm_ptr->Error_I2C_MUX << 2)
                                                                             | (eps_p.eps_pam_ptr->Error_State_DC_DC << 3) | (eps_p.eps_pam_ptr->Error_State_LDO << 4) | (eps_p.eps_pam_ptr->Error_I2C_GPIO_Ext << 5)
                                                                             | (eps_p.eps_pam_ptr->Error_I2C_MUX_1 << 6) | (eps_p.eps_pam_ptr->Error_I2C_MUX_2 << 7);
+
+    CAN_IVar5_telemetry.CAN_Beacon_PMM_Switch_Active_CPU_double 	  			= CAN_IVar5_telemetry.CAN_Beacon_PMM_Switch_Active_CPU;
+    CAN_IVar5_telemetry.CAN_Beacon_PMM_Temp_Sensor_double 			   			= CAN_IVar5_telemetry.CAN_Beacon_PMM_Temp_Sensor;
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_Main_Bus_Voltage_double 		   			= CAN_IVar5_telemetry.CAN_Beacon_EPS_Main_Bus_Voltage;
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_CubeSat_Total_Cons_Power_double 			= CAN_IVar5_telemetry.CAN_Beacon_EPS_CubeSat_Total_Cons_Power;
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power_double 		= CAN_IVar5_telemetry.CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power;
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_PAM_Generation_Power_double		= CAN_IVar5_telemetry.CAN_Beacon_EPS_Total_PAM_Generation_Power;
+    CAN_IVar5_telemetry.CAN_Beacon_PAM_In_PwrCh_ID_State_BitsMask_double		= CAN_IVar5_telemetry.CAN_Beacon_PAM_In_PwrCh_ID_State_BitsMask;
+    CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch1_Median_Temp_double 				= CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch1_Median_Temp;
+    CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch2_Median_Temp_double 				= CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch2_Median_Temp;
+    CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch3_Median_Temp_double 				= CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch3_Median_Temp;
+    CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch4_Median_Temp_double 				= CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch4_Median_Temp;
+    CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch5_Median_Temp_double 				= CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch5_Median_Temp;
+    CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch6_Median_Temp_double					= CAN_IVar5_telemetry.CAN_Beacon_SP_TM_Ch6_Median_Temp;
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_PBM_Char_Dischar_Power_double		= CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_PBM_Char_Dischar_Power;
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_Heating_Elements_Power_double		= CAN_IVar5_telemetry.CAN_Beacon_PBM_Heating_Element_State_BitMask;
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_Battery_Level_mAh_double			= CAN_IVar5_telemetry.CAN_Beacon_PBM_Total_Battery_Level_mAh;
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Heating_Element_State_BitMask_double		= CAN_IVar5_telemetry.CAN_Beacon_PBM_Heating_Element_State_BitMask;
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON_double[0]	= CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[0];
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON_double[1]	= CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[1];
+    CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON_double[2]	= CAN_IVar5_telemetry.CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[2];
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON_double[0]	= CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[0];
+    CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON_double[1]	= CAN_IVar5_telemetry.CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[1];
 }
 
 
