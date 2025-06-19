@@ -8,6 +8,7 @@ extern "C" {
 #include "stm32l4xx.h"
 #include "Error_Handler.h"
 
+#define CAN_SAT_ID         			    0x8065
 #define CAN_ID_DEV            			0x03
 
 #define CAN_ID_VAR_ROM					0x00
@@ -630,26 +631,23 @@ struct CAN_IVar4 {
 struct CAN_IVar5{
     //-------------------------------------------------------------Offset ------- Constant --------------------- Description ------------------------//
     // -------------------  Beacon  ------------------ //
-    uint8_t CAN_Beacon_PMM_Switch_Active_CPU;				        //+0       |  const = 0x                 	|  Переключатель основной/резервный МАЯК
-    int8_t  CAN_Beacon_PMM_Temp_Sensor;                             //+1       |  const = 0x                 	|  PMM датчик 1
-    uint16_t CAN_Beacon_EPS_Main_Bus_Voltage;				        //+2,3    |  const = 0x                 	|  Напряжение внутренней силовой шины СЭС
-    uint32_t CAN_Beacon_EPS_CubeSat_Total_Cons_Power;               //+4,5,6,7    |  const = 0x                 	|  Полная потребляемая мощность
-    //uint16_t CAN_Beacon_EPS_CubeSat_SubSystem_Cons_Power;           //+6,7    |  const = 0x                 	|  Потребляемая мощность полезной нагрузкой и подсистемами КА
-    uint16_t CAN_Beacon_EPS_Total_PAM_Generation_Power;             //+8,9    |  const = 0x                 	|  Полная вырабатываемая мощность СБ
-    int8_t  CAN_Beacon_SP_TM_Ch1_Median_Temp;                       //+10       |  const = 0x                 	|  Медианная температура панели +X
-    int8_t  CAN_Beacon_SP_TM_Ch2_Median_Temp;                       //+11       |  const = 0x                 	|  Медианная температура панели -X
-    int8_t  CAN_Beacon_SP_TM_Ch3_Median_Temp;                       //+12       |  const = 0x                 	|  Медианная температура панели +Y
-    int8_t  CAN_Beacon_SP_TM_Ch4_Median_Temp;                       //+13       |  const = 0x                 	|  Медианная температура панели -Y
-    int8_t  CAN_Beacon_SP_TM_Ch5_Median_Temp;                       //+14       |  const = 0x                 	|  Медианная температура откидной панели +Y
-    int8_t  CAN_Beacon_SP_TM_Ch6_Median_Temp;                       //+15       |  const = 0x                 	|  Медианная температура откидной панели -Y
-    int16_t CAN_Beacon_PBM_Total_PBM_Char_Dischar_Power;            //+16,17    |  const = 0x                 	|  Полная мощность зарядки/разрядки АБ
-    uint16_t CAN_Beacon_PBM_Total_Heating_Elements_Power;			//+18,19    |  const = 0x                	|  Полная мощность нагревателей АБ
-    uint16_t CAN_Beacon_PBM_Total_Battery_Level_mAh;			    //+20,21    |  const = 0x                 	|  Полный уровень заряда АБ в mAh
-    uint16_t  CAN_Beacon_PBM_Heating_Element_State_BitMask;         //+22,23       |  const = 0x                 	|  Текущее состояние Термостата
-    uint8_t  CAN_Beacon_PBM_Error_Status_BitsMask_BEACON[2];        //+24,25 |  const = 0x                 	|  Статусы отказов (ошибок)АБ, битовая маска (МАЯК)
-    uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask_BEACON[3];        //+26,27,28    |  const = 0x                 	|  Статус отказов элементов СЭС, битовая маска (МАЯК)
-                                                                	//Total 29 byte
-    uint8_t Protaction_GAP_Beacon[64];
+	int8_t   CAN_Beacon_PMM_Temp_Sensor;                           //+0    	   |  const = 0x                 	|  PMM датчик 1
+	uint16_t CAN_Beacon_EPS_Main_Bus_Voltage;				       //+1,2      |  const = 0x                 	|  Напряжение внутренней силовой шины СЭС
+	uint32_t CAN_Beacon_EPS_CubeSat_Total_Cons_Power;              //+3,4,5,6  |  const = 0x                 	|  Полная потребляемая мощность
+	uint16_t CAN_Beacon_EPS_Total_PAM_Generation_Power;            //+7,8      |  const = 0x                 	|  Полная вырабатываемая мощность СБ
+	uint16_t CAN_Beacon_PBM_Total_Battery_Level_mAh;			   //+9,10     |  const = 0x                 	|  Полный уровень заряда АБ в mAh
+	int16_t  CAN_Beacon_PBM_Total_PBM_Char_Dischar_Power;          //+11,12    |  const = 0x                 	|  Полная мощность зарядки/разрядки АБ
+	uint16_t CAN_Beacon_PBM_Heating_Element_State_BitMask;         //+13,14    |  const = 0x                 	|  Текущее состояние Термостата
+	uint8_t  CAN_Beacon_PBM_Error_Status_BitsMask[2];     		   //+15,16    |  const = 0x                 	|  Статусы отказов (ошибок)АБ, битовая маска (МАЯК)
+	uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask[3];      		   //+17,18,19 |  const = 0x                 	|  Статус отказов элементов СЭС, битовая маска (МАЯК)
+	uint16_t CAN_Beacon_TMIx_PMM_PWR_Ch_State_BitMask;			   //20, 21
+	uint16_t CAN_Beacon_TMIx_PDM_PWR_Ch_State_BitsMask;			   //22, 23
+	uint32_t CAN_Beacon_TMIx_PDM_Error_BitMask; 				   //24, 25, 26, 27
+	uint16_t CAN_Beacon_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;   //28,29
+	uint32_t CAN_Beacon_TMIx_PMM_Error_BitMask;					   //30,31,32,33
+	uint8_t  CAN_Beacon_TMIx_PMM_Switch_Active_CPU; 			   //34
+
+    uint8_t Protaction_GAP_Beacon[58];							   //35...92
 
     // -------------------  ТМИ 0 // PMM // ------------------ //
     uint8_t Protaction_GAP_TMI0[53];                                //+93...145|  const = 0x
