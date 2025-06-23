@@ -639,9 +639,9 @@ struct CAN_IVar5{
 	int16_t  CAN_Beacon_PBM_Total_PBM_Char_Dischar_Power;          //+11,12    |  const = 0x                 	|  Полная мощность зарядки/разрядки АБ
 	uint16_t CAN_Beacon_PBM_Heating_Element_State_BitMask;         //+13,14    |  const = 0x                 	|  Текущее состояние Термостата
 	uint8_t  CAN_Beacon_PBM_Error_Status_BitsMask[2];     		   //+15,16    |  const = 0x                 	|  Статусы отказов (ошибок)АБ, битовая маска (МАЯК)
-	uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask[3];      		   //+17,18,19 |  const = 0x                 	|  Статус отказов элементов СЭС, битовая маска (МАЯК)
+	uint8_t  CAN_Beacon_EPS_Error_Status_BitsMask[3];      	       //+17,18,19 |  const = 0x                 	|  Статус отказов элементов СЭС, битовая маска (МАЯК)
 	uint16_t CAN_Beacon_TMIx_PMM_PWR_Ch_State_BitMask;			   //20, 21
-	uint16_t CAN_Beacon_TMIx_PDM_PWR_Ch_State_BitsMask;			   //22, 23
+	uint16_t CAN_Beacon_TMIx_PDM_PWR_Ch_State_BitsMask;		       //22, 23
 	uint32_t CAN_Beacon_TMIx_PDM_Error_BitMask; 				   //24, 25, 26, 27
 	uint16_t CAN_Beacon_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;   //28,29
 	uint32_t CAN_Beacon_TMIx_PMM_Error_BitMask;					   //30,31,32,33
