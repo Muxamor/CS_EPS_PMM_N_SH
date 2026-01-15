@@ -31,6 +31,7 @@ ErrorStatus PAM_init(_PAM *pam_ptr){
 
 	//Automatic protection of switching to backup power supply
     if( (pam_ptr->State_DC_DC == ENABLE) && ( (pam_ptr->PG_DC_DC == ERROR) || (pam_ptr->Error_State_DC_DC == ERROR) ) && (pam_ptr->State_LDO == DISABLE) ){
+    	error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_DC_DC, DISABLE);
 	    error_status += PAM_Set_state_PWR_Supply(pam_ptr, PAM_PWR_LDO, ENABLE);
         pam_ptr->State_LDO = ENABLE;
 	}

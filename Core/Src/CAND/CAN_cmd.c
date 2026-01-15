@@ -1400,7 +1400,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	//---
 
 	//***
-	CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power            =  0x0000;
+	CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power           =  0x0000;
 	for( num_pwr_ch = 0; num_pwr_ch < PDM_PWR_Ch_quantity; num_pwr_ch++ ){
 	    CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power       =  CAN_IVar5_telemetry.CAN_TMIx_EPS_CubeSat_SubSystem_Cons_Power + eps_p.eps_pdm_ptr->PWR_Channel[num_pwr_ch].Power_val;
 	}
@@ -1534,10 +1534,12 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PAM_Temp_Sensor4                        = eps_p.eps_pam_ptr->Temp_sensor[3];
     CAN_IVar5_telemetry.CAN_TMIx_PAM_Median_Temp                         = GetMedian(eps_p.eps_pam_ptr->Temp_sensor, 4 );
 
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_ID_State_BitsMask = 0x00;
     for( num_pwr_ch = 0, move_bit_pos = 0; num_pwr_ch <PAM_PWR_IN_Ch_quantity; num_pwr_ch++, move_bit_pos ++ ){
         CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_ID_State_BitsMask      = CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_ID_State_BitsMask | (eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].State_ID_In << move_bit_pos);
     }
 
+    CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_Error_BitsMask = 0x00;
     for( num_pwr_ch = 0, move_bit_pos = 0; num_pwr_ch <PAM_PWR_IN_Ch_quantity; num_pwr_ch++, move_bit_pos ++ ){
         CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_Error_BitsMask         = CAN_IVar5_telemetry.CAN_TMIx_PAM_In_PwrCh_Error_BitsMask | (eps_p.eps_pam_ptr->PWR_IN_Channel[num_pwr_ch].Error_PWR_Mon << move_bit_pos);
     }
@@ -2145,37 +2147,6 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch5_Median_Temp                  = 0x1D;
 	CAN_IVar5_telemetry.CAN_TMIx_SP_TM_Ch6_Median_Temp                  = 0x1E;
 
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[0]                            = 0xC9;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[1]                            = 0xCA;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[2]                            = 0xCB;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[3]                            = 0xCD;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[4]                            = 0xCE;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[5]                            = 0xCF;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[6]                            = 0xD0;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[7]                            = 0xD1;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[8]                            = 0xD2;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[9]                            = 0xD3;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[10]                           = 0xD4;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[11]                           = 0xD5;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[12]                           = 0xD6;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[13]                           = 0xD7;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[14]                           = 0xD8;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[15]                           = 0xD9;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[16]                           = 0xDA;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[17]                           = 0xDB;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[18]                           = 0xDC;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[19]                           = 0xDD;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[20]                           = 0xDE;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[21]                           = 0xDF;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[22]                           = 0xE0;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[23]                           = 0xE1;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[24]                           = 0xE2;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[25]                           = 0xE3;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[26]                           = 0xE4;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[27]                           = 0xE5;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[28]                           = 0xE6;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[29]                           = 0xE7;
-	CAN_IVar5_telemetry.CAN_TMI1_Reserved[30]                           = 0xE8;
 
 
 	CAN_IVar5_telemetry.CAN_TMI2_version                                = 0x0201;
@@ -2253,19 +2224,7 @@ void CAN_Var5_fill_telemetry_const(void){
 	CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor2                           = 0x65;
 	CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor3                           = 0x66;
 	CAN_IVar5_telemetry.CAN_PBM4_Temp_Sensor4                           = 0x67;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[0]                            = 0x68;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[1]                            = 0x69;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[2]                            = 0x6A;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[3]                            = 0x6B;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[4]                            = 0x6C;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[5]                            = 0x6D;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[6]                            = 0x6E;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[7]                            = 0x6F;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[8]                            = 0x70;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[9]                            = 0x71;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[10]                           = 0x72;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[11]                           = 0x73;
-	CAN_IVar5_telemetry.CAN_TMI2_Reserved[12]                           = 0x74;
+
 
 
 	CAN_IVar5_telemetry.CAN_TMI3_version                                = 0x7675;
