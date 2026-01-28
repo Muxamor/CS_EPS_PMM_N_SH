@@ -12,7 +12,7 @@ typedef enum {
   ERROR = !SUCCESS,
 } ErrorStatus; */
 
-#include "PBM/pbm_config.h"
+#include "PBM_T1/pbm_T1_config.h"
 
 // Structure PDM
 typedef struct{
