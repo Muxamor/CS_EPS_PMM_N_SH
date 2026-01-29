@@ -104,10 +104,10 @@ void PMM_CPUm_Check_Active_CPU( _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_CO
         if( error_status == SUCCESS ){
 
             if ( save_value_Active_CPU != eps_p.eps_pmm_ptr->Active_CPU ) {
-                if( eps_p.eps_pmm_ptr->Active_CPU == 1 ){
-                    eps_p.eps_pmm_ptr->Active_CPU = 1;
-                } else {
+                if( save_value_Active_CPU == 0 ){
                     eps_p.eps_pmm_ptr->Active_CPU = 0;
+                } else {
+                    eps_p.eps_pmm_ptr->Active_CPU = 1;
                     //eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
                 }
             }
