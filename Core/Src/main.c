@@ -28,6 +28,7 @@
 
 //extern uint32_t SysTick_Counter;
 //extern uint64_t CAN_cmd_mask_status;
+extern uint32_t SysTick_Second_Counter;
 extern uint8_t CAN1_exchange_data_flag;
 extern uint8_t CAN2_exchange_data_flag;
 
@@ -42,6 +43,7 @@ int main(void){
    uint32_t Passive_CPU_start_time_wait_data = 0 ;
 
     SysTick_Counter = 0;
+    SysTick_Second_Counter = 0;
     CAN_cmd_Buff.length = 0;
     CAN1_exchange_data_flag = 0;
     CAN2_exchange_data_flag = 0;

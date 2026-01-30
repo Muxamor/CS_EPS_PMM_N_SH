@@ -23,6 +23,7 @@
 
 
 uint32_t SysTick_Counter;
+uint32_t SysTick_Second_Counter;
 
 /** @brief Initialization of basic functionality
  * @retval None
