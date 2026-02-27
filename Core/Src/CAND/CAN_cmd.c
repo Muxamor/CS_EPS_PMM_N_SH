@@ -1308,21 +1308,10 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	uint8_t num_pwr_ch = 0;
 	uint8_t move_bit_pos = 0;
 	uint8_t PBM_Number = 0, Branch_Number = 0, Heat_number = 0;
-	// static uint32_t Second_Counter = 0;
 
-	//if( ((uint32_t)(SysTick_Counter - Second_Counter)) > ((uint32_t) 1000) ){
-	//    CAN_IVar4_RegCmd.CAN_Global_Time++;
-	//    Second_Counter = SysTick_Counter;
-	//}
-
-	if( SysTick_Second_Counter >= ((uint32_t) 1000) ){
-
-		if(SysTick_Second_Counter >= ((uint32_t) 2000)){
-			CAN_IVar4_RegCmd.CAN_Global_Time++;
-			SysTick_Second_Counter = SysTick_Second_Counter-1000;
-	    }
+	while(SysTick_Second_Counter >= 1000){
 		CAN_IVar4_RegCmd.CAN_Global_Time++;
-		SysTick_Second_Counter = SysTick_Second_Counter + (SysTick_Second_Counter-1000);
+		SysTick_Second_Counter = SysTick_Second_Counter - 1000;
 	}
 
 	// -------------------  ТМИ 0  ------------------ //
