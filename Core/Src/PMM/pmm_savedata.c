@@ -506,7 +506,7 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
 */
 ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
 
-    int8_t error_status = SUCCESS;
+    int8_t error_status = ERROR;
 
     #ifdef DEBUGprintf
         printf("Enter in PMM_Sync_and_Save_Settings_A_P_CPU\n");
@@ -523,30 +523,32 @@ ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
                 PMM_Damage_Check_UART_m_b_ActiveCPU(UART_M_eps_comm, UART_B_eps_comm, eps_p);
 
                 if( eps_p.eps_pmm_ptr->PMM_save_conf_flag == SET ){
-                    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                    UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PMM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
                 }
 
                 if( eps_p.eps_pdm_ptr->PDM_save_conf_flag == SET ){
-                    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                    UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PDM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
                 }
 
                 if( eps_p.eps_pam_ptr->PAM_save_conf_flag == SET ){
-                    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                    UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PAM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
                 }
 
                 if( PBM_T1_CheckSaveSetupFlag(eps_p.eps_pbm_ptr) == SET ){
-                    error_status += UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                    UART_EPS_Send_CMD(UART_EPS_ID_CMD_SAVE_PBM_struct, 0, UART_M_eps_comm, UART_B_eps_comm, eps_p);
                 }
             }
         }
 
         //Save setting to FRAM for Active and Passive CPU
-        error_status += PMM_FRAM_write_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
+        error_status = PMM_FRAM_write_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
 
-        eps_p.eps_pmm_ptr->PMM_save_conf_flag = RESET;
-        eps_p.eps_pdm_ptr->PDM_save_conf_flag = RESET;
-        eps_p.eps_pam_ptr->PAM_save_conf_flag = RESET;
-        PBM_T1_ClearSaveSetupFlag( eps_p.eps_pbm_ptr );
+        if(error_status == SUCCESS ){
+        	eps_p.eps_pmm_ptr->PMM_save_conf_flag = RESET;
+        	eps_p.eps_pdm_ptr->PDM_save_conf_flag = RESET;
+        	eps_p.eps_pam_ptr->PAM_save_conf_flag = RESET;
+        	PBM_T1_ClearSaveSetupFlag( eps_p.eps_pbm_ptr );
+        }
     }
 
     if( error_status != SUCCESS ){
