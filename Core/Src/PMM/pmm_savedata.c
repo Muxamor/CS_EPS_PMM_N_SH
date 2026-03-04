@@ -506,7 +506,7 @@ ErrorStatus PMM_Get_Settings_From_NeighborCPU ( _EPS_Param eps_p ){
 */
 ErrorStatus PMM_Sync_and_Save_Settings_A_P_CPU( _EPS_Param eps_p ){
 
-    int8_t error_status = ERROR;
+    int8_t error_status = SUCCESS;
 
     #ifdef DEBUGprintf
         printf("Enter in PMM_Sync_and_Save_Settings_A_P_CPU\n");
