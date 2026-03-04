@@ -178,10 +178,6 @@ int main(void){
     //Initialization CAN for passive CPU
 	}else{
         PMM_Set_mode_Passive_CPU( eps_param );
-        I2C4_DeInit();
-        PWM_DeInit_Ch3_Ch4();
-		CAN_DeInit_eps(CAN1);
-		CAN_DeInit_eps(CAN2);
         PMM_Start_Time_Check_UART_PassiveCPU = SysTick_Counter;
 	}
 
