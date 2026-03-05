@@ -548,6 +548,7 @@ ErrorStatus PMM_ADS1015_average_meas(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 
 			timeout = 0;
 			error_I2C = ERROR_N;
+			conv_status = 0;
 
 			while(!conv_status){
 				error_I2C = ADS1015_read_conv_status(I2Cx, I2C_ADS1015_addr, &conv_status);
