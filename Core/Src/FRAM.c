@@ -221,6 +221,7 @@ ErrorStatus FRAM_majority_read_byte(I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, ui
 
 
     error_I2C = ERROR_N;
+    i = 0;
     while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
         error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_1) + offset), &seg1_byte);
@@ -234,6 +235,7 @@ ErrorStatus FRAM_majority_read_byte(I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, ui
     error_status = error_I2C;
 
     error_I2C = ERROR_N;
+    i = 0;
     while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
         error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_2) + offset), &seg2_byte);
@@ -247,6 +249,7 @@ ErrorStatus FRAM_majority_read_byte(I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, ui
     error_status = error_status + error_I2C;
 
     error_I2C = ERROR_N;
+    i = 0;
     while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
         error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_3) + offset), &seg3_byte);
