@@ -211,75 +211,59 @@ ErrorStatus FRAM_majority_read_data_two_fram(I2C_TypeDef *I2Cx, uint8_t I2C_addr
 */
 ErrorStatus FRAM_majority_read_byte(I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, uint32_t offset, uint8_t *read_byte){
 
-	uint8_t seg1_byte = 114;
-	uint8_t seg2_byte = 15;
-	uint8_t seg3_byte = 65;
-
-    int8_t error_I2C = ERROR_N; //0-OK -1-ERROR_N
-    int8_t error_status = SUCCESS;
+	uint8_t seg1_byte = 0;
+	uint8_t seg2_byte = 0;
+	uint8_t seg3_byte = 0;
+	int8_t seg1_error_I2C = ERROR_N; //0-OK -1-ERROR
+	int8_t seg2_error_I2C = ERROR_N; //0-OK -1-ERROR
+	int8_t seg3_error_I2C = ERROR_N; //0-OK -1-ERROR
     uint8_t i = 0;
 
-
-    error_I2C = ERROR_N;
     i = 0;
-    while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+    while( ( seg1_error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-        error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_1) + offset), &seg1_byte);
+    	seg1_error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_1) + offset), &seg1_byte);
 
-        if( error_I2C != SUCCESS ){
-            i++;
-            LL_mDelay( fram_i2c_delay_att_conn );
-        }
-    }
+    	if( seg1_error_I2C != SUCCESS ){
+    		i++;
+    		LL_mDelay( fram_i2c_delay_att_conn );
+    	}
+	}
 
-    error_status = error_I2C;
+	i = 0;
+	while( ( seg2_error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-    error_I2C = ERROR_N;
-    i = 0;
-    while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+		seg2_error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_2) + offset), &seg2_byte);
 
-        error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_2) + offset), &seg2_byte);
+		if( seg2_error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( fram_i2c_delay_att_conn );
+		}
+	}
 
-        if( error_I2C != SUCCESS ){
-            i++;
-            LL_mDelay( fram_i2c_delay_att_conn );
-        }
-    }
+	i = 0;
+	while( ( seg3_error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
 
-    error_status = error_status + error_I2C;
+		seg3_error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_3) + offset), &seg3_byte);
 
-    error_I2C = ERROR_N;
-    i = 0;
-    while( ( error_I2C != SUCCESS ) && ( i < fram_i2c_attempt_conn ) ){//Enable/Disable INPUT Efuse power channel.
+		if( seg3_error_I2C != SUCCESS ){
+			i++;
+			LL_mDelay( fram_i2c_delay_att_conn );
+		}
+	}
 
-        error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, ((uint32_t)(FRAM_Addr_segment_3) + offset), &seg3_byte);
+	if( seg1_error_I2C == SUCCESS && seg2_error_I2C == SUCCESS && seg1_byte == seg2_byte ){
+		*read_byte = seg1_byte;
 
-        if( error_I2C != SUCCESS ){
-            i++;
-            LL_mDelay( fram_i2c_delay_att_conn );
-        }
-    }
+	}else if( seg1_error_I2C == SUCCESS && seg3_error_I2C == SUCCESS && seg1_byte == seg3_byte ){
+		*read_byte = seg1_byte;
 
-    error_status = error_status + error_I2C;
+	}else if( seg2_error_I2C == SUCCESS && seg3_error_I2C == SUCCESS && seg2_byte == seg3_byte ){
+		*read_byte = seg2_byte;
 
-    if( error_status != -3 ){
-
-        if( seg1_byte == seg2_byte ){
-            *read_byte = seg1_byte;
-
-        }else if( seg1_byte == seg3_byte ){
-            *read_byte = seg1_byte;
-
-        }else if( seg2_byte == seg3_byte ){
-            *read_byte = seg2_byte;
-
-        }else{
-            return ERROR_N;
-        }
-
-    }else{
-        return ERROR_N;
-    }
+	}else{
+		return ERROR;
+	}
 
 	return SUCCESS;
 }
