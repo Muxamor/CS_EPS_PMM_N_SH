@@ -36,6 +36,7 @@ ErrorStatus FRAM_majority_read_data(I2C_TypeDef *I2Cx, uint8_t I2C_fram_addr, ui
 ErrorStatus FRAM_majority_read_data_two_fram(I2C_TypeDef *I2Cx, uint8_t I2C_addr_fram_main, uint8_t I2C_addr_fram_backup, uint8_t *ptr_data, uint32_t data_size );
 
 ErrorStatus FRAM_majority_read_byte(I2C_TypeDef *I2Cx, uint8_t fram_addr, uint32_t offset, uint8_t *read_byte);
+static ErrorStatus FRAM_Read_Byte_With_Retry( I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, uint32_t addr, uint8_t *read_byte );
 
 #ifdef __cplusplus
 }
