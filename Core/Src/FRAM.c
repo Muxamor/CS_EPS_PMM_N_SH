@@ -200,6 +200,23 @@ ErrorStatus FRAM_majority_read_data_two_fram(I2C_TypeDef *I2Cx, uint8_t I2C_addr
 	return SUCCESS;
 }
 
+ErrorStatus FRAM_Read_Byte_With_Retry( I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, uint32_t addr, uint8_t *read_byte ){
+
+    uint8_t i = 0;
+    ErrorStatus error_I2C = ERROR_N;
+
+    while ((error_I2C != SUCCESS) && (i < fram_i2c_attempt_conn)) {
+        error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, addr, read_byte);
+
+        if (error_I2C != SUCCESS) {
+            i++;
+            LL_mDelay(fram_i2c_delay_att_conn);
+        }
+    }
+
+    return error_I2C;
+}
+
 
 /** @brief	Reading single byte from three segments of FRAM with subsequent comparison of them by
 	majoritary method.
@@ -233,25 +250,10 @@ ErrorStatus FRAM_majority_read_byte( I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, u
         *read_byte = seg2_byte;
 
     }else{
-        return ERROR;
+        return ERROR_N;
     }
 
 	return SUCCESS;
 }
 
-static ErrorStatus FRAM_Read_Byte_With_Retry( I2C_TypeDef *I2Cx, uint8_t i2c_fram_addr, uint32_t addr, uint8_t *read_byte ){
 
-    uint8_t i = 0;
-    ErrorStatus error_I2C = ERROR_N;
-
-    while ((error_I2C != SUCCESS) && (i < fram_i2c_attempt_conn)) {
-        error_I2C = I2C_Read_byte_St_ReSt(I2Cx, i2c_fram_addr, I2C_SIZE_REG_ADDR_U16, addr, read_byte);
-
-        if (error_I2C != SUCCESS) {
-            i++;
-            LL_mDelay(fram_i2c_delay_att_conn);
-        }
-    }
-
-    return error_I2C;
-}
