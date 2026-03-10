@@ -1392,65 +1392,62 @@ void PBM_T1_CalcTotalCapacity(_PBM_T1 pbm[], uint8_t PBM_number) {
 void PBM_T1_CheckLowLevelEnergy(_PBM_T1 pbm[], uint8_t PBM_number) {
 
 	int16_t Voltage_Branch = 0;
-	uint8_t Branch_Number = 0;
-	uint8_t count_low_energy = 0;
-	uint8_t count_reset_low_energy = 0;
-	uint8_t count_zero_energy = 0;
-	uint8_t count_reset_zero_energy = 0;
+		uint8_t Branch_Number = 0;
+		uint8_t count_low_energy = 0;
+		uint8_t count_reset_low_energy = 0;
+		uint8_t count_zero_energy = 0;
+		uint8_t count_reset_zero_energy = 0;
 
-	for (Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+		for (Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
 
-		if(PBM_T1_BRANCH_BAT_QUANTITY == 1){
-			Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0];
-		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 2){
-			Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1];
-		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 3){
-			Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1] +
-					pbm[PBM_number].Branch[Branch_Number].Voltage[2];
-		} else if(PBM_T1_BRANCH_BAT_QUANTITY == 4){
-			Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1] +
-					pbm[PBM_number].Branch[Branch_Number].Voltage[2] + pbm[PBM_number].Branch[Branch_Number].Voltage[3];
-		}
-
-		if ((Voltage_Branch <= PBM_T1_LOW_ENERGY_EDGE) && (pbm[PBM_number].Branch[Branch_Number].Error_MAX17320 == SUCCESS) &&
-				(pbm[PBM_number].Branch[Branch_Number].DchgControlFlag == ENABLE)) {
-
-			count_low_energy++;
-
-		}else if( pbm[PBM_number].Low_Energy_Flag == 1 ){
-
-		    if((Voltage_Branch >= PBM_T1_NORMAL_ENERGY_EDGE) || (pbm[PBM_number].Branch[Branch_Number].Error_MAX17320 == ERROR) ||
-		    		(pbm[PBM_number].Branch[Branch_Number].DchgControlFlag == DISABLE)) {
-
-		    	count_reset_low_energy++;
+			if(PBM_T1_BRANCH_BAT_QUANTITY == 1){
+				Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0];
+			} else if(PBM_T1_BRANCH_BAT_QUANTITY == 2){
+				Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1];
+			} else if(PBM_T1_BRANCH_BAT_QUANTITY == 3){
+				Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1] +
+						pbm[PBM_number].Branch[Branch_Number].Voltage[2];
+			} else if(PBM_T1_BRANCH_BAT_QUANTITY == 4){
+				Voltage_Branch = pbm[PBM_number].Branch[Branch_Number].Voltage[0] + pbm[PBM_number].Branch[Branch_Number].Voltage[1] +
+						pbm[PBM_number].Branch[Branch_Number].Voltage[2] + pbm[PBM_number].Branch[Branch_Number].Voltage[3];
 			}
+
+			if ((Voltage_Branch <= PBM_T1_LOW_ENERGY_EDGE) && (pbm[PBM_number].Branch[Branch_Number].Error_MAX17320 == SUCCESS) &&
+					(pbm[PBM_number].Branch[Branch_Number].DchgControlFlag == ENABLE)) {
+
+				count_low_energy++;
+
+			}else if( pbm[PBM_number].Low_Energy_Flag == 1 ){
+
+			    if((Voltage_Branch >= PBM_T1_NORMAL_ENERGY_EDGE) || (pbm[PBM_number].Branch[Branch_Number].Error_MAX17320 == ERROR) ||
+			    		(pbm[PBM_number].Branch[Branch_Number].DchgControlFlag == DISABLE)) {
+
+			    	count_reset_low_energy++;
+					count_reset_zero_energy++;
+				}
+			}
+
+			if ((Voltage_Branch <= PBM_T1_ZERO_ENERGY_EDGE) && (pbm[PBM_number].Branch[Branch_Number].Error_MAX17320 == SUCCESS) &&
+					(pbm[PBM_number].Branch[Branch_Number].DchgControlFlag == ENABLE)) {
+				count_zero_energy++;
+			}
+
 		}
-	}
 
-	if (count_low_energy != 0){
-		pbm[PBM_number].Low_Energy_Flag = 1;
+		if (count_low_energy != 0){
+			pbm[PBM_number].Low_Energy_Flag = 1;
 
-	} else if (count_reset_low_energy == PBM_T1_BRANCH_QUANTITY){
-		pbm[PBM_number].Low_Energy_Flag = 0;
-	}
-
-	for (Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-		if( (Voltage_Branch <= PBM_T1_ZERO_ENERGY_EDGE ) && (pbm[PBM_number].Low_Energy_Flag == 1) ){
-
-			count_zero_energy++;
-
-		}else if(pbm[PBM_number].Low_Energy_Flag == 0) {
-
-			count_reset_zero_energy++;
-
+		} else if (count_reset_low_energy == PBM_T1_BRANCH_QUANTITY){
+			pbm[PBM_number].Low_Energy_Flag = 0;
 		}
-	}
-	if (count_zero_energy != 0){
-		pbm[PBM_number].Zero_Energy_Flag = 1;
 
-	} else if (count_reset_zero_energy == PBM_T1_BRANCH_QUANTITY){
-		pbm[PBM_number].Zero_Energy_Flag = 0;
-	}
+
+		if (count_zero_energy != 0){
+			pbm[PBM_number].Zero_Energy_Flag = 1;
+
+		} else if (count_reset_zero_energy == PBM_T1_BRANCH_QUANTITY){
+			pbm[PBM_number].Zero_Energy_Flag = 0;
+		}
 }
 
 /** @brief	Reset MAX17320  for selected branch.
