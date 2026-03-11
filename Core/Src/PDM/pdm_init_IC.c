@@ -264,7 +264,7 @@ ErrorStatus PDM_Power_Down_TMP1075( _PDM *pdm_ptr, I2C_TypeDef *I2Cx, uint8_t tm
                             pdm_ptr->Temp_sensor[3] = 0x7F;
                             pdm_ptr->Error_temp_sensor_4 = ERROR;
                         }else{
-                            pdm_ptr->Temp_sensor[2] = 0x00;
+                            pdm_ptr->Temp_sensor[3] = 0x00;
                             pdm_ptr->Error_temp_sensor_4 = SUCCESS;
                         }
                         break;
