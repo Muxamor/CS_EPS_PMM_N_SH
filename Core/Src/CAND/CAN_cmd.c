@@ -216,20 +216,23 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     break;
 
                 case CAN_PMM_Reboot_Passive_CPU_offset:
-                    if ( CAN_IVar4_RegCmd.CAN_PMM_Reboot_Passive_CPU == 0x01) {
-                        #ifdef DEBUGprintf
-                            printf("Get comm. reg. %d ->Reboot Passive CPU\n", CAN_PMM_Reboot_Passive_CPU_offset);
-                        #endif
-                        PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
-                        PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
-                        PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
-                        LL_mDelay(50);
-                        PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
-                        PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
-                        PWM_DeInit_Ch3_Ch4( );
-                        CAN_IVar4_RegCmd.CAN_PMM_Reboot_Passive_CPU = 0x00;
-                    }
-                    break;
+                	if ( CAN_IVar4_RegCmd.CAN_PMM_Reboot_Passive_CPU == 0x01) {
+
+                		if( eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == DISABLE){
+							#ifdef DEBUGprintf
+                				printf("Get comm. reg. %d ->Reboot Passive CPU\n", CAN_PMM_Reboot_Passive_CPU_offset);
+							#endif
+                			PWM_Init_Ch3_Ch4(100000, 50, 0); //F=100kHz, Duty = 50%, tim divider=0
+                			PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH3);
+                			PWM_start_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                			LL_mDelay(50);
+                			PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+                			PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                			PWM_DeInit_Ch3_Ch4( );
+                			CAN_IVar4_RegCmd.CAN_PMM_Reboot_Passive_CPU = 0x00;
+                		}
+                	}
+                	break;
 
                 case CAN_PMM_PWR_CAN_main_offset://Enable/Disable Power main CAN
                     if ( CAN_IVar4_RegCmd.CAN_PMM_PWR_CAN_main == 0x01) {
