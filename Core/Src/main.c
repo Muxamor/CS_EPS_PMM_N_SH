@@ -133,6 +133,7 @@ int main(void){
     PMM_init( pmm_ptr );
 
     //Fill VarID4
+    CAN_IVar4_RegCmd.CAN_Global_Time                       			    = 0;
     CAN_Var4_fill(eps_param);
     if( pmm_ptr->CAN_constatnt_mode == ENABLE){
         CAN_Var5_fill_telemetry_const();

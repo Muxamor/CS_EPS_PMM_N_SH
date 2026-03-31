@@ -2306,7 +2306,7 @@ void CAN_Var5_fill_telemetry_const(void){
 
 void CAN_Var4_fill( _EPS_Param eps_p ){
 
-    CAN_IVar4_RegCmd.CAN_Global_Time                       			    = 0x00;
+    //CAN_IVar4_RegCmd.CAN_Global_Time                       			    = 0x00;
     CAN_IVar4_RegCmd.CAN_Constant_mode                          		= eps_p.eps_pmm_ptr->CAN_constatnt_mode;
     CAN_IVar4_RegCmd.CAN_Common_cmd0                           			= 0x00;
     CAN_IVar4_RegCmd.CAN_Common_cmd1                           			= 0x00;
