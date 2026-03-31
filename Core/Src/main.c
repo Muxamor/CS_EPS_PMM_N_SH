@@ -133,6 +133,7 @@ int main(void){
     //Initialization PMM (active and passive CPU)
     PMM_init( pmm_ptr );
 	
+    CAN_IVar4_RegCmd.CAN_Global_Time                       			    = 0;
     //Fill VarID4
     CAN_Var4_fill(eps_param);
     if( pmm_ptr->CAN_constatnt_mode == ENABLE){
