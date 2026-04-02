@@ -726,7 +726,7 @@ ErrorStatus INA238_Get_Bus_V_int16(I2C_TypeDef *I2Cx, uint8_t I2C_INA238_addr, u
 
     voltage_lsb = 3.125f; //ADC LSB value 3.125mV
 
-    if(INA238_Read_Reg(I2Cx, I2C_INA238_addr, INA238_VSHUNT_REG_ADDR, &bus_volt_reg) != SUCCESS){
+    if(INA238_Read_Reg(I2Cx, I2C_INA238_addr, INA238_VBUS_REG_ADDR, &bus_volt_reg) != SUCCESS){
         return ERROR_N;
     }
 
