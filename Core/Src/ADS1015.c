@@ -656,7 +656,7 @@ ErrorStatus ADS1015_setup_conv_data_rate(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
 		return ERROR_N;
 	}
-	read_reg = (uint16_t)((read_reg & (~(7 << 5))) | rate);
+	read_reg = (uint16_t)((read_reg & (~(7 << 5))) | (rate << 5));
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
 		return ERROR_N;
@@ -682,7 +682,7 @@ ErrorStatus ADS1015_setup_comp_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr,
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
 		return ERROR_N;
 	}
-	read_reg = (uint16_t)((read_reg & (~(1 << 4))) | mode);
+	read_reg = (uint16_t)((read_reg & (~(1 << 4))) | (mode << 4));
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
 		return ERROR_N;
@@ -708,7 +708,7 @@ ErrorStatus ADS1015_setup_comp_pol(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
 		return ERROR_N;
 	}
-	read_reg = (uint16_t)((read_reg & (~(1 << 3))) | polarity);
+	read_reg = (uint16_t)((read_reg & (~(1 << 3))) | (polarity << 3));
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
 		return ERROR_N;
@@ -738,7 +738,8 @@ ErrorStatus ADS1015_setup_latching_comp(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
 		return ERROR_N;
 	}
-	read_reg = (uint16_t)((read_reg & (~(1 << 2))) | mode);
+
+	read_reg = (uint16_t)((read_reg & (~(1 << 2))) | (mode << 2));
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
 		return ERROR_N;
