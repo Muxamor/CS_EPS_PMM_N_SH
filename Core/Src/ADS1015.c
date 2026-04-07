@@ -3,6 +3,8 @@
 #include "ADS1015.h"
 
 
+
+
 /** @brief	Converting RAW code ADC to Volts.
 	@param 	LSB_ADC_SIZE - //LSB quant size ADC with diff. FSR
 			ADS1015_LSB_SIZE_FSR_6144mV = 0.003 V - with FSR  ±6.144V
@@ -47,14 +49,14 @@ int16_t ADS1015_Volts_to_raw(float LSB_ADC_SIZE, float volts ){
 			ADS1015_LSB_SIZE_FSR_1024mV = 0.000500 V - with FSR  ±1.0424V
 			ADS1015_LSB_SIZE_FSR_512mV	= 0.000250 V - with FSR  ±0.512V
 			ADS1015_LSB_SIZE_FSR_256mV	= 0.000125 V - with FSR  ±0.256V
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_get_lsb(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *lsb){
 
-	uint8_t ADC_FSR = -1;
+	uint8_t ADC_FSR = 254U;
 
 	if(ADS1015_read_gain_FSR(I2Cx, I2C_ADS1015_addr, &ADC_FSR) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	switch (ADC_FSR) {
 		case 0:
@@ -82,7 +84,7 @@ ErrorStatus ADS1015_get_lsb(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *
 			*lsb = ADS1015_LSB_SIZE_FSR_256mV;
 			break;
 		default:
-			return ERROR_N;
+			return ERROR;
 			break;
 	}
 	return SUCCESS;
@@ -93,7 +95,7 @@ ErrorStatus ADS1015_get_lsb(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	*meas_voltage - pointer to store measured voltage in millivolts int16 format.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_mVolts_int16(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *meas_voltage){
 
@@ -102,11 +104,11 @@ ErrorStatus ADS1015_read_mVolts_int16(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_add
 	float LSB_ADC_SIZE = 0;
 
 	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	if(ADS1015_read_conv_reg(I2Cx, I2C_ADS1015_addr, &raw_adc) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	adc_meas_voltage = ADS1015_raw_to_Volts( LSB_ADC_SIZE, raw_adc );
@@ -121,7 +123,7 @@ ErrorStatus ADS1015_read_mVolts_int16(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_add
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	*meas_voltage - pointer to store measured voltage in float format.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_Volts_float(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *meas_voltage){
 
@@ -129,10 +131,10 @@ ErrorStatus ADS1015_read_Volts_float(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 	float LSB_ADC_SIZE = 0;
 
 	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS){
-		return ERROR_N;
+		return ERROR;
 	}
 	if(ADS1015_read_conv_reg(I2Cx, I2C_ADS1015_addr, &raw_adc) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	*meas_voltage = ADS1015_raw_to_Volts( LSB_ADC_SIZE, raw_adc);
@@ -145,12 +147,12 @@ ErrorStatus ADS1015_read_Volts_float(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	*config - pointer to variable where will be store value of configuration register.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint16_t *config){
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, config) != 0){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -161,14 +163,14 @@ ErrorStatus ADS1015_read_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr,
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	*read_data - pointer to variable where will be store value of conversion register.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_conv_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *read_data){
 
 	uint16_t data = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONVERSION_REG_ADDR, &data) != 0){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	*read_data = (int16_t)data;
@@ -181,14 +183,14 @@ ErrorStatus ADS1015_read_conv_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, i
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	*read_data - pointer to store value of low threshold register.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_lo_thresh_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *read_data){
 
 	uint16_t data;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_LOW_THRESH_REG_ADDR, &data) != SUCCESS){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	*read_data = (int16_t)data;
@@ -201,7 +203,7 @@ ErrorStatus ADS1015_read_lo_thresh_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	*read_data - pointer to store value of low threshold register in voltage in float format.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *read_data){
 
@@ -209,10 +211,10 @@ ErrorStatus ADS1015_read_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 	float LSB_ADC_SIZE = 0;
 
 	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS){
-		return ERROR_N;
+		return ERROR;
 	}
 	if( ADS1015_read_lo_thresh_reg(I2Cx, I2C_ADS1015_addr, &raw_data_th_lo) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	*read_data = ADS1015_raw_to_Volts( LSB_ADC_SIZE, raw_data_th_lo );
@@ -225,14 +227,14 @@ ErrorStatus ADS1015_read_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	*read_data - pointer to store value of high threshold register.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_hi_thresh_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, int16_t *read_data){
 
 	uint16_t data;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_HIGH_THRESH_REG_ADDR, &data) != SUCCESS){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	*read_data = (int16_t)data;
@@ -245,7 +247,7 @@ ErrorStatus ADS1015_read_hi_thresh_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	*read_data - pointer to store value of high threshold register in voltage in float format.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float *read_data){
 
@@ -253,10 +255,10 @@ ErrorStatus ADS1015_read_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 	float LSB_ADC_SIZE = 0;
 
 	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS){
-		return ERROR_N;
+		return ERROR;
 	}
 	if( ADS1015_read_hi_thresh_reg(I2Cx, I2C_ADS1015_addr, &raw_data_th_hi) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	*read_data = ADS1015_raw_to_Volts( LSB_ADC_SIZE, raw_data_th_hi );
@@ -273,14 +275,14 @@ ErrorStatus ADS1015_read_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 	@param 	*status - pointer to variable where will be store status bit of configuration register.
 			0 : Device is currently performing a conversion
 			1 : Device is not currently performing a conversion
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_conv_status(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *status){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	*status = (uint8_t)((read_reg & 0x8000) >> 15);
 
@@ -301,14 +303,14 @@ ErrorStatus ADS1015_read_conv_status(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 			5 : AINP = AIN1 and AINN = GND
 			6 : AINP = AIN2 and AINN = GND
 			7 : AINP = AIN3 and AINN = GND
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_mux(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	*config = (uint8_t)((read_reg & 0x7000) >> 12);
 
@@ -329,14 +331,14 @@ ErrorStatus ADS1015_read_mux(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_
 			5 : range voltage = ±0.256 V
 			6 : range voltage = ±0.256 V
 			7 : range voltage = ±0.256 V
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_gain_FSR(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	*config = (uint8_t)((read_reg & 0x0E00) >> 9);
 
@@ -350,14 +352,14 @@ ErrorStatus ADS1015_read_gain_FSR(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, u
 	@param 	*config - pointer to variable where will be store operation mode bit of configuration register.
 			0 : Continuous-conversion mode
 			1 : Single-shot mode or power-down state (default)
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_conv_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	*config = (uint8_t)((read_reg & 0x0100) >> 8);
 
@@ -377,7 +379,7 @@ ErrorStatus ADS1015_read_conv_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, 
 			5 : 2400 SPS
 			6 : 3300 SPS
 			7 : 3300 SPS
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_conv_data_rate(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config){
 
@@ -385,9 +387,9 @@ ErrorStatus ADS1015_read_conv_data_rate(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	*config = (uint8_t)((read_reg & 0x00E0) >> 5);
+	*config = (uint8_t)((read_reg >> ADS1015_CONV_DATA_RATE_POS) & ADS1015_CONV_DATA_RATE_MASK);
 
 	return SUCCESS;
 }
@@ -400,16 +402,16 @@ ErrorStatus ADS1015_read_conv_data_rate(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 	@param 	*config - pointer to variable where will be store comparator mode bit of configuration register.
 			0 : Traditional comparator (default)
 			1 : Window comparator
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_comp_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	*config = (uint8_t)((read_reg & 0x0010) >> 4);
+	*config = (uint8_t)((read_reg >> ADS1015_COMP_MODE_POS) & ADS1015_COMP_MODE_MASK);
 
 	return SUCCESS;
 }
@@ -422,16 +424,16 @@ ErrorStatus ADS1015_read_comp_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, 
 	@param 	*config - pointer to variable where will be store comparator polarity bit of configuration register.
 			0 : Active low (default)
 			1 : Active high
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_comp_pol(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	*config = (uint8_t)((read_reg & 0x0008) >> 3);
+	*config = (uint8_t)((read_reg >> ADS1015_COMP_POL_POS) & ADS1015_COMP_POL_MASK);
 
 	return SUCCESS;
 }
@@ -447,16 +449,16 @@ ErrorStatus ADS1015_read_comp_pol(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, u
 			conversion data are read by the master or an appropriate SMBus alert response
 			is sent by the master. The device responds with its address, and it is the lowest
 			address currently asserting the ALERT/RDY bus line
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_latching_comp(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	*config = (uint8_t)((read_reg & 0x04) >> 2);
+	*config = (uint8_t)((read_reg >> ADS1015_LATCHING_COMP_POS) & ADS1015_LATCHING_COMP_MASK);
 
 	return SUCCESS;
 }
@@ -476,14 +478,14 @@ ErrorStatus ADS1015_read_latching_comp(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_ad
 			1 : Assert after two conversions
 			2 : Assert after four conversions
 			3 : Disable comparator and set ALERT/RDY pin to high-impedance (default)
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_read_comp_queue(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t *config){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	*config = (uint8_t)(read_reg & 0x03);
 
@@ -494,18 +496,18 @@ ErrorStatus ADS1015_read_comp_queue(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr,
 /** @brief	Setting default values for all registers.
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_default_values(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr){
 
 	if(ADS1015_write_config_reg(I2Cx, I2C_ADS1015_addr, 0x8583) != 0){
-		return ERROR_N;
+		return ERROR;
 	}
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_LOW_THRESH_REG_ADDR, 0x8000) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_HIGH_THRESH_REG_ADDR, 0x7FF0) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	return SUCCESS;
 }
@@ -515,12 +517,12 @@ ErrorStatus ADS1015_setup_default_values(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	config - variable that will be write to configuration register.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_write_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint16_t config){
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, config) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -530,19 +532,19 @@ ErrorStatus ADS1015_write_config_reg(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 /** @brief	Starting single conversion (when in power-down state).
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_start_single_conv(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr){
 
 	uint16_t read_reg = 0;
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	read_reg = (uint16_t)(read_reg | (1 << 15));
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -562,19 +564,24 @@ ErrorStatus ADS1015_start_single_conv(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_add
 			5 - ADS1015_AINp1_AINnGND : AINP = AIN1 and AINN = GND
 			6 - ADS1015_AINp2_AINnGND : AINP = AIN2 and AINN = GND
 			7 - ADS1015_AINp3_AINnGND : AINP = AIN3 and AINN = GND
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_mux(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t config){
 
 	uint16_t read_reg = 0;
+	uint16_t expected_state = 0;
+
+	if(config > 0x07U){
+		return ERROR;
+	}
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	read_reg = (uint16_t)((read_reg & (~(7 << 12))) | (config << 12));
+	expected_state = (uint16_t)((read_reg & ~(7U << 12)) | ((config & 0x07U) << 12));
 
-	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, expected_state) != SUCCESS ){
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -592,19 +599,24 @@ ErrorStatus ADS1015_setup_mux(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8
 			3 - ADS1015_FSR_1024mV : range voltage = ±1.024 V
 			4 - ADS1015_FSR_512mV  : range voltage = ±0.512 V
 			5 - ADS1015_FSR_256mV  : range voltage = ±0.256 V
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_gain_FSR(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t config){
 
 	uint16_t read_reg = 0;
+	uint16_t expected_state = 0;
+
+	if(config > 0x05U){
+		return ERROR;
+	}
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	read_reg = (uint16_t)((read_reg & (~(7 << 9))) | (config << 9));
+	expected_state = (uint16_t)((read_reg & ~(7U << 9)) | ((config & 0x07U) << 9));
 
-	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, expected_state) != SUCCESS ){
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -617,19 +629,24 @@ ErrorStatus ADS1015_setup_gain_FSR(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, 
 	@param 	mode - variable that will be write to configuration register.
 			0 - ADS1015_CONT_CONV_MODE : Continuous-conversion mode
 			1 - ADS1015_SINGLE_SHOT_MODE : Single-shot mode or power-down state (default)
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_conv_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t mode){
 
 	uint16_t read_reg = 0;
+	uint16_t expected_state = 0;
+
+	if(mode > 0x01U){
+		return ERROR;
+	}
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	read_reg = (uint16_t)((read_reg & (~(1 << 8))) | (mode << 8));
+	expected_state = (uint16_t)((read_reg & ~(1U << 8)) | ((mode & 0x01U) << 8));
 
-	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, expected_state) != SUCCESS ){
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -647,19 +664,25 @@ ErrorStatus ADS1015_setup_conv_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr,
 			4 - ADS1015_1600_SPS : 1600 SPS (default)
 			5 - ADS1015_2400_SPS : 2400 SPS
 			6 - ADS1015_3300_SPS : 3300 SPS
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_conv_data_rate(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t rate){
 
 	uint16_t read_reg = 0;
+	uint16_t expected_state = 0;
+
+	if(rate > 0x06U){
+		return ERROR;
+	}
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	read_reg = (uint16_t)((read_reg & (~(7 << 5))) | (rate << 5));
+	expected_state = (uint16_t)((read_reg & ~(ADS1015_CONV_DATA_RATE_MASK << ADS1015_CONV_DATA_RATE_POS))
+					| ((rate & ADS1015_CONV_DATA_RATE_MASK) << ADS1015_CONV_DATA_RATE_POS));
 
-	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, expected_state) != SUCCESS ){
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -673,19 +696,25 @@ ErrorStatus ADS1015_setup_conv_data_rate(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_
 	@param 	mode - variable that will be write to configuration register.
 			0 - ADS1015_TRADITIONAL_COMP: Traditional comparator (default)
 			1 - ADS1015_WINDOW_COMP : Window comparator
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_comp_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t mode){
 
 	uint16_t read_reg = 0;
+	uint16_t expected_state = 0;
+
+	if(mode > 0x01U){
+		return ERROR;
+	}
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	read_reg = (uint16_t)((read_reg & (~(1 << 4))) | (mode << 4));
+	expected_state = (uint16_t)((read_reg & ~(ADS1015_COMP_MODE_MASK << ADS1015_COMP_MODE_POS))
+					| ((mode & ADS1015_COMP_MODE_MASK) << ADS1015_COMP_MODE_POS));
 
-	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, expected_state) != SUCCESS ){
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -699,19 +728,25 @@ ErrorStatus ADS1015_setup_comp_mode(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr,
 	@param 	polarity - variable that will be write to configuration register.
 			0 - ADS1015_ACTIVE_LOW_POL : Active low (default)
 			1 - ADS1015_ACTIVE_HIGH_POL : Active high
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_comp_pol(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t polarity){
 
 	uint16_t read_reg = 0;
+	uint16_t expected_state = 0;
+
+	if(polarity > 0x01U){
+		return ERROR;
+	}
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	read_reg = (uint16_t)((read_reg & (~(1 << 3))) | (polarity << 3));
+	expected_state = (uint16_t)((read_reg & ~(ADS1015_COMP_POL_MASK << ADS1015_COMP_POL_POS))
+					| ((polarity & ADS1015_COMP_POL_MASK) << ADS1015_COMP_POL_POS));
 
-	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, expected_state) != SUCCESS ){
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -729,19 +764,25 @@ ErrorStatus ADS1015_setup_comp_pol(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, 
 			conversion data are read by the master or an appropriate SMBus alert response
 			is sent by the master. The device responds with its address, and it is the lowest
 			address currently asserting the ALERT/RDY bus line
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_latching_comp(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t mode){
 
 	uint16_t read_reg = 0;
+	uint16_t expected_state = 0;
+
+	if(mode > 0x01U){
+		return ERROR;
+	}
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	read_reg = (uint16_t)((read_reg & (~(1 << 2))) | (mode << 2));
+	expected_state = (uint16_t)((read_reg & ~(ADS1015_LATCHING_COMP_MASK << ADS1015_LATCHING_COMP_POS))
+					| ((mode & ADS1015_LATCHING_COMP_MASK) << ADS1015_LATCHING_COMP_POS));
 
-	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, expected_state) != SUCCESS ){
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -762,19 +803,24 @@ ErrorStatus ADS1015_setup_latching_comp(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 			1 - ADS1015_2_CONVERSION : Assert after two conversions
 			2 - ADS1015_3_CONVERSION : Assert after four conversions
 			3 - ADS1015_DISABLE_COMPARATOR : Disable comparator and set ALERT/RDY pin to high-impedance (default)
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_comp_queue(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, uint8_t mode){
 
 	uint16_t read_reg = 0;
+	uint16_t expected_state = 0;
+
+	if(mode > 0x03U){
+		return ERROR;
+	}
 
 	if(I2C_Read_word_u16_St_ReSt(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, &read_reg) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
-	read_reg = (uint16_t)((read_reg & (~(3 << 0))) | mode);
+	expected_state = (uint16_t)((read_reg & ~(3U << 0)) | (mode & 0x03U));
 
-	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, read_reg) != SUCCESS ){
-		return ERROR_N;
+	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_CONFIG_REG_ADDR, expected_state) != SUCCESS ){
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -785,7 +831,7 @@ ErrorStatus ADS1015_setup_comp_queue(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	th_val_volts - Low threshold value in Volts
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float th_val_volts){
 
@@ -793,12 +839,12 @@ ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 	float LSB_ADC_SIZE = 0;
 
 	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	raw_data = ADS1015_Volts_to_raw( LSB_ADC_SIZE, th_val_volts );
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_LOW_THRESH_REG_ADDR, (uint16_t)raw_data ) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	return SUCCESS;
@@ -809,7 +855,7 @@ ErrorStatus ADS1015_setup_lo_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 	@param 	*I2Cx - pointer to I2C controller, where x is a number (e.x., I2C1, I2C2 etc.).
 	@param 	I2C_ADS1015_addr - 7-bit device address.
 	@param 	th_val_volts - High threshold value in Volts.
-	@retval 0-OK, -1-ERROR_N
+	@retval 0-OK, -1-ERROR
 */
 ErrorStatus ADS1015_setup_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_addr, float th_val_volts){
 
@@ -817,12 +863,12 @@ ErrorStatus ADS1015_setup_hi_thresh_val(I2C_TypeDef *I2Cx, uint8_t I2C_ADS1015_a
 	float LSB_ADC_SIZE = 0;
 
 	if(ADS1015_get_lsb(I2Cx, I2C_ADS1015_addr, &LSB_ADC_SIZE) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 	raw_data = ADS1015_Volts_to_raw( LSB_ADC_SIZE, th_val_volts );
 
 	if(I2C_Write_word_u16_St(I2Cx, I2C_ADS1015_addr, I2C_SIZE_REG_ADDR_U8, (uint32_t)ADS1015_HIGH_THRESH_REG_ADDR, (uint16_t)raw_data ) != SUCCESS ){
-		return ERROR_N;
+		return ERROR;
 	}
 
 	return SUCCESS;

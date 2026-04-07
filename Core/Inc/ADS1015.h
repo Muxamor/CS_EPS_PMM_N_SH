@@ -7,17 +7,17 @@ extern "C" {
 
 /*
 typedef enum {
-  ERROR_N = -1,
+  ERROR = -1,
   SUCCESS = 0,
   ERROR = !SUCCESS,
 } ErrorStatus; */
 
-#define ADS1015_CONVERSION_REG_ADDR				0x00
-#define ADS1015_CONFIG_REG_ADDR			 	 	0x01
-#define ADS1015_LOW_THRESH_REG_ADDR				0x02
-#define ADS1015_HIGH_THRESH_REG_ADDR			0x03
+#define ADS1015_CONVERSION_REG_ADDR		0x00
+#define ADS1015_CONFIG_REG_ADDR			 	0x01
+#define ADS1015_LOW_THRESH_REG_ADDR		0x02
+#define ADS1015_HIGH_THRESH_REG_ADDR	0x03
 
-#define ADS1015_SINGLE_CONVERSION				0x01
+#define ADS1015_SINGLE_CONVERSION			0x01
 
 #define ADS1015_AINp0_AINn1						0x00
 #define ADS1015_AINp0_AINn3						0x01
@@ -32,11 +32,8 @@ typedef enum {
 #define ADS1015_FSR_4096mV						0x01 //FSR  ±4.096V
 #define ADS1015_FSR_2048mV						0x02 //FSR  ±2.048V
 #define ADS1015_FSR_1024mV						0x03 //FSR  ±1.0424V
-#define ADS1015_FSR_512mV						0x04 //FSR  ±0.512V
-#define ADS1015_FSR_256mV						0x05 //FSR  ±0.256V
-//#define ADS1015_FSR_256mV						0x06
-//#define ADS1015_FSR_256mV						0x07
-
+#define ADS1015_FSR_512mV						  0x04 //FSR  ±0.512V
+#define ADS1015_FSR_256mV						  0x05 //FSR  ±0.256V
 
 #define ADS1015_LSB_SIZE_FSR_6144mV			    0.003 		// 3mV LSB size ADC with FSR  ±6.144V
 #define ADS1015_LSB_SIZE_FSR_4096mV				0.002 		// 2mV LSB size ADC with FSR  ±4.096V
@@ -45,31 +42,40 @@ typedef enum {
 #define ADS1015_LSB_SIZE_FSR_512mV				0.000250 	// 0.250 mV LSB size ADC with FSR  ±0.512V
 #define ADS1015_LSB_SIZE_FSR_256mV				0.000125 	// 0.125 mV LSB size ADC with FSR  ±0.256V
 
+#define ADS1015_CONT_CONV_MODE				0x00
+#define ADS1015_SINGLE_SHOT_MODE			0x01
 
-#define ADS1015_CONT_CONV_MODE					0x00
-#define ADS1015_SINGLE_SHOT_MODE				0x01
+/* Raw field values for ADS1015_setup_* APIs. Bit positions are applied in ADS1015.c. */
+#define ADS1015_128_SPS							  0x00
+#define ADS1015_250_SPS							  0x01
+#define ADS1015_490_SPS							  0x02
+#define ADS1015_920_SPS							  0x03
+#define ADS1015_1600_SPS						  0x04
+#define ADS1015_2400_SPS						  0x05
+#define ADS1015_3300_SPS						  0x06
 
-#define ADS1015_128_SPS							0x00
-#define ADS1015_250_SPS							0x20
-#define ADS1015_490_SPS							0x40
-#define ADS1015_920_SPS							0x60
-#define ADS1015_1600_SPS						0x80
-#define ADS1015_2400_SPS						0xA0
-#define ADS1015_3300_SPS						0xC0
+#define ADS1015_TRADITIONAL_COMP		  0x00
+#define ADS1015_WINDOW_COMP					  0x01
 
-#define ADS1015_TRADITIONAL_COMP				0x00
-#define ADS1015_WINDOW_COMP						0x10
+#define ADS1015_ACTIVE_LOW_POL			  0x00
+#define ADS1015_ACTIVE_HIGH_POL			  0x01
 
-#define ADS1015_ACTIVE_LOW_POL					0x00
-#define ADS1015_ACTIVE_HIGH_POL					0x08
+#define ADS1015_NONLATCHING_COMP		  0x00
+#define ADS1015_LATCHING_COMP				  0x01
 
-#define ADS1015_NONLATCHING_COMP				0x00
-#define ADS1015_LATCHING_COMP					0x04
+#define ADS1015_1_CONVERSION				  0x00
+#define ADS1015_2_CONVERSION				  0x01
+#define ADS1015_3_CONVERSION				  0x02
+#define ADS1015_DISABLE_COMPARATOR	  0x03
 
-#define ADS1015_1_CONVERSION					0x00
-#define ADS1015_2_CONVERSION					0x01
-#define ADS1015_3_CONVERSION					0x02
-#define ADS1015_DISABLE_COMPARATOR				0x03
+#define ADS1015_CONV_DATA_RATE_POS             5
+#define ADS1015_CONV_DATA_RATE_MASK            0x07
+#define ADS1015_COMP_MODE_POS                  4
+#define ADS1015_COMP_MODE_MASK                 0x01
+#define ADS1015_COMP_POL_POS                   3
+#define ADS1015_COMP_POL_MASK                  0x01
+#define ADS1015_LATCHING_COMP_POS              2
+#define ADS1015_LATCHING_COMP_MASK             0x01
 
 
 float ADS1015_raw_to_Volts(float LSB_ADC_SIZE, int16_t raw_adc);
