@@ -19,7 +19,7 @@ const CAN_typeRegistrationRec RegistrationRec[] = {
     {& CAN_IVar5_ready_telemetry, sizeof(CAN_IVar5_ready_telemetry), CAN_ProcCallbackTelemetry, CAN_ID_VAR_TELEMETRY, 1},  //256k size, read-only, regarless offset
 	{&(*((uint32_t*) CAN_ROM_ADDR)), 4, CAN_ProcCallbackTelemetry, CAN_ID_VAR_ROM, 1},
 	{&(*((uint32_t*) CAN_RAM_ADDR)), 4, CAN_ProcCallbackTelemetry, CAN_ID_VAR_RAM, 1},
-	{&VarCAN_FlashFragment, 0x80008, CallbackCAN_Flash, 14, CAN_AFLG_NOOFFSET}
+	{&VarCAN_FlashFragment, 0x80008, (void (*)(CAN_TypeDef *, CAN_typeIdxMask, uint16_t, int))CallbackCAN_Flash, 14, CAN_AFLG_NOOFFSET}
 };
 
 
