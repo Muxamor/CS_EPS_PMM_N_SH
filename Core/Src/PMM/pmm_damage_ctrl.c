@@ -338,11 +338,19 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
 void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
 
     uint8_t num_pwr_ch;
+    uint8_t need_rewrite_VarID4_Flag = 0;
 
     if( (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF1 != ERROR) && (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF2 != ERROR)  ){
 
     	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val < PBM_T1_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF1_Voltage_val != 0 )
     			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Power_val < PBM_T1_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF2_Voltage_val != 0) ){
+
+    		if((eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF1 == ENABLE) || (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF2 == ENABLE)
+    				|| (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF1 == ENABLE) || (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF2 == ENABLE) ){
+
+    			need_rewrite_VarID4_Flag = 1;
+    		}
+
 
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF1, DISABLE );
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF2, DISABLE );
@@ -355,10 +363,16 @@ void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
 
         	//Disable TM SP power channels.
         	for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
+        		if( eps_p.eps_pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out == ENABLE){
+        			need_rewrite_VarID4_Flag = 1;
+        		}
             	PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, num_pwr_ch, DISABLE);
         	}
 
-        	CAN_Var4_fill(eps_p);
+        	if(need_rewrite_VarID4_Flag == 1){
+        		CAN_Var4_fill(eps_p);
+        	}
+
     	}
     }
 
