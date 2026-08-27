@@ -159,7 +159,9 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
 
         //Checking quantity error input power monitors on PAM
         for( total_error_pwr_mon_pam = 0, i = 0; i < PAM_PWR_IN_Ch_quantity; i++){
-            total_error_pwr_mon_pam = total_error_pwr_mon_pam + eps_p.eps_pam_ptr->PWR_IN_Channel[i].Error_PWR_Mon;
+        	if (eps_p.eps_pam_ptr->PWR_IN_Channel[i].Current_val > 0){
+        		total_error_pwr_mon_pam = total_error_pwr_mon_pam + eps_p.eps_pam_ptr->PWR_IN_Channel[i].Error_PWR_Mon;
+        	}
         }
 
         //if all is errors it is mean PAM is broken and we go to next stage deploy
