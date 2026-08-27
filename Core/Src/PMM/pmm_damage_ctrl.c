@@ -337,21 +337,31 @@ void PMM_ReInit_EPS( _EPS_Param eps_p ){
 void PMM_ZERO_Energy_PWR_OFF_SubSystem( _EPS_Param eps_p ){
 
     uint8_t num_pwr_ch;
+    uint8_t need_rewrite_VarID4_Flag = 0;
 
     if( (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat1_eF != ERROR) && (eps_p.eps_pmm_ptr->Error_PWR_Mon_Vbat2_eF != ERROR)  ){
 
     	if( (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val < PBM_T1_ZERO_ENERGY_EDGE )  && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat1_eF_Voltage_val != 0 )
     			&& ( eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Power_val < PBM_T1_ZERO_ENERGY_EDGE) && (eps_p.eps_pmm_ptr->PWR_Ch_Vbat2_eF_Voltage_val != 0) ){
 
+    		if((eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat1_eF == ENABLE) || (eps_p.eps_pmm_ptr->PWR_Ch_State_Vbat2_eF == ENABLE)){
+    			need_rewrite_VarID4_Flag = 1;
+    	    }
+
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT1_eF, DISABLE );
         	PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_VBAT2_eF, DISABLE );
 
         	//Disable TM SP power channels.
         	for( num_pwr_ch = 0; num_pwr_ch < PAM_PWR_TM_SP_Ch_quantity; num_pwr_ch++ ){
+        		if( eps_p.eps_pam_ptr->PWR_Channel_TM_SP[num_pwr_ch].State_eF_out == ENABLE){
+        			need_rewrite_VarID4_Flag = 1;
+        		}
             	PAM_Set_state_PWR_TM_SP_CH( eps_p.eps_pam_ptr, num_pwr_ch, DISABLE);
         	}
 
-        	CAN_Var4_fill(eps_p);
+        	if (need_rewrite_VarID4_Flag == 1) {
+        		CAN_Var4_fill(eps_p);
+        	}
     	}
     }
 
