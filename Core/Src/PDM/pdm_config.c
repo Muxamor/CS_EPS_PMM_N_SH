@@ -212,14 +212,14 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch8;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 2100; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 2.1f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 2600; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 2.6f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 20;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.020f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.02f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
-			pdm_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_40mv;//INA238_ADC_RANGE_163mv;
+			pdm_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_163mv;
 			pdm_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 			break;
 
@@ -238,14 +238,14 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch9;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 2100; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 2.1f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 2600; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 2.6f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 20;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.020f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.02f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
-			pdm_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_40mv;//INA238_ADC_RANGE_163mv;
+			pdm_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_163mv;
 			pdm_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 			break;
 
@@ -264,14 +264,14 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch10;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 2100; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 2.1f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 2600; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 2.6f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 20;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.020f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.02f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
-			pdm_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_40mv;//INA238_ADC_RANGE_163mv;
+			pdm_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_163mv;
 			pdm_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 			break;
 
@@ -290,14 +290,14 @@ _PDM_table PDM__Table(uint8_t number_pwr_channel){
 			pdm_table.I2C_addr_PWR_Mon = PDM_I2CADDR_PWR_Mon_Ch11;
 
 			//Config Power monitor INA238, same for all power channels
-			pdm_table.PWR_Mon_Max_Current_int16 = 2100; 		//Max current in mA
-			pdm_table.PWR_Mon_Max_Current_float = 2.1f; 			//Max current in A
+			pdm_table.PWR_Mon_Max_Current_int16 = 2600; 		//Max current in mA
+			pdm_table.PWR_Mon_Max_Current_float = 2.6f; 			//Max current in A
 			//pdm_table.PWR_Mon_Rshunt_int16 = 20;				//Rshunt value in mOhm
-			pdm_table.PWR_Mon_Rshunt_float = 0.020f;				//Rshunt value in Ohm
+			pdm_table.PWR_Mon_Rshunt_float = 0.02f;				//Rshunt value in Ohm
 
 			pdm_table.PWR_Mon_Convr_Time = INA238_CONVERSION_TIME_1052us;
 			pdm_table.PWR_Mon_Aver_Count = INA238_AVERAGING_COUNT_128;
-			pdm_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_40mv;//INA238_ADC_RANGE_163mv;
+			pdm_table.PWR_Mon_ADC_Range = INA238_ADC_RANGE_163mv;
 			pdm_table.PWR_Mon_Mode = INA238_SHUNT_AND_BUS_CONTINUOUS;
 			break;
 
