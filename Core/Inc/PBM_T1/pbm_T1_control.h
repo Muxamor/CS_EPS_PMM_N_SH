@@ -52,6 +52,7 @@ ErrorStatus PBM_T1_CheckResetPreqChrg(I2C_TypeDef *I2Cx,_PBM_T1 pbm[], uint8_t P
 uint8_t PBM_T1_CheckSaveSetupFlag(_PBM_T1 pbm[]);
 
 void PBM_T1_ClearSaveSetupFlag(_PBM_T1 pbm[]);
+void PBM_T1_SetSaveSetupFlag(_PBM_T1 pbm[]);
 
 #ifdef __cplusplus
 }

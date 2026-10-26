@@ -1,13 +1,16 @@
 
 #include <string.h>
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "Error_Handler.h"
 #include "Fn_CRC16.h"
 #include "uart_comm.h"
+#include "FRAM.h"
 #include "PMM/eps_struct.h"
 #include "PMM/pmm_config.h"
 #include "PMM/pmm_init.h"
 #include "PMM/pmm_sw_cpu.h"
+#include "PBM_T1/pbm_T1_control.h"
 #include "PBM_T1/pbm_T1_config.h"
 #include "uart_eps_comm.h"
 
@@ -164,6 +167,7 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
 
 	}else if( cmd_id == UART_EPS_ID_CMD_SAVE_PBM_struct ){
 		memcpy( eps_p.eps_pbm_ptr, (&(UART_eps_comm->recv_pack_buf[7])), ( sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_T1_QUANTITY ) );
+		//PBM_T1_SetSaveSetupFlag(eps_p.eps_pbm_ptr);
 		eps_p.eps_pbm_ptr->PBM_save_conf_flag = 1; //Save received settings in FRAM
 		ACK_Attribute = 1;
 
@@ -231,9 +235,17 @@ ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps
         size_ACK = 2;
         ACK_Attribute = 2;
 
+	}else if( cmd_id == UART_EPS_ID_CMD_Factory_Reset ){
+		LL_IWDG_ReloadCounter(IWDG);
+		FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
+		FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
+		ACK_Attribute = 1;
+
 	}else{
 		ACK_Attribute = 0;
 	}
+
+
 
 
 	if( ACK_Attribute == 0 ){ // Sends an ERROR in response
@@ -319,7 +331,7 @@ ErrorStatus UART_EPS_Pars_Get_ACK(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.	
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p ){
+ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm/*, _EPS_Param eps_p */){
 
 	uint8_t nfc_id = 0;
 	int8_t error_status = SUCCESS; //TO DO
@@ -374,7 +386,7 @@ ErrorStatus UART_EPS_Pars_Get_Package(_UART_EPS_COMM *UART_eps_comm, _EPS_Param 
 			error_status = UART_EPS_Pars_Get_ACK( UART_eps_comm, eps_p );
 
 		}else if( package_tag == UART_EPS_NFC ){
-			error_status = UART_EPS_Pars_Get_NFC( UART_eps_comm, eps_p );
+			error_status = UART_EPS_Pars_Get_NFC( UART_eps_comm/*, eps_p */);
 
 		}//else{
 			//Not recognize package tag.
@@ -483,6 +495,11 @@ ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_E
     }else if( cmd_id == UART_EPS_ID_CMD_Get_Active_status ){
         send_buf[0] =  UART_EPS_ID_CMD_Get_Active_status;
         size_send_data = 1;
+
+    }else if( cmd_id == UART_EPS_ID_CMD_Factory_Reset ){
+    	send_buf[0] =  UART_EPS_ID_CMD_Factory_Reset;
+    	size_send_data = 1;
+
 	}else{
 		return ERROR_N;
 	}

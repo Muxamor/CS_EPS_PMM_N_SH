@@ -8,7 +8,7 @@ extern "C" {
 #include "stm32l4xx.h"
 #include "Error_Handler.h"
 
-#define CAN_SAT_ID         			    0x8065
+//#define CAN_SAT_ID         			    0x8065
 #define CAN_ID_DEV            			0x03
 
 #define CAN_ID_VAR_ROM					0x00
@@ -45,6 +45,11 @@ extern "C" {
 #define CAN_PMM_PWR_PBM_Logic_offset                26
 #define CAN_PMM_PDM_Reset_offset                    27
 #define CAN_PMM_PAM_Reset_offset                    28
+#define CAN_PMM_Permit_Change_SatID_offset 			29
+#define CAN_PMM_SatID_offset						30
+#define CAN_PMM_Factory_Reset_offset				80
+
+
 
 // Offset Command of PDM
 #define CAN_PWR_CH1_offset			                100
@@ -219,10 +224,10 @@ struct CAN_IVar4 {
     uint8_t CAN_PMM_PWR_PBM_Logic;          //+26           Вкл/Выкл питания логики PBM
     uint8_t CAN_PMM_PDM_Reset;              //+27           Reset PDM
     uint8_t CAN_PMM_PAM_Reset;              //+28           Reset PAM
+    uint8_t CAN_PMM_Permit_Change_SatID;	//+29			Поднятие флага разрешения смены Sat_ID
+	uint16_t CAN_PMM_SatID;					//+30			Уставнока  Sat_ID
 
-    uint8_t CAN_Comd_Reserved_29;           //+29           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_30;           //+30           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_31;           //+31           Командный регистр зарезервирован
+
     uint8_t CAN_Comd_Reserved_32;           //+32           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_33;           //+33           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_34;           //+34           Командный регистр зарезервирован
@@ -271,7 +276,7 @@ struct CAN_IVar4 {
     uint8_t CAN_Comd_Reserved_77;           //+77           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_78;           //+78           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_79;           //+79           Командный регистр зарезервирован
-    uint8_t CAN_Comd_Reserved_80;           //+80           Командный регистр зарезервирован
+    uint8_t CAN_PMM_Factory_Reset;           //+80           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_81;           //+81           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_82;           //+82           Командный регистр зарезервирован
     uint8_t CAN_Comd_Reserved_83;           //+83           Командный регистр зарезервирован

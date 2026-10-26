@@ -65,8 +65,12 @@ ErrorStatus PMM_FRAM_write_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram
     fram_data_write.FRAM_PMM_reboot_counter_CPUm        = eps_p.eps_pmm_ptr->reboot_counter_CPUm;
     fram_data_write.FRAM_PMM_reboot_counter_CPUb        = eps_p.eps_pmm_ptr->reboot_counter_CPUb;
 
+    fram_data_write.FRAM_PMM_SatID						= eps_p.eps_pmm_ptr->PMM_SatID;
+
     fram_data_write.FRAM_PMM_EPS_Mode                   = eps_p.eps_pmm_ptr->EPS_Mode;
     fram_data_write.FRAM_PMM_Deploy_stage               = eps_p.eps_pmm_ptr->Deploy_stage;
+
+
 
     //PDM
     fram_data_write.FRAM_PDM_PDM_ID_module = eps_p.eps_pdm_ptr->PDM_ID_module;
@@ -151,11 +155,12 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
     //Read data from FRAM1
     if( FRAM_majority_read_data(I2Cx_fram1, i2c_addr_fram1, fram_data_read_ptr, sizeof(fram_data_read)) == SUCCESS ){
         //if( FRAM_majority_read_data_two_fram(I2Cx_fram1, i2c_addr_fram1, i2c_addr_fram2, (uint8_t*)(&fram_struct_read), sizeof(fram_struct_read)) != SUCCESS ){
-        if( FRAM_Check_Data_CRC( fram_data_read_ptr, sizeof(fram_data_read) - 2, fram_data_read.FRAM_DATA_CRC ) == SUCCESS  ){
+    	if( FRAM_Check_Data_CRC( fram_data_read_ptr, sizeof(fram_data_read) - 2, fram_data_read.FRAM_DATA_CRC ) == SUCCESS  ){
             eps_p.eps_pmm_ptr->Error_FRAM1 = SUCCESS;
         }else{
             eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
         }
+
     }else{
         eps_p.eps_pmm_ptr->Error_FRAM1 = ERROR;
     }
@@ -210,6 +215,8 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
         eps_p.eps_pmm_ptr->reboot_counter_CPUm = fram_data_read.FRAM_PMM_reboot_counter_CPUm;
         eps_p.eps_pmm_ptr->reboot_counter_CPUb = fram_data_read.FRAM_PMM_reboot_counter_CPUb;
 
+        eps_p.eps_pmm_ptr->PMM_SatID 		   = fram_data_read.FRAM_PMM_SatID;
+
         eps_p.eps_pmm_ptr->EPS_Mode = fram_data_read.FRAM_PMM_EPS_Mode;
         eps_p.eps_pmm_ptr->Deploy_stage = fram_data_read.FRAM_PMM_Deploy_stage;
 
@@ -255,7 +262,7 @@ ErrorStatus PMM_FRAM_read_data( I2C_TypeDef *I2Cx_fram1, I2C_TypeDef *I2Cx_fram2
 	@param  eps_p - contain pointer to struct which contain all parameters EPS.
 	@retval 0 - SUCCESS, -1 - ERROR_N.
 */
-ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p ){
+ErrorStatus PMM_FRAM_Restore_Settings ( _EPS_Param eps_p){
 
     int8_t /*I2C_Error_FRAM1 = 0, I2C_Error_FRAM2 = 0,*/ error_status = SUCCESS;
    // uint8_t FRAM1_status = 0, FRAM2_status = 0; // 0 - FRAM empty, 1 - FRAM no empty

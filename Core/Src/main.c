@@ -101,7 +101,9 @@ int main(void){
 
     //Get settings from the neighbor CPU if detect errors FRAM1 and FRAM2.
     if( eps_param.eps_pmm_ptr->Error_FRAM1 == ERROR && eps_param.eps_pmm_ptr->Error_FRAM2 == ERROR ){
-        PMM_Get_Settings_From_NeighborCPU( eps_param );
+       if( PMM_Get_Settings_From_NeighborCPU( eps_param ) == ERROR ){
+    	   pmm_ptr->PMM_SatID = 0x0000;
+       }
     }
 
     if( pmm_ptr->Main_Backup_mode_CPU == CPUmain ){

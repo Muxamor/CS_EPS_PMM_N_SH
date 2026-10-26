@@ -1,10 +1,14 @@
+#include <string.h>
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "stm32l4xx_ll_tim.h"
 #include "median_filter.h"
 #include "SetupPeriph.h"
 #include "Fn_CRC16.h"
+#include "FRAM.h"
 #include "tim_pwm.h"
+#include "uart_eps_comm.h"
 #include "PBM_T1/pbm_T1_config.h"
 #include "PBM_T1/pbm_T1_control.h"
 #include "PBM_T1/pbm_T1_init.h"
@@ -17,7 +21,9 @@
 #include "PAM/pam_ctrl.h"
 #include "PAM/pam_init.h"
 #include "PMM/pmm.h"
+#include "PMM/pmm_savedata.h"
 #include "PAM/pam_sp_init.h"
+#include "PMM/pmm_sw_cpu.h"
 #include "uart_eps_comm.h"
 #include "CAND/filter2D.h"
 #include "CAND/CAN.h"
@@ -66,9 +72,6 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                             printf("Get comm. reg. %d -> EPS in SERVICE mode\n", CAN_EPS_Mode_offset);
                         #endif
                         eps_p.eps_pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
-                        //eps_p.eps_pmm_ptr->Deploy_stage = 0;
-                        //eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_1 = 0;
-                        //eps_p.eps_pmm_ptr->Deploy_Lim_SW_Exit_2 = 0;
 
                     }else{
                         #ifdef DEBUGprintf
@@ -336,6 +339,109 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     PAM_init( eps_p.eps_pam_ptr );
                     break;
 
+                case CAN_PMM_Permit_Change_SatID_offset://
+                	if( CAN_IVar4_RegCmd.CAN_PMM_Permit_Change_SatID == 0x01 ){
+						#ifdef DEBUGprintf
+                			printf("Get comm. reg. %d -> Set permit flag to change SAT_ID\n", CAN_PMM_Permit_Change_SatID_offset);
+						#endif
+                		eps_p.eps_pmm_ptr->Permit_Change_SatID = 1;
+                	}else{
+                		eps_p.eps_pmm_ptr->Permit_Change_SatID = 0;
+                		CAN_IVar4_RegCmd.CAN_PMM_Permit_Change_SatID = 0x0;
+                	}
+                	break;
+
+                case CAN_PMM_SatID_offset://
+                	if(eps_p.eps_pmm_ptr->Permit_Change_SatID == 1){
+						#ifdef DEBUGprintf
+                			printf("Set Sat_ID\n");
+						#endif
+                		eps_p.eps_pmm_ptr->PMM_SatID = CAN_IVar4_RegCmd.CAN_PMM_SatID;
+
+                		CAN_IVar4_RegCmd.CAN_PMM_Permit_Change_SatID = 0x00;
+                		eps_p.eps_pmm_ptr->Permit_Change_SatID = 0;
+                		eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
+                	}else{
+                		CAN_IVar4_RegCmd.CAN_PMM_SatID = eps_p.eps_pmm_ptr->PMM_SatID;
+                	}
+                	break;
+
+
+                case CAN_PMM_Factory_Reset_offset://
+                	if(CAN_IVar4_RegCmd.CAN_PMM_Factory_Reset == 0x18 && eps_p.eps_pmm_ptr->EPS_Mode == EPS_SERVICE_MODE){
+						#ifdef DEBUGprintf
+                			printf("Perform Factory Reset\n");
+						#endif
+                		uint32_t Save_SatID = 0;
+
+                		Save_SatID = eps_p.eps_pmm_ptr->PMM_SatID;
+
+                		if(eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU == ENABLE){
+                			eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+                			PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH3);
+                			PWM_stop_channel(TIM3, LL_TIM_CHANNEL_CH4);
+                			PWM_DeInit_Ch3_Ch4( );
+                			eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+                			LPUART1_Init();
+                			USART3_Init();
+                			Setup_UART_Interrupt();
+                			LL_IWDG_ReloadCounter(IWDG);
+                			LL_mDelay(200);
+                		}
+                		eps_p.eps_pmm_ptr->Error_UART_port_M = SUCCESS;
+                		eps_p.eps_pmm_ptr->Error_UART_port_B = SUCCESS;
+                		LL_IWDG_ReloadCounter(IWDG);
+                		UART_EPS_Send_CMD( UART_EPS_ID_CMD_Factory_Reset, 1, UART_M_eps_comm, UART_B_eps_comm, eps_p);
+                		//Erase Fram1 и Fram2
+
+                		FRAM_erase(PMM_I2Cx_FRAM1, PMM_I2CADDR_FRAM1, FRAM_SIZE_64KB);
+                		FRAM_erase(PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM2, FRAM_SIZE_64KB);
+                		LL_mDelay(10);
+                		LL_IWDG_ReloadCounter(IWDG);
+
+                		// Fill 0 struct
+                		memset( eps_p.eps_pmm_ptr, 0, sizeof( *(eps_p.eps_pmm_ptr) ) );
+                		memset( eps_p.eps_pdm_ptr, 0, sizeof( *(eps_p.eps_pdm_ptr) ) );
+                		memset( eps_p.eps_pam_ptr, 0, sizeof( *(eps_p.eps_pam_ptr) ) );
+                		memset( eps_p.eps_pbm_ptr, 0, sizeof( *(eps_p.eps_pbm_ptr) ) );
+
+                		//Setup EPS
+                		eps_p.eps_pmm_ptr->PMM_SatID = Save_SatID;
+                		eps_p.eps_pmm_ptr->PWR_Ch_State_CANmain = ENABLE;
+                		eps_p.eps_pmm_ptr->PWR_Ch_State_CANbackup = ENABLE;
+                		eps_p.eps_pmm_ptr->PWR_OFF_Passive_CPU = DISABLE;
+                		eps_p.eps_pmm_ptr->EPS_Mode = EPS_SERVICE_MODE;
+                		eps_p.eps_pmm_ptr->Active_CPU = CPUmain_Active;
+                		eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_3].State_eF = ENABLE;
+                		eps_p.eps_pdm_ptr->PWR_Channel[PDM_PWR_Channel_4].State_eF = ENABLE;
+
+                		//Save settings in the FRAMs
+                		eps_p.eps_pmm_ptr->PMM_save_conf_flag = SET;
+                		eps_p.eps_pdm_ptr->PDM_save_conf_flag = SET;
+                		eps_p.eps_pam_ptr->PAM_save_conf_flag = SET;
+                		PBM_T1_SetSaveSetupFlag( eps_p.eps_pbm_ptr );
+
+                		LL_IWDG_ReloadCounter(IWDG);
+                		PMM_Sync_and_Save_Settings_A_P_CPU(eps_p);
+                		LL_mDelay(50);
+                		//Write settings to the Fram1 and Fram2
+                		//PMM_FRAM_write_data(PMM_I2Cx_FRAM1, PMM_I2Cx_FRAM2, PMM_I2CADDR_FRAM1, PMM_I2CADDR_FRAM2, eps_p);
+
+                		//Reboot not Active MPU
+                		LL_IWDG_ReloadCounter(IWDG);
+                		//Reboot MCU
+                		PMM_Reboot_EPS_PassiveCPU( );
+                		LL_mDelay(500);
+                		//LL_IWDG_ReloadCounter(IWDG);
+                		//LL_mDelay(500);
+                		NVIC_SystemReset();
+                	}else{
+                		CAN_IVar4_RegCmd.CAN_PMM_Factory_Reset = 0x01;
+                	}
+                	break;
+
+
+                // PDM
                 case CAN_PWR_CH1_offset: //Enable/Disable power channel 1 (SOP1)
                     if( CAN_IVar4_RegCmd.CAN_PDM_PWR_CH1 == 0x01 && PDM_PCB_Assembled_PWR_CH1 ){
                         #ifdef DEBUGprintf
@@ -1642,7 +1748,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
 	// -------------------  ТМИ 0  ------------------ //
     CAN_IVar5_telemetry.CAN_TMI0_Headr_Start_Mark                       = 0x0FF1;
-    CAN_IVar5_telemetry.CAN_TMI0_Headr_Sat_ID                           = CAN_SAT_ID;
+    CAN_IVar5_telemetry.CAN_TMI0_Headr_Sat_ID                           = (uint16_t)eps_p.eps_pmm_ptr->PMM_SatID;// CAN_SAT_ID;
     CAN_IVar5_telemetry.CAN_TMI0_Headr_Loc_ID                           = 0x3000;
     CAN_IVar5_telemetry.CAN_TMI0_Headr_Mas_Number                       = 0x0000;
     CAN_IVar5_telemetry.CAN_TMI0_Headr_Time                             = CAN_IVar4_RegCmd.CAN_Global_Time;
@@ -1764,7 +1870,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     //PDM
     CAN_IVar5_telemetry.CAN_TMI1_Headr_Start_Mark                        = 0x0FF1;
-    CAN_IVar5_telemetry.CAN_TMI1_Headr_Sat_ID                            = CAN_SAT_ID;
+    CAN_IVar5_telemetry.CAN_TMI1_Headr_Sat_ID                            = (uint16_t)eps_p.eps_pmm_ptr->PMM_SatID;// CAN_SAT_ID;
     CAN_IVar5_telemetry.CAN_TMI1_Headr_Loc_ID                            = 0x3001;
     CAN_IVar5_telemetry.CAN_TMI1_Headr_Mas_Number                        = 0x0000;
     CAN_IVar5_telemetry.CAN_TMI1_Headr_Time                              = CAN_IVar4_RegCmd.CAN_Global_Time;
@@ -1852,7 +1958,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     // -------------------  ТМИ 2  ------------------ //
 
     CAN_IVar5_telemetry.CAN_TMI2_Headr_Start_Mark                       = 0x0FF1;
-    CAN_IVar5_telemetry.CAN_TMI2_Headr_Sat_ID                           = CAN_SAT_ID;
+    CAN_IVar5_telemetry.CAN_TMI2_Headr_Sat_ID                           = (uint16_t)eps_p.eps_pmm_ptr->PMM_SatID;// CAN_SAT_ID;
     CAN_IVar5_telemetry.CAN_TMI2_Headr_Loc_ID                           = 0x3002;
     CAN_IVar5_telemetry.CAN_TMI2_Headr_Mas_Number                       = 0x0000;
     CAN_IVar5_telemetry.CAN_TMI2_Headr_Time                             = CAN_IVar4_RegCmd.CAN_Global_Time;
@@ -2026,7 +2132,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 
     //-------------------  ТМИ 3 //PBM part1// ------------------//
     CAN_IVar5_telemetry.CAN_TMI3_Headr_Start_Mark                    	= 0x0FF1;
-    CAN_IVar5_telemetry.CAN_TMI3_Headr_Sat_ID                        	= CAN_SAT_ID;
+    CAN_IVar5_telemetry.CAN_TMI3_Headr_Sat_ID                        	= (uint16_t)eps_p.eps_pmm_ptr->PMM_SatID;// CAN_SAT_ID;
     CAN_IVar5_telemetry.CAN_TMI3_Headr_Loc_ID                        	= 0x3003;
     CAN_IVar5_telemetry.CAN_TMI3_Headr_Mas_Number                    	= 0x0000;
     CAN_IVar5_telemetry.CAN_TMI3_Headr_Time                          	= CAN_IVar4_RegCmd.CAN_Global_Time;
@@ -2315,7 +2421,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     // -------------------  ТМИ 4 ------------------ //
     // PBM part2 //
     CAN_IVar5_telemetry.CAN_TMI4_Headr_Start_Mark                    	= 0x0FF1;
-    CAN_IVar5_telemetry.CAN_TMI4_Headr_Sat_ID                        	= CAN_SAT_ID;
+    CAN_IVar5_telemetry.CAN_TMI4_Headr_Sat_ID                        	= (uint16_t)eps_p.eps_pmm_ptr->PMM_SatID;// CAN_SAT_ID;
     CAN_IVar5_telemetry.CAN_TMI4_Headr_Loc_ID                        	= 0x3004;
     CAN_IVar5_telemetry.CAN_TMI4_Headr_Mas_Number                    	= 0x0000;
     CAN_IVar5_telemetry.CAN_TMI4_Headr_Time                          	= CAN_IVar4_RegCmd.CAN_Global_Time;
@@ -2851,6 +2957,8 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
         CAN_IVar4_RegCmd.CAN_PDM_PWR_CH12                     				= 0x00;
     }
 
+    CAN_IVar4_RegCmd.CAN_PMM_Permit_Change_SatID							= (uint16_t) eps_p.eps_pmm_ptr->PMM_SatID;
+    CAN_IVar4_RegCmd.CAN_PMM_Permit_Change_SatID 							= 0x00;
 
     // Command of PAM
     CAN_IVar4_RegCmd.CAN_PAM_PWR_DC_DC              				        = eps_p.eps_pam_ptr->State_DC_DC;

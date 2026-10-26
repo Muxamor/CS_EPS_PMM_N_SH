@@ -84,12 +84,15 @@ typedef struct{
 	int16_t  PWR_Ch_Vbat2_eF_Current_val;
 	uint32_t PWR_Ch_Vbat2_eF_Power_val;
 
+	uint32_t PMM_SatID;
+
 	uint8_t Main_Backup_mode_CPU 	:1; //= 0-Main, 1-Backup mode CPU.
 	uint8_t Active_CPU		 		:1;	//= 0-Main CPU is active, Backup CPU is passive. // Need to save in flash.
 										//= 1-Main CPU is passive, Backup CPU is active.
 	uint8_t CAN_constatnt_mode		:1;	//= 1-Constant mode CANreg5 is ON, 0-Constant CANreg5 is OFF. // Need to save in flash.
     uint8_t PMM_save_conf_flag  	:1;// 0-Note need save, 1-Need save configure PDM to FRAM and sent to neighboring CPU
-    uint8_t	:4;
+    uint8_t Permit_Change_SatID 	:1;//= 1-Set permit to change Sat_ID, 0-Disable permit to change Sat_ID.
+    uint8_t	:3;
 
     int8_t Temp_sensor;             //PMM temperature
 

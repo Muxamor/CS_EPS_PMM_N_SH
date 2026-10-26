@@ -1135,9 +1135,9 @@ ErrorStatus PBM_T1_CheckOverHeat(_PBM_T1 pbm[], uint8_t PBM_number, uint8_t Heat
 
 	uint8_t count = 0 , tempsense = 0;
 	int8_t Error = 0;
-	_PBM_T1_table pbm_table = { 0 };
+	//_PBM_T1_table pbm_table = { 0 };
 
-	pbm_table = PBM_T1_Table(PBM_number, 0, Heat_number);
+	//pbm_table = PBM_T1_Table(PBM_number, 0, Heat_number);
 
 	for ( tempsense = 0; tempsense < PBM_T1_HEAT_TEMPSENS_QUANTITY; tempsense++ ){
 
@@ -1588,6 +1588,19 @@ void PBM_T1_ClearSaveSetupFlag(_PBM_T1 pbm[]){
     for( uint16_t i = 0; i < PBM_T1_QUANTITY; i++){
 
         pbm[i].PBM_save_conf_flag = 0;
+    }
+
+}
+
+/** @brief    Set flag to save setting.
+    @param     pbm[] - structure data for all PBM modules.
+    @retval    ErrorStatus
+*/
+void PBM_T1_SetSaveSetupFlag(_PBM_T1 pbm[]){
+
+    for( uint16_t i = 0; i < PBM_T1_QUANTITY; i++){
+
+        pbm[i].PBM_save_conf_flag = 1;
     }
 
 }

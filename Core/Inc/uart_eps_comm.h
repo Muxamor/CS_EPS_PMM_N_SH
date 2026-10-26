@@ -30,6 +30,7 @@ extern "C" {
 #define UART_EPS_ID_CMD_Take_CTRL			0x0B
 #define UART_EPS_ID_CMD_Ping				0x0C
 #define UART_EPS_ID_CMD_Get_Active_status 	0x0D
+#define UART_EPS_ID_CMD_Factory_Reset	 	0x0E
 
 #define UART_EPS_ID_ACK_SAVE_PMM_struct 	0x01
 #define UART_EPS_ID_ACK_SAVE_PDM_struct 	0x02
@@ -44,6 +45,7 @@ extern "C" {
 #define UART_EPS_ID_ACK_Take_CTRL 			0x0B
 #define UART_EPS_ID_ACK_Ping				0x0C
 #define UART_EPS_ID_ACK_Get_Active_status 	0x0D
+#define UART_EPS_ID_ACK_Factory_Reset	 	0x0E
 
 #define UART_EPS_ID_NFS_Prep_Take_CTRL 		0x01
 
@@ -79,7 +81,7 @@ ErrorStatus UART_EPS_Check_CRC_Package( _UART_EPS_COMM *UART_eps_comm );
 
 ErrorStatus UART_EPS_Pars_Get_CMD( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
 ErrorStatus UART_EPS_Pars_Get_ACK( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
-ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
+ErrorStatus UART_EPS_Pars_Get_NFC(_UART_EPS_COMM *UART_eps_comm/*, _EPS_Param eps_p */);
 ErrorStatus UART_EPS_Pars_Get_Package( _UART_EPS_COMM *UART_eps_comm, _EPS_Param eps_p );
 
 ErrorStatus UART_EPS_Send_CMD( uint8_t cmd_id, uint8_t choice_uart_port, _UART_EPS_COMM *UART_Main_eps_comm, _UART_EPS_COMM *UART_Backup_eps_comm, _EPS_Param eps_p );

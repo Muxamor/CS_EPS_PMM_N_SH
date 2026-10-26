@@ -91,8 +91,8 @@ typedef struct{
      uint32_t Reserved1;
      uint32_t Reserved2;
      uint32_t Reserved3;
-     uint32_t Reserved4;
 
+     uint32_t FRAM_PMM_SatID;
      uint32_t FRAM_PMM_reboot_counter_CPUm;
      uint32_t FRAM_PMM_reboot_counter_CPUb;
 
