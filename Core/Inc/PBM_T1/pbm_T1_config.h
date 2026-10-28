@@ -12,7 +12,7 @@ extern "C" {
 #define PBM_T1_I2C_PORT                		I2C4 	//Number of I2C port for PBM.
 #define PBM_T1_I2C_ATTEMPT_CONN             3 	    //Quantity attempt to connection through I2C.
 #define PBM_T1_i2c_delay_att_conn			3 	 	//ms Delay between attempts connection through I2C in millisecond
-#define PBM_T1_QUANTITY 					5 	// Total quantity power modules PBM
+#define PBM_T1_QUANTITY 					6 	// Total quantity power modules PBM
 #define PBM_T1_BRANCH_QUANTITY 				1 	// Total quantity branches on one PBM
 #define PBM_T1_BRANCH_BAT_QUANTITY			4 	    // Total quantity battery in branch
 #define PBM_T1_HEAT_QUANTITY 				2 	// Total quantity heaters on one PBM
@@ -47,6 +47,7 @@ extern "C" {
 #define PBM_T1_3                			2		//Designation for choose PBM №3.
 #define PBM_T1_4                			3		//Designation for choose PBM №3.
 #define PBM_T1_5                			4		//Designation for choose PBM №4.
+#define PBM_T1_6                			5		//Designation for choose PBM №4.
 
 #define PBM_T1_BRANCH_1                		0x00 	//Designation for choose branch №1 PBM.
 #define PBM_T1_BRANCH_2                		0x01 	//Designation for choose branch №2 PBM.

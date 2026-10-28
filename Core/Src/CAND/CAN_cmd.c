@@ -403,7 +403,7 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                 		memset( eps_p.eps_pmm_ptr, 0, sizeof( *(eps_p.eps_pmm_ptr) ) );
                 		memset( eps_p.eps_pdm_ptr, 0, sizeof( *(eps_p.eps_pdm_ptr) ) );
                 		memset( eps_p.eps_pam_ptr, 0, sizeof( *(eps_p.eps_pam_ptr) ) );
-                		memset( eps_p.eps_pbm_ptr, 0, sizeof( *(eps_p.eps_pbm_ptr) ) );
+                		memset( eps_p.eps_pbm_ptr, 0, ( sizeof( eps_p.eps_pbm_ptr[0] ) * PBM_T1_QUANTITY ) );
 
                 		//Setup EPS
                 		eps_p.eps_pmm_ptr->PMM_SatID = Save_SatID;
@@ -1079,6 +1079,65 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     }*/
                     break;
 
+                case CAN_PBM6_Charge_key_branch_1_offset: //Enable/Disable Charge AB6 branch 1 // PBM_data
+                    if( CAN_IVar4_RegCmd.CAN_PBM6_Charge_key_branch_1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE charge AB6 branch 1\n", CAN_PBM6_Charge_key_branch_1_offset);
+                        #endif
+                        // change!!!!!! Morsin A.A.
+                        PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_ON_CHARGE);
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE charge AB6 branch 1\n", CAN_PBM6_Charge_key_branch_1_offset);
+                        #endif
+                        PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_OFF_CHARGE);
+                    }
+                    break;
+
+                case CAN_PBM6_Discharge_key_branch_1_offset: //Enable/Disable Discharge AB6 branch 1 // PBM_data
+                    if( CAN_IVar4_RegCmd.CAN_PBM6_Discharge_key_branch_1 == 0x01 ){
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE discharge AB6 branch 1\n", CAN_PBM6_Discharge_key_branch_1_offset);
+                        #endif
+                        PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_ON_DISCHARGE);
+                    }else{
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE discharge AB6 branch 1\n", CAN_PBM6_Discharge_key_branch_1_offset);
+                        #endif
+                        PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_OFF_DISCHARGE);
+                    }
+                    break;
+
+                case CAN_PBM6_Charge_key_branch_2_offset: //Enable/Disable Charge AB6 branch 2 // PBM_data
+                	CAN_IVar4_RegCmd.CAN_PBM6_Charge_key_branch_2 = 0x00;
+                    /*if ( CAN_IVar4_RegCmd.CAN_PBM5_Charge_key_branch_2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE charge AB5 branch 2\n", CAN_PBM5_Charge_key_branch_2_offset);
+                        #endif
+                        PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2, PBM_T1_ON_CHARGE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE charge AB5 branch 2\n", CAN_PBM5_Charge_key_branch_2_offset);
+                        #endif
+                        PBM_T1_SetStateChargeBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2, PBM_T1_OFF_CHARGE);
+                    }*/
+                    break;
+
+                case CAN_PBM6_Discharge_key_branch_2_offset: //Enable/Disable Discharge AB5 branch 2 // PBM_data
+                	CAN_IVar4_RegCmd.CAN_PBM6_Discharge_key_branch_2 = 0x00;
+                    /*if ( CAN_IVar4_RegCmd.CAN_PBM5_Discharge_key_branch_2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE discharge AB5 branch 2\n", CAN_PBM5_Discharge_key_branch_2_offset);
+                        #endif
+                        PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2, PBM_T1_ON_DISCHARGE);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE discharge AB5 branch 2\n", CAN_PBM5_Discharge_key_branch_2_offset);
+                        #endif
+                        PBM_T1_SetStateDischargeBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2, PBM_T1_OFF_DISCHARGE);
+                    }*/
+                    break;
+
                 case CAN_PBM1_Heat_1_offset: //Enable/Disable Auto heat (thermostat) AB1 heat 1 // PBM_data
                     if ( CAN_IVar4_RegCmd.CAN_PBM1_Heat_1 == 0x01) {
                         #ifdef DEBUGprintf
@@ -1218,6 +1277,34 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_HEAT_2, PBM_T1_OFF_HEAT);
                     }
                     break;
+
+                case CAN_PBM6_Heat_1_offset: //Enable/Disable Auto heat (thermostat) AB5 heat 1 // PBM_data
+                	if ( CAN_IVar4_RegCmd.CAN_PBM6_Heat_1 == 0x01) {
+						#ifdef DEBUGprintf
+                			printf("Get comm. reg. %d -> ENABLE auto heat AB6 branch 1\n", CAN_PBM6_Heat_1_offset);
+						#endif
+                		PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_HEAT_1, PBM_T1_ON_HEAT);
+                	} else {
+						#ifdef DEBUGprintf
+                			printf("Get comm. reg. %d -> DISABLE auto heat AB6 branch 1\n", CAN_PBM6_Heat_1_offset);
+						#endif
+                		PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_HEAT_1, PBM_T1_OFF_HEAT);
+                	}
+                	break;
+
+                case CAN_PBM6_Heat_2_offset: //Enable/Disable Auto heat (thermostat) AB1 heat 2 // PBM_data
+                	if ( CAN_IVar4_RegCmd.CAN_PBM6_Heat_2 == 0x01) {
+						#ifdef DEBUGprintf
+                			printf("Get comm. reg. %d -> ENABLE auto heat AB6 heat 2\n", CAN_PBM6_Heat_2_offset);
+						#endif
+                		PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_HEAT_2, PBM_T1_ON_HEAT);
+                	} else {
+						#ifdef DEBUGprintf
+                			printf("Get comm. reg. %d -> DISABLE auto heat AB6 heat 2\n", CAN_PBM6_Heat_2_offset);
+						#endif
+                		PBM_T1_SetStateHeat(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_HEAT_2, PBM_T1_OFF_HEAT);
+                	}
+                	break;
 
                 case CAN_PBM1_Emerg_Charge_Key_Branch1_offset: //Enable/Disable Emergency charge PBM1 branch 1  // PBM_data
                     if ( CAN_IVar4_RegCmd.CAN_PBM1_Emerg_Charge_Key_Branch1 == 0x01) {
@@ -1367,6 +1454,25 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     }*/
                     break;
 
+                case CAN_PBM6_Emerg_Charge_Key_Branch1_offset: //Enable/Disable Emergency charge PBM5 branch 1  // PBM_data
+                	if ( CAN_IVar4_RegCmd.CAN_PBM6_Emerg_Charge_Key_Branch1 == 0x01) {
+						#ifdef DEBUGprintf
+                			printf("Get comm. reg. %d -> ENABLE emergency charge PBM6 branch 1\n", CAN_PBM6_Emerg_Charge_Key_Branch1_offset);
+						#endif
+                		PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_ON_EMERG_CHRG);
+                	} else {
+						#ifdef DEBUGprintf
+                			printf("Get comm. reg. %d -> DISABLE emergency charge PBM6 branch 1\n", CAN_PBM6_Emerg_Charge_Key_Branch1_offset);
+						#endif
+                		PBM_T1_SetStateEmergChrg(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_OFF_EMERG_CHRG);
+                	}
+                	break;
+
+                case CAN_PBM6_Emerg_Charge_Key_Branch2_offset: //Enable/Disable Emergency charge PBM4 branch 2  // PBM_data
+                	CAN_IVar4_RegCmd.CAN_PBM6_Emerg_Charge_Key_Branch2 = 0x00;
+                	break;
+
+
                 case CAN_PBM1_Auto_Corr_Cap_Level_Branch1_offset: //Enable/Disable auto correction capacity level PBM1 branch 1  // PBM_data
                     if ( CAN_IVar4_RegCmd.CAN_PBM1_Auto_Corr_Cap_Level_Branch1 == 0x01) {
                         #ifdef DEBUGprintf
@@ -1512,6 +1618,35 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     }*/
                     break;
 
+                case CAN_PBM6_Auto_Corr_Cap_Level_Branch1_offset: //Enable/Disable auto correction capacity level PBM5 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM6_Auto_Corr_Cap_Level_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM6 branch 1\n", CAN_PBM6_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM6 branch 1\n", CAN_PBM6_Auto_Corr_Cap_Level_Branch1_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }
+                    break;
+
+                case CAN_PBM6_Auto_Corr_Cap_Level_Branch2_offset: //Enable/Disable auto correction capacity level PBM5 branch 2  // PBM_data
+                	CAN_IVar4_RegCmd.CAN_PBM6_Auto_Corr_Cap_Level_Branch2 = 0x00;
+                    /*if ( CAN_IVar4_RegCmd.CAN_PBM5_Auto_Corr_Cap_Level_Branch2 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> ENABLE auto correction capacity level PBM5 branch 2\n", CAN_PBM5_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2, PBM_T1_ON_AUTO_CAP_CORRECT);
+                    } else {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> DISABLE auto correction capacity level PBM5 branch 2\n", CAN_PBM5_Auto_Corr_Cap_Level_Branch2_offset);
+                        #endif
+                        PBM_T1_SetStateAutoCorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2, PBM_T1_OFF_AUTO_CAP_CORRECT);
+                    }*/
+                    break;
+
                 case CAN_PBM1_Corr_Cap_Level_Branch1_offset: //Perform once time correction capacity level PBM1 branch 1  // PBM_data
                     if ( CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch1 == 0x01) {
                         #ifdef DEBUGprintf
@@ -1617,6 +1752,21 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                     }*/
                     break;
 
+                case CAN_PBM6_Corr_Cap_Level_Branch1_offset: //Perform once time correction capacity level PBM6 branch 1  // PBM_data
+                	if ( CAN_IVar4_RegCmd.CAN_PBM6_Corr_Cap_Level_Branch1 == 0x01) {
+						#ifdef DEBUGprintf
+                			printf("Get comm. reg. %d -> Perform once time correction capacity level PBM6 branch 1\n", CAN_PBM6_Corr_Cap_Level_Branch1_offset);
+						#endif
+                		PBM_T1_CorrectCapacity(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1, PBM_T1_MAX_BATT_CAP);
+                		CAN_IVar4_RegCmd.CAN_PBM6_Corr_Cap_Level_Branch1 = 0x00;
+                	}
+                	break;
+
+                case CAN_PBM6_Corr_Cap_Level_Branch2_offset: //Perform once time correction capacity level PBM4 branch 2  // PBM_data
+                	CAN_IVar4_RegCmd.CAN_PBM6_Corr_Cap_Level_Branch2 = 0x00;
+                    break;
+
+
                 case CAN_PBM1_Reset_Branch1_offset: //Reset MAX17320 PBM1 branch 1  // PBM_data
                     if ( CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch1 == 0x01) {
                         #ifdef DEBUGprintf
@@ -1720,6 +1870,20 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
                         PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_5, PBM_T1_BRANCH_2);
                         CAN_IVar4_RegCmd.CAN_PBM5_Reset_Branch2 = 0x00;
                     }*/
+                    break;
+
+                case CAN_PBM6_Reset_Branch1_offset: //Reset MAX17320 PBM5 branch 1  // PBM_data
+                    if ( CAN_IVar4_RegCmd.CAN_PBM6_Reset_Branch1 == 0x01) {
+                        #ifdef DEBUGprintf
+                            printf("Get comm. reg. %d -> Reset PBM6 branch 1\n", CAN_PBM6_Reset_Branch1_offset);
+                        #endif
+                        PBM_T1_ResetBranch(PBM_T1_I2C_PORT, eps_p.eps_pbm_ptr, PBM_T1_6, PBM_T1_BRANCH_1);
+                        CAN_IVar4_RegCmd.CAN_PBM6_Reset_Branch1 = 0x00;
+                    }
+                    break;
+
+                case CAN_PBM6_Reset_Branch2_offset: //Reset MAX17320 PBM5 branch 2  // PBM_data
+                	CAN_IVar4_RegCmd.CAN_PBM6_Reset_Branch2 = 0x00;
                     break;
 
                 default:
@@ -2247,6 +2411,13 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12);
     																					//| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_6].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_6].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_6].Low_Energy_Flag << 2)
+            																				| (eps_p.eps_pbm_ptr[PBM_T1_6].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
+        																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].Error_Heat << 5) | (eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 6)
+        																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 7) | (eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].Error_INA238 << 8)
+        																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].Error_Heat << 9) | (eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1] << 10)
+        																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].Error_Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2] << 11) | (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Error_Emerg_Chrg << 12);
+        																					//| (eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Error_Emerg_Chrg << 13);
 
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].UVP << 1)
@@ -2331,6 +2502,15 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
 																					| (eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
 
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Controller1_Error_BitMask 		 = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].OVP | (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].UVP << 1)
+       																				| (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].OCCP << 2) | (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].ODCP << 3)
+   																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].PreqF << 4) | (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].LDet << 5)
+   																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].OC << 6) | (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].OD << 7)
+   																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].SC << 8) | (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].PreqChrg << 9)
+   																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].DchgControlFlag << 10) | (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].ChgControlFlag << 11)
+   																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Error_Discharge << 12) | (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Error_Charge << 13)
+   																					| (eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Error_MAX17320 << 14);
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
     //CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
@@ -2342,6 +2522,9 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
   //  CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].RelativeCapacity_Perc;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
 
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Charge_Level_Percent 	 = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].RelativeCapacity_Perc;
+
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
    // CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
@@ -2352,6 +2535,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
   //  CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AbcoluteCapacity_mAh;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Charge_Level_mAh 	     = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].AbcoluteCapacity_mAh;
 
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Current;
@@ -2363,6 +2547,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].Current;
  //   CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].Current;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Current;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Char_Discha_Current    = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Current;
 
 
     CAN_IVar5_telemetry.CAN_PBM1_Temp_Controller1                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Temperature;
@@ -2395,6 +2580,14 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
 	CAN_IVar5_telemetry.CAN_PBM5_Temp_Sensor2                        = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
 	CAN_IVar5_telemetry.CAN_PBM5_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
 	CAN_IVar5_telemetry.CAN_PBM5_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
+	CAN_IVar5_telemetry.CAN_PBM6_Temp_Controller1                    = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Temperature;
+	//CAN_IVar5_telemetry.CAN_PBM6_Temp_Controller2                  = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_2].Temperature;
+	CAN_IVar5_telemetry.CAN_PBM6_Temp_Sensor1                        = eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
+	CAN_IVar5_telemetry.CAN_PBM6_Temp_Sensor2                        = eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
+	CAN_IVar5_telemetry.CAN_PBM6_Temp_Sensor3                        = eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_1];
+	CAN_IVar5_telemetry.CAN_PBM6_Temp_Sensor4                        = eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].Heat_TMP1075[PBM_T1_HEAT_TEMPSENS_2];
+
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].AgeScalar;
    // CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].AgeScalar;
@@ -2405,6 +2598,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].AgeScalar;
  //   CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Age                    = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].AgeScalar;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].AgeScalar;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Age                    = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].AgeScalar;
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].CycleCounter;
     //CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_2].CycleCounter;
@@ -2415,6 +2609,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].CycleCounter;
    // CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].CycleCounter;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].CycleCounter;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Char_Discha_Cycle      = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].CycleCounter;
 
     CAN_IVar5_telemetry.CAN_TMI3_CRC                                 = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI3_Headr_Start_Mark)), 126 );
 
@@ -2448,6 +2643,11 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Voltage[1];
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Battery3_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Voltage[2];
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Battery4_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Voltage[3];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Battery1_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Voltage[0];
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Battery2_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Voltage[1];
+	CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Battery3_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Voltage[2];
+	CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Battery4_Voltage       = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Voltage[3];
+
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MaxCurr;
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MinCurr;
@@ -2459,6 +2659,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MinCurr;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].MaxCurr;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].MinCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Max_Current            = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].MaxCurr;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Min_Current            = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].MinCurr;
 
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].MinVCELL;
@@ -2470,6 +2672,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_1].MinVCELL;
    // CAN_IVar5_telemetry.CAN_TMIx_PBM4_Branch2_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_4].Branch[PBM_T1_BRANCH_2].MinVCELL;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].MinVCELL;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Branch1_Min_Voltage            = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].MinVCELL;
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Heat_1_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].HeatCurrent;
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Heat_2_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].HeatCurrent;
@@ -2481,6 +2684,8 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM4_Heat_2_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].HeatCurrent;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Heat_1_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].HeatCurrent;
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Heat_2_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Heat_1_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].HeatCurrent;
+    CAN_IVar5_telemetry.CAN_TMIx_PBM6_Heat_2_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].HeatCurrent;
 
 
     CAN_IVar5_telemetry.CAN_TMI4_CRC                                 = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI4_Headr_Start_Mark)), 126 );
