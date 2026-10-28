@@ -24,6 +24,7 @@ extern "C" {
 #define PBM_T1_3_TCA9548A_ADDR              0x72 	//Address GPIO mux PCA9534ARGTR Battery Module №3.
 #define PBM_T1_4_TCA9548A_ADDR              0x73 	//Address GPIO mux PCA9534ARGTR Battery Module №4.
 #define PBM_T1_5_TCA9548A_ADDR              0x74 	//Address GPIO mux PCA9534ARGTR Battery Module №5.
+#define PBM_T1_6_TCA9548A_ADDR              0x75 	//Address GPIO mux PCA9534ARGTR Battery Module №5.
 
 #define PBM_T1_PCA9534_ADDR               	0x38 	//Address GPIO mux PCA9534ARGTR Battery Module.
 

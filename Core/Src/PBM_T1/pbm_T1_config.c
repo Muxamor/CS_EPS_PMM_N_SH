@@ -56,6 +56,10 @@ _PBM_T1_table PBM_T1_Table(uint8_t PBM_number, uint8_t Branch, uint8_t Heat) {
 		pbm_T1_table.I2C_MUX_Addr = PBM_T1_5_TCA9548A_ADDR;
 		break;
 
+	case PBM_T1_6:
+		pbm_T1_table.I2C_MUX_Addr = PBM_T1_6_TCA9548A_ADDR;
+		break;
+
 	default:
 		break;
 	}
