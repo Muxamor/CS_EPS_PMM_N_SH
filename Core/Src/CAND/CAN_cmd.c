@@ -3198,6 +3198,10 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PBM5_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].DchgEnableCmd;
     CAN_IVar4_RegCmd.CAN_PBM5_Charge_key_branch_2                           = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM5_Discharge_key_branch_2                        = 0x00;
+    CAN_IVar4_RegCmd.CAN_PBM6_Charge_key_branch_1                           = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].ChgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM6_Discharge_key_branch_1                        = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].DchgEnableCmd;
+    CAN_IVar4_RegCmd.CAN_PBM6_Charge_key_branch_2                           = 0x00;
+    CAN_IVar4_RegCmd.CAN_PBM6_Discharge_key_branch_2                        = 0x00;
 
     CAN_IVar4_RegCmd.CAN_PBM1_Heat_1                                        = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].PCA9534_Heat_CMD;
     CAN_IVar4_RegCmd.CAN_PBM1_Heat_2                                        = eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_2].PCA9534_Heat_CMD;
@@ -3209,6 +3213,8 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PBM4_Heat_2                                  		= eps_p.eps_pbm_ptr[PBM_T1_4].Heat[PBM_T1_HEAT_2].PCA9534_Heat_CMD;
     CAN_IVar4_RegCmd.CAN_PBM5_Heat_1                                 		= eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_1].PCA9534_Heat_CMD;
     CAN_IVar4_RegCmd.CAN_PBM5_Heat_2                                  		= eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].PCA9534_Heat_CMD;
+    CAN_IVar4_RegCmd.CAN_PBM6_Heat_1                                 		= eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].PCA9534_Heat_CMD;
+    CAN_IVar4_RegCmd.CAN_PBM6_Heat_2                                  		= eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].PCA9534_Heat_CMD;
 
 
     CAN_IVar4_RegCmd.CAN_PBM1_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Cmd;
@@ -3221,6 +3227,8 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PBM4_Emerg_Charge_Key_Branch2                      = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM5_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Cmd;
     CAN_IVar4_RegCmd.CAN_PBM5_Emerg_Charge_Key_Branch2                      = 0x00;
+    CAN_IVar4_RegCmd.CAN_PBM6_Emerg_Charge_Key_Branch1                      = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].PCA9534_Emerg_Chrg_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM6_Emerg_Charge_Key_Branch2                      = 0x00;
 
 
     CAN_IVar4_RegCmd.CAN_PBM1_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_1].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Cmd;
@@ -3233,6 +3241,8 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PBM4_Auto_Corr_Cap_Level_Branch2                   = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM5_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_5].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Cmd;
     CAN_IVar4_RegCmd.CAN_PBM5_Auto_Corr_Cap_Level_Branch2                   = 0x00;
+    CAN_IVar4_RegCmd.CAN_PBM6_Auto_Corr_Cap_Level_Branch1                   = eps_p.eps_pbm_ptr[PBM_T1_6].Branch[PBM_T1_BRANCH_1].Auto_Corr_Capacity_Cmd;
+    CAN_IVar4_RegCmd.CAN_PBM6_Auto_Corr_Cap_Level_Branch2                   = 0x00;
 
     CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch1                        = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM1_Corr_Cap_Level_Branch2                        = 0x00;
@@ -3244,6 +3254,8 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PBM4_Corr_Cap_Level_Branch2                        = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM5_Corr_Cap_Level_Branch1                        = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM5_Corr_Cap_Level_Branch2                        = 0x00;
+    CAN_IVar4_RegCmd.CAN_PBM6_Corr_Cap_Level_Branch1                        = 0x00;
+    CAN_IVar4_RegCmd.CAN_PBM6_Corr_Cap_Level_Branch2                        = 0x00;
 
     CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch1                                 = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM1_Reset_Branch2                                 = 0x00;
@@ -3255,4 +3267,6 @@ void CAN_Var4_fill( _EPS_Param eps_p ){
     CAN_IVar4_RegCmd.CAN_PBM4_Reset_Branch2                                 = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM5_Reset_Branch1                                 = 0x00;
     CAN_IVar4_RegCmd.CAN_PBM5_Reset_Branch2                                 = 0x00;
+    CAN_IVar4_RegCmd.CAN_PBM6_Reset_Branch1                                 = 0x00;
+    CAN_IVar4_RegCmd.CAN_PBM6_Reset_Branch2                                 = 0x00;
 }
