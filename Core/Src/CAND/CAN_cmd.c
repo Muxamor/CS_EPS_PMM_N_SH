@@ -143,6 +143,8 @@ void CAN_Var4_cmd_parser( _EPS_Param eps_p ){
 
                         PMM_Set_state_PWR_CH( eps_p.eps_pmm_ptr, PMM_PWR_Ch_Deploy_Logic, DISABLE );
 
+                        eps_p.eps_pmm_ptr->Permit_Change_SatID = 0;
+
                         eps_p.eps_pmm_ptr->PMM_save_conf_flag = 1;
                         CAN_IVar4_RegCmd.CAN_Reset_to_default = 0x00;
                     }
