@@ -172,7 +172,7 @@ ErrorStatus PMM_Deploy( _EPS_Param eps_p ){
         }else{
             for ( total_power_gen_pam = 0, i = 0; i < PAM_PWR_IN_Ch_quantity; i++ ){
             	if (eps_p.eps_pam_ptr->PWR_IN_Channel[i].Current_val > 0){
-            		total_power_gen_pam = total_power_gen_pam + ( (eps_p.eps_pam_ptr->PWR_IN_Channel[i].Current_val * eps_p.eps_pam_ptr->PWR_IN_Channel[i].Voltage_val ) / 1000 );
+            		total_power_gen_pam = total_power_gen_pam + ( (((uint16_t)eps_p.eps_pam_ptr->PWR_IN_Channel[i].Current_val) * eps_p.eps_pam_ptr->PWR_IN_Channel[i].Voltage_val ) / 1000 );
             	}
             }
 
