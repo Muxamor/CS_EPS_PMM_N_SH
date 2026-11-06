@@ -895,15 +895,14 @@ struct CAN_IVar5{
 	uint16_t CAN_TMI3_version;                                  	//+698,699 |  const = 0x               		| Версия ТМИ
 
 	    // PBM part1 //
-    int16_t CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power;              //+700,701 |  const = 0x                    | Полная мощность зарядки/разрядки PBM
-    uint16_t CAN_TMIx_PBM_Total_Heating_Elements_Power;			    //+702,703 |  const = 0x                    |
-    uint16_t CAN_TMIx_PBM_Total_Battery_Level_mAh;			        //+704,705 |  const = 0x                    | Полный уровень заряда АБ в mAh
-    uint8_t  CAN_TMIx_PBM_Total_Battery_Level_percent;              //+706     |  const = 0x                    | Полный уровень заряда АБ в %
-    uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;           //+707,708 |  const = 0x                    |
-    uint16_t CAN_TMIx_PBM_Thermostat_Cmd_BitMask;                   //+709,710 |  const = 0x                    | Команда на включение Термостат
-    uint16_t CAN_TMIx_PBM_Heating_Element_State_BitMask;            //+711,712 |  const = 0x                    | Текущее состояние Термостата
-    uint8_t CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask;                  //+713     |  const = 0x                    | Ключи аварийной зарядки
-    uint8_t CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask;            //+714     |  const = 0x                    | Ключи аварийной зарядки
+    int32_t CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power;              //+700,701,702,703 |  const = 0x                    | Полная мощность зарядки/разрядки PBM
+    uint16_t CAN_TMIx_PBM_Total_Heating_Elements_Power;			    //+704,705 |  const = 0x                    |
+    uint16_t CAN_TMIx_PBM_Total_Battery_Level_mAh;			        //+706,707 |  const = 0x                    | Полный уровень заряда АБ в mAh
+    uint8_t  CAN_TMIx_PBM_Total_Battery_Level_percent;              //+708     |  const = 0x                    | Полный уровень заряда АБ в %
+    uint16_t CAN_TMIx_PBM_Chrg_Dichrg_Key_ComReg_BitMask;           //+709,710 |  const = 0x                    |
+    uint16_t CAN_TMIx_PBM_Thermostat_Cmd_BitMask;                   //+711,712 |  const = 0x                    | Команда на включение Термостат
+    uint16_t CAN_TMIx_PBM_Heating_Element_State_BitMask;            //+713,714 |  const = 0x                    | Текущее состояние Термостата
+
     uint16_t CAN_TMIx_PBM1_Error_BitMask;                           //+715,716 |  const = 0x                    | Статус ошибок модуля PBM1, битовая маска
     uint16_t CAN_TMIx_PBM2_Error_BitMask;                           //+717,718 |  const = 0x                    | Статус ошибок модуля PBM2, битовая маска
     uint16_t CAN_TMIx_PBM3_Error_BitMask;                           //+719,720 |  const = 0x                    | Статус ошибок модуля PBM3, битовая маска
@@ -984,7 +983,7 @@ struct CAN_IVar5{
     uint8_t CAN_TMIx_PBM5_Branch1_Char_Discha_Cycle;                //+809     |  const = 0x                   	| Цмклы заряда/разряда АБ4 ветвь 1
     uint8_t CAN_TMIx_PBM6_Branch1_Char_Discha_Cycle;                //+810     |  const = 0x                   	| Цмклы заряда/разряда АБ4 ветвь 1
 
-    uint8_t  CAN_TMI3_Reserved[1];                                 //+811|  const = 0x
+    uint8_t  CAN_TMI3_Reserved[1];                                  //+811	   |  const = 0x
     uint16_t CAN_TMI3_CRC;                                          //+812,813 |  const = 0x
 
 
@@ -1057,8 +1056,11 @@ struct CAN_IVar5{
     int16_t CAN_TMIx_PBM6_Heat_1_Current;                     		//+932,933 |  const = 0x               		| Ток нагревателей АБ4 ветвь 1
     int16_t CAN_TMIx_PBM6_Heat_2_Current;                     		//+934,935 |  const = 0x               		| Ток нагревателей АБ4 ветвь 2
 
-    uint8_t  CAN_TMI4_Reserved[4];                          		//+936,937,938,939|  const = 0x
-    uint16_t CAN_TMI4_CRC;                                          //+940, 941 |  const = 0x
+    uint8_t CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask;                  //+936     |  const = 0x                    | Ключи аварийной зарядки
+    uint8_t CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask;            //+937     |  const = 0x                    | Ключи аварийной зарядки
+
+    uint8_t  CAN_TMI4_Reserved[2];                          		//+938,939 |  const = 0x
+    uint16_t CAN_TMI4_CRC;                                          //+940,941 |  const = 0x
 };
 
 #pragma pack(pop)

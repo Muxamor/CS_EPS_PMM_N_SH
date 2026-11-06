@@ -2308,7 +2308,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power 	 	= 0x0000;
     for( PBM_Number = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++ ){
         for(Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-            CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power    =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power + (int16_t) (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Power);
+            CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power    =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Total_PBM_Char_Dischar_Power + (int32_t) (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Power);
         }
     }
 
@@ -2357,21 +2357,7 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
         }
     }
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask    = 0x0000;
-    for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
-        for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-            CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask   = CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd << move_bit_pos);
-            move_bit_pos++;
-        }
-    }
 
-    CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask    = 0x0000;
-    for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
-        for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
-            CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Cmd << move_bit_pos);
-            move_bit_pos++;
-        }
-    }
 
     CAN_IVar5_telemetry.CAN_TMIx_PBM1_Error_BitMask 		 			 = eps_p.eps_pbm_ptr[PBM_T1_1].Error_PCA9534 | (eps_p.eps_pbm_ptr[PBM_T1_1].Error_I2C_MUX << 1) | (eps_p.eps_pbm_ptr[PBM_T1_1].Low_Energy_Flag << 2)
     																				| (eps_p.eps_pbm_ptr[PBM_T1_1].Zero_Energy_Flag << 3) | (eps_p.eps_pbm_ptr[PBM_T1_1].Heat[PBM_T1_HEAT_1].Error_INA238 << 4)
@@ -2688,6 +2674,22 @@ void CAN_Var5_fill_telemetry( _EPS_Param eps_p ){
     CAN_IVar5_telemetry.CAN_TMIx_PBM5_Heat_2_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_5].Heat[PBM_T1_HEAT_2].HeatCurrent;
     CAN_IVar5_telemetry.CAN_TMIx_PBM6_Heat_1_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_1].HeatCurrent;
     CAN_IVar5_telemetry.CAN_TMIx_PBM6_Heat_2_Current           		 = eps_p.eps_pbm_ptr[PBM_T1_6].Heat[PBM_T1_HEAT_2].HeatCurrent;
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask    = 0x0000;
+    for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
+        for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+            CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask   = CAN_IVar5_telemetry.CAN_TMIx_PBM_Wreck_Charge_Cmd_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].PCA9534_Emerg_Chrg_Cmd << move_bit_pos);
+            move_bit_pos++;
+        }
+    }
+
+    CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask    = 0x0000;
+    for (PBM_Number = 0, move_bit_pos = 0; PBM_Number < PBM_T1_QUANTITY; PBM_Number++){
+        for( Branch_Number = 0; Branch_Number < PBM_T1_BRANCH_QUANTITY; Branch_Number++){
+            CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask   =  CAN_IVar5_telemetry.CAN_TMIx_PBM_Auto_Correct_Cap_State_BitMask | (eps_p.eps_pbm_ptr[PBM_Number].Branch[Branch_Number].Auto_Corr_Capacity_Cmd << move_bit_pos);
+            move_bit_pos++;
+        }
+    }
 
 
     CAN_IVar5_telemetry.CAN_TMI4_CRC                                 = norby_crc16_calc( (uint8_t *)(&(CAN_IVar5_telemetry.CAN_TMI4_Headr_Start_Mark)), 126 );
